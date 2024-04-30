@@ -1,4 +1,5 @@
 import 'package:fjghrd/models/agama.dart';
+import 'package:fjghrd/models/area.dart';
 import 'package:fjghrd/models/divisi.dart';
 import 'package:fjghrd/models/jabatan.dart';
 import 'package:fjghrd/models/pendidikan.dart';
@@ -12,6 +13,7 @@ class Karyawan {
   String nomorKtp;
   DateTime? tanggalMasuk;
   Agama agama = Agama();
+  Area area = Area();
   Jabatan jabatan = Jabatan();
   Divisi divisi = Divisi();
   String tempatLahir;
@@ -78,6 +80,9 @@ class Karyawan {
     if(data['agama'] != null) {
       a.agama = Agama.fromMap(data['agama']);
     }
+    if(data['area'] != null) {
+      a.area = Area.fromMap(data['area']);
+    }
     if(data['jabatan'] != null) {
       a.jabatan = Jabatan.fromMap(data['jabatan']);
     }
@@ -100,9 +105,6 @@ class Karyawan {
       'nik': nik,
       'nomor_ktp': nomorKtp,
       'tanggal_masuk': AFconvert.matYMDTime(tanggalMasuk),
-      'agama_id': agama.id,
-      'jabatan_id': jabatan.id,
-      'divisi_id': divisi.id,
       'tempat_lahir': tempatLahir,
       'tanggal_lahir': AFconvert.matYMDTime(tanggalLahir),
       'alamat_ktp': alamatKtp,
@@ -110,14 +112,30 @@ class Karyawan {
       'telepon': telepon,
       'email': email,
       'kawin': kawin ? 'Y' : 'N',
-      'status_kerja_id': statusKerja.id,
-      'pendidikan_id': pendidikan.id,
       'pendidikan_almamater': pendidikanAlmamater,
       'pendidikan_jurusan': pendidikanJurusan,
       'aktif': aktif ? 'Y' : 'N',
       'nomor_kk': nomorKk,
       'nomor_paspor': nomorPaspor,
     };
+    if(agama.id != '') {
+      data['agama_id'] = agama.id;
+    }
+    if(area.id != '') {
+      data['area_id'] = area.id;
+    }
+    if(jabatan.id != '') {
+      data['jabatan_id'] = jabatan.id;
+    }
+    if(divisi.id != '') {
+      data['divisi_id'] = divisi.id;
+    }
+    if(statusKerja.id != '') {
+      data['status_kerja_id'] = statusKerja.id;
+    }
+    if(pendidikan.id != '') {
+      data['pendidikan_id'] = pendidikan.id;
+    }
     return data;
   }
 

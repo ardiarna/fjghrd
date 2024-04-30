@@ -1,5 +1,6 @@
 import 'package:fjghrd/controllers/auth_control.dart';
 import 'package:fjghrd/models/agama.dart';
+import 'package:fjghrd/models/area.dart';
 import 'package:fjghrd/models/divisi.dart';
 import 'package:fjghrd/models/jabatan.dart';
 import 'package:fjghrd/models/karyawan.dart';
@@ -9,6 +10,7 @@ import 'package:fjghrd/models/pendidikan.dart';
 import 'package:fjghrd/models/perjanjian_kerja.dart';
 import 'package:fjghrd/models/status_kerja.dart';
 import 'package:fjghrd/repositories/agama_repository.dart';
+import 'package:fjghrd/repositories/area_repository.dart';
 import 'package:fjghrd/repositories/divisi_repository.dart';
 import 'package:fjghrd/repositories/jabatan_repository.dart';
 import 'package:fjghrd/repositories/karyawan_repository.dart';
@@ -28,6 +30,7 @@ class KaryawanControl extends GetxController {
   Karyawan current = Karyawan();
   List<Karyawan> listKaryawan = [];
   List<Opsi> listAgama = [];
+  List<Opsi> listArea = [];
   List<Opsi> listDivisi = [];
   List<Opsi> listJabatan = [];
   List<Opsi> listPendidikan = [];
@@ -45,6 +48,7 @@ class KaryawanControl extends GetxController {
       txtPerjanjianId, txtPerjanjianNomor, txtPerjanjianTglAwal, txtPerjanjianTglAkhir;
 
   Agama agama = Agama();
+  Area area = Area();
   Divisi divisi = Divisi();
   Jabatan jabatan = Jabatan();
   Pendidikan pendidikan = Pendidikan();
@@ -123,6 +127,7 @@ class KaryawanControl extends GetxController {
     txtPendidikanAlmamater.text = '';
     txtPendidikanJurusan.text = '';
     agama = Agama();
+    area = Area();
     divisi = Divisi();
     jabatan = Jabatan();
     pendidikan = Pendidikan();
@@ -140,10 +145,38 @@ class KaryawanControl extends GetxController {
           children: [
             ListView(
               children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 60, 20, 0),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 150,
+                        padding: const EdgeInsets.only(right: 15),
+                        child: const Text('Area'),
+                      ),
+                      Expanded(
+                        child: GetBuilder<KaryawanControl>(
+                          builder: (_) {
+                            return AFwidget.comboField(
+                              value: area.nama,
+                              label: '',
+                              onTap: () async {
+                                var a = await pilihArea(value: area.id);
+                                if(a != null && a.value != area.id) {
+                                  area = Area.fromMap(a.data!);
+                                  update();
+                                }
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 barisForm(
                   label: 'Nama',
                   controller: txtNama,
-                  paddingTop: 60,
                 ),
                 barisForm(
                   label: 'NIK',
@@ -581,6 +614,7 @@ class KaryawanControl extends GetxController {
     txtPendidikanAlmamater.text = current.pendidikanAlmamater;
     txtPendidikanJurusan.text = current.pendidikanJurusan;
     agama = current.agama;
+    area = current.area;
     divisi = current.divisi;
     jabatan = current.jabatan;
     pendidikan = current.pendidikan;
@@ -1575,7 +1609,7 @@ class KaryawanControl extends GetxController {
                         },
                         minimumSize: const Size(120, 40),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       AFwidget.tombol(
                         label: 'Batal',
                         color: Colors.orange,
@@ -1632,23 +1666,23 @@ class KaryawanControl extends GetxController {
 
   Future<void> tambahData() async {
     try {
+      if(area.id == '') {
+        throw 'Silakan pilih area';
+      }
       if(txtNama.text.isEmpty) {
         throw 'Nama harus diisi';
       }
-      if(txtNomorKtp.text.isEmpty) {
-        throw 'Nomor KTP harus diisi';
-      }
       if(txtTanggalMasuk.text.isEmpty) {
         throw 'Masa kerja harus diisi';
-      }
-      if(agama.id == '') {
-        throw 'Silakan pilih agama';
       }
       if(divisi.id == '') {
         throw 'Silakan pilih divisi';
       }
       if(jabatan.id == '') {
         throw 'Silakan pilih jabatan';
+      }
+      if(txtNomorKtp.text.isEmpty) {
+        throw 'Nomor KTP harus diisi';
       }
       if(txtTempatLahir.text.isEmpty || txtTanggalLahir.text.isEmpty) {
         throw 'Tempat & tanggal lahir harus diisi';
@@ -1661,9 +1695,6 @@ class KaryawanControl extends GetxController {
       }
       if(kawin == null) {
         throw 'Silakan isi status kawin';
-      }
-      if(pendidikan.id == '') {
-        throw 'Silakan pilih pendidikan terakhir';
       }
       if(statusKerja.id == '') {
         throw 'Silakan pilih status karyawan';
@@ -1684,8 +1715,10 @@ class KaryawanControl extends GetxController {
         nomorPaspor: txtNomorPaspor.text,
         pendidikanAlmamater: txtPendidikanAlmamater.text,
         pendidikanJurusan: txtPendidikanJurusan.text,
+        aktif: true,
       );
       a.agama = agama;
+      a.area = area;
       a.jabatan = jabatan;
       a.divisi = divisi;
       a.pendidikan = pendidikan;
@@ -1712,20 +1745,20 @@ class KaryawanControl extends GetxController {
       if(txtNama.text.isEmpty) {
         throw 'Nama harus diisi';
       }
-      if(txtNomorKtp.text.isEmpty) {
-        throw 'Nomor KTP harus diisi';
-      }
       if(txtTanggalMasuk.text.isEmpty) {
         throw 'Masa kerja harus diisi';
       }
-      if(agama.id == '') {
-        throw 'Silakan pilih agama';
+      if(area.id == '') {
+        throw 'Silakan pilih area';
       }
       if(divisi.id == '') {
         throw 'Silakan pilih divisi';
       }
       if(jabatan.id == '') {
         throw 'Silakan pilih jabatan';
+      }
+      if(txtNomorKtp.text.isEmpty) {
+        throw 'Nomor KTP harus diisi';
       }
       if(txtTempatLahir.text.isEmpty || txtTanggalLahir.text.isEmpty) {
         throw 'Tempat & tanggal lahir harus diisi';
@@ -1738,9 +1771,6 @@ class KaryawanControl extends GetxController {
       }
       if(kawin == null) {
         throw 'Silakan isi status kawin';
-      }
-      if(pendidikan.id == '') {
-        throw 'Silakan pilih pendidikan terakhir';
       }
       if(statusKerja.id == '') {
         throw 'Silakan pilih status karyawan';
@@ -1762,8 +1792,10 @@ class KaryawanControl extends GetxController {
         nomorPaspor: txtNomorPaspor.text,
         pendidikanAlmamater: txtPendidikanAlmamater.text,
         pendidikanJurusan: txtPendidikanJurusan.text,
+        aktif: true,
       );
       a.agama = agama;
+      a.area = area;
       a.jabatan = jabatan;
       a.divisi = divisi;
       a.pendidikan = pendidikan;
@@ -2091,12 +2123,28 @@ class KaryawanControl extends GetxController {
   }
 
   Future<void> loadAgamas() async {
-    AgamaRepository repoAgama = AgamaRepository();
-    var hasil = await repoAgama.findAll();
+    AgamaRepository repo = AgamaRepository();
+    var hasil = await repo.findAll();
     if(hasil.success) {
       listAgama.clear();
       for (var data in hasil.daftar) {
         listAgama.add(
+          Opsi(value: AFconvert.keString(data['id']), label: data['nama'], data: data),
+        );
+      }
+      update();
+    } else {
+      AFwidget.snackbar(hasil.message);
+    }
+  }
+
+  Future<void> loadAreas() async {
+    AreaRepository repo = AreaRepository();
+    var hasil = await repo.findAll();
+    if(hasil.success) {
+      listArea.clear();
+      for (var data in hasil.daftar) {
+        listArea.add(
           Opsi(value: AFconvert.keString(data['id']), label: data['nama'], data: data),
         );
       }
@@ -2113,7 +2161,7 @@ class KaryawanControl extends GetxController {
       listDivisi.clear();
       for (var data in hasil.daftar) {
         listDivisi.add(
-          Opsi(value: AFconvert.keString(data['id']), label: data['nama'], data: data),
+          Opsi(value: AFconvert.keString(data['id']), label: '${data['nama']} (${data['kode']})', data: data),
         );
       }
       update();
@@ -2175,6 +2223,15 @@ class KaryawanControl extends GetxController {
       listOpsi: listAgama,
       valueSelected: value,
       judul: 'Pilih Agama',
+    );
+    return a;
+  }
+
+  Future<Opsi?> pilihArea({String value = ''}) async {
+    var a = await AFcombobox.bottomSheet(
+      listOpsi: listArea,
+      valueSelected: value,
+      judul: 'Pilih Area',
     );
     return a;
   }

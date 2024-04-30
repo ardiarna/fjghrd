@@ -15,6 +15,7 @@ class KaryawanView extends StatelessWidget {
       rowData.length,
           (index) => PlutoRow(
         cells: {
+          'area': PlutoCell(value: rowData[index].area.nama),
           'id': PlutoCell(value: rowData[index].id),
           'nama': PlutoCell(value: rowData[index].nama),
           'nik': PlutoCell(value: rowData[index].nik),
@@ -42,6 +43,18 @@ class KaryawanView extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<PlutoColumn> columns = [
       PlutoColumn(
+        title: 'AREA',
+        field: 'area',
+        type: PlutoColumnType.text(),
+        readOnly: true,
+        width: 270,
+        backgroundColor: Colors.brown.shade100,
+        enableFilterMenuItem: false,
+        enableContextMenu: false,
+        enableDropToResize: false,
+        frozen: PlutoColumnFrozen.start,
+      ),
+      PlutoColumn(
         title: '',
         field: 'id',
         type: PlutoColumnType.text(),
@@ -53,6 +66,9 @@ class KaryawanView extends StatelessWidget {
         enableDropToResize: false,
         frozen: PlutoColumnFrozen.start,
         renderer: (rdrCtx) {
+          if(rdrCtx.row.cells['id']!.value == null) {
+            return const Text('');
+          }
           return Row(
             children: [
               IconButton(
@@ -74,7 +90,7 @@ class KaryawanView extends StatelessWidget {
         title: 'NAMA',
         field: 'nama',
         type: PlutoColumnType.text(),
-        minWidth: 180,
+        minWidth: 200,
         backgroundColor: Colors.brown.shade100,
         frozen: PlutoColumnFrozen.start,
       ),
@@ -204,6 +220,7 @@ class KaryawanView extends StatelessWidget {
     ];
     controller.loadKaryawans();
     controller.loadAgamas();
+    controller.loadAreas();
     controller.loadDivisis();
     controller.loadJabatans();
     controller.loadPendidikans();
@@ -218,7 +235,7 @@ class KaryawanView extends StatelessWidget {
             children: [
               const Padding(
                 padding: EdgeInsets.fromLTRB(20, 10, 30, 10),
-                child: Text('Data Karyawan',
+                child: Text('DATA KARYAWAN',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -236,6 +253,14 @@ class KaryawanView extends StatelessWidget {
                 color: Colors.blue,
                 padding: const EdgeInsets.all(0),
               ),
+              const Spacer(),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                child: OutlinedButton(
+                  onPressed: () {},
+                  child: const Text('EX KARYAWAN'),
+                ),
+              ),
             ],
           ),
         ),
@@ -252,10 +277,18 @@ class KaryawanView extends StatelessWidget {
                 },
                 onLoaded: (PlutoGridOnLoadedEvent event) {
                   event.stateManager.setShowColumnFilter(true);
-                  event.stateManager.autoFitColumn(context, columns[1]);
-                  for (int i = 5; i <= 16; i++) {
+                  // event.stateManager.autoFitColumn(context, columns[0]);
+                  event.stateManager.autoFitColumn(context, columns[2]);
+                  for (int i = 6; i <= 17; i++) {
                     event.stateManager.autoFitColumn(context, columns[i]);
                   }
+                  event.stateManager.setRowGroup(
+                    PlutoRowGroupByColumnDelegate(
+                      columns: [
+                        columns[0],
+                      ],
+                    ),
+                  );
                 },
                 configuration: PlutoGridConfiguration(
                   scrollbar: const PlutoGridScrollbarConfig(
