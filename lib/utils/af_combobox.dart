@@ -89,7 +89,7 @@ class _DaftarOpsiState extends State<DaftarOpsi> {
             },
             separatorBuilder: (_, i) {
               return const Divider(
-                indent: 60,
+                indent: 45,
                 endIndent: 20,
                 height: 5,
                 thickness: 1,

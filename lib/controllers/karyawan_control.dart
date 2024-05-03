@@ -1,4 +1,5 @@
 import 'package:fjghrd/controllers/auth_control.dart';
+import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/models/agama.dart';
 import 'package:fjghrd/models/area.dart';
 import 'package:fjghrd/models/divisi.dart';
@@ -8,7 +9,9 @@ import 'package:fjghrd/models/keluarga_karyawan.dart';
 import 'package:fjghrd/models/keluarga_kontak.dart';
 import 'package:fjghrd/models/pendidikan.dart';
 import 'package:fjghrd/models/perjanjian_kerja.dart';
+import 'package:fjghrd/models/phk.dart';
 import 'package:fjghrd/models/status_kerja.dart';
+import 'package:fjghrd/models/status_phk.dart';
 import 'package:fjghrd/repositories/agama_repository.dart';
 import 'package:fjghrd/repositories/area_repository.dart';
 import 'package:fjghrd/repositories/divisi_repository.dart';
@@ -16,6 +19,7 @@ import 'package:fjghrd/repositories/jabatan_repository.dart';
 import 'package:fjghrd/repositories/karyawan_repository.dart';
 import 'package:fjghrd/repositories/pendidikan_repository.dart';
 import 'package:fjghrd/repositories/status_kerja_repository.dart';
+import 'package:fjghrd/repositories/status_phk_repository.dart';
 import 'package:fjghrd/utils/af_combobox.dart';
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_convert.dart';
@@ -25,27 +29,31 @@ import 'package:get/get.dart';
 
 class KaryawanControl extends GetxController {
   final authControl = Get.find<AuthControl>();
+  final homeControl = Get.find<HomeControl>();
   final KaryawanRepository _repo = KaryawanRepository();
 
   Karyawan current = Karyawan();
   List<Karyawan> listKaryawan = [];
+  List<Karyawan> listMantanKaryawan = [];
   List<Opsi> listAgama = [];
   List<Opsi> listArea = [];
   List<Opsi> listDivisi = [];
   List<Opsi> listJabatan = [];
   List<Opsi> listPendidikan = [];
   List<Opsi> listStatusKerja = [];
+  List<Opsi> listStatusPhk = [];
   List<KeluargaKaryawan> listKeluarga = [];
   List<KeluargaKontak> listKontak = [];
   List<PerjanjianKerja> listPerjanjianKerja = [];
 
-  late TextEditingController txtId, txtNama, txtNik, txtTanggalMasuk, txtNomorKk,
+  late TextEditingController txtId, txtNama, txtNik, txtTanggalMasuk, txtTanggalKeluar, txtNomorKk,
       txtNomorKtp, txtNomorPaspor, txtTempatLahir, txtTanggalLahir, txtAlamatKtp,
       txtAlamatTinggal, txtTelepon, txtEmail, txtPendidikanAlmamater, txtPendidikanJurusan,
       txtKeluargaId, txtKeluargaNama, txtKeluargaNomorKtp, txtKeluargaTempatLahir,
       txtKeluargaTanggalLahir, txtKeluargaTelepon, txtKeluargaEmail,
       txtKontakId, txtKontakNama, txtKontakTelepon, txtKontakEmail,
-      txtPerjanjianId, txtPerjanjianNomor, txtPerjanjianTglAwal, txtPerjanjianTglAkhir;
+      txtPerjanjianId, txtPerjanjianNomor, txtPerjanjianTglAwal, txtPerjanjianTglAkhir,
+      txtPhkId, txtPhkKeterangan;
 
   Agama agama = Agama();
   Area area = Area();
@@ -54,6 +62,7 @@ class KaryawanControl extends GetxController {
   Pendidikan pendidikan = Pendidikan();
   StatusKerja statusKerja = StatusKerja();
   StatusKerja statusKerjaPerjanjian = StatusKerja();
+  StatusPhk statusPhk = StatusPhk();
 
   bool? kawin = false;
   String keluargaHubungan = '';
@@ -64,6 +73,19 @@ class KaryawanControl extends GetxController {
       listKaryawan.clear();
       for (var data in hasil.daftar) {
         listKaryawan.add(Karyawan.fromMap(data));
+      }
+      update();
+    } else {
+      AFwidget.snackbar(hasil.message);
+    }
+  }
+
+  Future<void> loadMantanKaryawans() async {
+    var hasil = await _repo.mantanFindAll();
+    if (hasil.success) {
+      listMantanKaryawan.clear();
+      for (var data in hasil.daftar) {
+        listMantanKaryawan.add(Karyawan.fromMap(data));
       }
       update();
     } else {
@@ -174,11 +196,11 @@ class KaryawanControl extends GetxController {
                     ],
                   ),
                 ),
-                barisForm(
+                barisText(
                   label: 'Nama',
                   controller: txtNama,
                 ),
-                barisForm(
+                barisText(
                   label: 'NIK',
                   controller: txtNik,
                 ),
@@ -298,15 +320,15 @@ class KaryawanControl extends GetxController {
                     ],
                   ),
                 ),
-                barisForm(
+                barisText(
                   label: 'Nomor KK',
                   controller: txtNomorKk,
                 ),
-                barisForm(
+                barisText(
                   label: 'Nomor KTP',
                   controller: txtNomorKtp,
                 ),
-                barisForm(
+                barisText(
                   label: 'Nomor Paspor',
                   controller: txtNomorPaspor,
                 ),
@@ -347,52 +369,17 @@ class KaryawanControl extends GetxController {
                     ],
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15, top: 15),
-                        child: const Text('Alamat KTP'),
-                      ),
-                      Expanded(
-                        child: AFwidget.textField(
-                          marginTop: 0,
-                          controller: txtAlamatKtp,
-                          maxLines: 4,
-                          minLines: 2,
-                          keyboard: TextInputType.multiline,
-                        ),
-                      ),
-                    ],
-                  ),
+                barisText(
+                  label: 'Alamat KTP',
+                  controller: txtAlamatKtp,
+                  isTextArea: true,
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15, top: 15),
-                        child: const Text('Alamat Tinggal Sekarang'),
-                      ),
-                      Expanded(
-                        child: AFwidget.textField(
-                          marginTop: 0,
-                          controller: txtAlamatTinggal,
-                          maxLines: 4,
-                          minLines: 2,
-                          keyboard: TextInputType.multiline,
-                        ),
-                      ),
-                    ],
-                  ),
+                barisText(
+                  label: 'Alamat Tinggal Sekarang',
+                  controller: txtAlamatTinggal,
+                  isTextArea: true,
                 ),
-                barisForm(
+                barisText(
                   label: 'No. Telepon',
                   controller: txtTelepon,
                 ),
@@ -513,7 +500,7 @@ class KaryawanControl extends GetxController {
                     ],
                   ),
                 ),
-                barisForm(
+                barisText(
                   label: 'Email Pribadi',
                   controller: txtEmail,
                 ),
@@ -676,11 +663,11 @@ class KaryawanControl extends GetxController {
                     ],
                   ),
                 ),
-                barisForm(
+                barisText(
                   label: 'Nama',
                   controller: txtKeluargaNama,
                 ),
-                barisForm(
+                barisText(
                   label: 'Nomor KTP',
                   controller: txtKeluargaNomorKtp,
                 ),
@@ -785,11 +772,11 @@ class KaryawanControl extends GetxController {
                     ],
                   ),
                 ),
-                barisForm(
+                barisText(
                   label: 'No. Telepon',
                   controller: txtKeluargaTelepon,
                 ),
-                barisForm(
+                barisText(
                   label: 'Email Pribadi',
                   controller: txtKeluargaEmail,
                 ),
@@ -885,11 +872,11 @@ class KaryawanControl extends GetxController {
                     ],
                   ),
                 ),
-                barisForm(
+                barisText(
                   label: 'Nama',
                   controller: txtKeluargaNama,
                 ),
-                barisForm(
+                barisText(
                   label: 'Nomor KTP',
                   controller: txtKeluargaNomorKtp,
                 ),
@@ -994,11 +981,11 @@ class KaryawanControl extends GetxController {
                     ],
                   ),
                 ),
-                barisForm(
+                barisText(
                   label: 'No. Telepon',
                   controller: txtKeluargaTelepon,
                 ),
-                barisForm(
+                barisText(
                   label: 'Email Pribadi',
                   controller: txtKeluargaEmail,
                 ),
@@ -1107,15 +1094,15 @@ class KaryawanControl extends GetxController {
                     ],
                   ),
                 ),
-                barisForm(
+                barisText(
                   label: 'No. Telepon',
                   controller: txtKontakTelepon,
                 ),
-                barisForm(
+                barisText(
                   label: 'Keterangan',
                   controller: txtKontakNama,
                 ),
-                barisForm(
+                barisText(
                   label: 'Email Pribadi',
                   controller: txtKontakEmail,
                 ),
@@ -1207,15 +1194,15 @@ class KaryawanControl extends GetxController {
                     ],
                   ),
                 ),
-                barisForm(
+                barisText(
                   label: 'No. Telepon',
                   controller: txtKontakTelepon,
                 ),
-                barisForm(
+                barisText(
                   label: 'Keterangan',
                   controller: txtKontakNama,
                 ),
-                barisForm(
+                barisText(
                   label: 'Email Pribadi',
                   controller: txtKontakEmail,
                 ),
@@ -1325,7 +1312,7 @@ class KaryawanControl extends GetxController {
                     ],
                   ),
                 ),
-                barisForm(
+                barisText(
                   label: 'Nomor',
                   controller: txtPerjanjianNomor,
                 ),
@@ -1505,7 +1492,7 @@ class KaryawanControl extends GetxController {
                     ],
                   ),
                 ),
-                barisForm(
+                barisText(
                   label: 'Nomor',
                   controller: txtPerjanjianNomor,
                 ),
@@ -1664,6 +1651,193 @@ class KaryawanControl extends GetxController {
     );
   }
 
+  void tambahPhkForm(BuildContext context) {
+    txtPhkId.text = '';
+    txtPhkKeterangan.text = '';
+    txtTanggalKeluar.text = AFconvert.matYMD(DateTime.now());
+    statusPhk = StatusPhk();
+    AFwidget.dialog(
+      Container(
+        padding: const EdgeInsets.fromLTRB(15, 0, 0, 15),
+        width: 700,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        child: Stack(
+          children: [
+            ListView(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 60, 20, 0),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 150,
+                        padding: const EdgeInsets.only(right: 15),
+                        child: const Text('Nama Karyawan'),
+                      ),
+                      Expanded(
+                        child: Text(': ${current.nama}',
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 30, 20, 5),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 150,
+                        padding: const EdgeInsets.only(right: 15),
+                        child: const Text('Status Karyawan'),
+                      ),
+                      Expanded(
+                        child: Text(': ${statusKerja.nama}',
+                          style: const TextStyle(
+                            fontSize: 15,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 150,
+                        padding: const EdgeInsets.only(right: 15),
+                        child: const Text('Masa Kerja'),
+                      ),
+                      Expanded(
+                        child: AFwidget.textField(
+                          marginTop: 0,
+                          controller: txtTanggalMasuk,
+                          readOnly: true,
+                          prefixIcon: const Icon(Icons.calendar_month),
+                          ontap: () async {
+                            var a = await AFwidget.pickDate(
+                              context: context,
+                              initialDate: AFconvert.keTanggal(txtTanggalMasuk.text),
+                            );
+                            if(a != null) {
+                              txtTanggalMasuk.text = AFconvert.matYMD(a);
+                            }
+                          },
+                        ),
+                      ),
+                      const Text('   s/d   '),
+                      Expanded(
+                        child: AFwidget.textField(
+                          marginTop: 0,
+                          controller: txtTanggalKeluar,
+                          readOnly: true,
+                          prefixIcon: const Icon(Icons.calendar_month),
+                          ontap: () async {
+                            var a = await AFwidget.pickDate(
+                              context: context,
+                              initialDate: AFconvert.keTanggal(txtTanggalKeluar.text),
+                            );
+                            if(a != null) {
+                              txtTanggalKeluar.text = AFconvert.matYMD(a);
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 150,
+                        padding: const EdgeInsets.only(right: 15),
+                        child: const Text('Status PHK'),
+                      ),
+                      Expanded(
+                        child: GetBuilder<KaryawanControl>(
+                          builder: (_) {
+                            return AFwidget.comboField(
+                              value: statusPhk.nama,
+                              label: '',
+                              onTap: () async {
+                                var a = await pilihStatusPhk(value: statusPhk.id);
+                                if(a != null && a.value != statusPhk.id) {
+                                  statusPhk = StatusPhk.fromMap(a.data!);
+                                  update();
+                                }
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                barisText(
+                  label: 'Keterangan',
+                  controller: txtPhkKeterangan,
+                  isTextArea: true,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 50, 20, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      AFwidget.tombol(
+                        label: 'Batal',
+                        color: Colors.orange,
+                        onPressed: Get.back,
+                        minimumSize: const Size(120, 40),
+                      ),
+                      const SizedBox(width: 40),
+                      AFwidget.tombol(
+                        label: 'Simpan',
+                        color: Colors.blue,
+                        onPressed: tambahPhkData,
+                        minimumSize: const Size(120, 40),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              height: 55,
+              width: double.infinity,
+              padding: const EdgeInsets.all(15),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(15),
+                ),
+              ),
+              child: const Text('Form PHK Karyawan',
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+      barrierDismissible: false,
+      scrollable: false,
+      backgroundColor: Colors.white,
+      contentPadding: const EdgeInsets.all(0),
+    );
+  }
+
   Future<void> tambahData() async {
     try {
       if(area.id == '') {
@@ -1674,9 +1848,6 @@ class KaryawanControl extends GetxController {
       }
       if(txtTanggalMasuk.text.isEmpty) {
         throw 'Masa kerja harus diisi';
-      }
-      if(divisi.id == '') {
-        throw 'Silakan pilih divisi';
       }
       if(jabatan.id == '') {
         throw 'Silakan pilih jabatan';
@@ -1695,9 +1866,6 @@ class KaryawanControl extends GetxController {
       }
       if(kawin == null) {
         throw 'Silakan isi status kawin';
-      }
-      if(statusKerja.id == '') {
-        throw 'Silakan pilih status karyawan';
       }
       var a = Karyawan(
         nama: txtNama.text,
@@ -2053,7 +2221,6 @@ class KaryawanControl extends GetxController {
         loadPerjanjianKerjas();
         Get.back();
       }
-      print(hasil.message);
       AFwidget.snackbar(hasil.message);
     } catch (er) {
       AFwidget.snackbar('$er');
@@ -2113,6 +2280,45 @@ class KaryawanControl extends GetxController {
       Get.back();
       if(hasil.success) {
         loadPerjanjianKerjas();
+        Get.back();
+        Get.back();
+      }
+      AFwidget.snackbar(hasil.message);
+    } catch (er) {
+      AFwidget.snackbar('$er');
+    }
+  }
+
+  Future<void> tambahPhkData() async {
+    try {
+      if(current.id.isEmpty) {
+        throw 'ID Karyawan tidak ditemukan';
+      }
+      if(txtTanggalMasuk.text.isEmpty) {
+        throw 'Tanggal awal masa kerja harus diisi';
+      }
+      if(txtTanggalKeluar.text.isEmpty) {
+        throw 'Tanggal akhir masa kerja harus diisi';
+      }
+      if(statusPhk.id == '') {
+        throw 'Silakan pilih status phk';
+      }
+
+      var a = Phk(
+        tanggalAwal: AFconvert.keTanggal('${txtTanggalMasuk.text} 08:00:00'),
+        tanggalAKhir: AFconvert.keTanggal('${txtTanggalKeluar.text} 08:00:00'),
+        keterangan: txtPhkKeterangan.text,
+        karyawanId: current.id,
+      );
+      a.statusKerja = statusKerja;
+      a.statusPhk = statusPhk;
+
+      AFwidget.loading();
+      var hasil = await _repo.phkCreate(a.karyawanId, a.toMap());
+      Get.back();
+      if(hasil.success) {
+        loadKaryawans();
+        loadMantanKaryawans();
         Get.back();
         Get.back();
       }
@@ -2218,6 +2424,22 @@ class KaryawanControl extends GetxController {
     }
   }
 
+  Future<void> loadStatusPhks() async {
+    StatusPhkRepository repo = StatusPhkRepository();
+    var hasil = await repo.findAll();
+    if(hasil.success) {
+      listStatusPhk.clear();
+      for (var data in hasil.daftar) {
+        listStatusPhk.add(
+          Opsi(value: AFconvert.keString(data['id']), label: data['nama'], data: data),
+        );
+      }
+      update();
+    } else {
+      AFwidget.snackbar(hasil.message);
+    }
+  }
+
   Future<Opsi?> pilihAgama({String value = ''}) async {
     var a = await AFcombobox.bottomSheet(
       listOpsi: listAgama,
@@ -2272,24 +2494,38 @@ class KaryawanControl extends GetxController {
     return a;
   }
 
-  Widget barisForm({
+  Future<Opsi?> pilihStatusPhk({String value = ''}) async {
+    var a = await AFcombobox.bottomSheet(
+      listOpsi: listStatusPhk,
+      valueSelected: value,
+      judul: 'Pilih Status PHK',
+    );
+    return a;
+  }
+
+  Widget barisText({
     String label = '',
     TextEditingController? controller,
     double paddingTop = 11,
+    bool isTextArea = false
   }) {
     return Padding(
       padding: EdgeInsets.fromLTRB(0, paddingTop, 20, 0),
       child: Row(
+        crossAxisAlignment: isTextArea ? CrossAxisAlignment.start : CrossAxisAlignment.center,
         children: [
           Container(
             width: 150,
-            padding: const EdgeInsets.only(right: 15),
+            padding: EdgeInsets.only(right: 15, top: isTextArea ? 15 : 0),
             child: Text(label),
           ),
           Expanded(
             child: AFwidget.textField(
               marginTop: 0,
               controller: controller,
+              maxLines: isTextArea ? 4 : 1,
+              minLines: isTextArea ? 2 : 1,
+              keyboard: isTextArea ? TextInputType.multiline : TextInputType.text,
             ),
           ),
         ],
@@ -2303,6 +2539,7 @@ class KaryawanControl extends GetxController {
     txtNama = TextEditingController();
     txtNik = TextEditingController();
     txtTanggalMasuk = TextEditingController();
+    txtTanggalKeluar = TextEditingController();
     txtNomorKk = TextEditingController();
     txtNomorKtp = TextEditingController();
     txtNomorPaspor = TextEditingController();
@@ -2329,6 +2566,8 @@ class KaryawanControl extends GetxController {
     txtPerjanjianNomor = TextEditingController();
     txtPerjanjianTglAwal = TextEditingController();
     txtPerjanjianTglAkhir = TextEditingController();
+    txtPhkId = TextEditingController();
+    txtPhkKeterangan = TextEditingController();
     super.onInit();
   }
 
@@ -2338,6 +2577,7 @@ class KaryawanControl extends GetxController {
     txtNama.dispose();
     txtNik.dispose();
     txtTanggalMasuk.dispose();
+    txtTanggalKeluar.dispose();
     txtNomorKk.dispose();
     txtNomorKtp.dispose();
     txtNomorPaspor.dispose();
@@ -2364,6 +2604,8 @@ class KaryawanControl extends GetxController {
     txtPerjanjianNomor.dispose();
     txtPerjanjianTglAwal.dispose();
     txtPerjanjianTglAkhir.dispose();
+    txtPhkId.dispose();
+    txtPhkKeterangan.dispose();
     super.onClose();
   }
 }

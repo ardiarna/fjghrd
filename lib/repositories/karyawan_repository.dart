@@ -5,7 +5,7 @@ class KaryawanRepository {
 
   Future<Hasil> findAll() async {
     return await AFdatabase.send(
-      url: 'karyawan?sort_by=tanggal_masuk&sort_order=asc',
+      url: 'karyawan?search_by=aktif&value=Y&sort_by=tanggal_masuk&sort_order=asc',
     );
   }
   
@@ -117,6 +117,26 @@ class KaryawanRepository {
     return await AFdatabase.send(
       url: 'karyawan/$id/perjanjian-kerja/$perjanjianKerjaId',
       methodeRequest: MethodeRequest.delete,
+    );
+  }
+
+  Future<Hasil> mantanFindAll() async {
+    return await AFdatabase.send(
+      url: 'karyawan?search_by=aktif&value=N&sort_by=tanggal_keluar&sort_order=desc',
+    );
+  }
+
+  Future<Hasil> phkFindAll(String id) async {
+    return await AFdatabase.send(
+      url: 'karyawan/$id/phk?sort_by=tanggal_akhir&sort_order=asc',
+    );
+  }
+
+  Future<Hasil> phkCreate(String id, Map<String, String> body) async {
+    return await AFdatabase.send(
+      url: 'karyawan/$id/phk',
+      methodeRequest: MethodeRequest.post,
+      body: body,
     );
   }
 

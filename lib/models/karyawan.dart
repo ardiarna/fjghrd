@@ -3,6 +3,7 @@ import 'package:fjghrd/models/area.dart';
 import 'package:fjghrd/models/divisi.dart';
 import 'package:fjghrd/models/jabatan.dart';
 import 'package:fjghrd/models/pendidikan.dart';
+import 'package:fjghrd/models/phk.dart';
 import 'package:fjghrd/models/status_kerja.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 
@@ -12,6 +13,7 @@ class Karyawan {
   String nik;
   String nomorKtp;
   DateTime? tanggalMasuk;
+  DateTime? tanggalKeluar;
   Agama agama = Agama();
   Area area = Area();
   Jabatan jabatan = Jabatan();
@@ -30,6 +32,7 @@ class Karyawan {
   bool aktif;
   String nomorKk;
   String nomorPaspor;
+  Phk phk = Phk();
   DateTime? createdAt;
   DateTime? updatedAt;
 
@@ -39,6 +42,7 @@ class Karyawan {
     this.nik = '',
     this.nomorKtp = '',
     this.tanggalMasuk,
+    this.tanggalKeluar,
     this.tempatLahir = '',
     this.tanggalLahir,
     this.alamatKtp = '',
@@ -62,6 +66,7 @@ class Karyawan {
       nik: AFconvert.keString(data['nik']),
       nomorKtp: AFconvert.keString(data['nomor_ktp']),
       tanggalMasuk: AFconvert.keTanggal(data['tanggal_masuk']),
+      tanggalKeluar: AFconvert.keTanggal(data['tanggal_keluar']),
       tempatLahir: AFconvert.keString(data['tempat_lahir']),
       tanggalLahir: AFconvert.keTanggal(data['tanggal_lahir']),
       alamatKtp: AFconvert.keString(data['alamat_ktp']),
@@ -95,6 +100,9 @@ class Karyawan {
     if(data['pendidikan'] != null) {
       a.pendidikan = Pendidikan.fromMap(data['pendidikan']);
     }
+    if(data['phk'] != null) {
+      a.phk = Phk.fromMap(data['phk']);
+    }
     return a;
   }
 
@@ -118,6 +126,9 @@ class Karyawan {
       'nomor_kk': nomorKk,
       'nomor_paspor': nomorPaspor,
     };
+    if(tanggalKeluar != null) {
+      data['tanggal_keluar'] = AFconvert.matYMDTime(tanggalKeluar);
+    }
     if(agama.id != '') {
       data['agama_id'] = agama.id;
     }

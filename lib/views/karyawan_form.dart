@@ -10,7 +10,6 @@ import 'package:fjghrd/models/perjanjian_kerja.dart';
 import 'package:fjghrd/models/status_kerja.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
@@ -732,7 +731,7 @@ class KaryawanForm extends StatelessWidget {
                                 label: 'PHK',
                                 color: Colors.orange,
                                 onPressed: () {
-
+                                  controller.tambahPhkForm(context);
                                 },
                                 minimumSize: const Size(120, 40),
                               ),
@@ -783,11 +782,22 @@ class KaryawanForm extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Expanded(
-                            flex: 3,
-                            child: GetBuilder<KaryawanControl>(
-                              builder: (_) {
-                                return PlutoGrid(
+                          GetBuilder<KaryawanControl>(
+                            builder: (_) {
+                              if(controller.listKeluarga.isEmpty) {
+                                return Container(
+                                  padding: const EdgeInsets.all(7),
+                                  width: double.infinity,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.brown.shade200),
+                                  ),
+                                  child: const Text('Tidak ada data'),
+                                );
+                              }
+                              return Expanded(
+                                flex: 2,
+                                child: PlutoGrid(
                                   key: UniqueKey(),
                                   columns: columnsKeluarga,
                                   rows: _buildRowsKeluarga(controller.listKeluarga),
@@ -831,9 +841,9 @@ class KaryawanForm extends StatelessWidget {
                                       defaultColumnFilterPadding: const EdgeInsets.fromLTRB(2, 2, 2, 2),
                                     ),
                                   ),
-                                );
-                              },
-                            ),
+                                ),
+                              );
+                            },
                           ),
                           Container(
                             margin: const EdgeInsets.only(top: 15),
@@ -865,11 +875,22 @@ class KaryawanForm extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Expanded(
-                            flex: 2,
-                            child: GetBuilder<KaryawanControl>(
-                              builder: (_) {
-                                return PlutoGrid(
+                          GetBuilder<KaryawanControl>(
+                            builder: (_) {
+                              if(controller.listKontak.isEmpty) {
+                                return Container(
+                                  padding: const EdgeInsets.all(7),
+                                  width: double.infinity,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.brown.shade200),
+                                  ),
+                                  child: const Text('Tidak ada data'),
+                                );
+                              }
+                              return Expanded(
+                                flex: 2,
+                                child: PlutoGrid(
                                   key: UniqueKey(),
                                   columns: columnsKontak,
                                   rows: _buildRowsKontak(controller.listKontak),
@@ -912,9 +933,9 @@ class KaryawanForm extends StatelessWidget {
                                       autoSizeMode: PlutoAutoSizeMode.scale,
                                     ),
                                   ),
-                                );
-                              },
-                            ),
+                                ),
+                              );
+                            },
                           ),
                           Container(
                             margin: const EdgeInsets.only(top: 15),
@@ -946,11 +967,22 @@ class KaryawanForm extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Expanded(
-                            flex: 2,
-                            child: GetBuilder<KaryawanControl>(
-                              builder: (_) {
-                                return PlutoGrid(
+                          GetBuilder<KaryawanControl>(
+                            builder: (_) {
+                              if(controller.listPerjanjianKerja.isEmpty) {
+                                return Container(
+                                  padding: const EdgeInsets.all(7),
+                                  width: double.infinity,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.brown.shade200),
+                                  ),
+                                  child: const Text('Tidak ada data'),
+                                );
+                              }
+                              return Expanded(
+                                flex: 2,
+                                child: PlutoGrid(
                                   key: UniqueKey(),
                                   columns: columnsPerjanjian,
                                   rows: _buildRowsPerjanjian(controller.listPerjanjianKerja),
@@ -990,9 +1022,9 @@ class KaryawanForm extends StatelessWidget {
                                       defaultColumnFilterPadding: const EdgeInsets.fromLTRB(2, 2, 2, 2),
                                     ),
                                   ),
-                                );
-                              },
-                            ),
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),
