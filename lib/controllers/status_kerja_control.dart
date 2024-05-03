@@ -3,7 +3,6 @@ import 'package:fjghrd/models/status_kerja.dart';
 import 'package:fjghrd/repositories/status_kerja_repository.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 

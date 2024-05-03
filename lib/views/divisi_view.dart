@@ -123,9 +123,7 @@ class DivisiView extends StatelessWidget {
                 key: UniqueKey(),
                 columns: columns,
                 rows: _buildRows(controller.listDivisi),
-                onChanged: (PlutoGridOnChangedEvent event) {
-                  print('=======onChanged Plutogrid=======: $event');
-                },
+                onChanged: (PlutoGridOnChangedEvent event) {},
                 onLoaded: (PlutoGridOnLoadedEvent event) {
                   event.stateManager.setShowColumnFilter(true);
                   event.stateManager.autoFitColumn(context, columns[1]);

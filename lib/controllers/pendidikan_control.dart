@@ -3,9 +3,7 @@ import 'package:fjghrd/models/pendidikan.dart';
 import 'package:fjghrd/repositories/pendidikan_repository.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 class PendidikanControl extends GetxController {

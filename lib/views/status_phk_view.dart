@@ -32,6 +32,9 @@ class StatusPhkView extends StatelessWidget {
         readOnly: true,
         width: 70,
         backgroundColor: Colors.brown.shade100,
+        enableFilterMenuItem: false,
+        enableContextMenu: false,
+        enableDropToResize: false,
         renderer: (rdrCtx) {
           return Row(
             children: [
@@ -112,9 +115,7 @@ class StatusPhkView extends StatelessWidget {
                 key: UniqueKey(),
                 columns: columns,
                 rows: _buildRows(controller.listStatusPhk),
-                onChanged: (PlutoGridOnChangedEvent event) {
-                  print('=======onChanged Plutogrid=======: $event');
-                },
+                onChanged: (PlutoGridOnChangedEvent event) {},
                 onLoaded: (PlutoGridOnLoadedEvent event) {
                   event.stateManager.setShowColumnFilter(true);
                   event.stateManager.autoFitColumn(context, columns[1]);
