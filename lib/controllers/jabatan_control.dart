@@ -32,8 +32,13 @@ class JabatanControl extends GetxController {
     txtNama.text = '';
     txtUrutan.text = '';
     AFwidget.dialog(
-      SizedBox(
+      Container(
+        padding: const EdgeInsets.all(20),
         width: 700,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
         child: Column(
           children: [
             const Text('Form Tambah Jabatan',
@@ -42,23 +47,23 @@ class JabatanControl extends GetxController {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 11),
-            Row(
-              children: [
-                Container(
-                  width: 100,
-                  padding: const EdgeInsets.only(right: 15),
-                  child: const Text('ID'),
-                ),
-                Expanded(
-                  child: AFwidget.textField(
-                    marginTop: 0,
-                    controller: txtId,
-                    readOnly: true,
-                  ),
-                )
-              ],
-            ),
+            // const SizedBox(height: 11),
+            // Row(
+            //   children: [
+            //     Container(
+            //       width: 100,
+            //       padding: const EdgeInsets.only(right: 15),
+            //       child: const Text('ID'),
+            //     ),
+            //     Expanded(
+            //       child: AFwidget.textField(
+            //         marginTop: 0,
+            //         controller: txtId,
+            //         readOnly: true,
+            //       ),
+            //     )
+            //   ],
+            // ),
             const SizedBox(height: 11),
             Row(
               children: [
@@ -105,6 +110,8 @@ class JabatanControl extends GetxController {
           ],
         ),
       ),
+      backgroundColor: Colors.white,
+      contentPadding: const EdgeInsets.all(0),
     );
   }
 
@@ -114,8 +121,13 @@ class JabatanControl extends GetxController {
     txtNama.text = item.nama;
     txtUrutan.text = item.urutan.toString();
     AFwidget.dialog(
-      SizedBox(
+      Container(
+        padding: const EdgeInsets.all(20),
         width: 700,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
         child: Column(
           children: [
             const Text('Form Ubah Jabatan',
@@ -124,23 +136,23 @@ class JabatanControl extends GetxController {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 11),
-            Row(
-              children: [
-                Container(
-                  width: 100,
-                  padding: const EdgeInsets.only(right: 15),
-                  child: const Text('ID'),
-                ),
-                Expanded(
-                  child: AFwidget.textField(
-                    marginTop: 0,
-                    controller: txtId,
-                    readOnly: true,
-                  ),
-                )
-              ],
-            ),
+            // const SizedBox(height: 11),
+            // Row(
+            //   children: [
+            //     Container(
+            //       width: 100,
+            //       padding: const EdgeInsets.only(right: 15),
+            //       child: const Text('ID'),
+            //     ),
+            //     Expanded(
+            //       child: AFwidget.textField(
+            //         marginTop: 0,
+            //         controller: txtId,
+            //         readOnly: true,
+            //       ),
+            //     )
+            //   ],
+            // ),
             const SizedBox(height: 11),
             Row(
               children: [
@@ -194,6 +206,8 @@ class JabatanControl extends GetxController {
           ],
         ),
       ),
+      backgroundColor: Colors.white,
+      contentPadding: const EdgeInsets.all(0),
     );
   }
 

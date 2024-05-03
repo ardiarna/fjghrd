@@ -31,8 +31,11 @@ class DivisiView extends StatelessWidget {
         field: 'id',
         type: PlutoColumnType.text(),
         readOnly: true,
-        width: 120,
+        width: 70,
         backgroundColor: Colors.brown.shade100,
+        enableFilterMenuItem: false,
+        enableContextMenu: false,
+        enableDropToResize: false,
         renderer: (rdrCtx) {
           return Row(
             children: [
@@ -47,14 +50,14 @@ class DivisiView extends StatelessWidget {
                 color: Colors.green,
                 padding: const EdgeInsets.all(0),
               ),
-              Expanded(
-                child: Text(
-                  rdrCtx.row.cells['id']!.value
-                      .toString(),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
+              // Expanded(
+              //   child: Text(
+              //     rdrCtx.row.cells['id']!.value
+              //         .toString(),
+              //     maxLines: 1,
+              //     overflow: TextOverflow.ellipsis,
+              //   ),
+              // ),
             ],
           );
         },
