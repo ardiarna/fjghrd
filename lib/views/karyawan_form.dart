@@ -20,7 +20,8 @@ class KaryawanForm extends StatelessWidget {
 
   final KaryawanControl controller = Get.put(KaryawanControl());
 
-  final ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollControllerLeft = ScrollController();
+  final ScrollController _scrollControllerRight = ScrollController();
 
   List<PlutoRow> _buildRowsKeluarga(List<KeluargaKaryawan> rowData) {
     return List.generate(
@@ -300,10 +301,10 @@ class KaryawanForm extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Scrollbar(
-                            controller: _scrollController,
+                            controller: _scrollControllerLeft,
                             thumbVisibility: true,
                             child: SingleChildScrollView(
-                              controller: _scrollController,
+                              controller: _scrollControllerLeft,
                               child: Column(
                                 children: [
                                   barisForm(
@@ -394,6 +395,56 @@ class KaryawanForm extends StatelessWidget {
                                                     controller.update();
                                                   }
                                                 },
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: 150,
+                                          padding: const EdgeInsets.only(right: 15),
+                                          child: const Text('Jenis Karyawan'),
+                                        ),
+                                        Expanded(
+                                          child: GetBuilder<KaryawanControl>(
+                                            builder: (_) {
+                                              return Row(
+                                                children: [
+                                                  Radio<bool>(
+                                                    value: true,
+                                                    groupValue: controller.staf,
+                                                    onChanged: (a) {
+                                                      if(a != null && a != controller.staf) {
+                                                        controller.staf = a;
+                                                        controller.update();
+                                                      }
+                                                    },
+                                                  ),
+                                                  const Padding(
+                                                    padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                                                    child: Text('Staf'),
+                                                  ),
+                                                  Radio<bool>(
+                                                    value: false,
+                                                    groupValue: controller.staf,
+                                                    onChanged: (a) {
+                                                      if(a != null && a != controller.staf) {
+                                                        controller.staf = a;
+                                                        controller.update();
+                                                      }
+                                                    },
+                                                  ),
+                                                  const Padding(
+                                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                                    child: Text('Non Staf'),
+                                                  ),
+                                                ],
                                               );
                                             },
                                           ),
@@ -556,6 +607,56 @@ class KaryawanForm extends StatelessWidget {
                                   barisForm(
                                     label: 'No. Telepon',
                                     controller: controller.txtTelepon,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: 150,
+                                          padding: const EdgeInsets.only(right: 15),
+                                          child: const Text('Jenis Kelamin'),
+                                        ),
+                                        Expanded(
+                                          child: GetBuilder<KaryawanControl>(
+                                            builder: (_) {
+                                              return Row(
+                                                children: [
+                                                  Radio<String>(
+                                                    value: 'L',
+                                                    groupValue: controller.kelamin,
+                                                    onChanged: (a) {
+                                                      if(a != null && a != controller.kelamin) {
+                                                        controller.kelamin = a;
+                                                        controller.update();
+                                                      }
+                                                    },
+                                                  ),
+                                                  const Padding(
+                                                    padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                                                    child: Text('Laki-laki'),
+                                                  ),
+                                                  Radio<String>(
+                                                    value: 'P',
+                                                    groupValue: controller.kelamin,
+                                                    onChanged: (a) {
+                                                      if(a != null && a != controller.kelamin) {
+                                                        controller.kelamin = a;
+                                                        controller.update();
+                                                      }
+                                                    },
+                                                  ),
+                                                  const Padding(
+                                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                                    child: Text('Perempuan'),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                   Padding(
                                     padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
@@ -749,15 +850,116 @@ class KaryawanForm extends StatelessWidget {
                     ),
                   ),
                   Flexible(
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 10, left: 10),
-                      child: Column(
-                        children: [
-                          Container(
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
+                    child: Scrollbar(
+                      controller: _scrollControllerRight,
+                      thumbVisibility: true,
+                      child: SingleChildScrollView(
+                        controller: _scrollControllerRight,
+                        child: Column(
+                          children: [
+                            GetBuilder<KaryawanControl>(
+                              builder: (_) {
+                                if(controller.listTimelineMasakerja.isEmpty) {
+                                  return Container();
+                                }
+                                var a = controller.listTimelineMasakerja[0].tanggalAwal;
+                                var b = controller.listTimelineMasakerja[controller.listTimelineMasakerja.length-1].tanggalAKhir ?? DateTime.now();
+                                Duration d = b.difference(a ?? b); // dalam hari
+                                int tahun = d.inDays ~/ 365; // Membagi dengan 365 untuk tahun
+                                int bulan = (d.inDays % 365) ~/ 30; // Menggunakan modulo 365, lalu dibagi dengan 30 untuk bulan
+                                return Padding(
+                                  padding: const EdgeInsets.fromLTRB(10, 0, 15, 10),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(10, 0, 0, 5),
+                                        child: Text(
+                                          'Masa Kerja : ${tahun>0 ? '$tahun tahun' : ''} ${bulan>0 ? '$bulan bulan' : ''} ',
+                                          textAlign: TextAlign.center,
+                                          style: const TextStyle(
+                                            color: Colors.blue,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                      ),
+                                      Row(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: controller.listTimelineMasakerja.map((e) {
+                                          return Expanded(
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.center,
+                                              children: [
+                                                Stack(
+                                                  alignment: AlignmentDirectional.center,
+                                                  children: [
+                                                    Container(
+                                                      width: double.infinity,
+                                                      margin: const EdgeInsets.fromLTRB(0, 3, 0, 3),
+                                                      padding: const EdgeInsets.all(1),
+                                                      decoration: BoxDecoration(
+                                                        color: e.warna,
+                                                      ),
+                                                      child: Text(
+                                                        '${e.tahun>0 ? '${e.tahun} tahun' : ''} ${e.bulan>0 ? '${e.bulan} bulan' : ''} ',
+                                                        textAlign: TextAlign.center,
+                                                        style: const TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 12,
+                                                          fontWeight: FontWeight.w500,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Positioned(
+                                                      left: -3,
+                                                      child: Container(
+                                                        width: 30,
+                                                        height: 30,
+                                                        decoration: BoxDecoration(
+                                                          shape: BoxShape.circle,
+                                                          color: e.warna,
+                                                          border: Border.all(
+                                                            color: Colors.white,
+                                                            width: 3,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Positioned(
+                                                      right: -27,
+                                                      child: Container(
+                                                        width: 30,
+                                                        height: 30,
+                                                        decoration: const BoxDecoration(
+                                                          shape: BoxShape.circle,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                Padding(
+                                                  padding: const EdgeInsets.only(left: 30),
+                                                  child: Text(
+                                                    '${AFconvert.matDate(e.tanggalAwal)} : ${e.nama}',
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      color: e.warna,
+                                                      fontSize: 11,
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          );
+                                        }).toList(),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
                             ),
-                            child: Row(
+                            Row(
                               children: [
                                 const Padding(
                                   padding: EdgeInsets.fromLTRB(20, 10, 30, 10),
@@ -773,7 +975,7 @@ class KaryawanForm extends StatelessWidget {
                                     controller.tambahKeluargaForm(context);
                                   },
                                   icon: const Icon(
-                                    Icons.add_circle,
+                                    Icons.add,
                                   ),
                                   iconSize: 30,
                                   color: Colors.blue,
@@ -781,252 +983,257 @@ class KaryawanForm extends StatelessWidget {
                                 ),
                               ],
                             ),
-                          ),
-                          GetBuilder<KaryawanControl>(
-                            builder: (_) {
-                              if(controller.listKeluarga.isEmpty) {
+                            GetBuilder<KaryawanControl>(
+                              builder: (_) {
+                                if(controller.listKeluarga.isEmpty) {
+                                  return Container(
+                                    margin: const EdgeInsets.symmetric(horizontal: 10),
+                                    padding: const EdgeInsets.all(7),
+                                    width: double.infinity,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.brown.shade200),
+                                    ),
+                                    child: const Text('Tidak ada data'),
+                                  );
+                                }
+                                int jumlah = controller.listKeluarga.length;
                                 return Container(
-                                  padding: const EdgeInsets.all(7),
-                                  width: double.infinity,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.brown.shade200),
-                                  ),
-                                  child: const Text('Tidak ada data'),
-                                );
-                              }
-                              return Expanded(
-                                flex: 2,
-                                child: PlutoGrid(
-                                  key: UniqueKey(),
-                                  columns: columnsKeluarga,
-                                  rows: _buildRowsKeluarga(controller.listKeluarga),
-                                  onLoaded: (PlutoGridOnLoadedEvent event) {
-                                    // for (int i = 1; i <= 6; i++) {
-                                    //   event.stateManager.autoFitColumn(context, columns[i]);
-                                    // }
-                                  },
-                                  configuration: PlutoGridConfiguration(
-                                    scrollbar: const PlutoGridScrollbarConfig(
-                                      isAlwaysShown: true,
-                                    ),
-                                    localeText: const PlutoGridLocaleText(
-                                      filterColumn: 'Kolom Pencarian',
-                                      filterAllColumns: 'Semua Kolom',
-                                      filterType: 'Tipe Pencarian',
-                                      filterValue: 'Nilai / Kata Dicari',
-                                      filterContains: '🔍 cari',
-                                      filterEquals: '🔍 cari sama dengan',
-                                      filterStartsWith: '🔍 cari dimulai dengan',
-                                      filterEndsWith: '🔍 cari diakhiri dengan',
-                                      filterGreaterThan: '🔍 lebih besar dari',
-                                      filterGreaterThanOrEqualTo: '🔍 lebih besar dari atau =',
-                                      filterLessThan: '🔍 lebih kecil dari',
-                                      filterLessThanOrEqualTo: '🔍 lebih kecil dari atau =',
-                                      loadingText: 'Mohon tunggu...',
-                                      sunday: 'Mg',
-                                      monday: 'Sn',
-                                      tuesday: 'Sl',
-                                      wednesday: 'Rb',
-                                      thursday: 'Km',
-                                      friday: 'Jm',
-                                      saturday: 'Sb',
+                                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                                  height: jumlah > 4 ? 230 : jumlah == 4 ? 193 : jumlah == 3 ? 157 : jumlah == 2 ? 121 : 85,
+                                  child: PlutoGrid(
+                                    key: UniqueKey(),
+                                    columns: columnsKeluarga,
+                                    rows: _buildRowsKeluarga(controller.listKeluarga),
+                                    onLoaded: (PlutoGridOnLoadedEvent event) {},
+                                    configuration: PlutoGridConfiguration(
+                                      scrollbar: const PlutoGridScrollbarConfig(
+                                        isAlwaysShown: true,
+                                      ),
+                                      localeText: const PlutoGridLocaleText(
+                                        filterColumn: 'Kolom Pencarian',
+                                        filterAllColumns: 'Semua Kolom',
+                                        filterType: 'Tipe Pencarian',
+                                        filterValue: 'Nilai / Kata Dicari',
+                                        filterContains: '🔍 cari',
+                                        filterEquals: '🔍 cari sama dengan',
+                                        filterStartsWith: '🔍 cari dimulai dengan',
+                                        filterEndsWith: '🔍 cari diakhiri dengan',
+                                        filterGreaterThan: '🔍 lebih besar dari',
+                                        filterGreaterThanOrEqualTo: '🔍 lebih besar dari atau =',
+                                        filterLessThan: '🔍 lebih kecil dari',
+                                        filterLessThanOrEqualTo: '🔍 lebih kecil dari atau =',
+                                        loadingText: 'Mohon tunggu...',
+                                        sunday: 'Mg',
+                                        monday: 'Sn',
+                                        tuesday: 'Sl',
+                                        wednesday: 'Rb',
+                                        thursday: 'Km',
+                                        friday: 'Jm',
+                                        saturday: 'Sb',
 
-                                    ),
-                                    style: PlutoGridStyleConfig(
-                                      rowHeight: 35,
-                                      borderColor: Colors.brown.shade200,
-                                      gridBorderColor: Colors.brown.shade200,
-                                      gridBackgroundColor: Colors.transparent,
-                                      defaultColumnFilterPadding: const EdgeInsets.fromLTRB(2, 2, 2, 2),
+                                      ),
+                                      style: PlutoGridStyleConfig(
+                                        rowHeight: 35,
+                                        borderColor: Colors.brown.shade200,
+                                        gridBorderColor: Colors.brown.shade200,
+                                        gridBackgroundColor: Colors.transparent,
+                                        defaultColumnFilterPadding: const EdgeInsets.fromLTRB(2, 2, 2, 2),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
-                            },
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 15),
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
+                                );
+                              },
                             ),
-                            child: Row(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(20, 10, 30, 10),
-                                  child: Text('Kontak Keluarga',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
+                            Container(
+                              margin: const EdgeInsets.only(top: 15),
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                              ),
+                              child: Row(
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.fromLTRB(20, 10, 30, 10),
+                                    child: Text('Kontak Keluarga',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    controller.tambahKontakForm(context);
-                                  },
-                                  icon: const Icon(
-                                    Icons.add_circle,
+                                  IconButton(
+                                    onPressed: () {
+                                      controller.tambahKontakForm(context);
+                                    },
+                                    icon: const Icon(
+                                      Icons.add,
+                                    ),
+                                    iconSize: 30,
+                                    color: Colors.blue,
+                                    padding: const EdgeInsets.all(0),
                                   ),
-                                  iconSize: 30,
-                                  color: Colors.blue,
-                                  padding: const EdgeInsets.all(0),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          GetBuilder<KaryawanControl>(
-                            builder: (_) {
-                              if(controller.listKontak.isEmpty) {
+                            GetBuilder<KaryawanControl>(
+                              builder: (_) {
+                                if(controller.listKontak.isEmpty) {
+                                  return Container(
+                                    margin: const EdgeInsets.symmetric(horizontal: 10),
+                                    padding: const EdgeInsets.all(7),
+                                    width: double.infinity,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.brown.shade200),
+                                    ),
+                                    child: const Text('Tidak ada data'),
+                                  );
+                                }
+                                int jumlah = controller.listKontak.length;
                                 return Container(
-                                  padding: const EdgeInsets.all(7),
-                                  width: double.infinity,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.brown.shade200),
-                                  ),
-                                  child: const Text('Tidak ada data'),
-                                );
-                              }
-                              return Expanded(
-                                flex: 2,
-                                child: PlutoGrid(
-                                  key: UniqueKey(),
-                                  columns: columnsKontak,
-                                  rows: _buildRowsKontak(controller.listKontak),
-                                  onLoaded: (PlutoGridOnLoadedEvent event) {},
-                                  configuration: PlutoGridConfiguration(
-                                    scrollbar: const PlutoGridScrollbarConfig(
-                                      isAlwaysShown: true,
-                                    ),
-                                    localeText: const PlutoGridLocaleText(
-                                      filterColumn: 'Kolom Pencarian',
-                                      filterAllColumns: 'Semua Kolom',
-                                      filterType: 'Tipe Pencarian',
-                                      filterValue: 'Nilai / Kata Dicari',
-                                      filterContains: '🔍 cari',
-                                      filterEquals: '🔍 cari sama dengan',
-                                      filterStartsWith: '🔍 cari dimulai dengan',
-                                      filterEndsWith: '🔍 cari diakhiri dengan',
-                                      filterGreaterThan: '🔍 lebih besar dari',
-                                      filterGreaterThanOrEqualTo: '🔍 lebih besar dari atau =',
-                                      filterLessThan: '🔍 lebih kecil dari',
-                                      filterLessThanOrEqualTo: '🔍 lebih kecil dari atau =',
-                                      loadingText: 'Mohon tunggu...',
-                                      sunday: 'Mg',
-                                      monday: 'Sn',
-                                      tuesday: 'Sl',
-                                      wednesday: 'Rb',
-                                      thursday: 'Km',
-                                      friday: 'Jm',
-                                      saturday: 'Sb',
+                                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                                  height: jumlah > 4 ? 230 : jumlah == 4 ? 193 : jumlah == 3 ? 157 : jumlah == 2 ? 121 : 85,
+                                  child: PlutoGrid(
+                                    key: UniqueKey(),
+                                    columns: columnsKontak,
+                                    rows: _buildRowsKontak(controller.listKontak),
+                                    onLoaded: (PlutoGridOnLoadedEvent event) {},
+                                    configuration: PlutoGridConfiguration(
+                                      scrollbar: const PlutoGridScrollbarConfig(
+                                        isAlwaysShown: true,
+                                      ),
+                                      localeText: const PlutoGridLocaleText(
+                                        filterColumn: 'Kolom Pencarian',
+                                        filterAllColumns: 'Semua Kolom',
+                                        filterType: 'Tipe Pencarian',
+                                        filterValue: 'Nilai / Kata Dicari',
+                                        filterContains: '🔍 cari',
+                                        filterEquals: '🔍 cari sama dengan',
+                                        filterStartsWith: '🔍 cari dimulai dengan',
+                                        filterEndsWith: '🔍 cari diakhiri dengan',
+                                        filterGreaterThan: '🔍 lebih besar dari',
+                                        filterGreaterThanOrEqualTo: '🔍 lebih besar dari atau =',
+                                        filterLessThan: '🔍 lebih kecil dari',
+                                        filterLessThanOrEqualTo: '🔍 lebih kecil dari atau =',
+                                        loadingText: 'Mohon tunggu...',
+                                        sunday: 'Mg',
+                                        monday: 'Sn',
+                                        tuesday: 'Sl',
+                                        wednesday: 'Rb',
+                                        thursday: 'Km',
+                                        friday: 'Jm',
+                                        saturday: 'Sb',
 
-                                    ),
-                                    style: PlutoGridStyleConfig(
-                                      rowHeight: 35,
-                                      borderColor: Colors.brown.shade200,
-                                      gridBorderColor: Colors.brown.shade200,
-                                      gridBackgroundColor: Colors.transparent,
-                                      defaultColumnFilterPadding: const EdgeInsets.fromLTRB(2, 2, 2, 2),
-                                    ),
-                                    columnSize: const PlutoGridColumnSizeConfig(
-                                      autoSizeMode: PlutoAutoSizeMode.scale,
+                                      ),
+                                      style: PlutoGridStyleConfig(
+                                        rowHeight: 35,
+                                        borderColor: Colors.brown.shade200,
+                                        gridBorderColor: Colors.brown.shade200,
+                                        gridBackgroundColor: Colors.transparent,
+                                        defaultColumnFilterPadding: const EdgeInsets.fromLTRB(2, 2, 2, 2),
+                                      ),
+                                      columnSize: const PlutoGridColumnSizeConfig(
+                                        autoSizeMode: PlutoAutoSizeMode.scale,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
-                            },
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 15),
-                            decoration: const BoxDecoration(
-                              color: Colors.white,
+                                );
+                              },
                             ),
-                            child: Row(
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(20, 10, 30, 10),
-                                  child: Text('Perjanjian Kerja',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
+                            Container(
+                              margin: const EdgeInsets.only(top: 15),
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                              ),
+                              child: Row(
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.fromLTRB(20, 10, 30, 10),
+                                    child: Text('Perjanjian Kerja',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                IconButton(
-                                  onPressed: () {
-                                    controller.tambahPerjanjianForm(context);
-                                  },
-                                  icon: const Icon(
-                                    Icons.add_circle,
+                                  IconButton(
+                                    onPressed: () {
+                                      controller.tambahPerjanjianForm(context);
+                                    },
+                                    icon: const Icon(
+                                      Icons.add,
+                                    ),
+                                    iconSize: 30,
+                                    color: Colors.blue,
+                                    padding: const EdgeInsets.all(0),
                                   ),
-                                  iconSize: 30,
-                                  color: Colors.blue,
-                                  padding: const EdgeInsets.all(0),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                          GetBuilder<KaryawanControl>(
-                            builder: (_) {
-                              if(controller.listPerjanjianKerja.isEmpty) {
+                            GetBuilder<KaryawanControl>(
+                              builder: (_) {
+                                if(controller.listPerjanjianKerja.isEmpty) {
+                                  return Container(
+                                    margin: const EdgeInsets.symmetric(horizontal: 10),
+                                    padding: const EdgeInsets.all(7),
+                                    width: double.infinity,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.brown.shade200),
+                                    ),
+                                    child: const Text('Tidak ada data'),
+                                  );
+                                }
+                                int jumlah = controller.listPerjanjianKerja.length;
                                 return Container(
-                                  padding: const EdgeInsets.all(7),
-                                  width: double.infinity,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(color: Colors.brown.shade200),
-                                  ),
-                                  child: const Text('Tidak ada data'),
-                                );
-                              }
-                              return Expanded(
-                                flex: 2,
-                                child: PlutoGrid(
-                                  key: UniqueKey(),
-                                  columns: columnsPerjanjian,
-                                  rows: _buildRowsPerjanjian(controller.listPerjanjianKerja),
-                                  onLoaded: (PlutoGridOnLoadedEvent event) {},
-                                  configuration: PlutoGridConfiguration(
-                                    scrollbar: const PlutoGridScrollbarConfig(
-                                      isAlwaysShown: true,
-                                    ),
-                                    localeText: const PlutoGridLocaleText(
-                                      filterColumn: 'Kolom Pencarian',
-                                      filterAllColumns: 'Semua Kolom',
-                                      filterType: 'Tipe Pencarian',
-                                      filterValue: 'Nilai / Kata Dicari',
-                                      filterContains: '🔍 cari',
-                                      filterEquals: '🔍 cari sama dengan',
-                                      filterStartsWith: '🔍 cari dimulai dengan',
-                                      filterEndsWith: '🔍 cari diakhiri dengan',
-                                      filterGreaterThan: '🔍 lebih besar dari',
-                                      filterGreaterThanOrEqualTo: '🔍 lebih besar dari atau =',
-                                      filterLessThan: '🔍 lebih kecil dari',
-                                      filterLessThanOrEqualTo: '🔍 lebih kecil dari atau =',
-                                      loadingText: 'Mohon tunggu...',
-                                      sunday: 'Mg',
-                                      monday: 'Sn',
-                                      tuesday: 'Sl',
-                                      wednesday: 'Rb',
-                                      thursday: 'Km',
-                                      friday: 'Jm',
-                                      saturday: 'Sb',
+                                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                                  height: jumlah > 4 ? 230 : jumlah == 4 ? 193 : jumlah == 3 ? 157 : jumlah == 2 ? 121 : 85,
+                                  child: PlutoGrid(
+                                    key: UniqueKey(),
+                                    columns: columnsPerjanjian,
+                                    rows: _buildRowsPerjanjian(controller.listPerjanjianKerja),
+                                    onLoaded: (PlutoGridOnLoadedEvent event) {},
+                                    configuration: PlutoGridConfiguration(
+                                      scrollbar: const PlutoGridScrollbarConfig(
+                                        isAlwaysShown: true,
+                                      ),
+                                      localeText: const PlutoGridLocaleText(
+                                        filterColumn: 'Kolom Pencarian',
+                                        filterAllColumns: 'Semua Kolom',
+                                        filterType: 'Tipe Pencarian',
+                                        filterValue: 'Nilai / Kata Dicari',
+                                        filterContains: '🔍 cari',
+                                        filterEquals: '🔍 cari sama dengan',
+                                        filterStartsWith: '🔍 cari dimulai dengan',
+                                        filterEndsWith: '🔍 cari diakhiri dengan',
+                                        filterGreaterThan: '🔍 lebih besar dari',
+                                        filterGreaterThanOrEqualTo: '🔍 lebih besar dari atau =',
+                                        filterLessThan: '🔍 lebih kecil dari',
+                                        filterLessThanOrEqualTo: '🔍 lebih kecil dari atau =',
+                                        loadingText: 'Mohon tunggu...',
+                                        sunday: 'Mg',
+                                        monday: 'Sn',
+                                        tuesday: 'Sl',
+                                        wednesday: 'Rb',
+                                        thursday: 'Km',
+                                        friday: 'Jm',
+                                        saturday: 'Sb',
 
-                                    ),
-                                    style: PlutoGridStyleConfig(
-                                      rowHeight: 35,
-                                      borderColor: Colors.brown.shade200,
-                                      gridBorderColor: Colors.brown.shade200,
-                                      gridBackgroundColor: Colors.transparent,
-                                      defaultColumnFilterPadding: const EdgeInsets.fromLTRB(2, 2, 2, 2),
+                                      ),
+                                      style: PlutoGridStyleConfig(
+                                        rowHeight: 35,
+                                        borderColor: Colors.brown.shade200,
+                                        gridBorderColor: Colors.brown.shade200,
+                                        gridBackgroundColor: Colors.transparent,
+                                        defaultColumnFilterPadding: const EdgeInsets.fromLTRB(2, 2, 2, 2),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

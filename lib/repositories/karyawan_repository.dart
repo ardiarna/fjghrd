@@ -3,12 +3,11 @@ import 'package:fjghrd/utils/hasil.dart';
 
 class KaryawanRepository {
 
-  Future<Hasil> findAll() async {
+  Future<Hasil> findAll({String isStaf = ''}) async {
     return await AFdatabase.send(
-      url: 'karyawan?search_by=aktif&value=Y&sort_by=tanggal_masuk&sort_order=asc',
+      url: 'karyawan?aktif=Y&staf=$isStaf&sort_by=tanggal_masuk&sort_order=asc',
     );
   }
-  
 
   Future<Hasil> create(Map<String, String> body) async {
     return await AFdatabase.send(
@@ -120,9 +119,9 @@ class KaryawanRepository {
     );
   }
 
-  Future<Hasil> mantanFindAll() async {
+  Future<Hasil> mantanFindAll({String isStaf = ''}) async {
     return await AFdatabase.send(
-      url: 'karyawan?search_by=aktif&value=N&sort_by=tanggal_keluar&sort_order=desc',
+      url: 'karyawan?aktif=N&staf=$isStaf&sort_by=tanggal_keluar&sort_order=desc',
     );
   }
 
@@ -137,6 +136,12 @@ class KaryawanRepository {
       url: 'karyawan/$id/phk',
       methodeRequest: MethodeRequest.post,
       body: body,
+    );
+  }
+
+  Future<Hasil> timelineMasakerja(String id) async {
+    return await AFdatabase.send(
+      url: 'karyawan/$id/timeline-masakerja',
     );
   }
 

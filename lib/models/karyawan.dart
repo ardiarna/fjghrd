@@ -25,11 +25,13 @@ class Karyawan {
   String telepon;
   String email;
   bool kawin;
+  String kelamin;
   StatusKerja statusKerja = StatusKerja();
   Pendidikan pendidikan = Pendidikan();
   String pendidikanAlmamater;
   String pendidikanJurusan;
   bool aktif;
+  bool staf;
   String nomorKk;
   String nomorPaspor;
   Phk phk = Phk();
@@ -50,9 +52,11 @@ class Karyawan {
     this.telepon = '',
     this.email = '',
     this.kawin = false,
+    this.kelamin = '',
     this.pendidikanAlmamater = '',
     this.pendidikanJurusan = '',
     this.aktif = false,
+    this.staf = true,
     this.nomorKk = '',
     this.nomorPaspor = '',
     this.createdAt,
@@ -74,9 +78,11 @@ class Karyawan {
       telepon: AFconvert.keString(data['telepon']),
       email: AFconvert.keString(data['email']),
       kawin: AFconvert.keBool(data['kawin']),
+      kelamin: AFconvert.keString(data['kelamin']),
       pendidikanAlmamater: AFconvert.keString(data['pendidikan_almamater']),
       pendidikanJurusan: AFconvert.keString(data['pendidikan_jurusan']),
       aktif: AFconvert.keBool(data['aktif']),
+      staf: AFconvert.keBool(data['staf']),
       nomorKk: AFconvert.keString(data['nomor_kk']),
       nomorPaspor: AFconvert.keString(data['nomor_paspor']),
       createdAt: AFconvert.keTanggal(data['created_at']),
@@ -120,9 +126,11 @@ class Karyawan {
       'telepon': telepon,
       'email': email,
       'kawin': kawin ? 'Y' : 'N',
+      'kelamin': kelamin,
       'pendidikan_almamater': pendidikanAlmamater,
       'pendidikan_jurusan': pendidikanJurusan,
       'aktif': aktif ? 'Y' : 'N',
+      'staf': staf ? 'Y' : 'N',
       'nomor_kk': nomorKk,
       'nomor_paspor': nomorPaspor,
     };

@@ -12,6 +12,7 @@ import 'package:fjghrd/models/perjanjian_kerja.dart';
 import 'package:fjghrd/models/phk.dart';
 import 'package:fjghrd/models/status_kerja.dart';
 import 'package:fjghrd/models/status_phk.dart';
+import 'package:fjghrd/models/timeline_masakerja.dart';
 import 'package:fjghrd/repositories/agama_repository.dart';
 import 'package:fjghrd/repositories/area_repository.dart';
 import 'package:fjghrd/repositories/divisi_repository.dart';
@@ -45,6 +46,9 @@ class KaryawanControl extends GetxController {
   List<KeluargaKaryawan> listKeluarga = [];
   List<KeluargaKontak> listKontak = [];
   List<PerjanjianKerja> listPerjanjianKerja = [];
+  List<TimelineMasakerja> listTimelineMasakerja = [];
+
+  Opsi cariStaf = Opsi(value: 'Y', label: 'Staf');
 
   late TextEditingController txtId, txtNama, txtNik, txtTanggalMasuk, txtTanggalKeluar, txtNomorKk,
       txtNomorKtp, txtNomorPaspor, txtTempatLahir, txtTanggalLahir, txtAlamatKtp,
@@ -65,10 +69,12 @@ class KaryawanControl extends GetxController {
   StatusPhk statusPhk = StatusPhk();
 
   bool? kawin = false;
+  String kelamin = '';
+  bool? staf = true;
   String keluargaHubungan = '';
 
   Future<void> loadKaryawans() async {
-    var hasil = await _repo.findAll();
+    var hasil = await _repo.findAll(isStaf: cariStaf.value);
     if (hasil.success) {
       listKaryawan.clear();
       for (var data in hasil.daftar) {
@@ -81,7 +87,7 @@ class KaryawanControl extends GetxController {
   }
 
   Future<void> loadMantanKaryawans() async {
-    var hasil = await _repo.mantanFindAll();
+    var hasil = await _repo.mantanFindAll(isStaf: cariStaf.value);
     if (hasil.success) {
       listMantanKaryawan.clear();
       for (var data in hasil.daftar) {
@@ -132,6 +138,19 @@ class KaryawanControl extends GetxController {
     update();
   }
 
+  Future<void> loadTimelineMasakerja() async {
+    listTimelineMasakerja.clear();
+    var hasil = await _repo.timelineMasakerja(current.id);
+    if (hasil.success) {
+      for (var data in hasil.daftar) {
+        listTimelineMasakerja.add(TimelineMasakerja.fromMap(data));
+      }
+    } else {
+      AFwidget.snackbar(hasil.message);
+    }
+    update();
+  }
+
   void tambahForm(BuildContext context) {
     txtId.text = '';
     txtNama.text = '';
@@ -155,6 +174,8 @@ class KaryawanControl extends GetxController {
     pendidikan = Pendidikan();
     statusKerja = StatusKerja();
     kawin = null;
+    kelamin = '';
+    staf = null;
     AFwidget.dialog(
       Container(
         padding: const EdgeInsets.fromLTRB(15, 0, 0, 15),
@@ -189,6 +210,56 @@ class KaryawanControl extends GetxController {
                                   update();
                                 }
                               },
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 150,
+                        padding: const EdgeInsets.only(right: 15),
+                        child: const Text('Jenis Karyawan'),
+                      ),
+                      Expanded(
+                        child: GetBuilder<KaryawanControl>(
+                          builder: (_) {
+                            return Row(
+                              children: [
+                                Radio<bool>(
+                                  value: true,
+                                  groupValue: staf,
+                                  onChanged: (a) {
+                                    if(a != null && a != staf) {
+                                      staf = a;
+                                      update();
+                                    }
+                                  },
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                                  child: Text('Staf'),
+                                ),
+                                Radio<bool>(
+                                  value: false,
+                                  groupValue: staf,
+                                  onChanged: (a) {
+                                    if(a != null && a != staf) {
+                                      staf = a;
+                                      update();
+                                    }
+                                  },
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                  child: Text('Non Staf'),
+                                ),
+                              ],
                             );
                           },
                         ),
@@ -382,6 +453,56 @@ class KaryawanControl extends GetxController {
                 barisText(
                   label: 'No. Telepon',
                   controller: txtTelepon,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 150,
+                        padding: const EdgeInsets.only(right: 15),
+                        child: const Text('Jenis Kelamin'),
+                      ),
+                      Expanded(
+                        child: GetBuilder<KaryawanControl>(
+                          builder: (_) {
+                            return Row(
+                              children: [
+                                Radio<String>(
+                                  value: 'L',
+                                  groupValue: kelamin,
+                                  onChanged: (a) {
+                                    if(a != null && a != kelamin) {
+                                      kelamin = a;
+                                      update();
+                                    }
+                                  },
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                                  child: Text('Laki-Laki'),
+                                ),
+                                Radio<String>(
+                                  value: 'P',
+                                  groupValue: kelamin,
+                                  onChanged: (a) {
+                                    if(a != null && a != kelamin) {
+                                      kelamin = a;
+                                      update();
+                                    }
+                                  },
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                  child: Text('Perempuan'),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
@@ -607,9 +728,12 @@ class KaryawanControl extends GetxController {
     pendidikan = current.pendidikan;
     statusKerja = current.statusKerja;
     kawin = current.kawin;
+    kelamin = current.kelamin;
+    staf = current.staf;
     loadKeluargas();
     loadKontaks();
     loadPerjanjianKerjas();
+    loadTimelineMasakerja();
     Get.toNamed(Rute.karyawanForm);
   }
 
@@ -1843,6 +1967,9 @@ class KaryawanControl extends GetxController {
       if(area.id == '') {
         throw 'Silakan pilih area';
       }
+      if(staf == null) {
+        throw 'Silakan pilih jenis karyawan (staf atau non staf)';
+      }
       if(txtNama.text.isEmpty) {
         throw 'Nama harus diisi';
       }
@@ -1867,6 +1994,9 @@ class KaryawanControl extends GetxController {
       if(kawin == null) {
         throw 'Silakan isi status kawin';
       }
+      if(kelamin == '') {
+        throw 'Silakan pilih jenis kelamin';
+      }
       var a = Karyawan(
         nama: txtNama.text,
         nik: txtNik.text,
@@ -1879,11 +2009,13 @@ class KaryawanControl extends GetxController {
         telepon: txtTelepon.text,
         email: txtEmail.text,
         kawin: kawin ?? false,
+        kelamin: kelamin,
         nomorKk: txtNomorKk.text,
         nomorPaspor: txtNomorPaspor.text,
         pendidikanAlmamater: txtPendidikanAlmamater.text,
         pendidikanJurusan: txtPendidikanJurusan.text,
         aktif: true,
+        staf: staf ?? true,
       );
       a.agama = agama;
       a.area = area;
@@ -1940,6 +2072,12 @@ class KaryawanControl extends GetxController {
       if(kawin == null) {
         throw 'Silakan isi status kawin';
       }
+      if(staf == null) {
+        throw 'Silakan pilih jenis karyawan (staf atau non staf)';
+      }
+      if(kelamin == '') {
+        throw 'Silakan pilih jenis kelamin';
+      }
       if(statusKerja.id == '') {
         throw 'Silakan pilih status karyawan';
       }
@@ -1956,11 +2094,13 @@ class KaryawanControl extends GetxController {
         telepon: txtTelepon.text,
         email: txtEmail.text,
         kawin: kawin ?? false,
+        kelamin: kelamin,
         nomorKk: txtNomorKk.text,
         nomorPaspor: txtNomorPaspor.text,
         pendidikanAlmamater: txtPendidikanAlmamater.text,
         pendidikanJurusan: txtPendidikanJurusan.text,
         aktif: true,
+        staf: staf ?? true,
       );
       a.agama = agama;
       a.area = area;
@@ -2219,6 +2359,7 @@ class KaryawanControl extends GetxController {
       Get.back();
       if(hasil.success) {
         loadPerjanjianKerjas();
+        loadTimelineMasakerja();
         Get.back();
       }
       AFwidget.snackbar(hasil.message);
@@ -2259,6 +2400,7 @@ class KaryawanControl extends GetxController {
       Get.back();
       if(hasil.success) {
         loadPerjanjianKerjas();
+        loadTimelineMasakerja();
         Get.back();
       }
       AFwidget.snackbar(hasil.message);
@@ -2280,6 +2422,7 @@ class KaryawanControl extends GetxController {
       Get.back();
       if(hasil.success) {
         loadPerjanjianKerjas();
+        loadTimelineMasakerja();
         Get.back();
         Get.back();
       }
@@ -2499,6 +2642,20 @@ class KaryawanControl extends GetxController {
       listOpsi: listStatusPhk,
       valueSelected: value,
       judul: 'Pilih Status PHK',
+    );
+    return a;
+  }
+
+  Future<Opsi?> pilihStaf({String value = ''}) async {
+    var a = await AFcombobox.bottomSheet(
+      listOpsi: [
+        Opsi(value: 'Y', label: 'Staf'),
+        Opsi(value: 'N', label: 'Non Staf'),
+        Opsi(value: '', label: 'Staf & Non Staf'),
+      ],
+      valueSelected: value,
+      judul: 'Pilih Jenis Karyawan',
+      withCari: false,
     );
     return a;
   }

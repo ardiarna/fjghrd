@@ -1,7 +1,8 @@
 import 'package:fjghrd/controllers/karyawan_control.dart';
 import 'package:fjghrd/models/karyawan.dart';
-import 'package:fjghrd/models/mantan_karyawan_view.dart';
+import 'package:fjghrd/views/mantan_karyawan_view.dart';
 import 'package:fjghrd/utils/af_convert.dart';
+import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
@@ -231,20 +232,38 @@ class KaryawanView extends StatelessWidget {
     return Column(
       children: [
         Container(
+          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
           decoration: const BoxDecoration(
             color: Colors.white,
           ),
           child: Row(
             children: [
-              const Padding(
-                padding: EdgeInsets.fromLTRB(20, 10, 30, 10),
-                child: Text('DATA KARYAWAN',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+              const Text('DATA KARYAWAN',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
+              const SizedBox(width: 20),
+              SizedBox(
+                width: 200,
+                child: GetBuilder<KaryawanControl>(
+                  builder: (_) {
+                    return AFwidget.comboField(
+                      value: controller.cariStaf.label,
+                      label: '',
+                      onTap: () async {
+                        var a = await controller.pilihStaf(value: controller.cariStaf.value);
+                        if(a != null && a.value != controller.cariStaf.value) {
+                          controller.cariStaf = a;
+                          controller.loadKaryawans();
+                        }
+                      },
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(width: 40),
               IconButton(
                 onPressed: () {
                   controller.tambahForm(context);
@@ -257,19 +276,16 @@ class KaryawanView extends StatelessWidget {
                 padding: const EdgeInsets.all(0),
               ),
               const Spacer(),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-                child: OutlinedButton(
-                  style: ButtonStyle(
-                    side: MaterialStateProperty.all<BorderSide>(const BorderSide(color: Colors.red)),
-                    foregroundColor: MaterialStateProperty.all<Color>(Colors.red),
-                  ),
-                  onPressed: () {
-                    controller.homeControl.kontener = MantanKaryawanView();
-                    controller.homeControl.update();
-                  },
-                  child: const Text('DATA EX KARYAWAN'),
+              OutlinedButton(
+                style: ButtonStyle(
+                  side: MaterialStateProperty.all<BorderSide>(const BorderSide(color: Colors.red)),
+                  foregroundColor: MaterialStateProperty.all<Color>(Colors.red),
                 ),
+                onPressed: () {
+                  controller.homeControl.kontener = MantanKaryawanView();
+                  controller.homeControl.update();
+                },
+                child: const Text('DATA EX KARYAWAN'),
               ),
             ],
           ),

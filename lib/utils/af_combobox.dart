@@ -42,7 +42,7 @@ class _DaftarOpsiState extends State<DaftarOpsi> {
 
   @override
   Widget build(BuildContext context) {
-    double tinggiAtas = widget.withCari ? (widget.judul != "" ? 80 : 60) : (widget.judul != "" ? 27 : 10);
+    double tinggiAtas = widget.withCari ? (widget.judul != "" ? 80 : 60) : (widget.judul != "" ? 30 : 10);
     return Stack(
       children: [
         Padding(

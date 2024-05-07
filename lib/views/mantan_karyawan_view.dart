@@ -1,6 +1,7 @@
 import 'package:fjghrd/controllers/karyawan_control.dart';
 import 'package:fjghrd/models/karyawan.dart';
 import 'package:fjghrd/utils/af_convert.dart';
+import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/views/karyawan_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -239,35 +240,49 @@ class MantanKaryawanView extends StatelessWidget {
     return Column(
       children: [
         Container(
+          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
           decoration: const BoxDecoration(
             color: Colors.white,
           ),
           child: Row(
             children: [
-              const Padding(
-                padding: EdgeInsets.fromLTRB(20, 10, 30, 10),
-                child: Text('DATA EX KARYAWAN',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red,
-                  ),
+              const Text('DATA EX KARYAWAN',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.red,
+                ),
+              ),
+              const SizedBox(width: 20),
+              SizedBox(
+                width: 200,
+                child: GetBuilder<KaryawanControl>(
+                  builder: (_) {
+                    return AFwidget.comboField(
+                      value: controller.cariStaf.label,
+                      label: '',
+                      onTap: () async {
+                        var a = await controller.pilihStaf(value: controller.cariStaf.value);
+                        if(a != null && a.value != controller.cariStaf.value) {
+                          controller.cariStaf = a;
+                          controller.loadMantanKaryawans();
+                        }
+                      },
+                    );
+                  },
                 ),
               ),
               const Spacer(),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-                child: OutlinedButton(
-                  style: ButtonStyle(
-                    side: MaterialStateProperty.all<BorderSide>(const BorderSide(color: Colors.green)),
-                    foregroundColor: MaterialStateProperty.all<Color>(Colors.green),
-                  ),
-                  onPressed: () {
-                    controller.homeControl.kontener = KaryawanView();
-                    controller.homeControl.update();
-                  },
-                  child: const Text('DATA GENERAL KARYAWAN'),
+              OutlinedButton(
+                style: ButtonStyle(
+                  side: MaterialStateProperty.all<BorderSide>(const BorderSide(color: Colors.green)),
+                  foregroundColor: MaterialStateProperty.all<Color>(Colors.green),
                 ),
+                onPressed: () {
+                  controller.homeControl.kontener = KaryawanView();
+                  controller.homeControl.update();
+                },
+                child: const Text('DATA GENERAL KARYAWAN'),
               ),
             ],
           ),
