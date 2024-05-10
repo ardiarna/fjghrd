@@ -863,7 +863,8 @@ class KaryawanForm extends StatelessWidget {
                                   return Container();
                                 }
                                 var a = controller.listTimelineMasakerja[0].tanggalAwal;
-                                var b = controller.listTimelineMasakerja[controller.listTimelineMasakerja.length-1].tanggalAKhir ?? DateTime.now();
+                                // var b = controller.listTimelineMasakerja[controller.listTimelineMasakerja.length-1].tanggalAKhir ?? DateTime.now();
+                                var b = DateTime.now();
                                 Duration d = b.difference(a ?? b); // dalam hari
                                 int tahun = d.inDays ~/ 365; // Membagi dengan 365 untuk tahun
                                 int bulan = (d.inDays % 365) ~/ 30; // Menggunakan modulo 365, lalu dibagi dengan 30 untuk bulan
@@ -878,7 +879,7 @@ class KaryawanForm extends StatelessWidget {
                                           'Masa Kerja : ${tahun>0 ? '$tahun tahun' : ''} ${bulan>0 ? '$bulan bulan' : ''} ',
                                           textAlign: TextAlign.center,
                                           style: const TextStyle(
-                                            color: Colors.blue,
+                                            color: Colors.black45,
                                             fontWeight: FontWeight.w500,
                                           ),
                                         ),

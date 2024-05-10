@@ -458,6 +458,7 @@ abstract class AFwidget {
     double marginBottom = 0,
     double marginRight = 0,
     double marginLeft = 0,
+    TextAlign textAlign = TextAlign.start,
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -506,6 +507,7 @@ abstract class AFwidget {
         obscureText: obscureText,
         minLines: minLines,
         maxLines: maxLines,
+        textAlign: textAlign,
       ),
     );
   }

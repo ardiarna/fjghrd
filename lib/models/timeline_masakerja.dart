@@ -37,11 +37,11 @@ class TimelineMasakerja {
       case '1':
         return Colors.green;
       case '2':
-        return Colors.purpleAccent;
+        return Colors.blue;
       case '3':
         return Colors.orange;
       case '4':
-        return Colors.grey;
+        return Colors.purpleAccent;
       default:
         return Colors.white;
     }

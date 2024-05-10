@@ -2,10 +2,12 @@ import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/views/agama_view.dart';
 import 'package:fjghrd/views/area_view.dart';
 import 'package:fjghrd/views/divisi_view.dart';
+import 'package:fjghrd/views/hari_libur_view.dart';
 import 'package:fjghrd/views/jabatan_view.dart';
 import 'package:fjghrd/views/pendidikan_view.dart';
 import 'package:fjghrd/views/status_kerja_view.dart';
 import 'package:fjghrd/views/status_phk_view.dart';
+import 'package:fjghrd/views/upah_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -55,8 +57,8 @@ class HomeView extends StatelessWidget {
                     idx: 2,
                   ),
                   barItem(
-                    label: 'Setting',
-                    icon: Icons.settings,
+                    label: 'Menu',
+                    icon: Icons.dehaze,
                     idx: 3,
                   ),
                   barItem(
@@ -149,6 +151,28 @@ class HomeView extends StatelessWidget {
               onTap: () {
                 controller.tabId = 3;
                 controller.kontener = StatusPhkView();
+                Get.back();
+                controller.update();
+              },
+            ),
+            drawItem(
+              label: 'Hari Libur',
+              icon: Icons.calendar_month,
+              color: Colors.brown,
+              onTap: () {
+                controller.tabId = 3;
+                controller.kontener = HariLiburView();
+                Get.back();
+                controller.update();
+              },
+            ),
+            drawItem(
+              label: 'Salary',
+              icon: Icons.attach_money,
+              color: Colors.brown,
+              onTap: () {
+                controller.tabId = 3;
+                controller.kontener = UpahView();
                 Get.back();
                 controller.update();
               },

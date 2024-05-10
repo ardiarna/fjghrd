@@ -21,6 +21,7 @@ abstract class AFconvert {
     } else if (nilai != null && nilai != '') {
       if(nilai is String) {
         nilai = nilai.replaceAll(',', '');
+        nilai = nilai.replaceAll('.', '');
       }
       if(int.tryParse(nilai) != null) {
         return int.parse(nilai);

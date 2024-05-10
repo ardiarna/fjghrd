@@ -49,6 +49,7 @@ class KaryawanControl extends GetxController {
   List<TimelineMasakerja> listTimelineMasakerja = [];
 
   Opsi cariStaf = Opsi(value: 'Y', label: 'Staf');
+  Map<String, int> totalKaryawanPerArea = {};
 
   late TextEditingController txtId, txtNama, txtNik, txtTanggalMasuk, txtTanggalKeluar, txtNomorKk,
       txtNomorKtp, txtNomorPaspor, txtTempatLahir, txtTanggalLahir, txtAlamatKtp,
@@ -77,8 +78,20 @@ class KaryawanControl extends GetxController {
     var hasil = await _repo.findAll(isStaf: cariStaf.value);
     if (hasil.success) {
       listKaryawan.clear();
+      totalKaryawanPerArea.clear();
       for (var data in hasil.daftar) {
-        listKaryawan.add(Karyawan.fromMap(data));
+        var k = Karyawan.fromMap(data);
+        listKaryawan.add(k);
+        if (totalKaryawanPerArea.containsKey('TOTAL KARYAWAN')) {
+          totalKaryawanPerArea['TOTAL KARYAWAN'] = totalKaryawanPerArea['TOTAL KARYAWAN']! + 1;
+        } else {
+          totalKaryawanPerArea['TOTAL KARYAWAN'] = 1;
+        }
+        if (totalKaryawanPerArea.containsKey(k.area.nama)) {
+          totalKaryawanPerArea[k.area.nama] = totalKaryawanPerArea[k.area.nama]! + 1;
+        } else {
+          totalKaryawanPerArea[k.area.nama] = 1;
+        }
       }
       update();
     } else {
@@ -2692,6 +2705,13 @@ class KaryawanControl extends GetxController {
 
   @override
   void onInit() {
+    loadAgamas();
+    loadAreas();
+    loadDivisis();
+    loadJabatans();
+    loadPendidikans();
+    loadStatusKerjas();
+    loadStatusPhks();
     txtId = TextEditingController();
     txtNama = TextEditingController();
     txtNik = TextEditingController();

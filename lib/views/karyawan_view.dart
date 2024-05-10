@@ -13,49 +13,66 @@ class KaryawanView extends StatelessWidget {
   final KaryawanControl controller = Get.put(KaryawanControl());
 
   List<PlutoRow> _buildRows(List<Karyawan> rowData) {
+    var now = DateTime.now();
     return List.generate(
       rowData.length,
-          (index) => PlutoRow(
-        cells: {
-          'area': PlutoCell(value: rowData[index].area.nama),
-          'id': PlutoCell(value: rowData[index].id),
-          'nama': PlutoCell(value: rowData[index].nama),
-          'nik': PlutoCell(value: rowData[index].nik),
-          'tanggal_masuk': PlutoCell(value: AFconvert.matDate(rowData[index].tanggalMasuk)),
-          'agama': PlutoCell(value: rowData[index].agama.nama),
-          'divisi': PlutoCell(value: rowData[index].divisi.nama),
-          'jabatan': PlutoCell(value: rowData[index].jabatan.nama),
-          'nomor_kk': PlutoCell(value: rowData[index].nomorKk),
-          'nomor_ktp': PlutoCell(value: rowData[index].nomorKtp),
-          'nomor_paspor': PlutoCell(value: rowData[index].nomorPaspor),
-          'ttl': PlutoCell(value: '${rowData[index].tempatLahir} ${AFconvert.matDate(rowData[index].tanggalLahir)}'),
-          'alamat_ktp': PlutoCell(value: rowData[index].alamatKtp),
-          'alamat_tinggal': PlutoCell(value: rowData[index].alamatTinggal),
-          'telepon': PlutoCell(value: rowData[index].telepon),
-          'kawin': PlutoCell(value: rowData[index].kawin ? 'Kawin' : 'Single'),
-          'pendidikan': PlutoCell(value: '${rowData[index].pendidikan.nama} ${rowData[index].pendidikanAlmamater} ${rowData[index].pendidikanJurusan != '' ? ', Jurusan: ${rowData[index].pendidikanJurusan}' : ''}'),
-          'email': PlutoCell(value: rowData[index].email),
-          'status_kerja': PlutoCell(value: rowData[index].statusKerja.nama),
-        },
-      ),
+      (index) {
+        Duration d = now.difference(rowData[index].tanggalMasuk ?? now); // dalama hari
+        int tahun = d.inDays ~/ 365; // Membagi dengan 365 untuk tahun
+        int bulan = (d.inDays % 365) ~/ 30; // Menggunakan modulo 365, lalu dibagi dengan 30 untuk bulan
+        return PlutoRow(
+          cells: {
+            'area': PlutoCell(value: rowData[index].area.nama),
+            'id': PlutoCell(value: rowData[index].id),
+            'nama': PlutoCell(value: rowData[index].nama),
+            'nik': PlutoCell(value: rowData[index].nik),
+            'tanggal_masuk': PlutoCell(value: AFconvert.matDate(rowData[index].tanggalMasuk)),
+            'masa_kerja': PlutoCell(value: '${tahun>0 ? '$tahun tahun' : ''} ${bulan>0 ? '$bulan bulan' : ''}'),
+            'agama': PlutoCell(value: rowData[index].agama.nama),
+            'divisi': PlutoCell(value: rowData[index].divisi.nama),
+            'jabatan': PlutoCell(value: rowData[index].jabatan.nama),
+            'nomor_kk': PlutoCell(value: rowData[index].nomorKk),
+            'nomor_ktp': PlutoCell(value: rowData[index].nomorKtp),
+            'nomor_paspor': PlutoCell(value: rowData[index].nomorPaspor),
+            'ttl': PlutoCell(value: '${rowData[index].tempatLahir} ${AFconvert.matDate(rowData[index].tanggalLahir)}'),
+            'alamat_ktp': PlutoCell(value: rowData[index].alamatKtp),
+            'alamat_tinggal': PlutoCell(value: rowData[index].alamatTinggal),
+            'telepon': PlutoCell(value: rowData[index].telepon),
+            'kawin': PlutoCell(value: rowData[index].kawin ? 'Kawin' : 'Single'),
+            'pendidikan': PlutoCell(value: '${rowData[index].pendidikan.nama} ${rowData[index].pendidikanAlmamater} ${rowData[index].pendidikanJurusan != '' ? ', Jurusan: ${rowData[index].pendidikanJurusan}' : ''}'),
+            'email': PlutoCell(value: rowData[index].email),
+            'status_kerja': PlutoCell(value: rowData[index].statusKerja.nama),
+            'status_kerja_id': PlutoCell(value: rowData[index].statusKerja.id),
+          },
+        );
+      },
     );
   }
+
+  final List<PlutoColumnGroup> columnGroups = [
+    PlutoColumnGroup(
+      title: 'MASA KERJA',
+      fields: ['tanggal_masuk', 'masa_kerja'],
+      expandedColumn: false,
+      backgroundColor: Colors.brown.shade100,
+    ),
+    PlutoColumnGroup(
+      title: 'DOKUMEN KARYAWAN',
+      fields: ['nomor_kk', 'nomor_ktp', 'nomor_paspor', 'ttl'],
+      expandedColumn: false,
+      backgroundColor: Colors.brown.shade100,
+    ),
+    PlutoColumnGroup(
+      title: 'ALAMAT',
+      fields: ['alamat_ktp', 'alamat_tinggal'],
+      expandedColumn: false,
+      backgroundColor: Colors.brown.shade100,
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
     final List<PlutoColumn> columns = [
-      PlutoColumn(
-        title: 'AREA',
-        field: 'area',
-        type: PlutoColumnType.text(),
-        readOnly: true,
-        width: 270,
-        backgroundColor: Colors.brown.shade100,
-        enableFilterMenuItem: false,
-        enableContextMenu: false,
-        enableDropToResize: false,
-        frozen: PlutoColumnFrozen.start,
-      ),
       PlutoColumn(
         title: '',
         field: 'id',
@@ -97,36 +114,58 @@ class KaryawanView extends StatelessWidget {
         frozen: PlutoColumnFrozen.start,
       ),
       PlutoColumn(
-        title: 'NIK',
-        field: 'nik',
+        title: 'AREA',
+        field: 'area',
         type: PlutoColumnType.text(),
-        width: 150,
+        readOnly: true,
+        minWidth: 230,
         backgroundColor: Colors.brown.shade100,
       ),
       PlutoColumn(
-        title: 'MASA KERJA',
+        title: 'NIK',
+        field: 'nik',
+        type: PlutoColumnType.text(),
+        minWidth: 120,
+        backgroundColor: Colors.brown.shade100,
+        textAlign: PlutoColumnTextAlign.center,
+      ),
+      PlutoColumn(
+        title: 'TANGGAL',
         field: 'tanggal_masuk',
         type: PlutoColumnType.text(),
-        width: 150,
+        minWidth: 150,
         backgroundColor: Colors.brown.shade100,
+        textAlign: PlutoColumnTextAlign.center,
+        titleTextAlign: PlutoColumnTextAlign.center,
+      ),
+      PlutoColumn(
+        title: 'DURASI',
+        field: 'masa_kerja',
+        type: PlutoColumnType.text(),
+        minWidth: 150,
+        backgroundColor: Colors.brown.shade100,
+        textAlign: PlutoColumnTextAlign.center,
+        titleTextAlign: PlutoColumnTextAlign.center,
       ),
       PlutoColumn(
         title: 'AGAMA',
         field: 'agama',
         type: PlutoColumnType.text(),
-        width: 150,
+        minWidth: 120,
         backgroundColor: Colors.brown.shade100,
       ),
       PlutoColumn(
         title: 'DIVISI',
         field: 'divisi',
         type: PlutoColumnType.text(),
+        minWidth: 150,
         backgroundColor: Colors.brown.shade100,
       ),
       PlutoColumn(
         title: 'JABATAN',
         field: 'jabatan',
         type: PlutoColumnType.text(),
+        minWidth: 150,
         backgroundColor: Colors.brown.shade100,
       ),
       PlutoColumn(
@@ -206,29 +245,15 @@ class KaryawanView extends StatelessWidget {
         minWidth: 180,
         backgroundColor: Colors.brown.shade100,
       ),
-    ];
-    final List<PlutoColumnGroup> columnGroups = [
-      PlutoColumnGroup(
-        title: 'DOKUMEN KARYAWAN',
-        fields: ['nomor_kk', 'nomor_ktp', 'nomor_paspor', 'ttl'],
-        expandedColumn: false,
+      PlutoColumn(
+        title: '',
+        field: 'status_kerja_id',
+        type: PlutoColumnType.text(),
         backgroundColor: Colors.brown.shade100,
-      ),
-      PlutoColumnGroup(
-        title: 'ALAMAT',
-        fields: ['alamat_ktp', 'alamat_tinggal'],
-        expandedColumn: false,
-        backgroundColor: Colors.brown.shade100,
+        hide: true,
       ),
     ];
     controller.loadKaryawans();
-    controller.loadAgamas();
-    controller.loadAreas();
-    controller.loadDivisis();
-    controller.loadJabatans();
-    controller.loadPendidikans();
-    controller.loadStatusKerjas();
-    controller.loadStatusPhks();
     return Column(
       children: [
         Container(
@@ -301,18 +326,28 @@ class KaryawanView extends StatelessWidget {
                 onChanged: (PlutoGridOnChangedEvent event) {},
                 onLoaded: (PlutoGridOnLoadedEvent event) {
                   event.stateManager.setShowColumnFilter(true);
-                  // event.stateManager.autoFitColumn(context, columns[0]);
-                  event.stateManager.autoFitColumn(context, columns[2]);
-                  for (int i = 6; i <= 18; i++) {
+                  for (int i = 1; i <= 19; i++) {
                     event.stateManager.autoFitColumn(context, columns[i]);
                   }
-                  event.stateManager.setRowGroup(
-                    PlutoRowGroupByColumnDelegate(
-                      columns: [
-                        columns[0],
-                      ],
-                    ),
-                  );
+                  // event.stateManager.setRowGroup(
+                  //   PlutoRowGroupByColumnDelegate(
+                  //     columns: [
+                  //       columns[0],
+                  //     ],
+                  //   ),
+                  // );
+                },
+                rowColorCallback: (rtx) {
+                  switch(rtx.row.cells['status_kerja_id']!.value) {
+                    case '2':
+                      return Colors.blue.shade100;
+                    case '3':
+                      return Colors.orange.shade200;
+                    case '4':
+                      return Colors.purpleAccent.shade100;
+                    default:
+                      return Colors.white;
+                  }
                 },
                 configuration: PlutoGridConfiguration(
                   scrollbar: const PlutoGridScrollbarConfig(
@@ -343,6 +378,7 @@ class KaryawanView extends StatelessWidget {
                   ),
                   style: PlutoGridStyleConfig(
                     rowHeight: 35,
+                    columnHeight: 35,
                     borderColor: Colors.brown.shade200,
                     gridBorderColor: Colors.transparent,
                     gridBackgroundColor: Colors.transparent,
@@ -353,6 +389,31 @@ class KaryawanView extends StatelessWidget {
             },
           ),
         ),
+        Container(
+          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+          ),
+          child: GetBuilder<KaryawanControl>(
+            builder: (_) {
+              return Wrap(
+                spacing: 15,
+                runSpacing: 5,
+                alignment: WrapAlignment.end,
+                children: controller.totalKaryawanPerArea.entries.map((e) {
+                  return Text(
+                    '💫${e.key}: ${e.value}',
+                    style: const TextStyle(
+                      fontSize: 13,
+                      color: Colors.black54
+                    ),
+                  );
+                }).toList(),
+              );
+            },
+          ),
+        )
       ],
     );
   }
