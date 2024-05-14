@@ -1,3 +1,4 @@
+import 'package:fjghrd/utils/af_constant.dart';
 import 'package:intl/intl.dart';
 
 abstract class AFconvert {
@@ -102,6 +103,11 @@ abstract class AFconvert {
   static String matYMDTime(DateTime? nilai) {
     final mat = DateFormat('yyyy-MM-dd HH:mm');
     return nilai != null ? mat.format(nilai) : '';
+  }
+
+  static String matYMDtoDate(String nilai) {
+    List<String> tanggal = nilai.split('-');
+    return '${tanggal[2]} ${mapBulan[int.parse(tanggal[1])]} ${tanggal[0]}';
   }
 
   static String matNumber(dynamic nilai) {

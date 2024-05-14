@@ -39,6 +39,7 @@ class Karyawan {
   Upah upah = Upah();
   DateTime? createdAt;
   DateTime? updatedAt;
+  bool dipilih;
 
   Karyawan({
     this.id = '',
@@ -63,6 +64,7 @@ class Karyawan {
     this.nomorPaspor = '',
     this.createdAt,
     this.updatedAt,
+    this.dipilih = true,
   }) ;
 
   factory Karyawan.fromMap(Map<String, dynamic> data) {

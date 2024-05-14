@@ -1,6 +1,7 @@
 import 'package:fjghrd/controllers/auth_control.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/views/karyawan_view.dart';
+import 'package:fjghrd/views/payroll_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -8,7 +9,7 @@ class HomeControl extends GetxController {
   AuthControl authControl = Get.find();
 
   int tabId = 0;
-  Widget kontener = const Text('Test');
+  Widget kontener = const Text('');
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -22,7 +23,7 @@ class HomeControl extends GetxController {
       kontener = KaryawanView();
     } else if(idx == 2) {
       tabId = idx;
-      kontener = const Text('Tab Payroll');
+      kontener = PayrollView();
     } else if(idx == 3) {
       if(scaffoldKey.currentState!.isEndDrawerOpen) {
         scaffoldKey.currentState!.closeEndDrawer();
