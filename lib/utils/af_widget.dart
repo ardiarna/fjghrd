@@ -693,6 +693,93 @@ abstract class AFwidget {
     );
   }
 
+  static Future<void> formKonfirmasi({
+    required String label,
+    required Function()? aksi,
+    IconData ikon = Icons.question_mark,
+    Color warna = Colors.red,
+  }) {
+    return Get.dialog(
+      AlertDialog(
+        contentPadding: const EdgeInsets.all(0),
+        backgroundColor: Colors.transparent,
+        scrollable: true,
+        // elevation: 0,
+        content: Stack(
+          alignment: AlignmentDirectional.topCenter,
+          children: [
+            Container(
+              constraints: const BoxConstraints(
+                maxWidth: 400,
+              ),
+              margin: const EdgeInsets.only(top: 15),
+              padding: const EdgeInsets.fromLTRB(15, 30, 15, 10),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(Radius.circular(7)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(label),
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: tombol(
+                          label: 'BATAL',
+                          color: Colors.orangeAccent,
+                          onPressed: () {
+                            Get.back();
+                          },
+                        ),
+                      ),
+                      const Padding(padding: EdgeInsets.only(right: 10)),
+                      Expanded(
+                        child: tombol(
+                          label: 'YA',
+                          color: warna,
+                          onPressed: aksi,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              constraints: const BoxConstraints(
+                maxWidth: 400,
+              ),
+              margin: const EdgeInsets.only(top: 15),
+              height: 5,
+              decoration: BoxDecoration(
+                color: warna,
+                borderRadius: const BorderRadius.only(
+                  topRight: Radius.circular(7),
+                  topLeft: Radius.circular(7),
+                ),
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                color: warna,
+                borderRadius: const BorderRadius.all(Radius.circular(50)),
+              ),
+              child: Icon(
+                ikon,
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+        // contentPadding: const EdgeInsets.all(0),
+      ),
+      barrierDismissible: true,
+    );
+  }
+
   static Widget table2column({required List<String> columnOne, required List<String> columnTwo}) {
     int idx = -1;
     return Table(

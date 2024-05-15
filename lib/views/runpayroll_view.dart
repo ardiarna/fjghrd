@@ -30,7 +30,7 @@ class RunpayrollView extends StatelessWidget {
           'nama': PlutoCell(value: e.nama),
           'jabatan': PlutoCell(value: e.jabatan.nama),
           'gaji': PlutoCell(value: e.upah.gaji),
-          'makan_harian': PlutoCell(value: e.upah.makanHarian),
+          'makan_harian': PlutoCell(value: e.upah.makanHarian ? 'Y' : 'N'),
           'hari_makan': PlutoCell(value: hariMakan),
           'uang_makan_harian': PlutoCell(value: uangMakanHarian),
           'uang_makan_jumlah': PlutoCell(value: uangMakanJumlah),
@@ -1081,11 +1081,11 @@ class RunpayrollView extends StatelessWidget {
                 columnGroups: columnGroups,
                 onChanged: (ev) {
                   if(ev.columnIdx == 4 || ev.columnIdx == 5) {
-                    if(ev.row.cells['makan_harian']!.value) {
+                    if(ev.row.cells['makan_harian']!.value == 'Y') {
                       ev.row.cells['uang_makan_jumlah']!.value = ev.row.cells['hari_makan']!.value * ev.row.cells['uang_makan_harian']!.value;
                     }
                   } else if(ev.columnIdx == 15 || ev.columnIdx == 5) {
-                    if(ev.row.cells['makan_harian']!.value) {
+                    if(ev.row.cells['makan_harian']!.value == 'Y') {
                       double a = ev.row.cells['pot_25_hari']!.value * (ev.row.cells['uang_makan_harian']!.value/4);
                       ev.row.cells['pot_25_jumlah']!.value = a.toInt();
                     }
@@ -1174,7 +1174,7 @@ class RunpayrollView extends StatelessWidget {
               ),
               const SizedBox(width: 50),
               FilledButton.icon(
-                onPressed: () {
+                onPressed: () async {
                   if(stateManager != null) {
                     List<Map<String, String>> listData = [];
                     Map<String, String> rowData = {};
@@ -1184,6 +1184,17 @@ class RunpayrollView extends StatelessWidget {
                         rowData[h.key] = h.value.value.toString();
                       }
                       listData.add(rowData);
+                    }
+                    var a = await controller.runPayroll(
+                      tglAwal: controller.txtTglGajiAwal.text,
+                      tglAkhir: controller.txtTglGajiAkhir.text,
+                      tglMakanAwal: controller.txtTglMakanAwal.text,
+                      tglMakanAkhir: controller.txtTglMakanAkhir.text,
+                      payrolls: listData,
+                    );
+                    if(a) {
+                      controller.homeControl.kontener = PayrollView();
+                      controller.homeControl.update();
                     }
                   }
                 },

@@ -21,28 +21,44 @@ abstract class AFdatabase {
   static Future<Hasil> send({
     required String url,
     MethodeRequest methodeRequest = MethodeRequest.get,
-    Map<String, String>? body,
+    Map<String, dynamic>? body,
     Map<String, String>? filePaths,
     Map<String, List<int>>? fileBytes,
     bool defaultAPI = true,
+    bool contentIsJson = false,
   }) async {
     String rute = defaultAPI ? "$_api$url" : url;
     Uri uriRute = Uri.parse(rute);
     Map<String, String> headers = {
       "Authorization" : "Bearer ${_authControl.user.tokenJWT}",
     };
+    if(contentIsJson) {
+      headers['Content-Type'] = 'application/json';
+    }
     http.Response resp;
     var hasil = Hasil();
     try {
       switch(methodeRequest) {
         case MethodeRequest.post:
-          resp = await http.post(uriRute, headers: headers, body: body);
+          if(contentIsJson) {
+            resp = await http.post(uriRute, headers: headers, body: jsonEncode(body));
+          } else {
+            resp = await http.post(uriRute, headers: headers, body: body);
+          }
           break;
         case MethodeRequest.put:
-          resp = await http.put(uriRute, headers: headers, body: body);
+          if(contentIsJson) {
+            resp = await http.put(uriRute, headers: headers, body: jsonEncode(body));
+          } else {
+            resp = await http.put(uriRute, headers: headers, body: body);
+          }
           break;
         case MethodeRequest.delete:
-          resp = await http.delete(uriRute, headers: headers, body: body);
+          if(contentIsJson) {
+            resp = await http.delete(uriRute, headers: headers, body: jsonEncode(body));
+          } else {
+            resp = await http.delete(uriRute, headers: headers, body: body);
+          }
           break;
         case MethodeRequest.multipartRequest:
           var req = http.MultipartRequest('POST', uriRute);

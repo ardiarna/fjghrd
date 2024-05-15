@@ -2,9 +2,11 @@ import 'package:fjghrd/controllers/auth_control.dart';
 import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/models/hari_libur.dart';
 import 'package:fjghrd/models/karyawan.dart';
+import 'package:fjghrd/models/payroll.dart';
 import 'package:fjghrd/repositories/hari_libur_repository.dart';
 import 'package:fjghrd/repositories/payroll_repository.dart';
 import 'package:fjghrd/repositories/upah_repository.dart';
+import 'package:fjghrd/utils/af_combobox.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
@@ -15,12 +17,27 @@ class PayrollControl extends GetxController {
   final homeControl = Get.find<HomeControl>();
   final PayrollRepository _payrollRepo = PayrollRepository();
   final UpahRepository _upahRepo = UpahRepository();
-  
+
+  Opsi filterTahun = Opsi(value: '${DateTime.now().year}', label: '${DateTime.now().year}');
+  List<Payroll> listPayroll = [];
   List<Karyawan> listKaryawan = [];
   Map<String, int> totalKaryawanPerArea = {};
   List<HariLibur> listHariLibur = [];
 
   late TextEditingController txtTglGajiAwal, txtTglGajiAkhir, txtTglMakanAwal, txtTglMakanAkhir;
+
+  Future<void> loadPayrolls() async {
+    var hasil = await _payrollRepo.findAll(tahun: filterTahun.value);
+    if (hasil.success) {
+      listPayroll.clear();
+      for (var data in hasil.daftar) {
+        listPayroll.add(Payroll.fromMap(data));
+      }
+      update();
+    } else {
+      AFwidget.snackbar(hasil.message);
+    }
+  }
 
   Future<void> loadKaryawans() async {
     var hasil = await _upahRepo.findAll();
@@ -76,6 +93,73 @@ class PayrollControl extends GetxController {
       }
     }
     return workingDays;
+  }
+
+  Future<bool> runPayroll({
+    required String tglAwal,
+    required String tglAkhir,
+    required String tglMakanAwal,
+    required String tglMakanAkhir,
+    required List<Map<String, dynamic>> payrolls,
+    String keterangan = '',
+  }) async {
+    try {
+      AFwidget.loading();
+      var hasil = await _payrollRepo.create(
+        tglAwal: tglAwal,
+        tglAkhir: tglAkhir,
+        tglMakanAwal: tglMakanAwal,
+        tglMakanAkhir: tglMakanAkhir,
+        payrolls: payrolls,
+        keterangan: keterangan,
+      );
+      Get.back();
+      AFwidget.snackbar(hasil.message);
+      return hasil.success;
+    } catch (er) {
+      AFwidget.snackbar('$er');
+      return false;
+    }
+  }
+
+  void kunciPayrollForm({
+    required String id,
+    required String periode,
+  }) {
+    AFwidget.formKonfirmasi(
+      label: 'Apakah anda ingin mengunci payroll periode $periode ?',
+      ikon: Icons.lock_outline,
+      aksi: () {
+        _kunciPayroll(id);
+      },
+    );
+  }
+
+  Future<void> _kunciPayroll(String id) async {
+    try {
+      AFwidget.loading();
+      var hasil = await _payrollRepo.kunci(id);
+      Get.back();
+      if(hasil.success) {
+        loadPayrolls();
+        Get.back();
+      }
+      AFwidget.snackbar(hasil.message);
+    } catch (er) {
+      AFwidget.snackbar('$er');
+
+    }
+  }
+
+  Future<Opsi?> pilihTahun({String value = ''}) async {
+    int tahunNow = DateTime.now().year;
+    var a = await AFcombobox.bottomSheet(
+      listOpsi: List.generate(tahunNow-2019, (index) => Opsi(value: '${tahunNow-index}', label: '${tahunNow-index}')),
+      valueSelected: value,
+      judul: 'Pilih Tahun',
+      withCari: false,
+    );
+    return a;
   }
   
   @override
