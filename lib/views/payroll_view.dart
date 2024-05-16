@@ -3,6 +3,7 @@ import 'package:fjghrd/models/payroll.dart';
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
+import 'package:fjghrd/views/payroll_form.dart';
 import 'package:fjghrd/views/runpayroll_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -133,7 +134,11 @@ class PayrollView extends StatelessWidget {
                   Visibility(
                     visible: !item.dikunci,
                     child: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        controller.currentPayroll = item;
+                        controller.homeControl.kontener = PayrollForm();
+                        controller.homeControl.update();
+                      },
                       icon: const Icon(
                         Icons.edit_square,
                         color: Colors.green,
