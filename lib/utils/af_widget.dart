@@ -512,13 +512,13 @@ abstract class AFwidget {
     );
   }
 
-  static Widget comboField({required String value, required String label, void Function()? onTap, IconData? prefixIcon}) {
+  static Widget comboField({required String value, required String label, void Function()? onTap, IconData? prefixIcon, Color? warna}) {
     if(value == '') {
       return Container(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         // margin: const EdgeInsets.only(top: 11),
         decoration: BoxDecoration(
-          border: Border.all(color: const Color(0xFFd1d1d1)),
+          border: Border.all(color: warna ?? const Color(0xFFd1d1d1)),
           borderRadius: const BorderRadius.all(Radius.circular(5)),
         ),
         child: GestureDetector(
@@ -526,7 +526,7 @@ abstract class AFwidget {
           child: Row(
             children: [
               Expanded(child: Text(label, style: const TextStyle(fontSize: 16))),
-              const Icon(Icons.keyboard_arrow_down, color: Colors.grey, size: 20)
+              Icon(Icons.keyboard_arrow_down, color: warna ?? Colors.grey, size: 20)
             ],
           ),
         ),
@@ -538,7 +538,7 @@ abstract class AFwidget {
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           // margin: const EdgeInsets.only(top: 11),
           decoration: BoxDecoration(
-            border: Border.all(color: const Color(0xFFd1d1d1)),
+            border: Border.all(color: warna ?? const Color(0xFFd1d1d1)),
             borderRadius: const BorderRadius.all(Radius.circular(5)),
           ),
           child: GestureDetector(
@@ -548,10 +548,10 @@ abstract class AFwidget {
                 prefixIcon != null ?
                 Padding(
                   padding: const EdgeInsets.only(right: 5),
-                  child: Icon(prefixIcon, color: Colors.grey, size: 20),
+                  child: Icon(prefixIcon, color: warna ?? Colors.grey, size: 20),
                 ) : Container(),
-                Expanded(child: Text(value, style: const TextStyle(fontSize: 16))),
-                const Icon(Icons.keyboard_arrow_down, color: Colors.grey, size: 20)
+                Expanded(child: Text(value, style: TextStyle(fontSize: 16, color: warna))),
+                Icon(Icons.keyboard_arrow_down, color: warna ?? Colors.grey, size: 20)
               ],
             ),
           ),
@@ -561,7 +561,7 @@ abstract class AFwidget {
           margin: const EdgeInsets.only(top: 5, left: 7),
           padding: const EdgeInsets.symmetric(horizontal: 4),
           color: Colors.white,
-          child: Text(label, style: const TextStyle(fontSize: 12)),
+          child: Text(label, style: TextStyle(fontSize: 12, color: warna)),
         ) :
         Container(),
       ],

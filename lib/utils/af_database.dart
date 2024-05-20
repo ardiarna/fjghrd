@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:background_downloader/background_downloader.dart';
 import 'package:fjghrd/controllers/auth_control.dart';
 import 'package:fjghrd/utils/hasil.dart';
 import 'package:http/http.dart' as http;
@@ -143,6 +144,22 @@ abstract class AFdatabase {
       hasil.message = "Mohon maaf, sistem sedang maintenance [err $err]";
     }
     return hasil;
+  }
+
+  static Future<void> download({
+    required String url,
+    bool defaultAPI = true,
+  }) async {
+    String rute = defaultAPI ? "$_api$url" : url;
+    final task = await DownloadTask(
+      url: rute,
+      filename: DownloadTask.suggestedFilename,
+      headers: {
+        "Authorization" : "Bearer ${_authControl.user.tokenJWT}",
+      },
+    ).withSuggestedFilename(unique: true);
+    await FileDownloader().download(task);
+    await FileDownloader().moveToSharedStorage(task, SharedStorage.downloads);
   }
 
 }

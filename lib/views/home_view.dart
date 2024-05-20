@@ -1,4 +1,5 @@
 import 'package:fjghrd/controllers/home_control.dart';
+import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/views/agama_view.dart';
 import 'package:fjghrd/views/area_view.dart';
 import 'package:fjghrd/views/divisi_view.dart';
@@ -57,15 +58,14 @@ class HomeView extends StatelessWidget {
                     idx: 2,
                   ),
                   barItem(
-                    label: 'Menu',
-                    icon: Icons.dehaze,
+                    label: 'Laporan',
+                    icon: Icons.analytics_outlined,
                     idx: 3,
                   ),
                   barItem(
-                    label: 'Keluar',
-                    icon: Icons.logout,
-                    idx: 99,
-                    warna: Colors.red,
+                    label: 'Menu',
+                    icon: Icons.dehaze,
+                    idx: 4,
                   ),
                 ],
               );
@@ -74,109 +74,198 @@ class HomeView extends StatelessWidget {
       ),
       endDrawer: Drawer(
         width: 250,
-        child: ListView(
-          padding: EdgeInsets.zero,
+        child: Column(
           children: [
-            const SizedBox(height: 20),
-            drawItem(
-              label: 'Area',
-              icon: Icons.maps_home_work_outlined,
-              color: Colors.brown,
-              onTap: () {
-                controller.tabId = 3;
-                controller.kontener = AreaView();
-                Get.back();
-                controller.update();
-              },
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  const SizedBox(height: 20),
+                  drawItem(
+                    label: 'Area',
+                    icon: Icons.maps_home_work_outlined,
+                    color: Colors.brown,
+                    onTap: () {
+                      controller.tabId = 3;
+                      controller.kontener = AreaView();
+                      Get.back();
+                      controller.update();
+                    },
+                  ),
+                  drawItem(
+                    label: 'Divisi',
+                    icon: Icons.dataset_linked_outlined,
+                    color: Colors.brown,
+                    onTap: () {
+                      controller.tabId = 3;
+                      controller.kontener = DivisiView();
+                      Get.back();
+                      controller.update();
+                    },
+                  ),
+                  drawItem(
+                    label: 'Jabatan',
+                    icon: Icons.chair_alt_outlined,
+                    color: Colors.brown,
+                    onTap: () {
+                      controller.tabId = 3;
+                      controller.kontener = JabatanView();
+                      Get.back();
+                      controller.update();
+                    },
+                  ),
+                  drawItem(
+                    label: 'Agama',
+                    icon: Icons.mosque_outlined,
+                    color: Colors.brown,
+                    onTap: () {
+                      controller.tabId = 3;
+                      controller.kontener = AgamaView();
+                      Get.back();
+                      controller.update();
+                    },
+                  ),
+                  drawItem(
+                    label: 'Pendidikan',
+                    icon: Icons.school_outlined,
+                    color: Colors.brown,
+                    onTap: () {
+                      controller.tabId = 3;
+                      controller.kontener = PendidikanView();
+                      Get.back();
+                      controller.update();
+                    },
+                  ),
+                  drawItem(
+                    label: 'Status Karyawan',
+                    icon: Icons.arrow_drop_down_circle_outlined,
+                    color: Colors.brown,
+                    onTap: () {
+                      controller.tabId = 3;
+                      controller.kontener = StatusKerjaView();
+                      Get.back();
+                      controller.update();
+                    },
+                  ),
+                  drawItem(
+                    label: 'Status PHK',
+                    icon: Icons.arrow_drop_down_circle_outlined,
+                    color: Colors.brown,
+                    onTap: () {
+                      controller.tabId = 3;
+                      controller.kontener = StatusPhkView();
+                      Get.back();
+                      controller.update();
+                    },
+                  ),
+                  drawItem(
+                    label: 'Hari Libur',
+                    icon: Icons.calendar_month,
+                    color: Colors.brown,
+                    onTap: () {
+                      controller.tabId = 3;
+                      controller.kontener = HariLiburView();
+                      Get.back();
+                      controller.update();
+                    },
+                  ),
+                  drawItem(
+                    label: 'Salary',
+                    icon: Icons.attach_money,
+                    color: Colors.brown,
+                    onTap: () {
+                      controller.tabId = 3;
+                      controller.kontener = UpahView();
+                      Get.back();
+                      controller.update();
+                    },
+                  ),
+                ],
+              ),
             ),
-            drawItem(
-              label: 'Divisi',
-              icon: Icons.dataset_linked_outlined,
-              color: Colors.brown,
-              onTap: () {
-                controller.tabId = 3;
-                controller.kontener = DivisiView();
-                Get.back();
-                controller.update();
-              },
-            ),
-            drawItem(
-              label: 'Jabatan',
-              icon: Icons.chair_alt_outlined,
-              color: Colors.brown,
-              onTap: () {
-                controller.tabId = 3;
-                controller.kontener = JabatanView();
-                Get.back();
-                controller.update();
-              },
-            ),
-            drawItem(
-              label: 'Agama',
-              icon: Icons.mosque_outlined,
-              color: Colors.brown,
-              onTap: () {
-                controller.tabId = 3;
-                controller.kontener = AgamaView();
-                Get.back();
-                controller.update();
-              },
-            ),
-            drawItem(
-              label: 'Pendidikan',
-              icon: Icons.school_outlined,
-              color: Colors.brown,
-              onTap: () {
-                controller.tabId = 3;
-                controller.kontener = PendidikanView();
-                Get.back();
-                controller.update();
-              },
-            ),
-            drawItem(
-              label: 'Status Karyawan',
-              icon: Icons.arrow_drop_down_circle_outlined,
-              color: Colors.brown,
-              onTap: () {
-                controller.tabId = 3;
-                controller.kontener = StatusKerjaView();
-                Get.back();
-                controller.update();
-              },
-            ),
-            drawItem(
-              label: 'Status PHK',
-              icon: Icons.arrow_drop_down_circle_outlined,
-              color: Colors.brown,
-              onTap: () {
-                controller.tabId = 3;
-                controller.kontener = StatusPhkView();
-                Get.back();
-                controller.update();
-              },
-            ),
-            drawItem(
-              label: 'Hari Libur',
-              icon: Icons.calendar_month,
-              color: Colors.brown,
-              onTap: () {
-                controller.tabId = 3;
-                controller.kontener = HariLiburView();
-                Get.back();
-                controller.update();
-              },
-            ),
-            drawItem(
-              label: 'Salary',
-              icon: Icons.attach_money,
-              color: Colors.brown,
-              onTap: () {
-                controller.tabId = 3;
-                controller.kontener = UpahView();
-                Get.back();
-                controller.update();
-              },
-            ),
+            Container(
+              color: Colors.red,
+              child: drawItem(
+                label: 'Keluar',
+                icon: Icons.logout_outlined,
+                color: Colors.white,
+                onTap: () {
+                  AFwidget.dialog(
+                    Stack(
+                      alignment: AlignmentDirectional.topCenter,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(top: 15),
+                          padding: const EdgeInsets.fromLTRB(15, 30, 15, 10),
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.all(Radius.circular(7)),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text('Apakah Kamu Yakin?',
+                                  style: TextStyle(fontWeight: FontWeight.w500)),
+                              const Padding(
+                                padding: EdgeInsets.only(top: 15, bottom: 20),
+                                child: Text(
+                                    'Ingin keluar dari aplikasi HRD Fratekindo?'),
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: AFwidget.tombol(
+                                      label: 'BATAL',
+                                      color: Colors.orangeAccent,
+                                      onPressed: () {
+                                        Get.back();
+                                      },
+                                    ),
+                                  ),
+                                  const Padding(padding: EdgeInsets.only(right: 10)),
+                                  Expanded(
+                                    child: AFwidget.tombol(
+                                      label: 'YA',
+                                      color: Colors.red,
+                                      onPressed: () {
+                                        Get.back();
+                                        controller.authControl.sessionEnd();
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          margin: const EdgeInsets.only(top: 15),
+                          height: 5,
+                          decoration: const BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(7),
+                              topLeft: Radius.circular(7),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(5),
+                          decoration: const BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.all(Radius.circular(50)),
+                          ),
+                          child: const Icon(Icons.logout_rounded,
+                              color: Colors.white),
+                        ),
+                      ],
+                    ),
+                    contentPadding: const EdgeInsets.all(0),
+                    backgroundColor: Colors.transparent,
+                  );
+                },
+              ),
+            )
           ],
         ),
       ),
