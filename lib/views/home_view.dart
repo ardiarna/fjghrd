@@ -2,6 +2,7 @@ import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/views/agama_view.dart';
 import 'package:fjghrd/views/area_view.dart';
+import 'package:fjghrd/views/customer_view.dart';
 import 'package:fjghrd/views/divisi_view.dart';
 import 'package:fjghrd/views/hari_libur_view.dart';
 import 'package:fjghrd/views/jabatan_view.dart';
@@ -154,6 +155,17 @@ class HomeView extends StatelessWidget {
                     onTap: () {
                       controller.tabId = 3;
                       controller.kontener = StatusPhkView();
+                      Get.back();
+                      controller.update();
+                    },
+                  ),
+                  drawItem(
+                    label: 'Customer',
+                    icon: Icons.emoji_people,
+                    color: Colors.brown,
+                    onTap: () {
+                      controller.tabId = 3;
+                      controller.kontener = CustomerView();
                       Get.back();
                       controller.update();
                     },
