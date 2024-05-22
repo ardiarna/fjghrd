@@ -792,7 +792,7 @@ class PayrollForm extends StatelessWidget {
               Flexible(
                 child: GetBuilder<PayrollControl>(
                     builder: (_) {
-                    return Text('Periode : ${AFconvert.matDate(controller.currentPayroll.tanggalAwal)} s/d ${AFconvert.matDate(controller.currentPayroll.tanggalAkhir)}',
+                    return Text('Periode : ${mapBulan[controller.currentPayroll.bulan]} ${controller.currentPayroll.tahun}',
                       style: const TextStyle(
                         color: Colors.black45,
                       ),
@@ -804,7 +804,7 @@ class PayrollForm extends StatelessWidget {
               Flexible(
                 child: GetBuilder<PayrollControl>(
                     builder: (_) {
-                    return Text('Periode U/makan & Transportasi : ${AFconvert.matDate(controller.currentPayroll.tanggalMakanAwal)} s/d ${AFconvert.matDate(controller.currentPayroll.tanggalMakanAkhir)}',
+                    return Text('Periode Batas (Cut-off) : ${AFconvert.matDate(controller.currentPayroll.tanggalAwal)} s/d ${AFconvert.matDate(controller.currentPayroll.tanggalAkhir)}',
                       style: const TextStyle(
                         color: Colors.black45,
                       ),

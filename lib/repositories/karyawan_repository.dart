@@ -145,4 +145,10 @@ class KaryawanRepository {
     );
   }
 
+  Future<Hasil> medicalRekap(String id, String tahun) async {
+    return await AFdatabase.send(
+      url: 'karyawan/$id/medical-rekap/$tahun',
+    );
+  }
+
 }

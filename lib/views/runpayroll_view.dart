@@ -1,9 +1,13 @@
 import 'package:fjghrd/controllers/payroll_control.dart';
 import 'package:fjghrd/models/karyawan.dart';
+import 'package:fjghrd/models/opsi.dart';
+import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/views/payroll_view.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
@@ -719,10 +723,10 @@ class RunpayrollView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    controller.txtTglGajiAwal.text = AFconvert.matYMD(DateTime(now.year, now.month == 1 ? 12 : now.month-1, 26));
-    controller.txtTglGajiAkhir.text = AFconvert.matYMD(DateTime(now.year, now.month, 25));
-    controller.txtTglMakanAwal.text = AFconvert.matYMD(DateTime(now.year, now.month == 1 ? 12 : now.month-1, 19));
-    controller.txtTglMakanAkhir.text = AFconvert.matYMD(DateTime(now.year, now.month, 18));
+    controller.txtTanggalAwal.text = AFconvert.matDate(DateTime(now.year, now.month == 1 ? 12 : now.month-1, 19));
+    controller.txtTanggalAkhir.text = AFconvert.matDate(DateTime(now.year, now.month, 18));
+    controller.tahun = Opsi(value: '${now.year}', label: '${now.year}');
+    controller.bulan = Opsi(value: '${now.month}', label: mapBulan[now.month]!);
     controller.homeControl.kontener = wgPeriode();
     return GetBuilder<PayrollControl>(
       builder: (_) {
@@ -759,38 +763,38 @@ class RunpayrollView extends StatelessWidget {
                     ),
                     SizedBox(
                       width: 170,
-                      child: AFwidget.textField(
-                        marginTop: 0,
-                        controller: controller.txtTglGajiAwal,
-                        readOnly: true,
-                        prefixIcon: const Icon(Icons.calendar_month),
-                        ontap: () async {
-                          var a = await AFwidget.pickDate(
-                            context: controller.homeControl.scaffoldKey.currentContext!,
-                            initialDate: AFconvert.keTanggal(controller.txtTglGajiAwal.text),
+                      child: GetBuilder<PayrollControl>(
+                        builder: (_) {
+                          return AFwidget.comboField(
+                            value: controller.bulan.label,
+                            label: '',
+                            onTap: () async {
+                              var a = await controller.pilihBulan(value: controller.bulan.value);
+                              if(a != null && a.value != controller.bulan.value) {
+                                controller.bulan = a;
+                                controller.update();
+                              }
+                            },
                           );
-                          if(a != null) {
-                            controller.txtTglGajiAwal.text = AFconvert.matYMD(a);
-                          }
                         },
                       ),
                     ),
-                    const Text('   s/d   '),
+                    const SizedBox(width: 40),
                     SizedBox(
                       width: 170,
-                      child: AFwidget.textField(
-                        marginTop: 0,
-                        controller: controller.txtTglGajiAkhir,
-                        readOnly: true,
-                        prefixIcon: const Icon(Icons.calendar_month),
-                        ontap: () async {
-                          var a = await AFwidget.pickDate(
-                            context: controller.homeControl.scaffoldKey.currentContext!,
-                            initialDate: AFconvert.keTanggal(controller.txtTglGajiAkhir.text),
+                      child: GetBuilder<PayrollControl>(
+                        builder: (_) {
+                          return AFwidget.comboField(
+                            value: controller.tahun.label,
+                            label: '',
+                            onTap: () async {
+                              var a = await controller.pilihTahun(value: controller.tahun.value);
+                              if(a != null && a.value != controller.tahun.value) {
+                                controller.tahun = a;
+                                controller.update();
+                              }
+                            },
                           );
-                          if(a != null) {
-                            controller.txtTglGajiAkhir.text = AFconvert.matYMD(a);
-                          }
                         },
                       ),
                     ),
@@ -804,41 +808,44 @@ class RunpayrollView extends StatelessWidget {
                     Container(
                       width: 240,
                       padding: const EdgeInsets.only(right: 15),
-                      child: const Text('Periode U/makan & Transportasi'),
+                      child: const Text('Periode Batas (Cut-Off)'),
                     ),
                     SizedBox(
                       width: 170,
                       child: AFwidget.textField(
                         marginTop: 0,
-                        controller: controller.txtTglMakanAwal,
+                        controller: controller.txtTanggalAwal,
                         readOnly: true,
                         prefixIcon: const Icon(Icons.calendar_month),
                         ontap: () async {
                           var a = await AFwidget.pickDate(
                             context: controller.homeControl.scaffoldKey.currentContext!,
-                            initialDate: AFconvert.keTanggal(controller.txtTglMakanAwal.text),
+                            initialDate: AFconvert.keTanggal(AFconvert.matDMYtoYMD(controller.txtTanggalAwal.text)),
                           );
                           if(a != null) {
-                            controller.txtTglMakanAwal.text = AFconvert.matYMD(a);
+                            controller.txtTanggalAwal.text = AFconvert.matDate(a);
                           }
                         },
                       ),
                     ),
-                    const Text('   s/d   '),
+                    const SizedBox(
+                      width: 40,
+                      child: Text('s/d', textAlign: TextAlign.center),
+                    ),
                     SizedBox(
                       width: 170,
                       child: AFwidget.textField(
                         marginTop: 0,
-                        controller: controller.txtTglMakanAkhir,
+                        controller: controller.txtTanggalAkhir,
                         readOnly: true,
                         prefixIcon: const Icon(Icons.calendar_month),
                         ontap: () async {
                           var a = await AFwidget.pickDate(
                             context: controller.homeControl.scaffoldKey.currentContext!,
-                            initialDate: AFconvert.keTanggal(controller.txtTglMakanAkhir.text),
+                            initialDate: AFconvert.keTanggal(AFconvert.matDMYtoYMD(controller.txtTanggalAkhir.text)),
                           );
                           if(a != null) {
-                            controller.txtTglMakanAkhir.text = AFconvert.matYMD(a);
+                            controller.txtTanggalAkhir.text = AFconvert.matDate(a);
                           }
                         },
                       ),
@@ -867,8 +874,7 @@ class RunpayrollView extends StatelessWidget {
                     ),
                     FilledButton.icon(
                       onPressed: () {
-                        var t = AFconvert.keTanggal(controller.txtTglGajiAwal.text) ?? now;
-                        controller.loadHariLiburs(t.year.toString());
+                        controller.loadHariLiburs(controller.tahun.value);
                         controller.homeControl.kontener = wgKaryawans();
                         controller.homeControl.update();
                       },
@@ -1055,7 +1061,7 @@ class RunpayrollView extends StatelessWidget {
               ),
               const SizedBox(width: 50),
               Flexible(
-                child: Text('Periode : ${AFconvert.matYMDtoDate(controller.txtTglGajiAwal.text)} s/d ${AFconvert.matYMDtoDate(controller.txtTglGajiAkhir.text)}',
+                child: Text('Periode : ${controller.bulan.label} ${controller.tahun.label}',
                   style: const TextStyle(
                     color: Colors.black45,
                   ),
@@ -1063,7 +1069,7 @@ class RunpayrollView extends StatelessWidget {
               ),
               const SizedBox(width: 50),
               Flexible(
-                child: Text('Periode U/makan & Transportasi : ${AFconvert.matYMDtoDate(controller.txtTglMakanAwal.text)} s/d ${AFconvert.matYMDtoDate(controller.txtTglMakanAkhir.text)}',
+                child: Text('Periode Batas (Cut-Off) : ${controller.txtTanggalAwal.text} s/d ${controller.txtTanggalAkhir.text}',
                   style: const TextStyle(
                     color: Colors.black45,
                   ),),
@@ -1186,10 +1192,10 @@ class RunpayrollView extends StatelessWidget {
                       listData.add(rowData);
                     }
                     var a = await controller.runPayroll(
-                      tglAwal: controller.txtTglGajiAwal.text,
-                      tglAkhir: controller.txtTglGajiAkhir.text,
-                      tglMakanAwal: controller.txtTglMakanAwal.text,
-                      tglMakanAkhir: controller.txtTglMakanAkhir.text,
+                      tglAwal: AFconvert.matDMYtoYMD(controller.txtTanggalAwal.text),
+                      tglAkhir: AFconvert.matDMYtoYMD(controller.txtTanggalAkhir.text),
+                      tahun: controller.tahun.value,
+                      bulan: controller.bulan.value,
                       payrolls: listData,
                     );
                     if(a) {

@@ -16,16 +16,16 @@ class PayrollRepository {
   Future<Hasil> create({
     required String tglAwal,
     required String tglAkhir,
-    required String tglMakanAwal,
-    required String tglMakanAkhir,
+    required String tahun,
+    required String bulan,
     required List<Map<String, dynamic>> payrolls,
     String keterangan = '',
   }) async {
     var body = {
       'tanggal_awal': tglAwal,
       'tanggal_akhir': tglAkhir,
-      'tanggal_makan_awal': tglMakanAwal,
-      'tanggal_makan_akhir': tglMakanAkhir,
+      'tahun': tahun,
+      'bulan': bulan,
       'payrolls': payrolls,
     };
     if(keterangan != '') {
@@ -43,15 +43,15 @@ class PayrollRepository {
     required String id,
     required String tglAwal,
     required String tglAkhir,
-    required String tglMakanAwal,
-    required String tglMakanAkhir,
+    required String tahun,
+    required String bulan,
     String keterangan = '',
   }) async {
     var body = {
       'tanggal_awal': tglAwal,
       'tanggal_akhir': tglAkhir,
-      'tanggal_makan_awal': tglMakanAwal,
-      'tanggal_makan_akhir': tglMakanAkhir,
+      'tahun': tahun,
+      'bulan': bulan,
     };
     if(keterangan != '') {
       body['keterangan'] = keterangan;

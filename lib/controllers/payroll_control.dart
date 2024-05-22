@@ -21,21 +21,26 @@ class PayrollControl extends GetxController {
   final PayrollRepository _payrollRepo = PayrollRepository();
   final UpahRepository _upahRepo = UpahRepository();
 
-  Opsi filterTahun = Opsi(value: '${DateTime.now().year}', label: '${DateTime.now().year}');
+  final DateTime _now = DateTime.now();
+
   List<Payroll> listPayroll = [];
   List<Payroll> listDetilPayroll = [];
   List<Karyawan> listKaryawan = [];
   Map<String, int> totalKaryawanPerArea = {};
   List<HariLibur> listHariLibur = [];
-
+  List<Opsi> listBulan = mapBulan.entries.map((e) => Opsi(value: e.key.toString(), label: e.value)).toList();
+  late List<Opsi> listTahun;
   Payroll currentPayroll = Payroll();
   Payroll currentDetilPayroll = Payroll();
 
-  late TextEditingController txtTglGajiAwal, txtTglGajiAkhir, txtTglMakanAwal, txtTglMakanAkhir,
+  late TextEditingController txtTanggalAwal, txtTanggalAkhir,
       txtGaji, txtHariMakan, txtUangMakanHarian, txtUangMakanJumlah, txtOvertimeFjg, txtOvertimeCus,
       txtMedical, txtThr, txtBonus, txtInsentif, txtTelkomsel, txtLain, txtPot25hari, txtPot25jumlah,
       txtPotTelepon, txtPotBensin, txtPotKas, txtPotCicilan, txtPotBpjs, txtPotCuti, txtPotLain,
       txtTotalDiterima, txtKeterangan;
+  late Opsi filterTahun;
+  late Opsi tahun;
+  late Opsi bulan;
 
   Future<void> loadPayrolls() async {
     var hasil = await _payrollRepo.findAll(tahun: filterTahun.value);
@@ -106,8 +111,8 @@ class PayrollControl extends GetxController {
   }
 
   int countWorkingDays() {
-    DateTime startDate = AFconvert.keTanggal('${txtTglMakanAwal.text} 00:00:00') ?? DateTime.now();
-    DateTime endDate = AFconvert.keTanggal('${txtTglMakanAkhir.text} 00:00:00') ?? DateTime.now();
+    DateTime startDate = AFconvert.keTanggal('${AFconvert.matDMYtoYMD(txtTanggalAwal.text)} 00:00:00') ?? _now;
+    DateTime endDate = AFconvert.keTanggal('${AFconvert.matDMYtoYMD(txtTanggalAkhir.text)} 00:00:00') ?? _now;
     int workingDays = 0;
     for (DateTime date = startDate; date.isBefore(endDate.add(const Duration(days: 1))); date = date.add(const Duration(days: 1))) {
       if (date.weekday != DateTime.saturday &&
@@ -136,8 +141,8 @@ class PayrollControl extends GetxController {
   Future<bool> runPayroll({
     required String tglAwal,
     required String tglAkhir,
-    required String tglMakanAwal,
-    required String tglMakanAkhir,
+    required String tahun,
+    required String bulan,
     required List<Map<String, dynamic>> payrolls,
     String keterangan = '',
   }) async {
@@ -146,8 +151,8 @@ class PayrollControl extends GetxController {
       var hasil = await _payrollRepo.create(
         tglAwal: tglAwal,
         tglAkhir: tglAkhir,
-        tglMakanAwal: tglMakanAwal,
-        tglMakanAkhir: tglMakanAkhir,
+        tahun: tahun,
+        bulan: bulan,
         payrolls: payrolls,
         keterangan: keterangan,
       );
@@ -190,10 +195,10 @@ class PayrollControl extends GetxController {
   }
 
   void ubahForm(BuildContext context) {
-    txtTglGajiAwal.text = AFconvert.matYMD(currentPayroll.tanggalAwal);
-    txtTglGajiAkhir.text = AFconvert.matYMD(currentPayroll.tanggalAkhir);
-    txtTglMakanAwal.text = AFconvert.matYMD(currentPayroll.tanggalMakanAwal);
-    txtTglMakanAkhir.text = AFconvert.matYMD(currentPayroll.tanggalMakanAkhir);
+    txtTanggalAwal.text = AFconvert.matDate(currentPayroll.tanggalAwal);
+    txtTanggalAkhir.text = AFconvert.matDate(currentPayroll.tanggalAkhir);
+    tahun = Opsi(value: '${currentPayroll.tahun}', label: '${currentPayroll.tahun}');
+    bulan = Opsi(value: '${currentPayroll.bulan}', label: mapBulan[currentPayroll.bulan]!);
     txtKeterangan.text = currentPayroll.keterangan;
     AFwidget.dialog(
       Container(
@@ -217,37 +222,37 @@ class PayrollControl extends GetxController {
                         child: const Text('Periode Penggajian'),
                       ),
                       Expanded(
-                        child: AFwidget.textField(
-                          marginTop: 0,
-                          controller: txtTglGajiAwal,
-                          readOnly: true,
-                          prefixIcon: const Icon(Icons.calendar_month),
-                          ontap: () async {
-                            var a = await AFwidget.pickDate(
-                              context: context,
-                              initialDate: AFconvert.keTanggal(txtTglGajiAwal.text),
+                        child: GetBuilder<PayrollControl>(
+                          builder: (_) {
+                            return AFwidget.comboField(
+                              value: bulan.label,
+                              label: '',
+                              onTap: () async {
+                                var a = await pilihBulan(value: bulan.value);
+                                if(a != null && a.value != bulan.value) {
+                                  bulan = a;
+                                  update();
+                                }
+                              },
                             );
-                            if(a != null) {
-                              txtTglGajiAwal.text = AFconvert.matYMD(a);
-                            }
                           },
                         ),
                       ),
-                      const Text('   s/d   '),
+                      const SizedBox(width: 40),
                       Expanded(
-                        child: AFwidget.textField(
-                          marginTop: 0,
-                          controller: txtTglGajiAkhir,
-                          readOnly: true,
-                          prefixIcon: const Icon(Icons.calendar_month),
-                          ontap: () async {
-                            var a = await AFwidget.pickDate(
-                              context: context,
-                              initialDate: AFconvert.keTanggal(txtTglGajiAkhir.text),
+                        child: GetBuilder<PayrollControl>(
+                          builder: (_) {
+                            return AFwidget.comboField(
+                              value: tahun.label,
+                              label: '',
+                              onTap: () async {
+                                var a = await pilihTahun(value: tahun.value);
+                                if(a != null && a.value != tahun.value) {
+                                  tahun = a;
+                                  update();
+                                }
+                              },
                             );
-                            if(a != null) {
-                              txtTglGajiAkhir.text = AFconvert.matYMD(a);
-                            }
                           },
                         ),
                       ),
@@ -261,39 +266,42 @@ class PayrollControl extends GetxController {
                       Container(
                         width: 240,
                         padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Periode U/makan & Transportasi'),
+                        child: const Text('Periode Batas (Cut-off)'),
                       ),
                       Expanded(
                         child: AFwidget.textField(
                           marginTop: 0,
-                          controller: txtTglMakanAwal,
+                          controller: txtTanggalAwal,
                           readOnly: true,
                           prefixIcon: const Icon(Icons.calendar_month),
                           ontap: () async {
                             var a = await AFwidget.pickDate(
                               context: context,
-                              initialDate: AFconvert.keTanggal(txtTglMakanAwal.text),
+                              initialDate: AFconvert.keTanggal(AFconvert.matDMYtoYMD(txtTanggalAwal.text)),
                             );
                             if(a != null) {
-                              txtTglMakanAwal.text = AFconvert.matYMD(a);
+                              txtTanggalAwal.text = AFconvert.matDate(a);
                             }
                           },
                         ),
                       ),
-                      const Text('   s/d   '),
+                      const SizedBox(
+                        width: 40,
+                        child: Text('s/d', textAlign: TextAlign.center),
+                      ),
                       Expanded(
                         child: AFwidget.textField(
                           marginTop: 0,
-                          controller: txtTglMakanAkhir,
+                          controller: txtTanggalAkhir,
                           readOnly: true,
                           prefixIcon: const Icon(Icons.calendar_month),
                           ontap: () async {
                             var a = await AFwidget.pickDate(
                               context: context,
-                              initialDate: AFconvert.keTanggal(txtTglMakanAkhir.text),
+                              initialDate: AFconvert.keTanggal(AFconvert.matDMYtoYMD(txtTanggalAkhir.text)),
                             );
                             if(a != null) {
-                              txtTglMakanAkhir.text = AFconvert.matYMD(a);
+                              txtTanggalAkhir.text = AFconvert.matDate(a);
                             }
                           },
                         ),
@@ -740,20 +748,20 @@ class PayrollControl extends GetxController {
       if(currentPayroll.id.isEmpty) {
         throw 'ID Payroll tidak ditemukan';
       }
-      if(txtTglGajiAwal.text.isEmpty || txtTglGajiAkhir.text.isEmpty) {
+      if(tahun.value.isEmpty || bulan.value.isEmpty) {
         throw 'Periode penggajian harus diisi';
       }
-      if(txtTglMakanAwal.text.isEmpty || txtTglMakanAkhir.text.isEmpty) {
-        throw 'Periode u/makan & transportasi harus diisi';
+      if(txtTanggalAwal.text.isEmpty || txtTanggalAkhir.text.isEmpty) {
+        throw 'Periode batas (cut-off) harus diisi';
       }
       AFwidget.loading();
       var id = currentPayroll.id;
       var hasil = await _payrollRepo.update(
         id: id,
-        tglAwal: txtTglGajiAwal.text,
-        tglAkhir: txtTglGajiAkhir.text,
-        tglMakanAwal: txtTglMakanAwal.text,
-        tglMakanAkhir: txtTglMakanAkhir.text,
+        tglAwal: txtTanggalAwal.text,
+        tglAkhir: txtTanggalAkhir.text,
+        bulan: bulan.value,
+        tahun: tahun.value,
         keterangan: txtKeterangan.text,
       );
       Get.back();
@@ -841,11 +849,20 @@ class PayrollControl extends GetxController {
   }
 
   Future<Opsi?> pilihTahun({String value = ''}) async {
-    int tahunNow = DateTime.now().year;
     var a = await AFcombobox.bottomSheet(
-      listOpsi: List.generate(tahunNow-2019, (index) => Opsi(value: '${tahunNow-index}', label: '${tahunNow-index}')),
+      listOpsi: listTahun,
       valueSelected: value,
       judul: 'Pilih Tahun',
+      withCari: false,
+    );
+    return a;
+  }
+
+  Future<Opsi?> pilihBulan({String value = ''}) async {
+    var a = await AFcombobox.bottomSheet(
+      listOpsi: listBulan,
+      valueSelected: value,
+      judul: 'Pilih Bulan',
       withCari: false,
     );
     return a;
@@ -923,10 +940,12 @@ class PayrollControl extends GetxController {
   
   @override
   void onInit() {
-    txtTglGajiAwal = TextEditingController();
-    txtTglGajiAkhir = TextEditingController();
-    txtTglMakanAwal = TextEditingController();
-    txtTglMakanAkhir = TextEditingController();
+    filterTahun = Opsi(value: '${_now.year}', label: '${_now.year}');
+    tahun = Opsi(value: '${_now.year}', label: '${_now.year}');
+    bulan = Opsi(value: '${_now.month}', label: mapBulan[_now.month]!);
+    listTahun = List.generate(_now.year-2019, (index) => Opsi(value: '${_now.year-index}', label: '${_now.year-index}'));
+    txtTanggalAwal = TextEditingController();
+    txtTanggalAkhir = TextEditingController();
     txtGaji = TextEditingController();
     txtHariMakan = TextEditingController();
     txtUangMakanHarian = TextEditingController();
@@ -955,10 +974,8 @@ class PayrollControl extends GetxController {
 
   @override
   void onClose() {
-    txtTglGajiAwal.dispose();
-    txtTglGajiAkhir.dispose();
-    txtTglMakanAwal.dispose();
-    txtTglMakanAkhir.dispose();
+    txtTanggalAwal.dispose();
+    txtTanggalAkhir.dispose();
     txtGaji.dispose();
     txtHariMakan.dispose();
     txtUangMakanHarian.dispose();

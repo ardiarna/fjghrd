@@ -3,6 +3,7 @@ import 'package:fjghrd/models/payroll.dart';
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
+import 'package:fjghrd/views/medical_view.dart';
 import 'package:fjghrd/views/payroll_form.dart';
 import 'package:fjghrd/views/runpayroll_view.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +43,15 @@ class PayrollView extends StatelessWidget {
                 },
                 icon: const Icon(Icons.data_exploration_outlined),
                 label: const Text('Run Payroll'),
+              ),
+              const SizedBox(width: 20),
+              ElevatedButton.icon(
+                onPressed: (){
+                  controller.homeControl.kontener = MedicalView();
+                  controller.homeControl.update();
+                },
+                icon: const Icon(Icons.medical_information_outlined),
+                label: const Text('Medical'),
               ),
               const Spacer(),
               SizedBox(

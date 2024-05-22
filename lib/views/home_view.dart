@@ -87,7 +87,7 @@ class HomeView extends StatelessWidget {
                     icon: Icons.maps_home_work_outlined,
                     color: Colors.brown,
                     onTap: () {
-                      controller.tabId = 3;
+                      controller.tabId = 4;
                       controller.kontener = AreaView();
                       Get.back();
                       controller.update();
@@ -98,7 +98,7 @@ class HomeView extends StatelessWidget {
                     icon: Icons.dataset_linked_outlined,
                     color: Colors.brown,
                     onTap: () {
-                      controller.tabId = 3;
+                      controller.tabId = 4;
                       controller.kontener = DivisiView();
                       Get.back();
                       controller.update();
@@ -109,7 +109,7 @@ class HomeView extends StatelessWidget {
                     icon: Icons.chair_alt_outlined,
                     color: Colors.brown,
                     onTap: () {
-                      controller.tabId = 3;
+                      controller.tabId = 4;
                       controller.kontener = JabatanView();
                       Get.back();
                       controller.update();
@@ -120,7 +120,7 @@ class HomeView extends StatelessWidget {
                     icon: Icons.mosque_outlined,
                     color: Colors.brown,
                     onTap: () {
-                      controller.tabId = 3;
+                      controller.tabId = 4;
                       controller.kontener = AgamaView();
                       Get.back();
                       controller.update();
@@ -131,7 +131,7 @@ class HomeView extends StatelessWidget {
                     icon: Icons.school_outlined,
                     color: Colors.brown,
                     onTap: () {
-                      controller.tabId = 3;
+                      controller.tabId = 4;
                       controller.kontener = PendidikanView();
                       Get.back();
                       controller.update();
@@ -142,7 +142,7 @@ class HomeView extends StatelessWidget {
                     icon: Icons.arrow_drop_down_circle_outlined,
                     color: Colors.brown,
                     onTap: () {
-                      controller.tabId = 3;
+                      controller.tabId = 4;
                       controller.kontener = StatusKerjaView();
                       Get.back();
                       controller.update();
@@ -153,7 +153,7 @@ class HomeView extends StatelessWidget {
                     icon: Icons.arrow_drop_down_circle_outlined,
                     color: Colors.brown,
                     onTap: () {
-                      controller.tabId = 3;
+                      controller.tabId = 4;
                       controller.kontener = StatusPhkView();
                       Get.back();
                       controller.update();
@@ -164,7 +164,7 @@ class HomeView extends StatelessWidget {
                     icon: Icons.emoji_people,
                     color: Colors.brown,
                     onTap: () {
-                      controller.tabId = 3;
+                      controller.tabId = 4;
                       controller.kontener = CustomerView();
                       Get.back();
                       controller.update();
@@ -175,7 +175,7 @@ class HomeView extends StatelessWidget {
                     icon: Icons.calendar_month,
                     color: Colors.brown,
                     onTap: () {
-                      controller.tabId = 3;
+                      controller.tabId = 4;
                       controller.kontener = HariLiburView();
                       Get.back();
                       controller.update();
@@ -186,7 +186,7 @@ class HomeView extends StatelessWidget {
                     icon: Icons.attach_money,
                     color: Colors.brown,
                     onTap: () {
-                      controller.tabId = 3;
+                      controller.tabId = 4;
                       controller.kontener = UpahView();
                       Get.back();
                       controller.update();

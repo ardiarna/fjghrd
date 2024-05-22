@@ -10,8 +10,6 @@ class Payroll {
   int tahun;
   DateTime? tanggalAwal;
   DateTime? tanggalAkhir;
-  DateTime? tanggalMakanAwal;
-  DateTime? tanggalMakanAkhir;
   bool makanHarian;
   int gaji;
   int hariMakan;
@@ -47,8 +45,6 @@ class Payroll {
     this.tahun = 0,
     this.tanggalAwal,
     this.tanggalAkhir,
-    this.tanggalMakanAwal,
-    this.tanggalMakanAkhir,
     this.makanHarian = true,
     this.gaji = 0,
     this.hariMakan = 0,
@@ -86,8 +82,6 @@ class Payroll {
       tahun: AFconvert.keInt(data['tahun']),
       tanggalAwal: AFconvert.keTanggal(data['tanggal_awal']),
       tanggalAkhir: AFconvert.keTanggal(data['tanggal_akhir']),
-      tanggalMakanAwal: AFconvert.keTanggal(data['tanggal_makan_awal']),
-      tanggalMakanAkhir: AFconvert.keTanggal(data['tanggal_makan_akhir']),
       makanHarian: AFconvert.keBool(data['makan_harian']),
       gaji: AFconvert.keInt(data['gaji']),
       hariMakan: AFconvert.keInt(data['hari_makan']),
@@ -129,8 +123,8 @@ class Payroll {
       'karyawan_id': karyawan.id,
       'tanggal_awal': AFconvert.matYMDTime(tanggalAwal),
       'tanggal_akhir': AFconvert.matYMDTime(tanggalAkhir),
-      'tanggal_makan_awal': AFconvert.matYMDTime(tanggalMakanAwal),
-      'tanggal_makan_akhir': AFconvert.matYMDTime(tanggalMakanAkhir),
+      'tahun': AFconvert.keString(tahun),
+      'bulan': AFconvert.keString(bulan),
       'makan_harian': makanHarian ? 'Y' : 'N',
       'gaji': AFconvert.keString(gaji),
       'hari_makan': AFconvert.keString(hariMakan),
