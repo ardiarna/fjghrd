@@ -22,4 +22,19 @@ class MedicalRepository {
     );
   }
 
+  Future<Hasil> update(String id, Map<String, String> body) async {
+    return await AFdatabase.send(
+      url: 'medical/$id',
+      methodeRequest: MethodeRequest.put,
+      body: body,
+    );
+  }
+
+  Future<Hasil> delete(String id) async {
+    return await AFdatabase.send(
+      url: 'medical/$id',
+      methodeRequest: MethodeRequest.delete,
+    );
+  }
+
 }

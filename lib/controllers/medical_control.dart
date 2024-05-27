@@ -442,12 +442,327 @@ class MedicalControl extends GetxController {
   }
 
   void ubahForm(String id, BuildContext context) {
-
+    var item = listMedical.where((element) => element.id == id).first;
+    txtId.text = item.id;
+    tahun = Opsi(value: '${item.tahun}', label: '${item.tahun}');
+    bulan = Opsi(value: '${item.bulan}', label: mapBulan[item.bulan]!);
+    txtTanggal.text = AFconvert.matDate(item.tanggal);
+    txtKeterangan.text = item.keterangan;
+    txtJumlah.text = AFconvert.matNumber(item.jumlah);
+    karyawan = item.karyawan;
+    jenis = listJenis.where((element) => element.value == item.jenis).first;
+    loadInfoMedical();
+    AFwidget.dialog(
+      Container(
+        padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+        width: Get.width,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Stack(
+                children: [
+                  ListView(
+                    children: [
+                      barisInfo(
+                        label: 'Nama Karyawan',
+                        nilai: karyawan.nama,
+                        paddingTop: 60,
+                      ),
+                      barisInfo(
+                        label: 'Jabatan',
+                        nilai: karyawan.jabatan.nama,
+                      ),
+                      barisInfo(
+                        label: 'Masa Kerja',
+                        nilai: AFconvert.matDate(karyawan.tanggalMasuk),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 150,
+                              padding: const EdgeInsets.only(right: 15),
+                              child: const Text('Jenis Medical'),
+                            ),
+                            Expanded(
+                              child: GetBuilder<MedicalControl>(
+                                builder: (_) {
+                                  return AFwidget.comboField(
+                                    value: jenis.label,
+                                    label: '',
+                                    onTap: () async {
+                                      var a = await pilihJenis(value: jenis.value);
+                                      if(a != null && a.value != jenis.value) {
+                                        jenis = a;
+                                        loadInfoMedical();
+                                      }
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 150,
+                              padding: const EdgeInsets.only(right: 15),
+                              child: const Text('Periode'),
+                            ),
+                            Expanded(
+                              child: GetBuilder<MedicalControl>(
+                                builder: (_) {
+                                  return AFwidget.comboField(
+                                    value: bulan.label,
+                                    label: '',
+                                    onTap: () async {
+                                      var a = await pilihBulan(value: bulan.value);
+                                      if(a != null && a.value != bulan.value) {
+                                        bulan = a;
+                                        update();
+                                      }
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 40),
+                            Expanded(
+                              child: GetBuilder<MedicalControl>(
+                                builder: (_) {
+                                  return AFwidget.comboField(
+                                    value: tahun.label,
+                                    label: '',
+                                    onTap: () async {
+                                      var a = await pilihTahun(value: tahun.value);
+                                      if(a != null && a.value != tahun.value) {
+                                        tahun = a;
+                                        if(jenis.value == 'R') {
+                                          loadInfoMedical();
+                                        } else {
+                                          update();
+                                        }
+                                      }
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 150,
+                              padding: const EdgeInsets.only(right: 15),
+                              child: const Text('Tanggal'),
+                            ),
+                            Expanded(
+                              child: AFwidget.textField(
+                                marginTop: 0,
+                                controller: txtTanggal,
+                                readOnly: true,
+                                prefixIcon: const Icon(Icons.calendar_month),
+                                ontap: () async {
+                                  var a = await AFwidget.pickDate(
+                                    context: context,
+                                    initialDate: AFconvert.keTanggal(AFconvert.matDMYtoYMD(txtTanggal.text)),
+                                  );
+                                  if(a != null) {
+                                    txtTanggal.text = AFconvert.matDate(a);
+                                  }
+                                },
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      barisText(
+                        label: 'Jumlah',
+                        controller: txtJumlah,
+                        isNumber: true,
+                      ),
+                      barisText(
+                        label: 'Keterangan',
+                        controller: txtKeterangan,
+                        isTextArea: true,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            AFwidget.tombol(
+                              label: 'Hapus',
+                              color: Colors.red,
+                              onPressed: () {
+                                hapusForm(item);
+                              },
+                              minimumSize: const Size(120, 40),
+                            ),
+                            const Spacer(),
+                            AFwidget.tombol(
+                              label: 'Batal',
+                              color: Colors.orange,
+                              onPressed: Get.back,
+                              minimumSize: const Size(120, 40),
+                            ),
+                            const SizedBox(width: 40),
+                            AFwidget.tombol(
+                              label: 'Simpan',
+                              color: Colors.blue,
+                              onPressed: ubahData,
+                              minimumSize: const Size(120, 40),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    height: 55,
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(15),
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topRight: Radius.circular(15),
+                      ),
+                    ),
+                    child: const Text('Form Ubah Medical',
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              width: 200,
+              padding: const EdgeInsets.all(15),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade200,
+                borderRadius: const BorderRadius.only(
+                  topRight: Radius.circular(15),
+                  bottomRight: Radius.circular(15),
+                ),
+              ),
+              child: GetBuilder<MedicalControl>(
+                builder: (_) {
+                  if(jenis.value == 'R') {
+                    tunjangan = karyawan.kelamin == 'L' ? medicalRekap.gaji*2 : medicalRekap.gaji;
+                    jumlahKlaim = medicalRekap.bln1 + medicalRekap.bln2 + medicalRekap.bln3 +
+                        medicalRekap.bln4 + medicalRekap.bln5 + medicalRekap.bln6 +
+                        medicalRekap.bln7 + medicalRekap.bln8 + medicalRekap.bln9 +
+                        medicalRekap.bln10 + medicalRekap.bln11 + medicalRekap.bln12;
+                    sisaTunjangan = tunjangan - jumlahKlaim;
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('Gaji:'),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(5),
+                          margin: const EdgeInsets.only(left: 5, bottom: 10),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey.shade300),
+                          ),
+                          child: Text(AFconvert.matNumber(medicalRekap.gaji)),
+                        ),
+                        const Text('Tunjangan:'),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(5),
+                          margin: const EdgeInsets.only(left: 5, bottom: 10),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey.shade300),
+                          ),
+                          child: Text(AFconvert.matNumber(tunjangan)),
+                        ),
+                        const Text('Jumlah Klaim:'),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(5),
+                          margin: const EdgeInsets.only(left: 5, bottom: 10),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey.shade300),
+                          ),
+                          child: Text(AFconvert.matNumber(jumlahKlaim)),
+                        ),
+                        const Text('Sisa IDR:'),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(5),
+                          margin: const EdgeInsets.only(left: 5, bottom: 15),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey.shade300),
+                          ),
+                          child: Text(AFconvert.matNumber(sisaTunjangan)),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text('History:'),
+                        const SizedBox(height: 10),
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: medicalHistory.length,
+                            itemBuilder: (_, i) {
+                              return Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(5),
+                                margin: const EdgeInsets.only(left: 5, bottom: 10),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey.shade300),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(AFconvert.matDate(medicalHistory[i].tanggal)),
+                                    Text('Rp. ${AFconvert.matNumber(medicalHistory[i].jumlah)}'),
+                                    Text(medicalHistory[i].keterangan),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+      barrierDismissible: false,
+      scrollable: false,
+      backgroundColor: Colors.white,
+      contentPadding: const EdgeInsets.all(0),
+    );
   }
 
   void hapusForm(Medical item) {
     AFwidget.formHapus(
-      label: 'medical ${item.karyawan.nama} pada tanggal ${AFconvert.matDate(item.tanggal)} (Rp. ${AFconvert.matNumber(item.jumlah)})',
+      label: 'medical ${item.karyawan.nama} pada tanggal ${AFconvert.matDate(item.tanggal)} sebesar Rp. ${AFconvert.matNumber(item.jumlah)} ',
       aksi: () {
         hapusData(item.id);
       },
@@ -496,26 +811,65 @@ class MedicalControl extends GetxController {
   }
 
   Future<void> ubahData() async {
+    try {
+      if(txtId.text.isEmpty) {
+        throw 'ID medical tidak ditemukan';
+      }
+      if(karyawan.id.isEmpty) {
+        throw 'Silakan pilih karyawan';
+      }
+      if(jenis.value.isEmpty) {
+        throw 'Silakan pilih jenis medical';
+      }
+      if(bulan.value.isEmpty || tahun.value.isEmpty) {
+        throw 'Periode harus diisi';
+      }
+      if(txtTanggal.text.isEmpty) {
+        throw 'Tanggal harus diisi';
+      }
+      if(txtJumlah.text.isEmpty) {
+        throw 'Jumlah harus diisi';
+      }
+      var a = Medical(
+        jenis: jenis.value,
+        tanggal: AFconvert.keTanggal('${AFconvert.matDMYtoYMD(txtTanggal.text)} 08:00:00'),
+        bulan: AFconvert.keInt(bulan.value),
+        tahun: AFconvert.keInt(tahun.value),
+        jumlah: AFconvert.keInt(txtJumlah.text),
+        keterangan: txtKeterangan.text,
+      );
+      a.karyawan = karyawan;
 
+      AFwidget.loading();
+      var hasil = await _repo.update(txtId.text, a.toMap());
+      Get.back();
+      if(hasil.success) {
+        loadMedicals();
+        Get.back();
+      }
+      AFwidget.snackbar(hasil.message);
+    } catch (er) {
+      AFwidget.snackbar('$er');
+    }
   }
 
   Future<void> hapusData(String id) async {
-    // try {
-    //   if(id == '') {
-    //     throw 'ID Medical null';
-    //   }
-    //   AFwidget.loading();
-    //   var hasil = await _repo.delete(id);
-    //   Get.back();
-    //   if(hasil.success) {
-    //     loadMedicals();
-    //     Get.back();
-    //     Get.back();
-    //   }
-    //   AFwidget.snackbar(hasil.message);
-    // } catch (er) {
-    //   AFwidget.snackbar('$er');
-    // }
+    try {
+      if(id == '') {
+        throw 'ID medical tidak ditemukan';
+      }
+      AFwidget.loading();
+      var hasil = await _repo.delete(id);
+      Get.back();
+      if(hasil.success) {
+        loadMedicals();
+        Get.back();
+        Get.back();
+      }
+      AFwidget.snackbar(hasil.message);
+    } catch (er) {
+      AFwidget.snackbar('$er');
+    }
   }
 
   Future<Opsi?> pilihKaryawan({String value = ''}) async {
@@ -587,6 +941,33 @@ class MedicalControl extends GetxController {
                 ),
               ],
               textAlign: isNumber ? TextAlign.end : TextAlign.start,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget barisInfo({
+    String label = '',
+    String nilai = '',
+    double paddingTop = 20,
+  }) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(0, paddingTop, 20, 0),
+      child: Row(
+        children: [
+          Container(
+            width: 150,
+            padding: const EdgeInsets.only(right: 15),
+            child: Text(label),
+          ),
+          Expanded(
+            child: Text(': $nilai',
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],
