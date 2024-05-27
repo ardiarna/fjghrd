@@ -5,9 +5,7 @@ import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/views/payroll_view.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
@@ -27,6 +25,15 @@ class RunpayrollView extends StatelessWidget {
       int uangMakanHarian = e.upah.makanHarian ? e.upah.uangMakan : 0;
       int uangMakanJumlah = e.upah.makanHarian ? uangMakanHarian*hariMakan : e.upah.uangMakan;
       int totalDiterima = e.upah.gaji + uangMakanJumlah;
+      int medical = controller.listMedical
+          .where((element) => element.karyawan.id == e.id)
+          .fold(0, (sum, element) => sum + element.jumlah);
+      var overtimeFjg = controller.listOvertime
+          .where((element) => element.karyawan.id == e.id && element.jenis == 'F')
+          .fold(0, (sum, element) => sum + element.jumlah);
+      var overtimeCus = controller.listOvertime
+          .where((element) => element.karyawan.id == e.id && element.jenis == 'C')
+          .fold(0, (sum, element) => sum + element.jumlah);
       return PlutoRow(
         cells: {
           'karyawan_id': PlutoCell(value: e.id),
@@ -38,9 +45,9 @@ class RunpayrollView extends StatelessWidget {
           'hari_makan': PlutoCell(value: hariMakan),
           'uang_makan_harian': PlutoCell(value: uangMakanHarian),
           'uang_makan_jumlah': PlutoCell(value: uangMakanJumlah),
-          'overtime_fjg': PlutoCell(value: 0),
-          'overtime_cus': PlutoCell(value: 0),
-          'medical': PlutoCell(value: 0),
+          'overtime_fjg': PlutoCell(value: overtimeFjg),
+          'overtime_cus': PlutoCell(value: overtimeCus),
+          'medical': PlutoCell(value: medical),
           'thr': PlutoCell(value: 0),
           'bonus': PlutoCell(value: 0),
           'insentif': PlutoCell(value: 0),
@@ -874,7 +881,9 @@ class RunpayrollView extends StatelessWidget {
                     ),
                     FilledButton.icon(
                       onPressed: () {
-                        controller.loadHariLiburs(controller.tahun.value);
+                        controller.loadOvertimes();
+                        controller.loadMedicals();
+                        controller.loadHariLiburs();
                         controller.homeControl.kontener = wgKaryawans();
                         controller.homeControl.update();
                       },

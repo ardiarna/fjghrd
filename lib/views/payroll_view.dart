@@ -227,6 +227,7 @@ class PayrollView extends StatelessWidget {
                 label: 'Telkomsel',
                 value: AFconvert.matNumber(item.telkomsel),
               ),
+              item.lain == 0 ? Container() :
               barisKonten(
                 label: 'Lain-lain',
                 value: AFconvert.matNumber(item.lain),
@@ -265,6 +266,7 @@ class PayrollView extends StatelessWidget {
                 label: 'Unpaid Leave / Cuti Bersama',
                 value: AFconvert.matNumber(item.potCuti),
               ),
+              item.potLain == 0 ? Container() :
               barisKonten(
                 label: 'Lain-lain',
                 value: AFconvert.matNumber(item.potLain),

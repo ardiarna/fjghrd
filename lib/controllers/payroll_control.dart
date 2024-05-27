@@ -3,8 +3,12 @@ import 'package:fjghrd/controllers/auth_control.dart';
 import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/models/hari_libur.dart';
 import 'package:fjghrd/models/karyawan.dart';
+import 'package:fjghrd/models/medical.dart';
+import 'package:fjghrd/models/overtime.dart';
 import 'package:fjghrd/models/payroll.dart';
 import 'package:fjghrd/repositories/hari_libur_repository.dart';
+import 'package:fjghrd/repositories/medical_repository.dart';
+import 'package:fjghrd/repositories/overtime_repository.dart';
 import 'package:fjghrd/repositories/payroll_repository.dart';
 import 'package:fjghrd/repositories/upah_repository.dart';
 import 'package:fjghrd/utils/af_combobox.dart';
@@ -27,6 +31,8 @@ class PayrollControl extends GetxController {
   List<Payroll> listDetilPayroll = [];
   List<Karyawan> listKaryawan = [];
   Map<String, int> totalKaryawanPerArea = {};
+  List<Overtime> listOvertime = [];
+  List<Medical> listMedical = [];
   List<HariLibur> listHariLibur = [];
   List<Opsi> listBulan = mapBulan.entries.map((e) => Opsi(value: e.key.toString(), label: e.value)).toList();
   late List<Opsi> listTahun;
@@ -99,9 +105,38 @@ class PayrollControl extends GetxController {
     }
   }
 
-  Future<void> loadHariLiburs(String tahun) async {
+  Future<void> loadOvertimes() async {
+    final OvertimeRepository repo = OvertimeRepository();
+    var hasil = await repo.findAll(
+      tahun: tahun.value,
+      bulan: bulan.value,
+    );
+    if (hasil.success) {
+      listOvertime.clear();
+      for (var data in hasil.daftar) {
+        listOvertime.add(Overtime.fromMap(data));
+      }
+    }
+  }
+
+  Future<void> loadMedicals() async {
+    final MedicalRepository repo = MedicalRepository();
+    var hasil = await repo.findAll(
+      tahun: tahun.value,
+      bulan: bulan.value,
+      jenis: 'R',
+    );
+    if (hasil.success) {
+      listMedical.clear();
+      for (var data in hasil.daftar) {
+        listMedical.add(Medical.fromMap(data));
+      }
+    }
+  }
+
+  Future<void> loadHariLiburs() async {
     final HariLiburRepository repo = HariLiburRepository();
-    var hasil = await repo.findAll(tahun: tahun);
+    var hasil = await repo.findAll(tahun: tahun.value);
     if (hasil.success) {
       listHariLibur.clear();
       for (var data in hasil.daftar) {
