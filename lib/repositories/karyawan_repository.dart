@@ -151,4 +151,10 @@ class KaryawanRepository {
     );
   }
 
+  Future<Hasil> overtimeRekap(String id, String tahun) async {
+    return await AFdatabase.send(
+      url: 'karyawan/$id/overtime-rekap/$tahun',
+    );
+  }
+
 }
