@@ -4,6 +4,7 @@ import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/views/medical_view.dart';
+import 'package:fjghrd/views/oncall_customer_view.dart';
 import 'package:fjghrd/views/overtime_view.dart';
 import 'package:fjghrd/views/payroll_form.dart';
 import 'package:fjghrd/views/runpayroll_view.dart';
@@ -61,7 +62,16 @@ class PayrollView extends StatelessWidget {
                   controller.homeControl.update();
                 },
                 icon: const Icon(Icons.punch_clock_outlined),
-                label: const Text('Overtime'),
+                label: const Text('Overtime Karyawan'),
+              ),
+              const SizedBox(width: 20),
+              ElevatedButton.icon(
+                onPressed: (){
+                  controller.homeControl.kontener = OncallCustomerView();
+                  controller.homeControl.update();
+                },
+                icon: const Icon(Icons.call_missed_outlined),
+                label: const Text('Overtime & On Call Customer'),
               ),
               const Spacer(),
               SizedBox(
