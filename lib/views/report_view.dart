@@ -58,14 +58,126 @@ class ReportView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 barisBox(
-                  label: 'List Payroll',
+                  label: 'LIST PAYROLL',
                   onPressed: controller.dowloadListpayroll,
+                ),
+                barisBox(
+                  label: 'REKAP GAJI',
+                  onPressed: controller.dowloadRekapPayroll,
+                ),
+                barisBox(
+                  label: 'REKAP MEDICAL',
+                  onPressed: controller.dowloadRekapMedical,
+                ),
+                barisBox(
+                  label: 'REKAP OVERTIME',
+                  onPressed: controller.dowloadRekapOvertime,
+                ),
+                barisBox(
+                  label: 'REKAP PAYROLL PER KARYAWAN DIVISI ENGINEERING',
+                  onPressed: () {
+                    areaDialog('1');
+                  },
+                ),
+                barisBox(
+                  label: 'REKAP PAYROLL PER KARYAWAN DIVISI STAF',
+                  onPressed: () {
+                    areaDialog('2');
+                  },
+                ),
+                barisBox(
+                  label: 'REKAP PAYROLL PER KARYAWAN DIVISI NON STAF',
+                  onPressed: controller.dowloadRekapPayrollPerKaryawanNonStaf,
                 ),
               ],
             ),
           ),
         ),
       ],
+    );
+  }
+
+  void areaDialog(String jenis) {
+    AFwidget.dialog(
+      Container(
+        width: 500,
+        height: 200,
+        padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        child: Column(
+          children: [
+            Container(
+              height: 65,
+              width: double.infinity,
+              padding: const EdgeInsets.all(15),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(15),
+                ),
+              ),
+              child: Text(jenis == '1' ? 'DIVISI ENGINEERING' : jenis == '2' ? 'DIVISI STAF' : '',
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Row(
+              children: [
+                const Text('Area   :   '),
+                Expanded(
+                  child: GetBuilder<ReportControl>(
+                    builder: (_) {
+                      return AFwidget.comboField(
+                        value: controller.filterArea.label,
+                        label: '',
+                        onTap: () async {
+                          var a = await controller.pilihArea(value: controller.filterArea.value);
+                          if(a != null && a.value != controller.filterArea.value) {
+                            controller.filterArea = a;
+                            controller.update();
+                          }
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  AFwidget.tombol(
+                    label: 'Batal',
+                    color: Colors.orange,
+                    onPressed: Get.back,
+                    minimumSize: const Size(120, 40),
+                  ),
+                  const SizedBox(width: 40),
+                  AFwidget.tombol(
+                    label: 'Download',
+                    color: Colors.green,
+                    onPressed: () {
+                      Get.back();
+                      controller.dowloadRekapPayrollPerKaryawanStaf(jenis);
+                    },
+                    minimumSize: const Size(120, 40),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      scrollable: false,
+      backgroundColor: Colors.white,
+      contentPadding: const EdgeInsets.all(0),
     );
   }
 

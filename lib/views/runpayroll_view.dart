@@ -24,7 +24,6 @@ class RunpayrollView extends StatelessWidget {
     return rowData.map((e) {
       int uangMakanHarian = e.upah.makanHarian ? e.upah.uangMakan : 0;
       int uangMakanJumlah = e.upah.makanHarian ? uangMakanHarian*hariMakan : e.upah.uangMakan;
-      int totalDiterima = e.upah.gaji + uangMakanJumlah;
       int medical = controller.listMedical
           .where((element) => element.karyawan.id == e.id)
           .fold(0, (sum, element) => sum + element.jumlah);
@@ -34,6 +33,7 @@ class RunpayrollView extends StatelessWidget {
       var overtimeCus = controller.listOvertime
           .where((element) => element.karyawan.id == e.id && element.jenis == 'C')
           .fold(0, (sum, element) => sum + element.jumlah);
+      int totalDiterima = (e.upah.gaji + uangMakanJumlah + overtimeFjg + overtimeCus + medical);
       return PlutoRow(
         cells: {
           'karyawan_id': PlutoCell(value: e.id),
