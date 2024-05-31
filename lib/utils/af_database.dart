@@ -1,10 +1,12 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:background_downloader/background_downloader.dart';
 import 'package:fjghrd/controllers/auth_control.dart';
 import 'package:fjghrd/utils/hasil.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 enum MethodeRequest {
   get,
@@ -146,7 +148,7 @@ abstract class AFdatabase {
     return hasil;
   }
 
-  static Future<void> download({
+  static Future<Hasil> download({
     required String url,
     bool defaultAPI = true,
   }) async {
@@ -158,8 +160,24 @@ abstract class AFdatabase {
         "Authorization" : "Bearer ${_authControl.user.tokenJWT}",
       },
     ).withSuggestedFilename(unique: true);
-    await FileDownloader().download(task);
-    await FileDownloader().moveToSharedStorage(task, SharedStorage.downloads);
+    final result = await FileDownloader().download(task);
+    if(result.status == TaskStatus.complete) {
+      final a = await FileDownloader().moveToSharedStorage(task, SharedStorage.downloads);
+      if( a!= null) {
+        final Uri uri = Uri.file(a);
+        if(File(uri.toFilePath()).existsSync()){
+          await launchUrl(uri);
+        }
+      }
+      return Hasil(
+        success: true,
+        message: result.task.filename,
+      );
+    } else {
+      return Hasil(
+        message: '${result.status}',
+      );
+    }
   }
 
 }
