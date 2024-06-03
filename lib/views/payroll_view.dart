@@ -25,53 +25,59 @@ class PayrollView extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-          decoration: const BoxDecoration(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+          decoration: BoxDecoration(
             color: Colors.white,
+            border: Border.all(color: Colors.brown.shade100, width: 0.5),
           ),
           child: Row(
             children: [
-              const Text('PAYROLL',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.brown.shade200, width: 3),
+                  borderRadius: const BorderRadius.all(Radius.circular(15)),
+                ),
+                child: const Text('PAYROLL',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.brown,
+                  ),
                 ),
               ),
               const SizedBox(width: 20),
-              ElevatedButton.icon(
-                onPressed: (){
+              tombol(
+                label: 'Run Payroll',
+                icon: Icons.data_exploration_outlined,
+                onPressed: () {
                   controller.homeControl.kontener = RunpayrollView();
                   controller.homeControl.update();
                 },
-                icon: const Icon(Icons.data_exploration_outlined),
-                label: const Text('Run Payroll'),
               ),
-              const SizedBox(width: 20),
-              ElevatedButton.icon(
-                onPressed: (){
+              tombol(
+                label: 'Medical',
+                icon: Icons.medical_information_outlined,
+                onPressed: () {
                   controller.homeControl.kontener = MedicalView();
                   controller.homeControl.update();
                 },
-                icon: const Icon(Icons.medical_information_outlined),
-                label: const Text('Medical'),
               ),
-              const SizedBox(width: 20),
-              ElevatedButton.icon(
+              tombol(
+                label: 'Overtime Karyawan',
+                icon: Icons.punch_clock_outlined,
                 onPressed: (){
                   controller.homeControl.kontener = OvertimeView();
                   controller.homeControl.update();
                 },
-                icon: const Icon(Icons.punch_clock_outlined),
-                label: const Text('Overtime Karyawan'),
               ),
-              const SizedBox(width: 20),
-              ElevatedButton.icon(
+              tombol(
+                label: 'Overtime & On Call Customer',
+                icon: Icons.call_missed_outlined,
                 onPressed: (){
                   controller.homeControl.kontener = OncallCustomerView();
                   controller.homeControl.update();
                 },
-                icon: const Icon(Icons.call_missed_outlined),
-                label: const Text('Overtime & On Call Customer'),
               ),
               const Spacer(),
               SizedBox(
@@ -81,6 +87,7 @@ class PayrollView extends StatelessWidget {
                     return AFwidget.comboField(
                       value: controller.filterTahun.label,
                       label: '',
+                      warna: Colors.brown.shade400,
                       onTap: () async {
                         var a = await controller.pilihTahun(value: controller.filterTahun.value);
                         if(a != null && a.value != controller.filterTahun.value) {
@@ -106,6 +113,7 @@ class PayrollView extends StatelessWidget {
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(10),
+                    color: Colors.grey.shade50,
                     child: GetBuilder<PayrollControl>(
                       builder: (_) {
                         return Wrap(
@@ -140,6 +148,7 @@ class PayrollView extends StatelessWidget {
               BoxShadow(
                 color: Colors.blue,
                 blurRadius: 1,
+                blurStyle: BlurStyle.outer,
                 offset: Offset(1, 1),
               ),
             ],
@@ -157,7 +166,22 @@ class PayrollView extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.w600,
+                          color: Colors.black45,
                         ),
+                      ),
+                    ),
+                  ),
+                  Visibility(
+                    visible: item.dikunci,
+                    child: IconButton(
+                      onPressed: () {
+                        controller.currentPayroll = item;
+                        controller.homeControl.kontener = PayrollForm();
+                        controller.homeControl.update();
+                      },
+                      icon: const Icon(
+                        Icons.remove_red_eye,
+                        color: Colors.green,
                       ),
                     ),
                   ),
@@ -166,7 +190,7 @@ class PayrollView extends StatelessWidget {
                     child: IconButton(
                       onPressed: () {
                         controller.currentPayroll = item;
-                        controller.homeControl.kontener = PayrollForm();
+                        controller.homeControl.kontener = PayrollForm(isEdit: true);
                         controller.homeControl.update();
                       },
                       icon: const Icon(
@@ -315,6 +339,24 @@ class PayrollView extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget tombol({
+    required String label,
+    required IconData? icon,
+    required void Function()? onPressed,
+  }) {
+    return ElevatedButton.icon(
+      onPressed: onPressed,
+      icon: Icon(icon),
+      label: Text(label),
+      style: ElevatedButton.styleFrom(
+        minimumSize: const Size(100, 70),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(0),
+        ),
       ),
     );
   }

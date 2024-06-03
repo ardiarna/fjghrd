@@ -9,7 +9,9 @@ import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
 class PayrollForm extends StatelessWidget {
-  PayrollForm({super.key});
+  PayrollForm({this.isEdit = false, super.key});
+
+  final bool isEdit;
 
   final PayrollControl controller = Get.put(PayrollControl());
 
@@ -166,6 +168,9 @@ class PayrollForm extends StatelessWidget {
           if(rdrCtx.row.cells['id']!.value == null) {
             return const Text('');
           }
+          if(!isEdit) {
+            return Container();
+          }
           return Row(
             children: [
               IconButton(
@@ -227,6 +232,7 @@ class PayrollForm extends StatelessWidget {
         title: 'GAJI / UPAH',
         field: 'gaji',
         type: PlutoColumnType.number(),
+        readOnly: true,
         width: 150,
         backgroundColor: Colors.brown.shade100,
         textAlign: PlutoColumnTextAlign.right,
@@ -253,6 +259,7 @@ class PayrollForm extends StatelessWidget {
         title: 'HR',
         field: 'hari_makan',
         type: PlutoColumnType.number(),
+        readOnly: true,
         width: 70,
         backgroundColor: Colors.brown.shade100,
         textAlign: PlutoColumnTextAlign.right,
@@ -264,6 +271,7 @@ class PayrollForm extends StatelessWidget {
         title: '@HARI IDR',
         field: 'uang_makan_harian',
         type: PlutoColumnType.number(),
+        readOnly: true,
         width: 120,
         backgroundColor: Colors.brown.shade100,
         textAlign: PlutoColumnTextAlign.right,
@@ -275,6 +283,7 @@ class PayrollForm extends StatelessWidget {
         title: 'JUMLAH IDR',
         field: 'uang_makan_jumlah',
         type: PlutoColumnType.number(),
+        readOnly: true,
         width: 130,
         backgroundColor: Colors.brown.shade100,
         textAlign: PlutoColumnTextAlign.right,
@@ -299,6 +308,7 @@ class PayrollForm extends StatelessWidget {
         title: 'FRATEKINDO',
         field: 'overtime_fjg',
         type: PlutoColumnType.number(),
+        readOnly: true,
         width: 130,
         backgroundColor: Colors.brown.shade100,
         textAlign: PlutoColumnTextAlign.right,
@@ -323,6 +333,7 @@ class PayrollForm extends StatelessWidget {
         title: 'CUSTOMER',
         field: 'overtime_cus',
         type: PlutoColumnType.number(),
+        readOnly: true,
         width: 130,
         backgroundColor: Colors.brown.shade100,
         textAlign: PlutoColumnTextAlign.right,
@@ -347,6 +358,7 @@ class PayrollForm extends StatelessWidget {
         title: 'MEDICAL IDR',
         field: 'medical',
         type: PlutoColumnType.number(),
+        readOnly: true,
         width: 140,
         backgroundColor: Colors.brown.shade100,
         textAlign: PlutoColumnTextAlign.right,
@@ -371,6 +383,7 @@ class PayrollForm extends StatelessWidget {
         title: 'THR IDR',
         field: 'thr',
         type: PlutoColumnType.number(),
+        readOnly: true,
         width: 130,
         backgroundColor: Colors.brown.shade100,
         textAlign: PlutoColumnTextAlign.right,
@@ -395,6 +408,7 @@ class PayrollForm extends StatelessWidget {
         title: 'BONUS IDR',
         field: 'bonus',
         type: PlutoColumnType.number(),
+        readOnly: true,
         width: 130,
         backgroundColor: Colors.brown.shade100,
         textAlign: PlutoColumnTextAlign.right,
@@ -419,6 +433,7 @@ class PayrollForm extends StatelessWidget {
         title: 'INSENTIF IDR',
         field: 'insentif',
         type: PlutoColumnType.number(),
+        readOnly: true,
         width: 130,
         backgroundColor: Colors.brown.shade100,
         textAlign: PlutoColumnTextAlign.right,
@@ -443,6 +458,7 @@ class PayrollForm extends StatelessWidget {
         title: 'TELKOM IDR',
         field: 'telkomsel',
         type: PlutoColumnType.number(),
+        readOnly: true,
         width: 130,
         backgroundColor: Colors.brown.shade100,
         textAlign: PlutoColumnTextAlign.right,
@@ -467,6 +483,7 @@ class PayrollForm extends StatelessWidget {
         title: 'LAIN2 IDR',
         field: 'lain',
         type: PlutoColumnType.number(),
+        readOnly: true,
         width: 130,
         backgroundColor: Colors.brown.shade100,
         textAlign: PlutoColumnTextAlign.right,
@@ -491,6 +508,7 @@ class PayrollForm extends StatelessWidget {
         title: 'HR',
         field: 'pot_25_hari',
         type: PlutoColumnType.number(),
+        readOnly: true,
         width: 70,
         backgroundColor: Colors.red.shade100,
         textAlign: PlutoColumnTextAlign.right,
@@ -540,6 +558,7 @@ class PayrollForm extends StatelessWidget {
         title: 'TELP. IDR',
         field: 'pot_telepon',
         type: PlutoColumnType.number(),
+        readOnly: true,
         width: 130,
         backgroundColor: Colors.red.shade100,
         textAlign: PlutoColumnTextAlign.right,
@@ -564,6 +583,7 @@ class PayrollForm extends StatelessWidget {
         title: 'BENSIN IDR',
         field: 'pot_bensin',
         type: PlutoColumnType.number(),
+        readOnly: true,
         width: 130,
         backgroundColor: Colors.red.shade100,
         textAlign: PlutoColumnTextAlign.right,
@@ -588,6 +608,7 @@ class PayrollForm extends StatelessWidget {
         title: 'KAS',
         field: 'pot_kas',
         type: PlutoColumnType.number(),
+        readOnly: true,
         width: 130,
         backgroundColor: Colors.red.shade100,
         textAlign: PlutoColumnTextAlign.right,
@@ -612,6 +633,7 @@ class PayrollForm extends StatelessWidget {
         title: 'CICILAN',
         field: 'pot_cicilan',
         type: PlutoColumnType.number(),
+        readOnly: true,
         width: 130,
         backgroundColor: Colors.red.shade100,
         textAlign: PlutoColumnTextAlign.right,
@@ -636,6 +658,7 @@ class PayrollForm extends StatelessWidget {
         title: 'BPJS IDR',
         field: 'pot_bpjs',
         type: PlutoColumnType.number(),
+        readOnly: true,
         width: 130,
         backgroundColor: Colors.red.shade100,
         textAlign: PlutoColumnTextAlign.right,
@@ -660,6 +683,7 @@ class PayrollForm extends StatelessWidget {
         title: 'UNPAID LEAVE',
         field: 'pot_cuti',
         type: PlutoColumnType.number(),
+        readOnly: true,
         width: 150,
         backgroundColor: Colors.red.shade100,
         textAlign: PlutoColumnTextAlign.right,
@@ -684,6 +708,7 @@ class PayrollForm extends StatelessWidget {
         title: 'LAIN2 IDR',
         field: 'pot_lain',
         type: PlutoColumnType.number(),
+        readOnly: true,
         width: 130,
         backgroundColor: Colors.red.shade100,
         textAlign: PlutoColumnTextAlign.right,
@@ -735,6 +760,7 @@ class PayrollForm extends StatelessWidget {
         title: 'KETERANGAN',
         field: 'keterangan',
         type: PlutoColumnType.text(),
+        readOnly: true,
         width: 200,
         backgroundColor: Colors.brown.shade100,
         titleTextAlign: PlutoColumnTextAlign.center,
@@ -778,15 +804,18 @@ class PayrollForm extends StatelessWidget {
                 },
               ),
               const SizedBox(width: 50),
-              IconButton(
-                onPressed: () {
-                  controller.ubahForm(context);
-                },
-                icon: const Icon(
-                  Icons.edit,
+              Visibility(
+                visible: isEdit,
+                child: IconButton(
+                  onPressed: () {
+                    controller.ubahForm(context);
+                  },
+                  icon: const Icon(
+                    Icons.edit,
+                  ),
+                  color: Colors.green,
+                  padding: const EdgeInsets.all(0),
                 ),
-                color: Colors.green,
-                padding: const EdgeInsets.all(0),
               ),
               const SizedBox(width: 50),
               Flexible(
