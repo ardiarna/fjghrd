@@ -10,6 +10,7 @@ import 'package:fjghrd/views/pendidikan_view.dart';
 import 'package:fjghrd/views/ptkp_view.dart';
 import 'package:fjghrd/views/status_kerja_view.dart';
 import 'package:fjghrd/views/status_phk_view.dart';
+import 'package:fjghrd/views/tarif_efektif_view.dart';
 import 'package:fjghrd/views/upah_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -167,6 +168,17 @@ class HomeView extends StatelessWidget {
                     onTap: () {
                       controller.tabId = 4;
                       controller.kontener = PtkpView();
+                      Get.back();
+                      controller.update();
+                    },
+                  ),
+                  drawItem(
+                    label: 'Tarif EFektif (TER)',
+                    icon: Icons.money,
+                    color: Colors.brown,
+                    onTap: () {
+                      controller.tabId = 4;
+                      controller.kontener = TarifEfektifView();
                       Get.back();
                       controller.update();
                     },
