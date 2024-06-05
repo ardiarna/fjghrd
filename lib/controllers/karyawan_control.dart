@@ -10,6 +10,7 @@ import 'package:fjghrd/models/keluarga_kontak.dart';
 import 'package:fjghrd/models/pendidikan.dart';
 import 'package:fjghrd/models/perjanjian_kerja.dart';
 import 'package:fjghrd/models/phk.dart';
+import 'package:fjghrd/models/ptkp.dart';
 import 'package:fjghrd/models/status_kerja.dart';
 import 'package:fjghrd/models/status_phk.dart';
 import 'package:fjghrd/models/timeline_masakerja.dart';
@@ -19,6 +20,7 @@ import 'package:fjghrd/repositories/divisi_repository.dart';
 import 'package:fjghrd/repositories/jabatan_repository.dart';
 import 'package:fjghrd/repositories/karyawan_repository.dart';
 import 'package:fjghrd/repositories/pendidikan_repository.dart';
+import 'package:fjghrd/repositories/ptkp_repository.dart';
 import 'package:fjghrd/repositories/status_kerja_repository.dart';
 import 'package:fjghrd/repositories/status_phk_repository.dart';
 import 'package:fjghrd/utils/af_combobox.dart';
@@ -43,6 +45,7 @@ class KaryawanControl extends GetxController {
   List<Opsi> listPendidikan = [];
   List<Opsi> listStatusKerja = [];
   List<Opsi> listStatusPhk = [];
+  List<Opsi> listPtkp = [];
   List<KeluargaKaryawan> listKeluarga = [];
   List<KeluargaKontak> listKontak = [];
   List<PerjanjianKerja> listPerjanjianKerja = [];
@@ -68,6 +71,7 @@ class KaryawanControl extends GetxController {
   StatusKerja statusKerja = StatusKerja();
   StatusKerja statusKerjaPerjanjian = StatusKerja();
   StatusPhk statusPhk = StatusPhk();
+  Ptkp ptkp = Ptkp();
 
   bool? kawin = false;
   String kelamin = '';
@@ -186,6 +190,7 @@ class KaryawanControl extends GetxController {
     jabatan = Jabatan();
     pendidikan = Pendidikan();
     statusKerja = StatusKerja();
+    ptkp = Ptkp();
     kawin = null;
     kelamin = '';
     staf = null;
@@ -668,6 +673,35 @@ class KaryawanControl extends GetxController {
                   ),
                 ),
                 Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 150,
+                        padding: const EdgeInsets.only(right: 15),
+                        child: const Text('PTKP'),
+                      ),
+                      Expanded(
+                        child: GetBuilder<KaryawanControl>(
+                          builder: (_) {
+                            return AFwidget.comboField(
+                              value: ptkp.kode,
+                              label: '',
+                              onTap: () async {
+                                var a = await pilihPtkp(value: ptkp.id);
+                                if(a != null && a.value != ptkp.id) {
+                                  ptkp = Ptkp.fromMap(a.data!);
+                                  update();
+                                }
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
                   padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
@@ -740,6 +774,7 @@ class KaryawanControl extends GetxController {
     jabatan = current.jabatan;
     pendidikan = current.pendidikan;
     statusKerja = current.statusKerja;
+    ptkp = current.ptkp;
     kawin = current.kawin;
     kelamin = current.kelamin;
     staf = current.staf;
@@ -2036,6 +2071,7 @@ class KaryawanControl extends GetxController {
       a.divisi = divisi;
       a.pendidikan = pendidikan;
       a.statusKerja = statusKerja;
+      a.ptkp = ptkp;
 
       AFwidget.loading();
       var hasil = await _repo.create(a.toMap());
@@ -2121,6 +2157,7 @@ class KaryawanControl extends GetxController {
       a.divisi = divisi;
       a.pendidikan = pendidikan;
       a.statusKerja = statusKerja;
+      a.ptkp = ptkp;
 
       AFwidget.loading();
       var hasil = await _repo.update(a.id, a.toMap());
@@ -2596,6 +2633,22 @@ class KaryawanControl extends GetxController {
     }
   }
 
+  Future<void> loadPtkps() async {
+    PtkpRepository repo = PtkpRepository();
+    var hasil = await repo.findAll();
+    if(hasil.success) {
+      listPtkp.clear();
+      for (var data in hasil.daftar) {
+        listPtkp.add(
+          Opsi(value: AFconvert.keString(data['id']), label: data['kode'], data: data),
+        );
+      }
+      update();
+    } else {
+      AFwidget.snackbar(hasil.message);
+    }
+  }
+
   Future<Opsi?> pilihAgama({String value = ''}) async {
     var a = await AFcombobox.bottomSheet(
       listOpsi: listAgama,
@@ -2673,6 +2726,15 @@ class KaryawanControl extends GetxController {
     return a;
   }
 
+  Future<Opsi?> pilihPtkp({String value = ''}) async {
+    var a = await AFcombobox.bottomSheet(
+      listOpsi: listPtkp,
+      valueSelected: value,
+      judul: 'Pilih PTKP',
+    );
+    return a;
+  }
+
   Widget barisText({
     String label = '',
     TextEditingController? controller,
@@ -2712,6 +2774,7 @@ class KaryawanControl extends GetxController {
     loadPendidikans();
     loadStatusKerjas();
     loadStatusPhks();
+    loadPtkps();
     txtId = TextEditingController();
     txtNama = TextEditingController();
     txtNik = TextEditingController();

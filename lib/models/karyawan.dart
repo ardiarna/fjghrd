@@ -4,6 +4,7 @@ import 'package:fjghrd/models/divisi.dart';
 import 'package:fjghrd/models/jabatan.dart';
 import 'package:fjghrd/models/pendidikan.dart';
 import 'package:fjghrd/models/phk.dart';
+import 'package:fjghrd/models/ptkp.dart';
 import 'package:fjghrd/models/status_kerja.dart';
 import 'package:fjghrd/models/upah.dart';
 import 'package:fjghrd/utils/af_convert.dart';
@@ -28,6 +29,7 @@ class Karyawan {
   bool kawin;
   String kelamin;
   StatusKerja statusKerja = StatusKerja();
+  Ptkp ptkp = Ptkp();
   Pendidikan pendidikan = Pendidikan();
   String pendidikanAlmamater;
   String pendidikanJurusan;
@@ -107,6 +109,9 @@ class Karyawan {
     if(data['status_kerja'] != null) {
       a.statusKerja = StatusKerja.fromMap(data['status_kerja']);
     }
+    if(data['ptkp'] != null) {
+      a.ptkp = Ptkp.fromMap(data['ptkp']);
+    }
     if(data['pendidikan'] != null) {
       a.pendidikan = Pendidikan.fromMap(data['pendidikan']);
     }
@@ -163,6 +168,9 @@ class Karyawan {
     }
     if(statusKerja.id != '') {
       data['status_kerja_id'] = statusKerja.id;
+    }
+    if(ptkp.id != '') {
+      data['ptkp_id'] = ptkp.id;
     }
     if(pendidikan.id != '') {
       data['pendidikan_id'] = pendidikan.id;

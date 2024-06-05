@@ -7,6 +7,7 @@ import 'package:fjghrd/views/divisi_view.dart';
 import 'package:fjghrd/views/hari_libur_view.dart';
 import 'package:fjghrd/views/jabatan_view.dart';
 import 'package:fjghrd/views/pendidikan_view.dart';
+import 'package:fjghrd/views/ptkp_view.dart';
 import 'package:fjghrd/views/status_kerja_view.dart';
 import 'package:fjghrd/views/status_phk_view.dart';
 import 'package:fjghrd/views/upah_view.dart';
@@ -22,7 +23,7 @@ class HomeView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       key: controller.scaffoldKey,
-      backgroundColor: Colors.grey[200],
+      backgroundColor: Colors.grey.shade50,
       body: SizedBox(
         height: double.infinity,
         width: double.infinity,
@@ -155,6 +156,17 @@ class HomeView extends StatelessWidget {
                     onTap: () {
                       controller.tabId = 4;
                       controller.kontener = StatusPhkView();
+                      Get.back();
+                      controller.update();
+                    },
+                  ),
+                  drawItem(
+                    label: 'PTKP',
+                    icon: Icons.arrow_drop_down_circle_outlined,
+                    color: Colors.brown,
+                    onTap: () {
+                      controller.tabId = 4;
+                      controller.kontener = PtkpView();
                       Get.back();
                       controller.update();
                     },

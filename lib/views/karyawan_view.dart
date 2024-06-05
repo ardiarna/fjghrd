@@ -43,6 +43,7 @@ class KaryawanView extends StatelessWidget {
             'email': PlutoCell(value: rowData[index].email),
             'status_kerja': PlutoCell(value: rowData[index].statusKerja.nama),
             'status_kerja_id': PlutoCell(value: rowData[index].statusKerja.id),
+            'ptkp': PlutoCell(value: rowData[index].ptkp.kode),
           },
         );
       },
@@ -78,7 +79,7 @@ class KaryawanView extends StatelessWidget {
         field: 'id',
         type: PlutoColumnType.text(),
         readOnly: true,
-        width: 70,
+        width: 100,
         backgroundColor: Colors.brown.shade100,
         enableFilterMenuItem: false,
         enableContextMenu: false,
@@ -99,6 +100,17 @@ class KaryawanView extends StatelessWidget {
                 ),
                 iconSize: 18,
                 color: Colors.green,
+                padding: const EdgeInsets.all(0),
+              ),
+              IconButton(
+                onPressed: () {
+
+                },
+                icon: const Icon(
+                  Icons.assignment_outlined,
+                ),
+                iconSize: 18,
+                color: Colors.lightBlueAccent,
                 padding: const EdgeInsets.all(0),
               ),
             ],
@@ -271,6 +283,14 @@ class KaryawanView extends StatelessWidget {
         backgroundColor: Colors.brown.shade100,
         hide: true,
       ),
+      PlutoColumn(
+        title: 'PTKP',
+        field: 'ptkp',
+        type: PlutoColumnType.text(),
+        readOnly: true,
+        width: 100,
+        backgroundColor: Colors.brown.shade100,
+      ),
     ];
     controller.loadKaryawans();
     return Column(
@@ -345,7 +365,7 @@ class KaryawanView extends StatelessWidget {
                 onChanged: (PlutoGridOnChangedEvent event) {},
                 onLoaded: (PlutoGridOnLoadedEvent event) {
                   event.stateManager.setShowColumnFilter(true);
-                  for (int i = 1; i <= 19; i++) {
+                  for (int i = 1; i <= 20; i++) {
                     event.stateManager.autoFitColumn(context, columns[i]);
                   }
                   // event.stateManager.setRowGroup(

@@ -7,6 +7,7 @@ import 'package:fjghrd/models/keluarga_karyawan.dart';
 import 'package:fjghrd/models/keluarga_kontak.dart';
 import 'package:fjghrd/models/pendidikan.dart';
 import 'package:fjghrd/models/perjanjian_kerja.dart';
+import 'package:fjghrd/models/ptkp.dart';
 import 'package:fjghrd/models/status_kerja.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
@@ -811,6 +812,35 @@ class KaryawanForm extends StatelessWidget {
                                                   var a = await controller.pilihStatusKerja(value: controller.statusKerja.id);
                                                   if(a != null && a.value != controller.statusKerja.id) {
                                                     controller.statusKerja = StatusKerja.fromMap(a.data!);
+                                                    controller.update();
+                                                  }
+                                                },
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: 150,
+                                          padding: const EdgeInsets.only(right: 15),
+                                          child: const Text('PTKP'),
+                                        ),
+                                        Expanded(
+                                          child: GetBuilder<KaryawanControl>(
+                                            builder: (_) {
+                                              return AFwidget.comboField(
+                                                value: controller.ptkp.kode,
+                                                label: '',
+                                                onTap: () async {
+                                                  var a = await controller.pilihPtkp(value: controller.ptkp.id);
+                                                  if(a != null && a.value != controller.ptkp.id) {
+                                                    controller.ptkp = Ptkp.fromMap(a.data!);
                                                     controller.update();
                                                   }
                                                 },
