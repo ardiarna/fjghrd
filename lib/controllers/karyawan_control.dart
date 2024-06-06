@@ -7,6 +7,7 @@ import 'package:fjghrd/models/jabatan.dart';
 import 'package:fjghrd/models/karyawan.dart';
 import 'package:fjghrd/models/keluarga_karyawan.dart';
 import 'package:fjghrd/models/keluarga_kontak.dart';
+import 'package:fjghrd/models/payroll.dart';
 import 'package:fjghrd/models/pendidikan.dart';
 import 'package:fjghrd/models/perjanjian_kerja.dart';
 import 'package:fjghrd/models/phk.dart';
@@ -35,6 +36,8 @@ class KaryawanControl extends GetxController {
   final homeControl = Get.find<HomeControl>();
   final KaryawanRepository _repo = KaryawanRepository();
 
+  final DateTime _now = DateTime.now();
+
   Karyawan current = Karyawan();
   List<Karyawan> listKaryawan = [];
   List<Karyawan> listMantanKaryawan = [];
@@ -50,6 +53,7 @@ class KaryawanControl extends GetxController {
   List<KeluargaKontak> listKontak = [];
   List<PerjanjianKerja> listPerjanjianKerja = [];
   List<TimelineMasakerja> listTimelineMasakerja = [];
+  List<Payroll> listPayroll = [];
 
   Opsi cariStaf = Opsi(value: 'Y', label: 'Staf');
   Map<String, int> totalKaryawanPerArea = {};
@@ -77,6 +81,9 @@ class KaryawanControl extends GetxController {
   String kelamin = '';
   bool? staf = true;
   String keluargaHubungan = '';
+
+  late Opsi filterTahun;
+  late List<Opsi> listTahun;
 
   Future<void> loadKaryawans() async {
     var hasil = await _repo.findAll(isStaf: cariStaf.value);
@@ -168,16 +175,29 @@ class KaryawanControl extends GetxController {
     update();
   }
 
+  Future<void> loadPayrolls() async {
+    listPayroll.clear();
+    var hasil = await _repo.payrollFindAll(id: current.id, tahun: filterTahun.value);
+    if (hasil.success) {
+      for (var data in hasil.daftar) {
+        listPayroll.add(Payroll.fromMap(data));
+      }
+    } else {
+      AFwidget.snackbar(hasil.message);
+    }
+    update();
+  }
+
   void tambahForm(BuildContext context) {
     txtId.text = '';
     txtNama.text = '';
     txtNik.text = '';
-    txtTanggalMasuk.text = AFconvert.matYMD(DateTime.now());
+    txtTanggalMasuk.text = AFconvert.matYMD(_now);
     txtNomorKk.text = '';
     txtNomorKtp.text = '';
     txtNomorPaspor.text = '';
     txtTempatLahir.text = '';
-    txtTanggalLahir.text = AFconvert.matYMD(DateTime.now());
+    txtTanggalLahir.text = AFconvert.matYMD(_now);
     txtAlamatKtp.text = '';
     txtAlamatTinggal.text = '';
     txtTelepon.text = '';
@@ -799,7 +819,7 @@ class KaryawanControl extends GetxController {
     txtKeluargaNama.text = '';
     txtKeluargaNomorKtp.text = '';
     txtKeluargaTempatLahir.text = '';
-    txtKeluargaTanggalLahir.text = AFconvert.matYMD(DateTime.now());
+    txtKeluargaTanggalLahir.text = AFconvert.matYMD(_now);
     txtKeluargaTelepon.text = '';
     txtKeluargaEmail.text = '';
     keluargaHubungan = '';
@@ -1449,7 +1469,7 @@ class KaryawanControl extends GetxController {
   void tambahPerjanjianForm(BuildContext context) {
     txtPerjanjianId.text = '';
     txtPerjanjianNomor.text = '';
-    txtPerjanjianTglAwal.text = AFconvert.matYMD(DateTime.now());
+    txtPerjanjianTglAwal.text = AFconvert.matYMD(_now);
     txtPerjanjianTglAkhir.text = '';
     statusKerjaPerjanjian = StatusKerja();
     AFwidget.dialog(
@@ -1826,7 +1846,7 @@ class KaryawanControl extends GetxController {
   void tambahPhkForm(BuildContext context) {
     txtPhkId.text = '';
     txtPhkKeterangan.text = '';
-    txtTanggalKeluar.text = AFconvert.matYMD(DateTime.now());
+    txtTanggalKeluar.text = AFconvert.matYMD(_now);
     statusPhk = StatusPhk();
     AFwidget.dialog(
       Container(
@@ -2008,6 +2028,12 @@ class KaryawanControl extends GetxController {
       backgroundColor: Colors.white,
       contentPadding: const EdgeInsets.all(0),
     );
+  }
+
+  void payrollView(String id) {
+    current = listKaryawan.where((element) => element.id == id).first;
+    loadPayrolls();
+    Get.toNamed(Rute.karyawanPayrollView);
   }
 
   Future<void> tambahData() async {
@@ -2735,6 +2761,16 @@ class KaryawanControl extends GetxController {
     return a;
   }
 
+  Future<Opsi?> pilihTahun({String value = ''}) async {
+    var a = await AFcombobox.bottomSheet(
+      listOpsi: listTahun,
+      valueSelected: value,
+      judul: 'Pilih Tahun',
+      withCari: false,
+    );
+    return a;
+  }
+
   Widget barisText({
     String label = '',
     TextEditingController? controller,
@@ -2775,6 +2811,8 @@ class KaryawanControl extends GetxController {
     loadStatusKerjas();
     loadStatusPhks();
     loadPtkps();
+    filterTahun = Opsi(value: '${_now.year}', label: '${_now.year}');
+    listTahun = List.generate(_now.year-2019, (index) => Opsi(value: '${_now.year-index}', label: '${_now.year-index}'));
     txtId = TextEditingController();
     txtNama = TextEditingController();
     txtNik = TextEditingController();

@@ -33,6 +33,14 @@ class Payroll {
   int potCuti;
   int potLain;
   int totalDiterima;
+  int kantorJp;
+  int kantorJht;
+  int kantorJkk;
+  int kantorJkm;
+  int kantorBpjs;
+  int penghasilanBruto;
+  int dpp;
+  int pph21;
   String keterangan;
   bool dikunci;
   DateTime? createdAt;
@@ -68,6 +76,14 @@ class Payroll {
     this.potCuti = 0,
     this.potLain = 0,
     this.totalDiterima = 0,
+    this.kantorJp = 0,
+    this.kantorJht = 0,
+    this.kantorJkk = 0,
+    this.kantorJkm = 0,
+    this.kantorBpjs = 0,
+    this.penghasilanBruto = 0,
+    this.dpp = 0,
+    this.pph21 = 0,
     this.keterangan = '',
     this.dikunci = false,
     this.createdAt,
@@ -109,6 +125,14 @@ class Payroll {
       dikunci: AFconvert.keBool(data['dikunci']),
       createdAt: AFconvert.keTanggal(data['created_at']),
       updatedAt: AFconvert.keTanggal(data['updated_at']),
+      kantorJp: AFconvert.keInt(data['kantor_jp']),
+      kantorJht: AFconvert.keInt(data['kantor_jht']),
+      kantorJkk: AFconvert.keInt(data['kantor_jkk']),
+      kantorJkm: AFconvert.keInt(data['kantor_jkm']),
+      kantorBpjs: AFconvert.keInt(data['kantor_bpjs']),
+      penghasilanBruto: AFconvert.keInt(data['penghasilan_bruto']),
+      dpp: AFconvert.keInt(data['dpp']),
+      pph21: AFconvert.keInt(data['pph21']),
     );
     if(data['karyawan'] != null) {
       a.karyawan = Karyawan.fromMap(data['karyawan']);

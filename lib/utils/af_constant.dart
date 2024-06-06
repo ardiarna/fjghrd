@@ -4,10 +4,9 @@ abstract class Rute {
   static const home = '/';
   static const login = '/login';
   static const karyawanForm = '/karyawanform';
+  static const karyawanPayrollView = '/karyawan-payroll';
   static const akunForm = '/akunform';
   static const passwordForm = '/passwordform';
-
-
 }
 
 Map<int, String> mapBulan = {

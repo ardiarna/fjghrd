@@ -157,4 +157,13 @@ class KaryawanRepository {
     );
   }
 
+  Future<Hasil> payrollFindAll({
+    required String id,
+    required String tahun,
+  }) async {
+    return await AFdatabase.send(
+      url: 'karyawan/$id/payroll?tahun=$tahun&pph21=Y',
+    );
+  }
+
 }

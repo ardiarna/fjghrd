@@ -104,7 +104,7 @@ class KaryawanView extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () {
-
+                  controller.payrollView(rdrCtx.row.cells['id']!.value);
                 },
                 icon: const Icon(
                   Icons.assignment_outlined,

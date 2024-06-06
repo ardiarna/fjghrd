@@ -2,6 +2,7 @@ import 'package:fjghrd/controllers/auth_control.dart';
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/views/home_view.dart';
 import 'package:fjghrd/views/karyawan_form.dart';
+import 'package:fjghrd/views/karyawan_payroll_view.dart';
 import 'package:fjghrd/views/login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -23,6 +24,7 @@ void main() async {
         GetPage(name: Rute.home, page: () => HomeView()),
         GetPage(name: Rute.login, page: () => LoginView()),
         GetPage(name: Rute.karyawanForm, page: () => KaryawanForm()),
+        GetPage(name: Rute.karyawanPayrollView, page: () => KaryawanPayrollView()),
       ],
     ),
   );
