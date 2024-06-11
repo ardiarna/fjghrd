@@ -2801,6 +2801,17 @@ class KaryawanControl extends GetxController {
     );
   }
 
+  Future<void> dowloadPayroll() async {
+    AFwidget.loading();
+    var hasil = await _repo.excelPayroll(id: current.id, tahun: filterTahun.label);
+    Get.back();
+    if(hasil.success) {
+      AFwidget.snackbar('laporan excel payroll ${current.nama} berhasil dibuat. silakan periksa directory Download anda (${hasil.message})');
+    } else {
+      AFwidget.snackbar('Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
   @override
   void onInit() {
     loadAgamas();

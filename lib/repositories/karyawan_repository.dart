@@ -166,4 +166,11 @@ class KaryawanRepository {
     );
   }
 
+  Future<Hasil> excelPayroll({
+    required String id,
+    required String tahun,
+  }) async {
+    return await AFdatabase.download(url: 'excel/payroll/$id/$tahun');
+  }
+
 }

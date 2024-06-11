@@ -10,7 +10,6 @@ class KaryawanPayrollView extends StatelessWidget {
   KaryawanPayrollView({super.key});
 
   final KaryawanControl controller = Get.put(KaryawanControl());
-
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -66,16 +65,12 @@ class KaryawanPayrollView extends StatelessWidget {
                     ),
                   ],
                 ),
-
-
                 const Spacer(),
                 tombol(
                   label: 'Export Excel',
                   icon: Icons.file_open,
                   color: Colors.green,
-                  onPressed: () {
-
-                  },
+                  onPressed: controller.dowloadPayroll,
                 ),
                 const SizedBox(width: 20),
                 SizedBox(
@@ -113,15 +108,15 @@ class KaryawanPayrollView extends StatelessWidget {
                       padding: const EdgeInsets.all(10),
                       color: Colors.grey.shade50,
                       child: GetBuilder<KaryawanControl>(
-                          builder: (_) {
-                            return Wrap(
-                              spacing: 10,
-                              runSpacing: 10,
-                              children: controller.listPayroll.map((e) {
-                                return boxKonten(e);
-                              }).toList(),
-                            );
-                          }
+                        builder: (_) {
+                          return Wrap(
+                            spacing: 10,
+                            runSpacing: 10,
+                            children: controller.listPayroll.map((e) {
+                              return boxKonten(e);
+                            }).toList(),
+                          );
+                        },
                       ),
                     ),
                   ],
@@ -173,8 +168,7 @@ class KaryawanPayrollView extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 10),
-              const Text(
-                'A. PENGHASILAN',
+              const Text('A. PENGHASILAN',
                 style: TextStyle(color: Colors.blue, fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 7),
@@ -219,9 +213,15 @@ class KaryawanPayrollView extends StatelessWidget {
                 label: 'Lain-lain',
                 value: AFconvert.matNumber(item.lain),
               ),
+              barisKonten(
+                label: 'Total A',
+                value: AFconvert.matNumber(item.gaji+item.uangMakanJumlah+item.overtimeFjg+item.overtimeCus+item.medical+item.thr+item.bonus+item.insentif+item.telkomsel+item.lain),
+                withBorder: true,
+                color: Colors.grey.shade400,
+                textAlign: TextAlign.right,
+              ),
               const SizedBox(height: 13),
-              const Text(
-                'B. POTONGAN',
+              const Text('B. POTONGAN',
                 style: TextStyle(color: Colors.blue, fontWeight: FontWeight.w600),
               ),
               const SizedBox(height: 7),
@@ -263,20 +263,25 @@ class KaryawanPayrollView extends StatelessWidget {
                 label: 'Lain-lain',
                 value: AFconvert.matNumber(item.potLain),
               ),
+              barisKonten(
+                label: 'Total B',
+                value: AFconvert.matNumber(item.pot25jumlah+item.potTelepon+item.potKas+item.potCicilan+item.potBpjs+item.potBensin+item.potCuti+item.potLain),
+                withBorder: true,
+                color: Colors.grey.shade400,
+                textAlign: TextAlign.right,
+              ),
               const SizedBox(height: 13),
               Row(
                 children: [
                   const SizedBox(
                     width: 230,
-                    child: Text(
-                      'TOTAL DITERIMA (A-B)',
+                    child: Text('TOTAL DITERIMA (A-B)',
                       style: TextStyle(color: Colors.blue, fontWeight: FontWeight.w600),
                     ),
                   ),
                   const Text('='),
                   Expanded(
-                    child: Text(
-                      AFconvert.matNumber(item.totalDiterima),
+                    child: Text(AFconvert.matNumber(item.totalDiterima),
                       textAlign: TextAlign.right,
                       style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.w600),
                     ),
@@ -295,8 +300,7 @@ class KaryawanPayrollView extends StatelessWidget {
                   children: [
                     const Padding(
                       padding: EdgeInsets.fromLTRB(20, 10, 10, 0),
-                      child: Text(
-                        'BENEFIT LAINNYA',
+                      child: Text('BENEFIT LAINNYA',
                         style: TextStyle(color: Colors.black54, fontWeight: FontWeight.w600),
                       ),
                     ),
@@ -331,6 +335,13 @@ class KaryawanPayrollView extends StatelessWidget {
                       value: AFconvert.matNumber(item.pph21),
                       textAlign: TextAlign.right,
                     ),
+                    barisKonten(
+                      label: 'Total Benefit',
+                      value: AFconvert.matNumber(item.kantorJp+item.kantorJht+item.kantorJkk+item.kantorJkm+item.kantorBpjs+item.pph21),
+                      withBorder: true,
+                      color: Colors.grey.shade400,
+                      textAlign: TextAlign.right,
+                    ),
                   ],
                 ),
               ),
@@ -339,15 +350,13 @@ class KaryawanPayrollView extends StatelessWidget {
                 children: [
                   const SizedBox(
                     width: 230,
-                    child: Text(
-                      'TOTAL',
+                    child: Text('TOTAL',
                       style: TextStyle(color: Colors.red, fontWeight: FontWeight.w600),
                     ),
                   ),
                   const Text('='),
                   Expanded(
-                    child: Text(
-                      AFconvert.matNumber(item.totalDiterima+item.kantorJp+item.kantorJht+item.kantorJkk+item.kantorJkm+item.kantorBpjs+item.pph21),
+                    child: Text(AFconvert.matNumber(item.totalDiterima+item.kantorJp+item.kantorJht+item.kantorJkk+item.kantorJkm+item.kantorBpjs+item.pph21),
                       textAlign: TextAlign.right,
                       style: const TextStyle(color: Colors.red, fontWeight: FontWeight.w600),
                     ),
@@ -361,21 +370,42 @@ class KaryawanPayrollView extends StatelessWidget {
     );
   }
 
-  Widget barisKonten({String label = '', String value = '', TextAlign? textAlign}) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 0, 0, 7),
+  Widget barisKonten({
+    String label = '',
+    String value = '',
+    TextAlign? textAlign,
+    Color? color,
+    bool withBorder = false,
+  }) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+      // margin: const EdgeInsets.only(bottom: 7),
+      decoration: withBorder ? BoxDecoration(
+        border: Border.symmetric(horizontal: BorderSide(color: color ?? const Color(0xFF000000))),
+      ) : null,
       child: Row(
         children: [
           Container(
             width: 230,
             padding: const EdgeInsets.only(right: 10),
-            child: Text(label, textAlign: textAlign),
+            child: Text(label,
+              textAlign: textAlign,
+              style: TextStyle(
+                color: color,
+              ),
+            ),
           ),
-          const Text('='),
+          Text('=',
+            style: TextStyle(
+              color: color,
+            ),
+          ),
           Expanded(
-            child: Text(
-              value,
+            child: Text(value,
               textAlign: TextAlign.right,
+              style: TextStyle(
+                color: color,
+              ),
             ),
           ),
         ],
