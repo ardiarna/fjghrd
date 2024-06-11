@@ -37,6 +37,7 @@ class Karyawan {
   bool staf;
   String nomorKk;
   String nomorPaspor;
+  String nomorPwp;
   Phk phk = Phk();
   Upah upah = Upah();
   DateTime? createdAt;
@@ -64,6 +65,7 @@ class Karyawan {
     this.staf = true,
     this.nomorKk = '',
     this.nomorPaspor = '',
+    this.nomorPwp = '',
     this.createdAt,
     this.updatedAt,
     this.dipilih = true,
@@ -91,6 +93,7 @@ class Karyawan {
       staf: AFconvert.keBool(data['staf']),
       nomorKk: AFconvert.keString(data['nomor_kk']),
       nomorPaspor: AFconvert.keString(data['nomor_paspor']),
+      nomorPwp: AFconvert.keString(data['nomor_pwp']),
       createdAt: AFconvert.keTanggal(data['created_at']),
       updatedAt: AFconvert.keTanggal(data['updated_at']),
     );
@@ -150,6 +153,7 @@ class Karyawan {
       'staf': staf ? 'Y' : 'N',
       'nomor_kk': nomorKk,
       'nomor_paspor': nomorPaspor,
+      'nomor_pwp': nomorPwp,
     };
     if(tanggalKeluar != null) {
       data['tanggal_keluar'] = AFconvert.matYMDTime(tanggalKeluar);

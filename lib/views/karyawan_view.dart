@@ -34,6 +34,7 @@ class KaryawanView extends StatelessWidget {
             'nomor_kk': PlutoCell(value: rowData[index].nomorKk),
             'nomor_ktp': PlutoCell(value: rowData[index].nomorKtp),
             'nomor_paspor': PlutoCell(value: rowData[index].nomorPaspor),
+            'nomor_pwp': PlutoCell(value: rowData[index].nomorPwp),
             'ttl': PlutoCell(value: '${rowData[index].tempatLahir} ${AFconvert.matDate(rowData[index].tanggalLahir)}'),
             'alamat_ktp': PlutoCell(value: rowData[index].alamatKtp),
             'alamat_tinggal': PlutoCell(value: rowData[index].alamatTinggal),
@@ -59,7 +60,7 @@ class KaryawanView extends StatelessWidget {
     ),
     PlutoColumnGroup(
       title: 'DOKUMEN KARYAWAN',
-      fields: ['nomor_kk', 'nomor_ktp', 'nomor_paspor', 'ttl'],
+      fields: ['nomor_kk', 'nomor_ktp', 'nomor_paspor', 'nomor_pwp', 'ttl'],
       expandedColumn: false,
       backgroundColor: Colors.brown.shade100,
     ),
@@ -206,6 +207,14 @@ class KaryawanView extends StatelessWidget {
       PlutoColumn(
         title: 'NOMOR PASPOR',
         field: 'nomor_paspor',
+        type: PlutoColumnType.text(),
+        readOnly: true,
+        minWidth: 170,
+        backgroundColor: Colors.brown.shade100,
+      ),
+      PlutoColumn(
+        title: 'NPWP',
+        field: 'nomor_pwp',
         type: PlutoColumnType.text(),
         readOnly: true,
         minWidth: 170,

@@ -59,7 +59,7 @@ class KaryawanControl extends GetxController {
   Map<String, int> totalKaryawanPerArea = {};
 
   late TextEditingController txtId, txtNama, txtNik, txtTanggalMasuk, txtTanggalKeluar, txtNomorKk,
-      txtNomorKtp, txtNomorPaspor, txtTempatLahir, txtTanggalLahir, txtAlamatKtp,
+      txtNomorKtp, txtNomorPaspor, txtNomorPwp, txtTempatLahir, txtTanggalLahir, txtAlamatKtp,
       txtAlamatTinggal, txtTelepon, txtEmail, txtPendidikanAlmamater, txtPendidikanJurusan,
       txtKeluargaId, txtKeluargaNama, txtKeluargaNomorKtp, txtKeluargaTempatLahir,
       txtKeluargaTanggalLahir, txtKeluargaTelepon, txtKeluargaEmail,
@@ -196,6 +196,7 @@ class KaryawanControl extends GetxController {
     txtNomorKk.text = '';
     txtNomorKtp.text = '';
     txtNomorPaspor.text = '';
+    txtNomorPwp.text = '';
     txtTempatLahir.text = '';
     txtTanggalLahir.text = AFconvert.matYMD(_now);
     txtAlamatKtp.text = '';
@@ -692,6 +693,10 @@ class KaryawanControl extends GetxController {
                     ],
                   ),
                 ),
+                barisText(
+                  label: 'NPWP',
+                  controller: txtNomorPwp,
+                ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
                   child: Row(
@@ -780,6 +785,7 @@ class KaryawanControl extends GetxController {
     txtNomorKk.text = current.nomorKk;
     txtNomorKtp.text = current.nomorKtp;
     txtNomorPaspor.text = current.nomorPaspor;
+    txtNomorPwp.text = current.nomorPwp;
     txtTempatLahir.text = current.tempatLahir;
     txtTanggalLahir.text = AFconvert.matYMD(current.tanggalLahir);
     txtAlamatKtp.text = current.alamatKtp;
@@ -2086,6 +2092,7 @@ class KaryawanControl extends GetxController {
         kelamin: kelamin,
         nomorKk: txtNomorKk.text,
         nomorPaspor: txtNomorPaspor.text,
+        nomorPwp: txtNomorPwp.text,
         pendidikanAlmamater: txtPendidikanAlmamater.text,
         pendidikanJurusan: txtPendidikanJurusan.text,
         aktif: true,
@@ -2172,6 +2179,7 @@ class KaryawanControl extends GetxController {
         kelamin: kelamin,
         nomorKk: txtNomorKk.text,
         nomorPaspor: txtNomorPaspor.text,
+        nomorPwp: txtNomorPwp.text,
         pendidikanAlmamater: txtPendidikanAlmamater.text,
         pendidikanJurusan: txtPendidikanJurusan.text,
         aktif: true,
@@ -2832,6 +2840,7 @@ class KaryawanControl extends GetxController {
     txtNomorKk = TextEditingController();
     txtNomorKtp = TextEditingController();
     txtNomorPaspor = TextEditingController();
+    txtNomorPwp = TextEditingController();
     txtTempatLahir = TextEditingController();
     txtTanggalLahir = TextEditingController();
     txtAlamatKtp = TextEditingController();
@@ -2870,6 +2879,7 @@ class KaryawanControl extends GetxController {
     txtNomorKk.dispose();
     txtNomorKtp.dispose();
     txtNomorPaspor.dispose();
+    txtNomorPwp.dispose();
     txtTempatLahir.dispose();
     txtTanggalLahir.dispose();
     txtAlamatKtp.dispose();

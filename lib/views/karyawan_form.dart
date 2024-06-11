@@ -822,6 +822,10 @@ class KaryawanForm extends StatelessWidget {
                                       ],
                                     ),
                                   ),
+                                  barisForm(
+                                    label: 'NPWP',
+                                    controller: controller.txtNomorPwp,
+                                  ),
                                   Padding(
                                     padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
                                     child: Row(
