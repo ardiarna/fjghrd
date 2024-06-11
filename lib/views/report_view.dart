@@ -62,7 +62,7 @@ class ReportView extends StatelessWidget {
                   onPressed: controller.dowloadListpayroll,
                 ),
                 barisBox(
-                  label: 'REKAP GAJI',
+                  label: 'REKAP PAYROLL',
                   onPressed: controller.dowloadRekapPayroll,
                 ),
                 barisBox(
@@ -74,20 +74,8 @@ class ReportView extends StatelessWidget {
                   onPressed: controller.dowloadRekapOvertime,
                 ),
                 barisBox(
-                  label: 'REKAP PAYROLL PER KARYAWAN DIVISI ENGINEERING',
-                  onPressed: () {
-                    dialogArea('1');
-                  },
-                ),
-                barisBox(
-                  label: 'REKAP PAYROLL PER KARYAWAN DIVISI STAF',
-                  onPressed: () {
-                    dialogArea('2');
-                  },
-                ),
-                barisBox(
-                  label: 'REKAP PAYROLL PER KARYAWAN DIVISI NON STAF',
-                  onPressed: controller.dowloadRekapPayrollPerKaryawanNonStaf,
+                  label: 'REKAP PAYROLL PER KARYAWAN',
+                  onPressed: dialogRekapPayroll,
                 ),
                 barisBox(
                   label: 'SLIP GAJI',
@@ -101,12 +89,13 @@ class ReportView extends StatelessWidget {
     );
   }
 
-  void dialogArea(String jenis) {
+  void dialogRekapPayroll() {
+    controller.filterJenis = '';
     AFwidget.dialog(
       Container(
         width: 500,
-        height: 200,
-        padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
+        height: 300,
+        padding: const EdgeInsets.fromLTRB(15, 0, 0, 15),
         decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -123,34 +112,127 @@ class ReportView extends StatelessWidget {
                   topRight: Radius.circular(15),
                 ),
               ),
-              child: Text(jenis == '1' ? 'DIVISI ENGINEERING' : jenis == '2' ? 'DIVISI STAF' : '',
+              child: Text('Excel Rekap Payroll Per Karyawan ${controller.filterTahun.label}',
                 style: const TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            Row(
-              children: [
-                const Text('Area   :   '),
-                Expanded(
-                  child: GetBuilder<ReportControl>(
-                    builder: (_) {
-                      return AFwidget.comboField(
-                        value: controller.filterArea.label,
-                        label: '',
-                        onTap: () async {
-                          var a = await controller.pilihArea(value: controller.filterArea.value);
-                          if(a != null && a.value != controller.filterArea.value) {
-                            controller.filterArea = a;
-                            controller.update();
-                          }
-                        },
-                      );
-                    },
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 100,
+                    padding: const EdgeInsets.only(right: 15),
+                    child: const Text('Divisi'),
                   ),
-                ),
-              ],
+                  Expanded(
+                    child: GetBuilder<ReportControl>(
+                      builder: (_) {
+                        return Column(
+                          children: [
+                            Row(
+                              children: [
+                                Radio<String>(
+                                  value: '1',
+                                  groupValue: controller.filterJenis,
+                                  onChanged: (a) {
+                                    if(a != null && a != controller.filterJenis) {
+                                      controller.filterJenis = a;
+                                      controller.update();
+                                    }
+                                  },
+                                ),
+                                const SizedBox(
+                                  width: 130,
+                                  child: Text('Engineering'),
+                                ),
+                                Radio<String>(
+                                  value: '3',
+                                  groupValue: controller.filterJenis,
+                                  onChanged: (a) {
+                                    if(a != null && a != controller.filterJenis) {
+                                      controller.filterJenis = a;
+                                      controller.update();
+                                    }
+                                  },
+                                ),
+                                const SizedBox(
+                                  width: 130,
+                                  child: Text('Non Staf'),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Radio<String>(
+                                  value: '2',
+                                  groupValue: controller.filterJenis,
+                                  onChanged: (a) {
+                                    if(a != null && a != controller.filterJenis) {
+                                      controller.filterJenis = a;
+                                      controller.update();
+                                    }
+                                  },
+                                ),
+                                const SizedBox(
+                                  width: 130,
+                                  child: Text('Staf'),
+                                ),
+                                Radio<String>(
+                                  value: '4',
+                                  groupValue: controller.filterJenis,
+                                  onChanged: (a) {
+                                    if(a != null && a != controller.filterJenis) {
+                                      controller.filterJenis = a;
+                                      controller.update();
+                                    }
+                                  },
+                                ),
+                                const SizedBox(
+                                  width: 130,
+                                  child: Text('Semua'),
+                                ),
+                              ],
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 20, 20, 0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 100,
+                    padding: const EdgeInsets.only(right: 15),
+                    child: const Text('Area'),
+                  ),
+                  Expanded(
+                    child: GetBuilder<ReportControl>(
+                      builder: (_) {
+                        return AFwidget.comboField(
+                          value: controller.filterArea.label,
+                          label: '',
+                          onTap: () async {
+                            var a = await controller.pilihArea(value: controller.filterArea.value, withSemua: true);
+                            if(a != null && a.value != controller.filterArea.value) {
+                              controller.filterArea = a;
+                              controller.update();
+                            }
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
@@ -167,10 +249,7 @@ class ReportView extends StatelessWidget {
                   AFwidget.tombol(
                     label: 'Download',
                     color: Colors.green,
-                    onPressed: () {
-                      Get.back();
-                      controller.dowloadRekapPayrollPerKaryawanStaf(jenis);
-                    },
+                    onPressed: controller.dowloadRekapPayrollPerKaryawan,
                     minimumSize: const Size(120, 40),
                   ),
                 ],
@@ -186,6 +265,7 @@ class ReportView extends StatelessWidget {
   }
 
   void dialogSlipGaji() {
+    controller.filterJenis = '';
     AFwidget.dialog(
       Container(
         width: 500,

@@ -84,27 +84,20 @@ class ReportControl extends GetxController {
     }
   }
 
-  Future<void> dowloadRekapPayrollPerKaryawanStaf(String jenis) async {
+  Future<void> dowloadRekapPayrollPerKaryawan() async {
+    if(filterJenis == '') {
+      AFwidget.snackbar('Silakan pilih divisi terlebih dahulu');
+      return;
+    }
     if(filterArea.value == '') {
       AFwidget.snackbar('Silakan pilih area terlebih dahulu');
       return;
     }
     AFwidget.loading();
-    var hasil = await AFdatabase.download(url: 'excel/rekap-payroll-perkaryawan/$jenis/${filterTahun.value}/${filterArea.value}');
+    var hasil = await AFdatabase.download(url: 'excel/rekap-payroll-perkaryawan/$filterJenis/${filterTahun.value}/${filterArea.value}');
     Get.back();
     if(hasil.success) {
-      AFwidget.snackbar('laporan excel rekap payroll per karyawan divisi ${jenis == '1' ? 'engineering' : jenis == '2' ? 'staf' : ''} ${filterArea.label.toLowerCase()} telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})');
-    } else {
-      AFwidget.snackbar('Gagal membuat excel. [${hasil.message}]');
-    }
-  }
-
-  Future<void> dowloadRekapPayrollPerKaryawanNonStaf() async {
-    AFwidget.loading();
-    var hasil = await AFdatabase.download(url: 'excel/rekap-payroll-perkaryawan/3/${filterTahun.value}/99');
-    Get.back();
-    if(hasil.success) {
-      AFwidget.snackbar('laporan excel rekap payroll per karyawan divisi non staf telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})');
+      AFwidget.snackbar('laporan excel rekap payroll per karyawan telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})');
     } else {
       AFwidget.snackbar('Gagal membuat excel. [${hasil.message}]');
     }
