@@ -93,6 +93,7 @@ class ReportControl extends GetxController {
       AFwidget.snackbar('Silakan pilih area terlebih dahulu');
       return;
     }
+    Get.back();
     AFwidget.loading();
     var hasil = await AFdatabase.download(url: 'excel/rekap-payroll-perkaryawan/$filterJenis/${filterTahun.value}/${filterArea.value}');
     Get.back();
