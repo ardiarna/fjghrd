@@ -1,4 +1,5 @@
 import 'package:fjghrd/controllers/auth_control.dart';
+import 'package:fjghrd/views/beranda_view.dart';
 import 'package:fjghrd/views/karyawan_view.dart';
 import 'package:fjghrd/views/payroll_view.dart';
 import 'package:fjghrd/views/report_view.dart';
@@ -9,15 +10,13 @@ class HomeControl extends GetxController {
   AuthControl authControl = Get.find();
 
   int tabId = 0;
-  Widget kontener = const Text('');
-
+  Widget kontener = BerandaView();
   final scaffoldKey = GlobalKey<ScaffoldState>();
-
 
   void pindahTab(int idx) {
     if(idx == 0) {
       tabId = idx;
-      kontener = const Text('Tab Beranda');
+      kontener = BerandaView();
     } else if(idx == 1) {
       tabId = idx;
       kontener = KaryawanView();

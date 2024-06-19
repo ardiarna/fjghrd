@@ -12,8 +12,9 @@ dependencies:
 
   cupertino_icons: ^1.0.8
   background_downloader: ^8.5.2
-  currency_text_input_formatter: ^2.2.2
+  currency_text_input_formatter: ^2.2.3
   dotted_border: ^2.1.0
+  fl_chart: ^0.68.0
   get: ^4.6.6
   http: ^1.2.1
   image_picker: ^1.1.1
@@ -28,7 +29,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: ^3.0.2
+  flutter_lints: ^4.0.0
 
 flutter:
 

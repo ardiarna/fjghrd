@@ -173,4 +173,11 @@ class KaryawanRepository {
     return await AFdatabase.download(url: 'excel/payroll/$id/$tahun');
   }
 
+  Future<Hasil> rekapAreaKelamin() async {
+    return await AFdatabase.send(
+      url: 'karyawan/rekap/area-kelamin',
+    );
+  }
+
+
 }

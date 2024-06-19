@@ -351,8 +351,8 @@ class KaryawanView extends StatelessWidget {
               const Spacer(),
               OutlinedButton(
                 style: ButtonStyle(
-                  side: MaterialStateProperty.all<BorderSide>(const BorderSide(color: Colors.red)),
-                  foregroundColor: MaterialStateProperty.all<Color>(Colors.red),
+                  side: WidgetStateProperty.all<BorderSide>(const BorderSide(color: Colors.red)),
+                  foregroundColor: WidgetStateProperty.all<Color>(Colors.red),
                 ),
                 onPressed: () {
                   controller.homeControl.kontener = MantanKaryawanView();

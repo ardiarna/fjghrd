@@ -91,4 +91,10 @@ class PayrollRepository {
     );
   }
 
+  Future<Hasil> reportRekap({required String tahun}) async {
+    return await AFdatabase.send(
+      url: 'payroll/report-rekap/$tahun',
+    );
+  }
+
 }

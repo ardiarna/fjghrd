@@ -120,4 +120,9 @@ abstract class AFconvert {
     return nilai != null ? mat.format(nilai) : '0';
   }
 
+  static String matNumberWithDecimal(dynamic nilai, {int decimal = 2}) {
+    final mat = NumberFormat('#,##0.${'0' * decimal}');
+    return nilai != null ? mat.format(nilai) : '0';
+  }
+
 }

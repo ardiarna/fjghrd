@@ -1216,7 +1216,7 @@ class RunpayrollView extends StatelessWidget {
                 icon: const Icon(Icons.save, size: 18),
                 label: const Text('Simpan Payroll'),
                 style: const ButtonStyle(
-                  backgroundColor: MaterialStatePropertyAll<Color>(Colors.blue),
+                  backgroundColor: WidgetStatePropertyAll<Color>(Colors.blue),
                 ),
               ),
             ],
