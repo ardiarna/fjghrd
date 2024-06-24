@@ -128,6 +128,26 @@ class ReportControl extends GetxController {
     }
   }
 
+  Future<void> dowloadRekapPPh21() async {
+    if(filterJenis == '') {
+      AFwidget.snackbar('Silakan pilih divisi terlebih dahulu');
+      return;
+    }
+    if(filterArea.value == '') {
+      AFwidget.snackbar('Silakan pilih area terlebih dahulu');
+      return;
+    }
+    Get.back();
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/rekap-pph21/$filterJenis/${filterTahun.value}/${filterArea.value}');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.snackbar('laporan excel rekap pph 21 telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})');
+    } else {
+      AFwidget.snackbar('Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
   Future<Opsi?> pilihTahun({String value = ''}) async {
     var a = await AFcombobox.bottomSheet(
       listOpsi: listTahun,

@@ -78,6 +78,10 @@ class ReportView extends StatelessWidget {
                   onPressed: dialogRekapPayroll,
                 ),
                 barisBox(
+                  label: 'REKAP PPh 21',
+                  onPressed: dialogRekapPPh21,
+                ),
+                barisBox(
                   label: 'SLIP GAJI',
                   onPressed: dialogSlipGaji,
                 ),
@@ -250,6 +254,181 @@ class ReportView extends StatelessWidget {
                     label: 'Download',
                     color: Colors.green,
                     onPressed: controller.dowloadRekapPayrollPerKaryawan,
+                    minimumSize: const Size(120, 40),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      scrollable: false,
+      backgroundColor: Colors.white,
+      contentPadding: const EdgeInsets.all(0),
+    );
+  }
+
+  void dialogRekapPPh21() {
+    controller.filterJenis = '';
+    AFwidget.dialog(
+      Container(
+        width: 500,
+        height: 300,
+        padding: const EdgeInsets.fromLTRB(15, 0, 0, 15),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        child: Column(
+          children: [
+            Container(
+              height: 65,
+              width: double.infinity,
+              padding: const EdgeInsets.all(15),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(15),
+                ),
+              ),
+              child: Text('Excel Rekap PPh21 Tahun ${controller.filterTahun.label}',
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 100,
+                    padding: const EdgeInsets.only(right: 15),
+                    child: const Text('Divisi'),
+                  ),
+                  Expanded(
+                    child: GetBuilder<ReportControl>(
+                      builder: (_) {
+                        return Column(
+                          children: [
+                            Row(
+                              children: [
+                                Radio<String>(
+                                  value: '1',
+                                  groupValue: controller.filterJenis,
+                                  onChanged: (a) {
+                                    if(a != null && a != controller.filterJenis) {
+                                      controller.filterJenis = a;
+                                      controller.update();
+                                    }
+                                  },
+                                ),
+                                const SizedBox(
+                                  width: 130,
+                                  child: Text('Engineering'),
+                                ),
+                                Radio<String>(
+                                  value: '3',
+                                  groupValue: controller.filterJenis,
+                                  onChanged: (a) {
+                                    if(a != null && a != controller.filterJenis) {
+                                      controller.filterJenis = a;
+                                      controller.update();
+                                    }
+                                  },
+                                ),
+                                const SizedBox(
+                                  width: 130,
+                                  child: Text('Non Staf'),
+                                ),
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Radio<String>(
+                                  value: '2',
+                                  groupValue: controller.filterJenis,
+                                  onChanged: (a) {
+                                    if(a != null && a != controller.filterJenis) {
+                                      controller.filterJenis = a;
+                                      controller.update();
+                                    }
+                                  },
+                                ),
+                                const SizedBox(
+                                  width: 130,
+                                  child: Text('Staf'),
+                                ),
+                                Radio<String>(
+                                  value: '4',
+                                  groupValue: controller.filterJenis,
+                                  onChanged: (a) {
+                                    if(a != null && a != controller.filterJenis) {
+                                      controller.filterJenis = a;
+                                      controller.update();
+                                    }
+                                  },
+                                ),
+                                const SizedBox(
+                                  width: 130,
+                                  child: Text('Semua'),
+                                ),
+                              ],
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 20, 20, 0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 100,
+                    padding: const EdgeInsets.only(right: 15),
+                    child: const Text('Area'),
+                  ),
+                  Expanded(
+                    child: GetBuilder<ReportControl>(
+                      builder: (_) {
+                        return AFwidget.comboField(
+                          value: controller.filterArea.label,
+                          label: '',
+                          onTap: () async {
+                            var a = await controller.pilihArea(value: controller.filterArea.value, withSemua: true);
+                            if(a != null && a.value != controller.filterArea.value) {
+                              controller.filterArea = a;
+                              controller.update();
+                            }
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  AFwidget.tombol(
+                    label: 'Batal',
+                    color: Colors.orange,
+                    onPressed: Get.back,
+                    minimumSize: const Size(120, 40),
+                  ),
+                  const SizedBox(width: 40),
+                  AFwidget.tombol(
+                    label: 'Download',
+                    color: Colors.green,
+                    onPressed: controller.dowloadRekapPPh21,
                     minimumSize: const Size(120, 40),
                   ),
                 ],
