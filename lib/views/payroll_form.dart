@@ -2,6 +2,7 @@ import 'package:fjghrd/controllers/payroll_control.dart';
 import 'package:fjghrd/models/payroll.dart';
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_convert.dart';
+import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/views/payroll_view.dart';
 import 'package:flutter/material.dart';
@@ -855,43 +856,7 @@ class PayrollForm extends StatelessWidget {
                 onLoaded: (PlutoGridOnLoadedEvent ev) {
                   ev.stateManager.setShowColumnFilter(true);
                 },
-                configuration: PlutoGridConfiguration(
-                  scrollbar: const PlutoGridScrollbarConfig(
-                    isAlwaysShown: true,
-                  ),
-                  localeText: const PlutoGridLocaleText(
-                    filterColumn: 'Kolom Pencarian',
-                    filterAllColumns: 'Semua Kolom',
-                    filterType: 'Tipe Pencarian',
-                    filterValue: 'Nilai / Kata Dicari',
-                    filterContains: '🔍 cari',
-                    filterEquals: '🔍 cari sama dengan',
-                    filterStartsWith: '🔍 cari dimulai dengan',
-                    filterEndsWith: '🔍 cari diakhiri dengan',
-                    filterGreaterThan: '🔍 lebih besar dari',
-                    filterGreaterThanOrEqualTo: '🔍 lebih besar dari atau =',
-                    filterLessThan: '🔍 lebih kecil dari',
-                    filterLessThanOrEqualTo: '🔍 lebih kecil dari atau =',
-                    loadingText: 'Mohon tunggu...',
-                    sunday: 'Mg',
-                    monday: 'Sn',
-                    tuesday: 'Sl',
-                    wednesday: 'Rb',
-                    thursday: 'Km',
-                    friday: 'Jm',
-                    saturday: 'Sb',
-
-                  ),
-                  style: PlutoGridStyleConfig(
-                    rowHeight: 30,
-                    columnHeight: 35,
-                    borderColor: Colors.brown.shade200,
-                    gridBorderColor: Colors.transparent,
-                    gridBackgroundColor: Colors.transparent,
-                    defaultColumnFilterPadding: const EdgeInsets.fromLTRB(2, 2, 2, 2),
-                    iconSize: 1,
-                  ),
-                ),
+                configuration: AFplutogridConfig.configSatu(iconSize: 1),
               );
             },
           ),

@@ -1,6 +1,7 @@
 import 'package:fjghrd/controllers/oncall_customer_control.dart';
 import 'package:fjghrd/models/oncall_customer.dart';
 import 'package:fjghrd/utils/af_convert.dart';
+import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/views/payroll_view.dart';
 import 'package:flutter/material.dart';
@@ -231,45 +232,7 @@ class OncallCustomerView extends StatelessWidget {
                   event.stateManager.autoFitColumn(context, columns[1]);
                   event.stateManager.autoFitColumn(context, columns[2]);
                 },
-                configuration: PlutoGridConfiguration(
-                  scrollbar: const PlutoGridScrollbarConfig(
-                    isAlwaysShown: true,
-                  ),
-                  localeText: const PlutoGridLocaleText(
-                    filterColumn: 'Kolom Pencarian',
-                    filterAllColumns: 'Semua Kolom',
-                    filterType: 'Tipe Pencarian',
-                    filterValue: 'Nilai / Kata Dicari',
-                    filterContains: '🔍 cari',
-                    filterEquals: '🔍 cari sama dengan',
-                    filterStartsWith: '🔍 cari dimulai dengan',
-                    filterEndsWith: '🔍 cari diakhiri dengan',
-                    filterGreaterThan: '🔍 lebih besar dari',
-                    filterGreaterThanOrEqualTo: '🔍 lebih besar dari atau =',
-                    filterLessThan: '🔍 lebih kecil dari',
-                    filterLessThanOrEqualTo: '🔍 lebih kecil dari atau =',
-                    loadingText: 'Mohon tunggu...',
-                    sunday: 'Mg',
-                    monday: 'Sn',
-                    tuesday: 'Sl',
-                    wednesday: 'Rb',
-                    thursday: 'Km',
-                    friday: 'Jm',
-                    saturday: 'Sb',
-
-                  ),
-                  style: PlutoGridStyleConfig(
-                    rowHeight: 30,
-                    columnHeight: 35,
-                    borderColor: Colors.brown.shade200,
-                    gridBorderColor: Colors.transparent,
-                    gridBackgroundColor: Colors.transparent,
-                    defaultColumnFilterPadding: const EdgeInsets.fromLTRB(2, 2, 2, 2),
-                  ),
-                  columnSize: const PlutoGridColumnSizeConfig(
-                    autoSizeMode: PlutoAutoSizeMode.scale,
-                  ),
-                ),
+                configuration: AFplutogridConfig.configDua(),
               );
             },
           ),

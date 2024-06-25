@@ -1,5 +1,6 @@
 import 'package:fjghrd/controllers/jabatan_control.dart';
 import 'package:fjghrd/models/jabatan.dart';
+import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
@@ -122,41 +123,7 @@ class JabatanView extends StatelessWidget {
                   event.stateManager.setShowColumnFilter(true);
                   event.stateManager.autoFitColumn(context, columns[1]);
                 },
-                configuration: PlutoGridConfiguration(
-                  scrollbar: const PlutoGridScrollbarConfig(
-                    isAlwaysShown: true,
-                  ),
-                  localeText: const PlutoGridLocaleText(
-                    filterColumn: 'Kolom Pencarian',
-                    filterAllColumns: 'Semua Kolom',
-                    filterType: 'Tipe Pencarian',
-                    filterValue: 'Nilai / Kata Dicari',
-                    filterContains: '🔍 cari',
-                    filterEquals: '🔍 cari sama dengan',
-                    filterStartsWith: '🔍 cari dimulai dengan',
-                    filterEndsWith: '🔍 cari diakhiri dengan',
-                    filterGreaterThan: '🔍 lebih besar dari',
-                    filterGreaterThanOrEqualTo: '🔍 lebih besar dari atau =',
-                    filterLessThan: '🔍 lebih kecil dari',
-                    filterLessThanOrEqualTo: '🔍 lebih kecil dari atau =',
-                    loadingText: 'Mohon tunggu...',
-                    sunday: 'Mig',
-                    monday: 'Sen',
-                    tuesday: 'Sel',
-                    wednesday: 'Rab',
-                    thursday: 'Kam',
-                    friday: 'Jum',
-                    saturday: 'Sab',
-
-                  ),
-                  style: PlutoGridStyleConfig(
-                    rowHeight: 35,
-                    borderColor: Colors.brown.shade100,
-                    gridBorderColor: Colors.transparent,
-                    gridBackgroundColor: Colors.transparent,
-                    defaultColumnFilterPadding: const EdgeInsets.fromLTRB(0, 0, 0, 3),
-                  ),
-                ),
+                configuration: AFplutogridConfig.configSatu(),
               );
             },
           ),

@@ -2442,8 +2442,10 @@ class KaryawanControl extends GetxController {
       var hasil = await _repo.perjanjianKerjaCreate(a.karyawan.id, a.toMap());
       Get.back();
       if(hasil.success) {
+        statusKerja = a.statusKerja;
         loadPerjanjianKerjas();
         loadTimelineMasakerja();
+        loadKaryawans();
         Get.back();
       }
       AFwidget.snackbar(hasil.message);

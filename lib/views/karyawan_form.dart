@@ -10,6 +10,7 @@ import 'package:fjghrd/models/perjanjian_kerja.dart';
 import 'package:fjghrd/models/ptkp.dart';
 import 'package:fjghrd/models/status_kerja.dart';
 import 'package:fjghrd/utils/af_convert.dart';
+import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -1048,47 +1049,16 @@ class KaryawanForm extends StatelessWidget {
                                 int jumlah = controller.listKeluarga.length;
                                 return Container(
                                   margin: const EdgeInsets.symmetric(horizontal: 10),
-                                  height: jumlah > 4 ? 230 : jumlah == 4 ? 193 : jumlah == 3 ? 157 : jumlah == 2 ? 121 : 85,
+                                  height: jumlah > 4 ? 215 : jumlah == 4 ? 183 : jumlah == 3 ? 153 : jumlah == 2 ? 121 : 90,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.brown.shade200),
+                                  ),
                                   child: PlutoGrid(
                                     key: UniqueKey(),
                                     columns: columnsKeluarga,
                                     rows: _buildRowsKeluarga(controller.listKeluarga),
                                     onLoaded: (PlutoGridOnLoadedEvent event) {},
-                                    configuration: PlutoGridConfiguration(
-                                      scrollbar: const PlutoGridScrollbarConfig(
-                                        isAlwaysShown: true,
-                                      ),
-                                      localeText: const PlutoGridLocaleText(
-                                        filterColumn: 'Kolom Pencarian',
-                                        filterAllColumns: 'Semua Kolom',
-                                        filterType: 'Tipe Pencarian',
-                                        filterValue: 'Nilai / Kata Dicari',
-                                        filterContains: '🔍 cari',
-                                        filterEquals: '🔍 cari sama dengan',
-                                        filterStartsWith: '🔍 cari dimulai dengan',
-                                        filterEndsWith: '🔍 cari diakhiri dengan',
-                                        filterGreaterThan: '🔍 lebih besar dari',
-                                        filterGreaterThanOrEqualTo: '🔍 lebih besar dari atau =',
-                                        filterLessThan: '🔍 lebih kecil dari',
-                                        filterLessThanOrEqualTo: '🔍 lebih kecil dari atau =',
-                                        loadingText: 'Mohon tunggu...',
-                                        sunday: 'Mg',
-                                        monday: 'Sn',
-                                        tuesday: 'Sl',
-                                        wednesday: 'Rb',
-                                        thursday: 'Km',
-                                        friday: 'Jm',
-                                        saturday: 'Sb',
-
-                                      ),
-                                      style: PlutoGridStyleConfig(
-                                        rowHeight: 35,
-                                        borderColor: Colors.brown.shade200,
-                                        gridBorderColor: Colors.brown.shade200,
-                                        gridBackgroundColor: Colors.transparent,
-                                        defaultColumnFilterPadding: const EdgeInsets.fromLTRB(2, 2, 2, 2),
-                                      ),
-                                    ),
+                                    configuration: AFplutogridConfig.configSatu(),
                                   ),
                                 );
                               },
@@ -1140,50 +1110,16 @@ class KaryawanForm extends StatelessWidget {
                                 int jumlah = controller.listKontak.length;
                                 return Container(
                                   margin: const EdgeInsets.symmetric(horizontal: 10),
-                                  height: jumlah > 4 ? 230 : jumlah == 4 ? 193 : jumlah == 3 ? 157 : jumlah == 2 ? 121 : 85,
+                                  height: jumlah > 4 ? 215 : jumlah == 4 ? 183 : jumlah == 3 ? 153 : jumlah == 2 ? 121 : 90,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.brown.shade200),
+                                  ),
                                   child: PlutoGrid(
                                     key: UniqueKey(),
                                     columns: columnsKontak,
                                     rows: _buildRowsKontak(controller.listKontak),
                                     onLoaded: (PlutoGridOnLoadedEvent event) {},
-                                    configuration: PlutoGridConfiguration(
-                                      scrollbar: const PlutoGridScrollbarConfig(
-                                        isAlwaysShown: true,
-                                      ),
-                                      localeText: const PlutoGridLocaleText(
-                                        filterColumn: 'Kolom Pencarian',
-                                        filterAllColumns: 'Semua Kolom',
-                                        filterType: 'Tipe Pencarian',
-                                        filterValue: 'Nilai / Kata Dicari',
-                                        filterContains: '🔍 cari',
-                                        filterEquals: '🔍 cari sama dengan',
-                                        filterStartsWith: '🔍 cari dimulai dengan',
-                                        filterEndsWith: '🔍 cari diakhiri dengan',
-                                        filterGreaterThan: '🔍 lebih besar dari',
-                                        filterGreaterThanOrEqualTo: '🔍 lebih besar dari atau =',
-                                        filterLessThan: '🔍 lebih kecil dari',
-                                        filterLessThanOrEqualTo: '🔍 lebih kecil dari atau =',
-                                        loadingText: 'Mohon tunggu...',
-                                        sunday: 'Mg',
-                                        monday: 'Sn',
-                                        tuesday: 'Sl',
-                                        wednesday: 'Rb',
-                                        thursday: 'Km',
-                                        friday: 'Jm',
-                                        saturday: 'Sb',
-
-                                      ),
-                                      style: PlutoGridStyleConfig(
-                                        rowHeight: 35,
-                                        borderColor: Colors.brown.shade200,
-                                        gridBorderColor: Colors.brown.shade200,
-                                        gridBackgroundColor: Colors.transparent,
-                                        defaultColumnFilterPadding: const EdgeInsets.fromLTRB(2, 2, 2, 2),
-                                      ),
-                                      columnSize: const PlutoGridColumnSizeConfig(
-                                        autoSizeMode: PlutoAutoSizeMode.scale,
-                                      ),
-                                    ),
+                                    configuration: AFplutogridConfig.configSatu(),
                                   ),
                                 );
                               },
@@ -1235,47 +1171,16 @@ class KaryawanForm extends StatelessWidget {
                                 int jumlah = controller.listPerjanjianKerja.length;
                                 return Container(
                                   margin: const EdgeInsets.symmetric(horizontal: 10),
-                                  height: jumlah > 4 ? 230 : jumlah == 4 ? 193 : jumlah == 3 ? 157 : jumlah == 2 ? 121 : 85,
+                                  height: jumlah > 4 ? 215 : jumlah == 4 ? 183 : jumlah == 3 ? 153 : jumlah == 2 ? 121 : 90,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.brown.shade200),
+                                  ),
                                   child: PlutoGrid(
                                     key: UniqueKey(),
                                     columns: columnsPerjanjian,
                                     rows: _buildRowsPerjanjian(controller.listPerjanjianKerja),
                                     onLoaded: (PlutoGridOnLoadedEvent event) {},
-                                    configuration: PlutoGridConfiguration(
-                                      scrollbar: const PlutoGridScrollbarConfig(
-                                        isAlwaysShown: true,
-                                      ),
-                                      localeText: const PlutoGridLocaleText(
-                                        filterColumn: 'Kolom Pencarian',
-                                        filterAllColumns: 'Semua Kolom',
-                                        filterType: 'Tipe Pencarian',
-                                        filterValue: 'Nilai / Kata Dicari',
-                                        filterContains: '🔍 cari',
-                                        filterEquals: '🔍 cari sama dengan',
-                                        filterStartsWith: '🔍 cari dimulai dengan',
-                                        filterEndsWith: '🔍 cari diakhiri dengan',
-                                        filterGreaterThan: '🔍 lebih besar dari',
-                                        filterGreaterThanOrEqualTo: '🔍 lebih besar dari atau =',
-                                        filterLessThan: '🔍 lebih kecil dari',
-                                        filterLessThanOrEqualTo: '🔍 lebih kecil dari atau =',
-                                        loadingText: 'Mohon tunggu...',
-                                        sunday: 'Mg',
-                                        monday: 'Sn',
-                                        tuesday: 'Sl',
-                                        wednesday: 'Rb',
-                                        thursday: 'Km',
-                                        friday: 'Jm',
-                                        saturday: 'Sb',
-
-                                      ),
-                                      style: PlutoGridStyleConfig(
-                                        rowHeight: 35,
-                                        borderColor: Colors.brown.shade200,
-                                        gridBorderColor: Colors.brown.shade200,
-                                        gridBackgroundColor: Colors.transparent,
-                                        defaultColumnFilterPadding: const EdgeInsets.fromLTRB(2, 2, 2, 2),
-                                      ),
-                                    ),
+                                    configuration: AFplutogridConfig.configSatu(),
                                   ),
                                 );
                               },
