@@ -23,6 +23,7 @@ class KaryawanView extends StatelessWidget {
         int bulan = (d.inDays % 365) ~/ 30; // Menggunakan modulo 365, lalu dibagi dengan 30 untuk bulan
         return PlutoRow(
           cells: {
+            'urutan': PlutoCell(value: index+1),
             'area': PlutoCell(value: rowData[index].area.nama),
             'id': PlutoCell(value: rowData[index].id),
             'nama': PlutoCell(value: rowData[index].nama),
@@ -118,6 +119,16 @@ class KaryawanView extends StatelessWidget {
             ],
           );
         },
+      ),
+      PlutoColumn(
+        title: 'NO',
+        field: 'urutan',
+        type: PlutoColumnType.number(),
+        readOnly: true,
+        width: 70,
+        backgroundColor: Colors.brown.shade100,
+        textAlign: PlutoColumnTextAlign.center,
+        frozen: PlutoColumnFrozen.start,
       ),
       PlutoColumn(
         title: 'NAMA',
@@ -375,7 +386,7 @@ class KaryawanView extends StatelessWidget {
                 onChanged: (PlutoGridOnChangedEvent event) {},
                 onLoaded: (PlutoGridOnLoadedEvent event) {
                   event.stateManager.setShowColumnFilter(true);
-                  for (int i = 1; i <= 20; i++) {
+                  for (int i = 2; i <= 21; i++) {
                     event.stateManager.autoFitColumn(context, columns[i]);
                   }
                   // event.stateManager.setRowGroup(
@@ -418,9 +429,10 @@ class KaryawanView extends StatelessWidget {
                 children: controller.totalKaryawanPerArea.entries.map((e) {
                   return Text(
                     '💫${e.key}: ${e.value}',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
-                      color: Colors.black54
+                      fontWeight: e.key == 'TOTAL KARYAWAN' ? FontWeight.bold : FontWeight.normal,
+                      color: e.key == 'TOTAL KARYAWAN' ? Colors.blue : Colors.black54,
                     ),
                   );
                 }).toList(),

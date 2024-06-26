@@ -7,6 +7,7 @@ import 'package:fjghrd/views/medical_view.dart';
 import 'package:fjghrd/views/oncall_customer_view.dart';
 import 'package:fjghrd/views/overtime_view.dart';
 import 'package:fjghrd/views/payroll_form.dart';
+import 'package:fjghrd/views/potongan_view.dart';
 import 'package:fjghrd/views/runpayroll_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -76,6 +77,14 @@ class PayrollView extends StatelessWidget {
                 icon: Icons.call_missed_outlined,
                 onPressed: (){
                   controller.homeControl.kontener = OncallCustomerView();
+                  controller.homeControl.update();
+                },
+              ),
+              tombol(
+                label: 'Potongan',
+                icon: Icons.money_off,
+                onPressed: (){
+                  controller.homeControl.kontener = PotonganView();
                   controller.homeControl.update();
                 },
               ),

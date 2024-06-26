@@ -1119,7 +1119,7 @@ class RunpayrollView extends StatelessWidget {
                 },
                 onLoaded: (PlutoGridOnLoadedEvent ev) {
                   stateManager = ev.stateManager;
-                  ev.stateManager.setShowColumnFilter(true);
+                  // ev.stateManager.setShowColumnFilter(true);
                   // ev.stateManager.setAutoEditing(true);
                 },
                 configuration: AFplutogridConfig.configSatu(iconSize: 1),
