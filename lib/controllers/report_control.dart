@@ -53,10 +53,10 @@ class ReportControl extends GetxController {
 
   Future<void> dowloadRekapPayroll() async {
     AFwidget.loading();
-    var hasil = await AFdatabase.download(url: 'excel/rekap-payroll/${filterTahun.value}');
+    var hasil = await AFdatabase.download(url: 'excel/rekap-gaji/${filterTahun.value}');
     Get.back();
     if(hasil.success) {
-      AFwidget.snackbar('laporan excel rekap payroll telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})');
+      AFwidget.snackbar('laporan excel rekap gaji telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})');
     } else {
       AFwidget.snackbar('Gagal membuat excel. [${hasil.message}]');
     }

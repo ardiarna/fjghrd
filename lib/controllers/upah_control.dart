@@ -21,7 +21,7 @@ class UpahControl extends GetxController {
   Opsi cariStaf = Opsi(value: 'Y', label: 'Staf');
   Map<String, int> totalKaryawanPerArea = {};
 
-  late TextEditingController txtGaji, txtUangMakan;
+  late TextEditingController txtUangMakan;
 
   bool? makanHarian = false;
   bool? overtime = true;
@@ -53,7 +53,6 @@ class UpahControl extends GetxController {
 
   void ubahForm(String karyawanId, BuildContext context) {
     current = listKaryawan.where((element) => element.id == karyawanId).first;
-    txtGaji.text = AFconvert.matNumber(current.upah.gaji);
     txtUangMakan.text = AFconvert.matNumber(current.upah.uangMakan);
     makanHarian = current.upah.id.isEmpty ? null : current.upah.makanHarian;
     overtime = current.upah.id.isEmpty ? null : current.upah.overtime;
@@ -129,9 +128,25 @@ class UpahControl extends GetxController {
                     ],
                   ),
                 ),
-                barisText(
-                  label: 'Jumlah Gaji / Upah',
-                  controller: txtGaji,
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 20, 20, 0),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 200,
+                        padding: const EdgeInsets.only(right: 15),
+                        child: const Text('Gaji Pokok Terakhir'),
+                      ),
+                      Expanded(
+                        child: Text(': ${AFconvert.matNumber(current.upah.gaji)}',
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 barisText(
                   label: 'Jumlah Uang Makan',
@@ -292,9 +307,6 @@ class UpahControl extends GetxController {
       if(current.id.isEmpty) {
         throw 'ID karyawan tidak ditemukan';
       }
-      if(txtGaji.text.isEmpty) {
-        throw 'Gaji harus diisi';
-      }
       if(txtUangMakan.text.isEmpty) {
         throw 'Uang Makan harus diisi';
       }
@@ -307,7 +319,6 @@ class UpahControl extends GetxController {
       var a = Upah(
         id: current.upah.id,
         karyawanId: current.id,
-        gaji: AFconvert.keInt(txtGaji.text),
         uangMakan: AFconvert.keInt(txtUangMakan.text),
         makanHarian: makanHarian ?? true,
         overtime: overtime ?? false,
@@ -383,14 +394,12 @@ class UpahControl extends GetxController {
 
   @override
   void onInit() {
-    txtGaji = TextEditingController();
     txtUangMakan = TextEditingController();
     super.onInit();
   }
 
   @override
   void onClose() {
-    txtGaji.dispose();
     txtUangMakan.dispose();
     super.onClose();
   }

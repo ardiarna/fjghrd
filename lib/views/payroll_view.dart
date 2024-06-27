@@ -232,6 +232,11 @@ class PayrollView extends StatelessWidget {
                 label: 'Gaji Pokok',
                 value: AFconvert.matNumber(item.gaji),
               ),
+              item.kenaikanGaji == 0 ? Container() :
+              barisKonten(
+                label: 'Kenaikan Gaji',
+                value: AFconvert.matNumber(item.kenaikanGaji),
+              ),
               barisKonten(
                 label: 'U/makan & Transport',
                 value: AFconvert.matNumber(item.uangMakanJumlah),

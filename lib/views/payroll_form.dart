@@ -27,6 +27,7 @@ class PayrollForm extends StatelessWidget {
           'nama': PlutoCell(value: e.karyawan.nama),
           'jabatan': PlutoCell(value: e.karyawan.jabatan.nama),
           'gaji': PlutoCell(value: e.gaji),
+          'kenaikan_gaji': PlutoCell(value: e.kenaikanGaji),
           'makan_harian': PlutoCell(value: e.makanHarian ? 'Y' : 'N'),
           'hari_makan': PlutoCell(value: e.hariMakan),
           'uang_makan_harian': PlutoCell(value: e.uangMakanHarian),
@@ -232,6 +233,33 @@ class PayrollForm extends StatelessWidget {
       PlutoColumn(
         title: 'GAJI / UPAH',
         field: 'gaji',
+        type: PlutoColumnType.number(),
+        readOnly: true,
+        width: 150,
+        backgroundColor: Colors.brown.shade100,
+        textAlign: PlutoColumnTextAlign.right,
+        titleTextAlign: PlutoColumnTextAlign.center,
+        suppressedAutoSize: true,
+        enableContextMenu: false,
+        enableSorting: false,
+        enableColumnDrag: false,
+        footerRenderer: (rendererContext) {
+          return PlutoAggregateColumnFooter(
+            rendererContext: rendererContext,
+            type: PlutoAggregateColumnType.sum,
+            format: '#,###',
+            alignment: Alignment.centerRight,
+            titleSpanBuilder: (text) {
+              return [
+                TextSpan(text: text),
+              ];
+            },
+          );
+        },
+      ),
+      PlutoColumn(
+        title: 'KENAIKAN GAJI',
+        field: 'kenaikan_gaji',
         type: PlutoColumnType.number(),
         readOnly: true,
         width: 150,

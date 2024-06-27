@@ -34,7 +34,35 @@ class RunpayrollView extends StatelessWidget {
       var overtimeCus = controller.listOvertime
           .where((element) => element.karyawan.id == e.id && element.jenis == 'C')
           .fold(0, (sum, element) => sum + element.jumlah);
-      int totalDiterima = (e.upah.gaji + uangMakanJumlah + overtimeFjg + overtimeCus + medical);
+      var pot25Hari = controller.listPotongan
+          .where((element) => element.karyawan.id == e.id && element.jenis == 'TB')
+          .fold(0, (sum, element) => sum + element.hari);
+      var pot25HJumlah = controller.listPotongan
+          .where((element) => element.karyawan.id == e.id && element.jenis == 'TB')
+          .fold(0, (sum, element) => sum + element.jumlah);
+      var potTelepon = controller.listPotongan
+          .where((element) => element.karyawan.id == e.id && element.jenis == 'TP')
+          .fold(0, (sum, element) => sum + element.jumlah);
+      var potBensin = controller.listPotongan
+          .where((element) => element.karyawan.id == e.id && element.jenis == 'BN')
+          .fold(0, (sum, element) => sum + element.jumlah);
+      var potKas = controller.listPotongan
+          .where((element) => element.karyawan.id == e.id && element.jenis == 'KS')
+          .fold(0, (sum, element) => sum + element.jumlah);
+      var potCicilan = controller.listPotongan
+          .where((element) => element.karyawan.id == e.id && element.jenis == 'CC')
+          .fold(0, (sum, element) => sum + element.jumlah);
+      var potBpjs = controller.listPotongan
+          .where((element) => element.karyawan.id == e.id && element.jenis == 'BP')
+          .fold(0, (sum, element) => sum + element.jumlah);
+      var potCuti = controller.listPotongan
+          .where((element) => element.karyawan.id == e.id && element.jenis == 'UL')
+          .fold(0, (sum, element) => sum + element.jumlah);
+      var potLain = controller.listPotongan
+          .where((element) => element.karyawan.id == e.id && element.jenis == 'LL')
+          .fold(0, (sum, element) => sum + element.jumlah);
+      int totalDiterima = (e.upah.gaji + uangMakanJumlah + overtimeFjg + overtimeCus + medical) -
+          (pot25HJumlah + potTelepon + potBensin + potKas + potCicilan + potBpjs + potCuti + potLain);
       return PlutoRow(
         cells: {
           'karyawan_id': PlutoCell(value: e.id),
@@ -42,6 +70,7 @@ class RunpayrollView extends StatelessWidget {
           'nama': PlutoCell(value: e.nama),
           'jabatan': PlutoCell(value: e.jabatan.nama),
           'gaji': PlutoCell(value: e.upah.gaji),
+          'kenaikan_gaji': PlutoCell(value: 0),
           'makan_harian': PlutoCell(value: e.upah.makanHarian ? 'Y' : 'N'),
           'hari_makan': PlutoCell(value: hariMakan),
           'uang_makan_harian': PlutoCell(value: uangMakanHarian),
@@ -54,15 +83,15 @@ class RunpayrollView extends StatelessWidget {
           'insentif': PlutoCell(value: 0),
           'telkomsel': PlutoCell(value: 0),
           'lain': PlutoCell(value: 0),
-          'pot_25_hari': PlutoCell(value: 0),
-          'pot_25_jumlah': PlutoCell(value: 0),
-          'pot_telepon': PlutoCell(value: 0),
-          'pot_bensin': PlutoCell(value: 0),
-          'pot_kas': PlutoCell(value: 0),
-          'pot_cicilan': PlutoCell(value: 0),
-          'pot_bpjs': PlutoCell(value: 0),
-          'pot_cuti': PlutoCell(value: 0),
-          'pot_lain': PlutoCell(value: 0),
+          'pot_25_hari': PlutoCell(value: pot25Hari),
+          'pot_25_jumlah': PlutoCell(value: pot25HJumlah),
+          'pot_telepon': PlutoCell(value: potTelepon),
+          'pot_bensin': PlutoCell(value: potBensin),
+          'pot_kas': PlutoCell(value: potKas),
+          'pot_cicilan': PlutoCell(value: potCicilan),
+          'pot_bpjs': PlutoCell(value: potBpjs),
+          'pot_cuti': PlutoCell(value: potCuti),
+          'pot_lain': PlutoCell(value: potLain),
           'total_diterima': PlutoCell(value: totalDiterima),
           'keterangan': PlutoCell(value: ''),
         },
@@ -210,6 +239,32 @@ class RunpayrollView extends StatelessWidget {
     PlutoColumn(
       title: 'GAJI / UPAH',
       field: 'gaji',
+      type: PlutoColumnType.number(),
+      width: 150,
+      backgroundColor: Colors.brown.shade100,
+      textAlign: PlutoColumnTextAlign.right,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      suppressedAutoSize: true,
+      enableContextMenu: false,
+      enableSorting: false,
+      enableColumnDrag: false,
+      footerRenderer: (rendererContext) {
+        return PlutoAggregateColumnFooter(
+          rendererContext: rendererContext,
+          type: PlutoAggregateColumnType.sum,
+          format: '#,###',
+          alignment: Alignment.centerRight,
+          titleSpanBuilder: (text) {
+            return [
+              TextSpan(text: text),
+            ];
+          },
+        );
+      },
+    ),
+    PlutoColumn(
+      title: 'KENAIKAN GAJI',
+      field: 'kenaikan_gaji',
       type: PlutoColumnType.number(),
       width: 150,
       backgroundColor: Colors.brown.shade100,
@@ -884,6 +939,7 @@ class RunpayrollView extends StatelessWidget {
                       onPressed: () {
                         controller.loadOvertimes();
                         controller.loadMedicals();
+                        controller.loadPotongans();
                         controller.loadHariLiburs();
                         controller.homeControl.kontener = wgKaryawans();
                         controller.homeControl.update();
@@ -1106,7 +1162,7 @@ class RunpayrollView extends StatelessWidget {
                       ev.row.cells['pot_25_jumlah']!.value = a.toInt();
                     }
                   }
-                  int penghasilan = ev.row.cells['gaji']!.value + ev.row.cells['uang_makan_jumlah']!.value +
+                  int penghasilan = ev.row.cells['gaji']!.value + ev.row.cells['kenaikan_gaji']!.value + ev.row.cells['uang_makan_jumlah']!.value +
                       ev.row.cells['overtime_fjg']!.value + ev.row.cells['overtime_cus']!.value +
                       ev.row.cells['medical']!.value + ev.row.cells['thr']!.value +
                       ev.row.cells['bonus']!.value + ev.row.cells['insentif']!.value +

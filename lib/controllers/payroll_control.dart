@@ -1,6 +1,7 @@
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:fjghrd/controllers/auth_control.dart';
 import 'package:fjghrd/controllers/home_control.dart';
+import 'package:fjghrd/models/Potongan.dart';
 import 'package:fjghrd/models/hari_libur.dart';
 import 'package:fjghrd/models/karyawan.dart';
 import 'package:fjghrd/models/medical.dart';
@@ -10,6 +11,7 @@ import 'package:fjghrd/repositories/hari_libur_repository.dart';
 import 'package:fjghrd/repositories/medical_repository.dart';
 import 'package:fjghrd/repositories/overtime_repository.dart';
 import 'package:fjghrd/repositories/payroll_repository.dart';
+import 'package:fjghrd/repositories/potongan_repository.dart';
 import 'package:fjghrd/repositories/upah_repository.dart';
 import 'package:fjghrd/utils/af_combobox.dart';
 import 'package:fjghrd/utils/af_constant.dart';
@@ -33,6 +35,7 @@ class PayrollControl extends GetxController {
   Map<String, int> totalKaryawanPerArea = {};
   List<Overtime> listOvertime = [];
   List<Medical> listMedical = [];
+  List<Potongan> listPotongan = [];
   List<HariLibur> listHariLibur = [];
   List<Opsi> listBulan = mapBulan.entries.map((e) => Opsi(value: e.key.toString(), label: e.value)).toList();
   late List<Opsi> listTahun;
@@ -40,7 +43,7 @@ class PayrollControl extends GetxController {
   Payroll currentDetilPayroll = Payroll();
 
   late TextEditingController txtTanggalAwal, txtTanggalAkhir,
-      txtGaji, txtHariMakan, txtUangMakanHarian, txtUangMakanJumlah, txtOvertimeFjg, txtOvertimeCus,
+      txtGaji, txtKenaikanGaji, txtHariMakan, txtUangMakanHarian, txtUangMakanJumlah, txtOvertimeFjg, txtOvertimeCus,
       txtMedical, txtThr, txtBonus, txtInsentif, txtTelkomsel, txtLain, txtPot25hari, txtPot25jumlah,
       txtPotTelepon, txtPotBensin, txtPotKas, txtPotCicilan, txtPotBpjs, txtPotCuti, txtPotLain,
       txtTotalDiterima, txtKeterangan;
@@ -134,6 +137,20 @@ class PayrollControl extends GetxController {
     }
   }
 
+  Future<void> loadPotongans() async {
+    final PotonganRepository repo = PotonganRepository();
+    var hasil = await repo.findAll(
+      tahun: tahun.value,
+      bulan: bulan.value,
+    );
+    if (hasil.success) {
+      listPotongan.clear();
+      for (var data in hasil.daftar) {
+        listPotongan.add(Potongan.fromMap(data));
+      }
+    }
+  }
+
   Future<void> loadHariLiburs() async {
     final HariLiburRepository repo = HariLiburRepository();
     var hasil = await repo.findAll(tahun: tahun.value);
@@ -160,7 +177,7 @@ class PayrollControl extends GetxController {
   }
 
   void hitungPenerimaanBersih (String nilai) {
-    var a = AFconvert.keInt(txtGaji.text) + AFconvert.keInt(txtUangMakanJumlah.text) +
+    var a = AFconvert.keInt(txtGaji.text) + AFconvert.keInt(txtKenaikanGaji.text) + AFconvert.keInt(txtUangMakanJumlah.text) +
         AFconvert.keInt(txtOvertimeFjg.text) + AFconvert.keInt(txtOvertimeCus.text) +
         AFconvert.keInt(txtMedical.text) + AFconvert.keInt(txtThr.text) +
         AFconvert.keInt(txtBonus.text) + AFconvert.keInt(txtInsentif.text) +
@@ -419,6 +436,7 @@ class PayrollControl extends GetxController {
   void ubahDetilForm(String id, BuildContext context) {
     currentDetilPayroll = listDetilPayroll.where((element) => element.id == id).first;
     txtGaji.text = AFconvert.matNumber(currentDetilPayroll.gaji);
+    txtKenaikanGaji.text = AFconvert.matNumber(currentDetilPayroll.kenaikanGaji);
     txtHariMakan.text = AFconvert.matNumber(currentDetilPayroll.hariMakan);
     txtUangMakanHarian.text = AFconvert.matNumber(currentDetilPayroll.uangMakanHarian);
     txtUangMakanJumlah.text = AFconvert.matNumber(currentDetilPayroll.uangMakanJumlah);
@@ -476,6 +494,11 @@ class PayrollControl extends GetxController {
                 barisText(
                   label: 'Gaji Pokok',
                   controller: txtGaji,
+                  onchanged: hitungPenerimaanBersih,
+                ),
+                barisText(
+                  label: 'Kenaikan Gaji',
+                  controller: txtKenaikanGaji,
                   onchanged: hitungPenerimaanBersih,
                 ),
                 currentDetilPayroll.makanHarian ?
@@ -846,6 +869,7 @@ class PayrollControl extends GetxController {
         headerId: currentDetilPayroll.headerId,
         makanHarian: currentDetilPayroll.makanHarian,
         gaji: AFconvert.keInt(txtGaji.text),
+        kenaikanGaji: AFconvert.keInt(txtKenaikanGaji.text),
         hariMakan: AFconvert.keInt(txtHariMakan.text),
         uangMakanHarian: AFconvert.keInt(txtUangMakanHarian.text),
         uangMakanJumlah: AFconvert.keInt(txtUangMakanJumlah.text),
@@ -982,6 +1006,7 @@ class PayrollControl extends GetxController {
     txtTanggalAwal = TextEditingController();
     txtTanggalAkhir = TextEditingController();
     txtGaji = TextEditingController();
+    txtKenaikanGaji = TextEditingController();
     txtHariMakan = TextEditingController();
     txtUangMakanHarian = TextEditingController();
     txtUangMakanJumlah = TextEditingController();
@@ -1012,6 +1037,7 @@ class PayrollControl extends GetxController {
     txtTanggalAwal.dispose();
     txtTanggalAkhir.dispose();
     txtGaji.dispose();
+    txtKenaikanGaji.dispose();
     txtHariMakan.dispose();
     txtUangMakanHarian.dispose();
     txtUangMakanJumlah.dispose();

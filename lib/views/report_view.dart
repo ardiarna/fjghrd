@@ -62,7 +62,7 @@ class ReportView extends StatelessWidget {
                   onPressed: controller.dowloadListpayroll,
                 ),
                 barisBox(
-                  label: 'REKAP PAYROLL',
+                  label: 'REKAP GAJI',
                   onPressed: controller.dowloadRekapPayroll,
                 ),
                 barisBox(

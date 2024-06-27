@@ -2,7 +2,6 @@ import 'package:fjghrd/models/karyawan.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 
 class MedicalRekap {
-  String id;
   Karyawan karyawan = Karyawan();
   String tahun;
   int gaji;
@@ -22,7 +21,6 @@ class MedicalRekap {
   DateTime? updatedAt;
 
   MedicalRekap({
-    this.id = '',
     this.tahun = '',
     this.gaji = 0,
     this.bln1 = 0,
@@ -43,7 +41,6 @@ class MedicalRekap {
 
   factory MedicalRekap.fromMap(Map<String, dynamic> data) {
     var a = MedicalRekap(
-      id: AFconvert.keString(data['id']),
       tahun: AFconvert.keString(data['tahun']),
       gaji: AFconvert.keInt(data['gaji']),
       bln1: AFconvert.keInt(data['bln_1']),
@@ -69,7 +66,6 @@ class MedicalRekap {
 
   Map<String, String> toMap() {
     Map<String, String> data = {
-      'id': id,
       'karyawan_id': karyawan.id,
       'tahun': tahun,
       'gaji': AFconvert.keString(gaji),
