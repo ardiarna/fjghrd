@@ -107,9 +107,9 @@ class MedicalControl extends GetxController {
 
   void tambahForm(BuildContext context) {
     txtId.text = '';
-    tahun = Opsi(value: '${_now.year}', label: '${_now.year}');
-    bulan = Opsi(value: '${_now.month}', label: mapBulan[_now.month]!);
-    txtTanggal.text = AFconvert.matDate(DateTime.now());
+    tahun = Opsi(value: filterTahun.value, label: filterTahun.label);
+    bulan = Opsi(value: filterBulan.value, label: filterBulan.label);
+    txtTanggal.text = AFconvert.matDate(DateTime(AFconvert.keInt(filterTahun.value), AFconvert.keInt(filterBulan.value)));
     txtKeterangan.text = '';
     txtJumlah.text = '';
     karyawan = Karyawan();
@@ -160,84 +160,90 @@ class MedicalControl extends GetxController {
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 150,
-                              padding: const EdgeInsets.only(right: 15),
-                              child: const Text('Periode'),
-                            ),
-                            Expanded(
-                              child: GetBuilder<MedicalControl>(
-                                builder: (_) {
-                                  return AFwidget.comboField(
-                                    value: bulan.label,
-                                    label: '',
-                                    onTap: () async {
-                                      var a = await pilihBulan(value: bulan.value);
-                                      if(a != null && a.value != bulan.value) {
-                                        bulan = a;
-                                        update();
-                                      }
-                                    },
-                                  );
-                                },
+                      Visibility(
+                        visible: false,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 150,
+                                padding: const EdgeInsets.only(right: 15),
+                                child: const Text('Periode'),
                               ),
-                            ),
-                            const SizedBox(width: 40),
-                            Expanded(
-                              child: GetBuilder<MedicalControl>(
-                                builder: (_) {
-                                  return AFwidget.comboField(
-                                    value: tahun.label,
-                                    label: '',
-                                    onTap: () async {
-                                      var a = await pilihTahun(value: tahun.value);
-                                      if(a != null && a.value != tahun.value) {
-                                        tahun = a;
-                                        if(jenis.value == 'R') {
-                                          loadInfoMedical();
-                                        } else {
+                              Expanded(
+                                child: GetBuilder<MedicalControl>(
+                                  builder: (_) {
+                                    return AFwidget.comboField(
+                                      value: bulan.label,
+                                      label: '',
+                                      onTap: () async {
+                                        var a = await pilihBulan(value: bulan.value);
+                                        if(a != null && a.value != bulan.value) {
+                                          bulan = a;
                                           update();
                                         }
-                                      }
-                                    },
-                                  );
-                                },
+                                      },
+                                    );
+                                  },
+                                ),
                               ),
-                            ),
-                          ],
+                              const SizedBox(width: 40),
+                              Expanded(
+                                child: GetBuilder<MedicalControl>(
+                                  builder: (_) {
+                                    return AFwidget.comboField(
+                                      value: tahun.label,
+                                      label: '',
+                                      onTap: () async {
+                                        var a = await pilihTahun(value: tahun.value);
+                                        if(a != null && a.value != tahun.value) {
+                                          tahun = a;
+                                          if(jenis.value == 'R') {
+                                            loadInfoMedical();
+                                          } else {
+                                            update();
+                                          }
+                                        }
+                                      },
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 150,
-                              padding: const EdgeInsets.only(right: 15),
-                              child: const Text('Tanggal'),
-                            ),
-                            Expanded(
-                              child: AFwidget.textField(
-                                marginTop: 0,
-                                controller: txtTanggal,
-                                readOnly: true,
-                                prefixIcon: const Icon(Icons.calendar_month),
-                                ontap: () async {
-                                  var a = await AFwidget.pickDate(
-                                    context: context,
-                                    initialDate: AFconvert.keTanggal(AFconvert.matDMYtoYMD(txtTanggal.text)),
-                                  );
-                                  if(a != null) {
-                                    txtTanggal.text = AFconvert.matDate(a);
-                                  }
-                                },
+                      Visibility(
+                        visible: false,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 150,
+                                padding: const EdgeInsets.only(right: 15),
+                                child: const Text('Tanggal'),
                               ),
-                            )
-                          ],
+                              Expanded(
+                                child: AFwidget.textField(
+                                  marginTop: 0,
+                                  controller: txtTanggal,
+                                  readOnly: true,
+                                  prefixIcon: const Icon(Icons.calendar_month),
+                                  ontap: () async {
+                                    var a = await AFwidget.pickDate(
+                                      context: context,
+                                      initialDate: AFconvert.keTanggal(AFconvert.matDMYtoYMD(txtTanggal.text)),
+                                    );
+                                    if(a != null) {
+                                      txtTanggal.text = AFconvert.matDate(a);
+                                    }
+                                  },
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                       Padding(
@@ -312,8 +318,8 @@ class MedicalControl extends GetxController {
                         topRight: Radius.circular(15),
                       ),
                     ),
-                    child: const Text('Form Tambah Medical',
-                      style: TextStyle(
+                    child: Text('Form Tambah Medical - ${bulan.label} ${tahun.label}',
+                      style: const TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
                       ),
@@ -560,33 +566,36 @@ class MedicalControl extends GetxController {
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 150,
-                              padding: const EdgeInsets.only(right: 15),
-                              child: const Text('Tanggal'),
-                            ),
-                            Expanded(
-                              child: AFwidget.textField(
-                                marginTop: 0,
-                                controller: txtTanggal,
-                                readOnly: true,
-                                prefixIcon: const Icon(Icons.calendar_month),
-                                ontap: () async {
-                                  var a = await AFwidget.pickDate(
-                                    context: context,
-                                    initialDate: AFconvert.keTanggal(AFconvert.matDMYtoYMD(txtTanggal.text)),
-                                  );
-                                  if(a != null) {
-                                    txtTanggal.text = AFconvert.matDate(a);
-                                  }
-                                },
+                      Visibility(
+                        visible: false,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 150,
+                                padding: const EdgeInsets.only(right: 15),
+                                child: const Text('Tanggal'),
                               ),
-                            )
-                          ],
+                              Expanded(
+                                child: AFwidget.textField(
+                                  marginTop: 0,
+                                  controller: txtTanggal,
+                                  readOnly: true,
+                                  prefixIcon: const Icon(Icons.calendar_month),
+                                  ontap: () async {
+                                    var a = await AFwidget.pickDate(
+                                      context: context,
+                                      initialDate: AFconvert.keTanggal(AFconvert.matDMYtoYMD(txtTanggal.text)),
+                                    );
+                                    if(a != null) {
+                                      txtTanggal.text = AFconvert.matDate(a);
+                                    }
+                                  },
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                       barisText(

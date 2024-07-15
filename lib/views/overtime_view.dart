@@ -110,28 +110,28 @@ class OvertimeView extends StatelessWidget {
         textAlign: PlutoColumnTextAlign.center,
         suppressedAutoSize: true,
       ),
-      PlutoColumn(
-        title: 'TANGGAL',
-        field: 'tanggal',
-        type: PlutoColumnType.text(),
-        readOnly: true,
-        width: 120,
-        backgroundColor: Colors.brown.shade100,
-        textAlign: PlutoColumnTextAlign.center,
-        suppressedAutoSize: true,
-        footerRenderer: (rendererContext) {
-          return PlutoAggregateColumnFooter(
-            rendererContext: rendererContext,
-            type: PlutoAggregateColumnType.count,
-            alignment: Alignment.centerLeft,
-            titleSpanBuilder: (text) {
-              return [
-                const TextSpan(text: 'TOTAL'),
-              ];
-            },
-          );
-        },
-      ),
+      // PlutoColumn(
+      //   title: 'TANGGAL',
+      //   field: 'tanggal',
+      //   type: PlutoColumnType.text(),
+      //   readOnly: true,
+      //   width: 120,
+      //   backgroundColor: Colors.brown.shade100,
+      //   textAlign: PlutoColumnTextAlign.center,
+      //   suppressedAutoSize: true,
+      //   footerRenderer: (rendererContext) {
+      //     return PlutoAggregateColumnFooter(
+      //       rendererContext: rendererContext,
+      //       type: PlutoAggregateColumnType.count,
+      //       alignment: Alignment.centerLeft,
+      //       titleSpanBuilder: (text) {
+      //         return [
+      //           const TextSpan(text: 'TOTAL'),
+      //         ];
+      //       },
+      //     );
+      //   },
+      // ),
       PlutoColumn(
         title: 'JUMLAH',
         field: 'jumlah',

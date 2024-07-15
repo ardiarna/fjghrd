@@ -65,7 +65,7 @@ class PayrollView extends StatelessWidget {
                 },
               ),
               tombol(
-                label: 'Overtime Karyawan',
+                label: 'Overtime',
                 icon: Icons.punch_clock_outlined,
                 onPressed: (){
                   controller.homeControl.kontener = OvertimeView();

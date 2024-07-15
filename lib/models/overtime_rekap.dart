@@ -2,7 +2,6 @@ import 'package:fjghrd/models/karyawan.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 
 class OvertimeRekap {
-  String id;
   Karyawan karyawan = Karyawan();
   String tahun;
   int fjg1;
@@ -33,7 +32,6 @@ class OvertimeRekap {
   DateTime? updatedAt;
 
   OvertimeRekap({
-    this.id = '',
     this.tahun = '',
     this.fjg1 = 0,
     this.fjg2 = 0,
@@ -65,7 +63,6 @@ class OvertimeRekap {
 
   factory OvertimeRekap.fromMap(Map<String, dynamic> data) {
     var a = OvertimeRekap(
-      id: AFconvert.keString(data['id']),
       tahun: AFconvert.keString(data['tahun']),
       fjg1: AFconvert.keInt(data['fjg_1']),
       fjg2: AFconvert.keInt(data['fjg_2']),
@@ -102,7 +99,6 @@ class OvertimeRekap {
 
   Map<String, String> toMap() {
     Map<String, String> data = {
-      'id': id,
       'karyawan_id': karyawan.id,
       'tahun': tahun,
       'fjg_1': AFconvert.keString(fjg1),
