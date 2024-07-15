@@ -34,6 +34,21 @@ class RunpayrollView extends StatelessWidget {
       var overtimeCus = controller.listOvertime
           .where((element) => element.karyawan.id == e.id && element.jenis == 'C')
           .fold(0, (sum, element) => sum + element.jumlah);
+      var thr = controller.listPenghasilan
+          .where((element) => element.karyawan.id == e.id && element.jenis == 'HR')
+          .fold(0, (sum, element) => sum + element.jumlah);
+      var bonus = controller.listPenghasilan
+          .where((element) => element.karyawan.id == e.id && element.jenis == 'BN')
+          .fold(0, (sum, element) => sum + element.jumlah);
+      var insentif = controller.listPenghasilan
+          .where((element) => element.karyawan.id == e.id && element.jenis == 'IN')
+          .fold(0, (sum, element) => sum + element.jumlah);
+      var telkomsel = controller.listPenghasilan
+          .where((element) => element.karyawan.id == e.id && element.jenis == 'TK')
+          .fold(0, (sum, element) => sum + element.jumlah);
+      var lain = controller.listPenghasilan
+          .where((element) => element.karyawan.id == e.id && element.jenis == 'LL')
+          .fold(0, (sum, element) => sum + element.jumlah);
       var pot25Hari = controller.listPotongan
           .where((element) => element.karyawan.id == e.id && element.jenis == 'TB')
           .fold(0, (sum, element) => sum + element.hari);
@@ -61,7 +76,7 @@ class RunpayrollView extends StatelessWidget {
       var potLain = controller.listPotongan
           .where((element) => element.karyawan.id == e.id && element.jenis == 'LL')
           .fold(0, (sum, element) => sum + element.jumlah);
-      int totalDiterima = (e.upah.gaji + uangMakanJumlah + overtimeFjg + overtimeCus + medical) -
+      int totalDiterima = (e.upah.gaji + uangMakanJumlah + overtimeFjg + overtimeCus + medical + thr + bonus + insentif + telkomsel + lain) -
           (pot25HJumlah + potTelepon + potBensin + potKas + potCicilan + potBpjs + potCuti + potLain);
       return PlutoRow(
         cells: {
@@ -78,11 +93,11 @@ class RunpayrollView extends StatelessWidget {
           'overtime_fjg': PlutoCell(value: overtimeFjg),
           'overtime_cus': PlutoCell(value: overtimeCus),
           'medical': PlutoCell(value: medical),
-          'thr': PlutoCell(value: 0),
-          'bonus': PlutoCell(value: 0),
-          'insentif': PlutoCell(value: 0),
-          'telkomsel': PlutoCell(value: 0),
-          'lain': PlutoCell(value: 0),
+          'thr': PlutoCell(value: thr),
+          'bonus': PlutoCell(value: bonus),
+          'insentif': PlutoCell(value: insentif),
+          'telkomsel': PlutoCell(value: telkomsel),
+          'lain': PlutoCell(value: lain),
           'pot_25_hari': PlutoCell(value: pot25Hari),
           'pot_25_jumlah': PlutoCell(value: pot25HJumlah),
           'pot_telepon': PlutoCell(value: potTelepon),
@@ -939,6 +954,7 @@ class RunpayrollView extends StatelessWidget {
                       onPressed: () {
                         controller.loadOvertimes();
                         controller.loadMedicals();
+                        controller.loadPenghasilans();
                         controller.loadPotongans();
                         controller.loadHariLiburs();
                         controller.homeControl.kontener = wgKaryawans();
