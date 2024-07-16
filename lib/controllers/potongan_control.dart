@@ -86,7 +86,11 @@ class PotonganControl extends GetxController {
     txtHari.text = '';
     txtJumlah.text = '';
     karyawan = Karyawan();
-    jenis = Opsi(value: '', label: '');
+    if(filterJenis.value == '') {
+      jenis = Opsi(value: '', label: '');
+    } else {
+      jenis = Opsi(value: filterJenis.value, label: filterJenis.label);
+    }
     AFwidget.dialog(
       Container(
         padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),

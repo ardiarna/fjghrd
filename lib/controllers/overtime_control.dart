@@ -9,6 +9,7 @@ import 'package:fjghrd/utils/af_combobox.dart';
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
+import 'package:fjghrd/utils/hasil.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -33,7 +34,7 @@ class OvertimeControl extends GetxController {
   late Opsi filterTahun;
   late Opsi filterBulan;
 
-  late TextEditingController txtId, txtTanggal, txtJumlah, txtKeterangan;
+  late TextEditingController txtId, txtTanggal, txtJumlah, txtJum2, txtKeterangan;
   Karyawan karyawan = Karyawan();
   String jenis = '';
   late Opsi tahun;
@@ -79,6 +80,7 @@ class OvertimeControl extends GetxController {
     txtTanggal.text = AFconvert.matDate(DateTime(AFconvert.keInt(filterTahun.value), AFconvert.keInt(filterBulan.value)));
     txtKeterangan.text = '';
     txtJumlah.text = '';
+    txtJum2.text = '';
     karyawan = Karyawan();
     jenis = '';
     AFwidget.dialog(
@@ -93,56 +95,6 @@ class OvertimeControl extends GetxController {
           children: [
             ListView(
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 60, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Jenis Overtime'),
-                      ),
-                      Expanded(
-                        child: GetBuilder<OvertimeControl>(
-                          builder: (_) {
-                            return Row(
-                              children: [
-                                Radio<String>(
-                                  value: 'F',
-                                  groupValue: jenis,
-                                  onChanged: (a) {
-                                    if(a != null && a != jenis) {
-                                      jenis = a;
-                                      update();
-                                    }
-                                  },
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
-                                  child: Text('Fratekindo'),
-                                ),
-                                Radio<String>(
-                                  value: 'C',
-                                  groupValue: jenis,
-                                  onChanged: (a) {
-                                    if(a != null && a != jenis) {
-                                      jenis = a;
-                                      update();
-                                    }
-                                  },
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                  child: Text('Customer'),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
                 Visibility(
                   visible: false,
                   child: Padding(
@@ -226,7 +178,7 @@ class OvertimeControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 60, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -255,8 +207,13 @@ class OvertimeControl extends GetxController {
                   ),
                 ),
                 barisText(
-                  label: 'Jumlah',
+                  label: 'Fratekindo IDR',
                   controller: txtJumlah,
+                  isNumber: true,
+                ),
+                barisText(
+                  label: 'Customer IDR',
+                  controller: txtJum2,
                   isNumber: true,
                 ),
                 barisText(
@@ -558,9 +515,6 @@ class OvertimeControl extends GetxController {
 
   Future<void> tambahData() async {
     try {
-      if(jenis.isEmpty) {
-        throw 'Silakan pilih jenis overtime';
-      }
       if(bulan.value.isEmpty || tahun.value.isEmpty) {
         throw 'Periode harus diisi';
       }
@@ -570,28 +524,53 @@ class OvertimeControl extends GetxController {
       if(karyawan.id.isEmpty) {
         throw 'Silakan pilih karyawan';
       }
-      if(txtJumlah.text.isEmpty) {
-        throw 'Jumlah harus diisi';
+      if(txtJumlah.text.isEmpty && txtJum2.text.isEmpty) {
+        throw 'Jumlah Overtime Fratekindo atau Customer, salah satu harus diisi';
       }
 
-      var a = Overtime(
-        jenis: jenis,
-        tanggal: AFconvert.keTanggal('${AFconvert.matDMYtoYMD(txtTanggal.text)} 08:00:00'),
-        bulan: AFconvert.keInt(bulan.value),
-        tahun: AFconvert.keInt(tahun.value),
-        jumlah: AFconvert.keInt(txtJumlah.text),
-        keterangan: txtKeterangan.text,
-      );
-      a.karyawan = karyawan;
-
+      Hasil hasil = Hasil();
+      Hasil hasil2 = Hasil();
       AFwidget.loading();
-      var hasil = await _repo.create(a.toMap());
+
+      if(AFconvert.keInt(txtJumlah.text) > 0) {
+        var a = Overtime(
+          jenis: 'F',
+          tanggal: AFconvert.keTanggal('${AFconvert.matDMYtoYMD(txtTanggal.text)} 08:00:00'),
+          bulan: AFconvert.keInt(bulan.value),
+          tahun: AFconvert.keInt(tahun.value),
+          jumlah: AFconvert.keInt(txtJumlah.text),
+          keterangan: txtKeterangan.text,
+        );
+        a.karyawan = karyawan;
+        hasil = await _repo.create(a.toMap());
+      } else {
+        hasil.success = true;
+      }
+
+      if(AFconvert.keInt(txtJum2.text) > 0) {
+        var b = Overtime(
+          jenis: 'C',
+          tanggal: AFconvert.keTanggal('${AFconvert.matDMYtoYMD(txtTanggal.text)} 08:00:00'),
+          bulan: AFconvert.keInt(bulan.value),
+          tahun: AFconvert.keInt(tahun.value),
+          jumlah: AFconvert.keInt(txtJum2.text),
+          keterangan: txtKeterangan.text,
+        );
+        b.karyawan = karyawan;
+        hasil2 = await _repo.create(b.toMap());
+      } else {
+        hasil2.success = true;
+      }
+
       Get.back();
-      if(hasil.success) {
+      if(hasil.success && hasil2.success) {
         loadOvertimes();
         Get.back();
       }
-      AFwidget.snackbar(hasil.message);
+      List<String> vMessages = [];
+      if(hasil.message != '') vMessages.add(hasil.message);
+      if(hasil2.message != '') vMessages.add(hasil2.message);
+      AFwidget.snackbar(vMessages.join(', '));
     } catch (er) {
       AFwidget.snackbar('$er');
     }
@@ -773,6 +752,7 @@ class OvertimeControl extends GetxController {
     txtId = TextEditingController();
     txtTanggal = TextEditingController();
     txtJumlah = TextEditingController();
+    txtJum2 = TextEditingController();
     txtKeterangan = TextEditingController();
     super.onInit();
   }
@@ -782,6 +762,7 @@ class OvertimeControl extends GetxController {
     txtId.dispose();
     txtTanggal.dispose();
     txtJumlah.dispose();
+    txtJum2.dispose();
     txtKeterangan.dispose();
     super.onClose();
   }

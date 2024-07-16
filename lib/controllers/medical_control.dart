@@ -113,7 +113,7 @@ class MedicalControl extends GetxController {
     txtKeterangan.text = '';
     txtJumlah.text = '';
     karyawan = Karyawan();
-    jenis = listJenis[0];
+    jenis = Opsi(value: filterJenis.value, label: filterJenis.label);
     medicalRekap = MedicalRekap();
     medicalHistory = [];
     AFwidget.dialog(

@@ -76,6 +76,17 @@ class RunpayrollView extends StatelessWidget {
       var potLain = controller.listPotongan
           .where((element) => element.karyawan.id == e.id && element.jenis == 'LL')
           .fold(0, (sum, element) => sum + element.jumlah);
+      var keteranganPot = controller.listPotongan
+          .where((element) => element.karyawan.id == e.id && element.keterangan != '')
+          .map((el) => el.keterangan)
+          .join(', ');
+      var keteranganPen = controller.listPenghasilan
+          .where((element) => element.karyawan.id == e.id && element.keterangan != '')
+          .map((el) => el.keterangan)
+          .join(', ');
+      List<String> keteranganAll = [];
+      if(keteranganPen.isNotEmpty) keteranganAll.add(keteranganPen);
+      if(keteranganPot.isNotEmpty) keteranganAll.add(keteranganPot);
       int totalDiterima = (e.upah.gaji + uangMakanJumlah + overtimeFjg + overtimeCus + medical + thr + bonus + insentif + telkomsel + lain) -
           (pot25HJumlah + potTelepon + potBensin + potKas + potCicilan + potBpjs + potCuti + potLain);
       return PlutoRow(
@@ -108,7 +119,7 @@ class RunpayrollView extends StatelessWidget {
           'pot_cuti': PlutoCell(value: potCuti),
           'pot_lain': PlutoCell(value: potLain),
           'total_diterima': PlutoCell(value: totalDiterima),
-          'keterangan': PlutoCell(value: ''),
+          'keterangan': PlutoCell(value: keteranganAll.join(', ')),
         },
       );
     }).toList();
@@ -801,7 +812,7 @@ class RunpayrollView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    controller.txtTanggalAwal.text = AFconvert.matDate(DateTime(now.year, now.month == 1 ? 12 : now.month-1, 19));
+    controller.txtTanggalAwal.text = AFconvert.matDate(DateTime(now.month == 1 ? (now.year-1) : now.year, now.month == 1 ? 12 : now.month-1, 19));
     controller.txtTanggalAkhir.text = AFconvert.matDate(DateTime(now.year, now.month, 18));
     controller.tahun = Opsi(value: '${now.year}', label: '${now.year}');
     controller.bulan = Opsi(value: '${now.month}', label: mapBulan[now.month]!);
@@ -850,6 +861,10 @@ class RunpayrollView extends StatelessWidget {
                               var a = await controller.pilihBulan(value: controller.bulan.value);
                               if(a != null && a.value != controller.bulan.value) {
                                 controller.bulan = a;
+                                int vTahun = AFconvert.keInt(controller.tahun.value);
+                                int vBulan = AFconvert.keInt(a.value);
+                                controller.txtTanggalAwal.text = AFconvert.matDate(DateTime(vBulan == 1 ? vTahun-1 : vTahun, vBulan == 1 ? 12 : vBulan-1, 19));
+                                controller.txtTanggalAkhir.text = AFconvert.matDate(DateTime(vTahun, vBulan, 18));
                                 controller.update();
                               }
                             },
@@ -869,6 +884,10 @@ class RunpayrollView extends StatelessWidget {
                               var a = await controller.pilihTahun(value: controller.tahun.value);
                               if(a != null && a.value != controller.tahun.value) {
                                 controller.tahun = a;
+                                int vTahun = AFconvert.keInt(a.value);
+                                int vBulan = AFconvert.keInt(controller.bulan.value);
+                                controller.txtTanggalAwal.text = AFconvert.matDate(DateTime(vBulan == 1 ? vTahun-1 : vTahun, vBulan == 1 ? 12 : vBulan-1, 19));
+                                controller.txtTanggalAkhir.text = AFconvert.matDate(DateTime(vTahun, vBulan, 18));
                                 controller.update();
                               }
                             },
@@ -951,7 +970,12 @@ class RunpayrollView extends StatelessWidget {
                       minimumSize: const Size(120, 40),
                     ),
                     FilledButton.icon(
-                      onPressed: () {
+                      onPressed: () async {
+                        var isExist = await controller.payrollPeriodeIsExist(controller.tahun.value, controller.bulan.value);
+                        if(isExist) {
+                          AFwidget.snackbar('Payroll untuk periode ${controller.bulan.label} ${controller.tahun.label} sudah ada di database, jika ada perubahan data silakan edit payroll tersebut (lihat di menu utama Payroll).');
+                          return;
+                        }
                         controller.loadOvertimes();
                         controller.loadMedicals();
                         controller.loadPenghasilans();

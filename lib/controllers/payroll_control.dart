@@ -67,6 +67,16 @@ class PayrollControl extends GetxController {
     }
   }
 
+  Future<bool> payrollPeriodeIsExist(String tahun, String bulan) async {
+    var hasil = await _payrollRepo.findAll(tahun: tahun, bulan: bulan);
+    if(hasil.success) {
+      if(hasil.daftar.isNotEmpty) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   Future<void> loadDetilPayrolls() async {
     var hasil = await _payrollRepo.findDetail(currentPayroll.id);
     if (hasil.success) {
