@@ -85,6 +85,21 @@ class KaryawanControl extends GetxController {
   late Opsi filterTahun;
   late List<Opsi> listTahun;
 
+  Map<int, bool> bulanTerpilih = {
+    1: false,
+    2: false,
+    3: false,
+    4: false,
+    5: false,
+    6: false,
+    7: false,
+    8: false,
+    9: false,
+    10: false,
+    11: false,
+    12: false,
+  };
+
   Future<void> loadKaryawans() async {
     var hasil = await _repo.findAll(isStaf: cariStaf.value);
     if (hasil.success) {
@@ -2817,6 +2832,22 @@ class KaryawanControl extends GetxController {
     Get.back();
     if(hasil.success) {
       AFwidget.snackbar('laporan excel payroll ${current.nama} berhasil dibuat. silakan periksa directory Download anda (${hasil.message})');
+    } else {
+      AFwidget.snackbar('Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+  Future<void> downloadSlipGaji() async {
+    AFwidget.loading();
+    List<int> selected = bulanTerpilih.entries
+    .where((entry) => entry.value)
+    .map((entry) => entry.key)
+    .toList();
+    var bulans = selected.join('-');
+    var hasil = await _repo.excelSlipGaji(id: current.id, tahun: filterTahun.value, bulans: bulans);
+    Get.back();
+    if(hasil.success) {
+      AFwidget.snackbar('slip gaji ${current.nama} berhasil dibuat. silakan periksa directory Download anda (${hasil.message})');
     } else {
       AFwidget.snackbar('Gagal membuat excel. [${hasil.message}]');
     }

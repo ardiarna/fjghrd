@@ -67,7 +67,13 @@ class KaryawanPayrollView extends StatelessWidget {
                 ),
                 const Spacer(),
                 tombol(
-                  label: 'Export Excel',
+                  label: 'Excel Slip Gaji',
+                  icon: Icons.receipt_long,
+                  color: Colors.green,
+                  onPressed: dialogSlipGaji,
+                ),
+                tombol(
+                  label: 'Excel Payroll',
                   icon: Icons.file_open,
                   color: Colors.green,
                   onPressed: controller.dowloadPayroll,
@@ -410,6 +416,105 @@ class KaryawanPayrollView extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void dialogSlipGaji() {
+    AFwidget.dialog(
+      Container(
+        width: 500,
+        height: 370,
+        padding: const EdgeInsets.fromLTRB(15, 0, 0, 15),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 65,
+              width: double.infinity,
+              padding: const EdgeInsets.all(15),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(15),
+                ),
+              ),
+              child: Text('Excel Slip Gaji ${controller.filterTahun.label}',
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const Padding(
+              padding: EdgeInsets.fromLTRB(15, 0, 15, 20),
+              child: Text('Silakan pilih bulan'),
+            ),
+            GetBuilder<KaryawanControl>(
+              builder: (_) {
+                return SizedBox(
+                  height: 150,
+                  width: 500,
+                  child: GridView.count(
+                    crossAxisCount: 3,
+                    childAspectRatio: 5,
+                    mainAxisSpacing: 5,
+                    crossAxisSpacing: 5,
+                    padding: const EdgeInsets.only(left: 10),
+                    children: controller.bulanTerpilih.entries.map((el) {
+                      return Row(
+                        children: [
+                          Checkbox(
+                            value: el.value,
+                            onChanged: (value) {
+                              if(value != null) {
+                                controller.bulanTerpilih[el.key] = value;
+                                controller.update();
+                              }
+                            },
+                          ),
+                          Text(mapBulan[el.key]!),
+                        ],
+                      );
+                    }).toList(),
+                  ),
+                );
+              }
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  AFwidget.tombol(
+                    label: 'Batal',
+                    color: Colors.orange,
+                    onPressed: Get.back,
+                    minimumSize: const Size(120, 40),
+                  ),
+                  const SizedBox(width: 40),
+                  AFwidget.tombol(
+                    label: 'Download',
+                    color: Colors.green,
+                    onPressed: () {
+                      Get.back();
+                      controller.downloadSlipGaji();
+                    },
+                    minimumSize: const Size(120, 40),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      scrollable: false,
+      backgroundColor: Colors.white,
+      contentPadding: const EdgeInsets.all(0),
     );
   }
 
