@@ -20,9 +20,10 @@ class LoginView extends StatelessWidget {
           width: MediaQuery.of(context).size.width,
           decoration: const BoxDecoration(
             image: DecorationImage(
-              image: AssetImage('assets/images/bgtile2.jpg'),
+              image: AssetImage('assets/images/hrd_bg.png'),
               alignment: Alignment.bottomRight,
-              repeat: ImageRepeat.repeat,
+              repeat: ImageRepeat.noRepeat,
+              fit: BoxFit.cover,
             ),
           ),
           child: SingleChildScrollView(
@@ -30,7 +31,20 @@ class LoginView extends StatelessWidget {
             child: Column(
               children: [
                 Container(
-                  padding: const EdgeInsets.fromLTRB(35, 15, 35, 50),
+                  padding: const EdgeInsets.fromLTRB(20, 35, 20, 10),
+                  margin: const EdgeInsets.only(bottom: 35),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.8),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.brown.withOpacity(0.1),
+                        spreadRadius: 1,
+                        blurRadius: 1,
+                        offset: const Offset(2, 3),
+                      ),
+                    ],
+                  ),
                   constraints: const BoxConstraints(
                     maxWidth: 450,
                   ),

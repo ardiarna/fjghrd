@@ -50,14 +50,6 @@ class PayrollView extends StatelessWidget {
               ),
               const SizedBox(width: 20),
               tombol(
-                label: 'Run Payroll',
-                icon: Icons.data_exploration_outlined,
-                onPressed: () {
-                  controller.homeControl.kontener = RunpayrollView();
-                  controller.homeControl.update();
-                },
-              ),
-              tombol(
                 label: 'Medical',
                 icon: Icons.medical_information_outlined,
                 onPressed: () {
@@ -94,6 +86,14 @@ class PayrollView extends StatelessWidget {
                 icon: Icons.call_missed_outlined,
                 onPressed: (){
                   controller.homeControl.kontener = OncallCustomerView();
+                  controller.homeControl.update();
+                },
+              ),
+              tombol(
+                label: 'Run Payroll',
+                icon: Icons.data_exploration_outlined,
+                onPressed: () {
+                  controller.homeControl.kontener = RunpayrollView();
                   controller.homeControl.update();
                 },
               ),

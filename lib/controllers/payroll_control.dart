@@ -615,10 +615,59 @@ class PayrollControl extends GetxController {
                     ],
                   ),
                 ) :
-                barisText(
-                  label: 'U/makan & Transport',
-                  controller: txtUangMakanJumlah,
-                  onchanged: hitungPenerimaanBersih,
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 21, 20, 0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 230,
+                        padding: const EdgeInsets.only(right: 15),
+                        child: const Text('U/makan & Transport'),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Hari :'),
+                            AFwidget.textField(
+                              marginTop: 0,
+                              controller: txtHariMakan,
+                              inputformatters: [
+                                CurrencyTextInputFormatter.currency(
+                                  symbol: '',
+                                  decimalDigits: 0,
+                                ),
+                              ],
+                              textAlign: TextAlign.end,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 15),
+                      Expanded(
+                        flex: 4,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Jumlah IDR :'),
+                            AFwidget.textField(
+                              marginTop: 0,
+                              controller: txtUangMakanJumlah,
+                              inputformatters: [
+                                CurrencyTextInputFormatter.currency(
+                                  symbol: '',
+                                  decimalDigits: 0,
+                                ),
+                              ],
+                              textAlign: TextAlign.end,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 barisText(
                   label: 'Overtime Fratekindo',
