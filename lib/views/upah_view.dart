@@ -185,16 +185,27 @@ class UpahView extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-          decoration: const BoxDecoration(
-            color: Colors.white,
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
+          decoration: BoxDecoration(
+            color: const Color(0xFFf2fbfe),
+            border: Border.all(
+              color: Colors.brown.shade100, width: 1.5,
+            ),
           ),
           child: Row(
             children: [
-              const Text('LIST SALARY',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(7)),
+                    color: Colors.brown
+                ),
+                child: const Text('LIST SALARY',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
               ),
               const SizedBox(width: 20),
@@ -226,9 +237,10 @@ class UpahView extends StatelessWidget {
                       children: controller.totalKaryawanPerArea.entries.map((e) {
                         return Text(
                           '💫${e.key}: ${e.value}',
-                          style: const TextStyle(
-                              fontSize: 13,
-                              color: Colors.black54
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: e.key == 'TOTAL KARYAWAN' ? FontWeight.bold : FontWeight.normal,
+                            color: e.key == 'TOTAL KARYAWAN' ? Colors.blue : Colors.black54,
                           ),
                         );
                       }).toList(),

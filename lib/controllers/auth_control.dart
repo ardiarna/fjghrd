@@ -46,6 +46,18 @@ class AuthControl extends GetxController {
     return a;
   }
 
+  Future<void> updateEmail(String email) async {
+    user.email = email;
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    await pref.setString('email', email);
+  }
+
+  Future<void> updatePassword(String password) async {
+    user.password = password;
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    await pref.setString('password', password);
+  }
+
   Future<void> sessionEnd({bool showDialog = false}) async {
     if(user.email != '') {
       await logout();

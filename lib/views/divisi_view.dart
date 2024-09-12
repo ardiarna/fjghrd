@@ -92,17 +92,27 @@ class DivisiView extends StatelessWidget {
     return Column(
       children: [
         Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
+          decoration: BoxDecoration(
+            color: const Color(0xFFf2fbfe),
+            border: Border.all(
+              color: Colors.brown.shade100, width: 1.5,
+            ),
           ),
           child: Row(
             children: [
-              const Padding(
-                padding: EdgeInsets.fromLTRB(20, 10, 30, 10),
-                child: Text('Divisi',
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                margin: const EdgeInsets.only(right: 40),
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(7)),
+                    color: Colors.brown
+                ),
+                child: const Text('DIVISI',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -121,20 +131,31 @@ class DivisiView extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: GetBuilder<DivisiControl>(
-            builder: (_) {
-              return PlutoGrid(
-                key: UniqueKey(),
-                columns: columns,
-                rows: _buildRows(controller.listDivisi),
-                onChanged: (PlutoGridOnChangedEvent event) {},
-                onLoaded: (PlutoGridOnLoadedEvent event) {
-                  event.stateManager.setShowColumnFilter(true);
-                  event.stateManager.autoFitColumn(context, columns[1]);
-                },
-                configuration: AFplutogridConfig.configSatu(),
-              );
-            },
+          child: Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/line-blue.png'),
+                alignment: Alignment.topLeft,
+                repeat: ImageRepeat.repeatY,
+                fit: BoxFit.fitWidth,
+                opacity: 0.1,
+              ),
+            ),
+            child: GetBuilder<DivisiControl>(
+              builder: (_) {
+                return PlutoGrid(
+                  key: UniqueKey(),
+                  columns: columns,
+                  rows: _buildRows(controller.listDivisi),
+                  onChanged: (PlutoGridOnChangedEvent event) {},
+                  onLoaded: (PlutoGridOnLoadedEvent event) {
+                    event.stateManager.setShowColumnFilter(true);
+                    event.stateManager.autoFitColumn(context, columns[1]);
+                  },
+                  configuration: AFplutogridConfig.configSatu(),
+                );
+              },
+            ),
           ),
         ),
       ],

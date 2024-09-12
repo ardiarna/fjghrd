@@ -31,6 +31,22 @@ class UserRepository {
     );
   }
 
+  Future<Hasil> changePassword({
+    String oldPassword = '',
+    String newPassword = '',
+    String confirmPassword = '',
+  }) async {
+    return await AFdatabase.send(
+      url: 'user/editpwd',
+      methodeRequest: MethodeRequest.put,
+      body: {
+        'old_password': oldPassword,
+        'password': newPassword,
+        'password_confirmation': confirmPassword,
+      },
+    );
+  }
+
   Future<Hasil> seTokenFCM(String token) async {
     return await AFdatabase.send(
       url: 'user/tokenpush',

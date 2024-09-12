@@ -29,22 +29,24 @@ class PayrollView extends StatelessWidget {
         Container(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
           decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(color: Colors.brown.shade100, width: 0.5),
+            color: const Color(0xFFf2fbfe),
+            border: Border.all(
+              color: Colors.brown.shade100, width: 1.5,
+            ),
           ),
           child: Row(
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.brown.shade200, width: 3),
-                  borderRadius: const BorderRadius.all(Radius.circular(15)),
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(7)),
+                  color: Colors.brown
                 ),
                 child: const Text('PAYROLL',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.brown,
+                    color: Colors.white,
                   ),
                 ),
               ),
@@ -131,7 +133,15 @@ class PayrollView extends StatelessWidget {
                   Container(
                     width: double.infinity,
                     padding: const EdgeInsets.all(10),
-                    color: Colors.grey.shade50,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/images/line-blue.png'),
+                        alignment: Alignment.topLeft,
+                        repeat: ImageRepeat.repeatY,
+                        fit: BoxFit.fitWidth,
+                        opacity: 0.1,
+                      ),
+                    ),
                     child: GetBuilder<PayrollControl>(
                       builder: (_) {
                         return Wrap(
@@ -154,194 +164,186 @@ class PayrollView extends StatelessWidget {
   }
 
   Widget boxKonten(Payroll item) {
-    return Stack(
-      alignment: AlignmentDirectional.topEnd,
-      children: [
-        Container(
-          width: 430,
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(15)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.blue,
-                blurRadius: 1,
-                blurStyle: BlurStyle.outer,
-                offset: Offset(1, 1),
-              ),
-            ],
+    return Container(
+      width: 430,
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.7),
+        borderRadius: const BorderRadius.all(Radius.circular(15)),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.blue,
+            blurRadius: 1,
+            blurStyle: BlurStyle.outer,
+            offset: Offset(1, 1),
           ),
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        ],
+      ),
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Align(
-                      child: Text(
-                        '${mapBulan[item.bulan]} ${item.tahun}'.toUpperCase(),
-                        style: const TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.black45,
-                        ),
-                      ),
+              Expanded(
+                child: Align(
+                  child: Text(
+                    '${mapBulan[item.bulan]} ${item.tahun}'.toUpperCase(),
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black45,
                     ),
                   ),
-                  Visibility(
-                    visible: item.dikunci,
-                    child: IconButton(
-                      onPressed: () {
-                        controller.currentPayroll = item;
-                        controller.homeControl.kontener = PayrollForm();
-                        controller.homeControl.update();
-                      },
-                      icon: const Icon(
-                        Icons.remove_red_eye,
-                        color: Colors.green,
-                      ),
-                    ),
+                ),
+              ),
+              Visibility(
+                visible: item.dikunci,
+                child: IconButton(
+                  onPressed: () {
+                    controller.currentPayroll = item;
+                    controller.homeControl.kontener = PayrollForm();
+                    controller.homeControl.update();
+                  },
+                  icon: const Icon(
+                    Icons.remove_red_eye,
+                    color: Colors.green,
                   ),
-                  Visibility(
-                    visible: !item.dikunci,
-                    child: IconButton(
-                      onPressed: () {
-                        controller.currentPayroll = item;
-                        controller.homeControl.kontener = PayrollForm(isEdit: true);
-                        controller.homeControl.update();
-                      },
-                      icon: const Icon(
-                        Icons.edit_square,
-                        color: Colors.green,
-                      ),
-                    ),
+                ),
+              ),
+              Visibility(
+                visible: !item.dikunci,
+                child: IconButton(
+                  onPressed: () {
+                    controller.currentPayroll = item;
+                    controller.homeControl.kontener = PayrollForm(isEdit: true);
+                    controller.homeControl.update();
+                  },
+                  icon: const Icon(
+                    Icons.edit_square,
+                    color: Colors.green,
                   ),
-                  IconButton(
-                    onPressed: item.dikunci ? null : () {
-                      controller.kunciPayrollForm(
-                        id: item.id,
-                        periode: '${mapBulan[item.bulan]} ${item.tahun}',
-                      );
-                    },
-                    icon: Icon(
-                      item.dikunci ? Icons.lock : Icons.lock_open,
-                      color: Colors.red,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                ],
+                ),
               ),
-              const Text(
-                'A. PENGHASILAN',
-                style: TextStyle(color: Colors.blue, fontWeight: FontWeight.w600),
+              IconButton(
+                onPressed: item.dikunci ? null : () {
+                  controller.kunciPayrollForm(
+                    id: item.id,
+                    periode: '${mapBulan[item.bulan]} ${item.tahun}',
+                  );
+                },
+                icon: Icon(
+                  item.dikunci ? Icons.lock : Icons.lock_open,
+                  color: Colors.red,
+                ),
               ),
-              const SizedBox(height: 7),
-              barisKonten(
-                label: 'Gaji Pokok',
-                value: AFconvert.matNumber(item.gaji),
-              ),
-              item.kenaikanGaji == 0 ? Container() :
-              barisKonten(
-                label: 'Kenaikan Gaji',
-                value: AFconvert.matNumber(item.kenaikanGaji),
-              ),
-              barisKonten(
-                label: 'U/makan & Transport',
-                value: AFconvert.matNumber(item.uangMakanJumlah),
-              ),
-              barisKonten(
-                label: 'Lembur/Overtime',
-                value: AFconvert.matNumber(item.overtimeFjg+item.overtimeCus),
-              ),
-              barisKonten(
-                label: 'Reimbursement Medical',
-                value: AFconvert.matNumber(item.medical),
-              ),
-              barisKonten(
-                label: 'Tunjangan Hari Raya',
-                value: AFconvert.matNumber(item.thr),
-              ),
-              barisKonten(
-                label: 'Bonus',
-                value: AFconvert.matNumber(item.bonus),
-              ),
-              barisKonten(
-                label: 'Insentif',
-                value: AFconvert.matNumber(item.insentif),
-              ),
-              barisKonten(
-                label: 'Telkomsel',
-                value: AFconvert.matNumber(item.telkomsel),
-              ),
-              item.lain == 0 ? Container() :
-              barisKonten(
-                label: 'Lain-lain',
-                value: AFconvert.matNumber(item.lain),
-              ),
-              const SizedBox(height: 13),
-              const Text(
-                'B. POTONGAN',
-                style: TextStyle(color: Colors.blue, fontWeight: FontWeight.w600),
-              ),
-              const SizedBox(height: 7),
-              barisKonten(
-                label: 'Keterlambatan Kehadiran 25%',
-                value: AFconvert.matNumber(item.pot25jumlah),
-              ),
-              barisKonten(
-                label: 'Pemakaian Telepon/Telkomsel',
-                value: AFconvert.matNumber(item.potTelepon),
-              ),
-              barisKonten(
-                label: 'Pinjaman Kas',
-                value: AFconvert.matNumber(item.potKas),
-              ),
-              barisKonten(
-                label: 'Pinjaman / Cicilan ',
-                value: AFconvert.matNumber(item.potCicilan),
-              ),
-              barisKonten(
-                label: 'BPJS Kesehatan',
-                value: AFconvert.matNumber(item.potBpjs),
-              ),
-              barisKonten(
-                label: 'Pemakaian Bensin',
-                value: AFconvert.matNumber(item.potBensin),
-              ),
-              barisKonten(
-                label: 'Unpaid Leave / Cuti Bersama',
-                value: AFconvert.matNumber(item.potCuti),
-              ),
-              item.potLain == 0 ? Container() :
-              barisKonten(
-                label: 'Lain-lain',
-                value: AFconvert.matNumber(item.potLain),
-              ),
-              const SizedBox(height: 13),
-              Row(
-                children: [
-                  const SizedBox(
-                    width: 230,
-                    child: Text(
-                      'TOTAL DITERIMA (A-B)',
-                      style: TextStyle(color: Colors.blue, fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                  const Text('='),
-                  Expanded(
-                    child: Text(
-                      AFconvert.matNumber(item.totalDiterima),
-                      textAlign: TextAlign.right,
-                      style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ],
-              )
+              const SizedBox(width: 10),
             ],
           ),
-        ),
-      ],
+          const Text(
+            'A. PENGHASILAN',
+            style: TextStyle(color: Colors.blue, fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 7),
+          barisKonten(
+            label: 'Gaji Pokok',
+            value: AFconvert.matNumber(item.gaji),
+          ),
+          barisKonten(
+            label: 'Kenaikan Gaji',
+            value: AFconvert.matNumber(item.kenaikanGaji),
+          ),
+          barisKonten(
+            label: 'U/makan & Transport',
+            value: AFconvert.matNumber(item.uangMakanJumlah),
+          ),
+          barisKonten(
+            label: 'Lembur/Overtime',
+            value: AFconvert.matNumber(item.overtimeFjg+item.overtimeCus),
+          ),
+          barisKonten(
+            label: 'Reimbursement Medical',
+            value: AFconvert.matNumber(item.medical),
+          ),
+          barisKonten(
+            label: 'Tunjangan Hari Raya',
+            value: AFconvert.matNumber(item.thr),
+          ),
+          barisKonten(
+            label: 'Bonus',
+            value: AFconvert.matNumber(item.bonus),
+          ),
+          barisKonten(
+            label: 'Insentif',
+            value: AFconvert.matNumber(item.insentif),
+          ),
+          barisKonten(
+            label: 'Telkomsel',
+            value: AFconvert.matNumber(item.telkomsel),
+          ),
+          barisKonten(
+            label: 'Lain-lain',
+            value: AFconvert.matNumber(item.lain),
+          ),
+          const SizedBox(height: 13),
+          const Text(
+            'B. POTONGAN',
+            style: TextStyle(color: Colors.blue, fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(height: 7),
+          barisKonten(
+            label: 'Keterlambatan Kehadiran 25%',
+            value: AFconvert.matNumber(item.pot25jumlah),
+          ),
+          barisKonten(
+            label: 'Pemakaian Telepon/Telkomsel',
+            value: AFconvert.matNumber(item.potTelepon),
+          ),
+          barisKonten(
+            label: 'Pinjaman Kas',
+            value: AFconvert.matNumber(item.potKas),
+          ),
+          barisKonten(
+            label: 'Pinjaman / Cicilan ',
+            value: AFconvert.matNumber(item.potCicilan),
+          ),
+          barisKonten(
+            label: 'BPJS Kesehatan',
+            value: AFconvert.matNumber(item.potBpjs),
+          ),
+          barisKonten(
+            label: 'Pemakaian Bensin',
+            value: AFconvert.matNumber(item.potBensin),
+          ),
+          barisKonten(
+            label: 'Unpaid Leave / Cuti Bersama',
+            value: AFconvert.matNumber(item.potCuti),
+          ),
+          barisKonten(
+            label: 'Lain-lain',
+            value: AFconvert.matNumber(item.potLain),
+          ),
+          const SizedBox(height: 13),
+          Row(
+            children: [
+              const SizedBox(
+                width: 230,
+                child: Text(
+                  'TOTAL DITERIMA (A-B)',
+                  style: TextStyle(color: Colors.blue, fontWeight: FontWeight.w600),
+                ),
+              ),
+              const Text('='),
+              Expanded(
+                child: Text(
+                  AFconvert.matNumber(item.totalDiterima),
+                  textAlign: TextAlign.right,
+                  style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.w600),
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
     );
   }
 
@@ -374,12 +376,15 @@ class PayrollView extends StatelessWidget {
     return ElevatedButton.icon(
       onPressed: onPressed,
       icon: Icon(icon),
-      label: Text(label),
+      label: Text(label,
+        style: const TextStyle(fontWeight: FontWeight.bold),
+      ),
       style: ElevatedButton.styleFrom(
         minimumSize: const Size(100, 70),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(0),
         ),
+        backgroundColor: const Color(0xFFf2fbfe),
       ),
     );
   }

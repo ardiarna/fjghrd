@@ -14,17 +14,28 @@ class ReportView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-          decoration: const BoxDecoration(
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
+          decoration: BoxDecoration(
             color: Colors.green,
+            border: Border.all(
+              color: Colors.brown.shade100, width: 1.5,
+            ),
           ),
           child: Row(
             children: [
-              const Text('REPORT',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                margin: const EdgeInsets.only(right: 40),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(7)),
+                    color: Colors.green.shade700,
+                ),
+                child: const Text('REPORT',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
               ),
               const Spacer(),
@@ -52,40 +63,51 @@ class ReportView extends StatelessWidget {
         ),
         Expanded(
           child: Container(
-            color: Colors.white,
             width: double.infinity,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                barisBox(
-                  label: 'LIST PAYROLL',
-                  onPressed: controller.dowloadListpayroll,
-                ),
-                barisBox(
-                  label: 'REKAP GAJI',
-                  onPressed: controller.dowloadRekapPayroll,
-                ),
-                barisBox(
-                  label: 'REKAP MEDICAL',
-                  onPressed: controller.dowloadRekapMedical,
-                ),
-                barisBox(
-                  label: 'REKAP OVERTIME',
-                  onPressed: controller.dowloadRekapOvertime,
-                ),
-                barisBox(
-                  label: 'REKAP PAYROLL PER KARYAWAN',
-                  onPressed: dialogRekapPayroll,
-                ),
-                barisBox(
-                  label: 'REKAP PPh 21',
-                  onPressed: dialogRekapPPh21,
-                ),
-                barisBox(
-                  label: 'SLIP GAJI',
-                  onPressed: dialogSlipGaji,
-                ),
-              ],
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/line-green.png'),
+                alignment: Alignment.topLeft,
+                repeat: ImageRepeat.noRepeat,
+                fit: BoxFit.fill,
+                opacity: 0.1,
+              ),
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 20, width: 20),
+                  barisBox(
+                    label: 'LIST PAYROLL',
+                    onPressed: controller.dowloadListpayroll,
+                  ),
+                  barisBox(
+                    label: 'REKAP GAJI',
+                    onPressed: controller.dowloadRekapPayroll,
+                  ),
+                  barisBox(
+                    label: 'REKAP MEDICAL',
+                    onPressed: controller.dowloadRekapMedical,
+                  ),
+                  barisBox(
+                    label: 'REKAP OVERTIME',
+                    onPressed: controller.dowloadRekapOvertime,
+                  ),
+                  barisBox(
+                    label: 'REKAP PAYROLL PER KARYAWAN',
+                    onPressed: dialogRekapPayroll,
+                  ),
+                  barisBox(
+                    label: 'REKAP PPh 21',
+                    onPressed: dialogRekapPPh21,
+                  ),
+                  barisBox(
+                    label: 'SLIP GAJI',
+                    onPressed: dialogSlipGaji,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -653,11 +675,25 @@ class ReportView extends StatelessWidget {
     required String label,
     required Function()? onPressed,
   }) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+    return Container(
+      margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.8),
+        borderRadius: const BorderRadius.all(Radius.circular(15)),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.green,
+            blurRadius: 1,
+            blurStyle: BlurStyle.outer,
+            offset: Offset(1, 1),
+          ),
+        ],
+      ),
       child: TextButton(
           onPressed: onPressed,
-          child: Text(label),
+          child: Text(label,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
       ),
     );
   }

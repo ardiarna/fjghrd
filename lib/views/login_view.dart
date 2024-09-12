@@ -24,6 +24,7 @@ class LoginView extends StatelessWidget {
               alignment: Alignment.bottomRight,
               repeat: ImageRepeat.noRepeat,
               fit: BoxFit.cover,
+              opacity: 0.5,
             ),
           ),
           child: SingleChildScrollView(
@@ -31,20 +32,7 @@ class LoginView extends StatelessWidget {
             child: Column(
               children: [
                 Container(
-                  padding: const EdgeInsets.fromLTRB(20, 35, 20, 10),
                   margin: const EdgeInsets.only(bottom: 35),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.8),
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.brown.withOpacity(0.1),
-                        spreadRadius: 1,
-                        blurRadius: 1,
-                        offset: const Offset(2, 3),
-                      ),
-                    ],
-                  ),
                   constraints: const BoxConstraints(
                     maxWidth: 450,
                   ),

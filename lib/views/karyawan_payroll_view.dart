@@ -20,8 +20,10 @@ class KaryawanPayrollView extends StatelessWidget {
           Container(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
             decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(color: Colors.brown.shade100, width: 0.5),
+              color: const Color(0xFFf2fbfe),
+              border: Border.all(
+                color: Colors.brown.shade100, width: 1.5,
+              ),
             ),
             child: Row(
               children: [
@@ -37,15 +39,15 @@ class KaryawanPayrollView extends StatelessWidget {
                 const SizedBox(width: 50),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.brown.shade200, width: 2),
-                    borderRadius: const BorderRadius.all(Radius.circular(15)),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(7)),
+                    color: Colors.brown,
                   ),
                   child: const Text('PAYROLL',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.brown,
+                      color: Colors.white,
                     ),
                   ),
                 ),
@@ -56,6 +58,7 @@ class KaryawanPayrollView extends StatelessWidget {
                     Text(controller.current.nama,
                       style: const TextStyle(
                         color: Colors.black54,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text('Jabatan : ${controller.current.jabatan.nama}',
@@ -112,7 +115,15 @@ class KaryawanPayrollView extends StatelessWidget {
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(10),
-                      color: Colors.grey.shade50,
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/images/line-blue.png'),
+                          alignment: Alignment.topLeft,
+                          repeat: ImageRepeat.repeatY,
+                          fit: BoxFit.fitWidth,
+                          opacity: 0.1,
+                        ),
+                      ),
                       child: GetBuilder<KaryawanControl>(
                         builder: (_) {
                           return Wrap(
@@ -141,10 +152,10 @@ class KaryawanPayrollView extends StatelessWidget {
       children: [
         Container(
           width: 430,
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(15)),
-            boxShadow: [
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.7),
+            borderRadius: const BorderRadius.all(Radius.circular(15)),
+            boxShadow: const [
               BoxShadow(
                 color: Colors.blue,
                 blurRadius: 1,
@@ -194,27 +205,22 @@ class KaryawanPayrollView extends StatelessWidget {
                 label: 'Reimbursement Medical',
                 value: AFconvert.matNumber(item.medical),
               ),
-              item.thr == 0 ? Container() :
               barisKonten(
                 label: 'Tunjangan Hari Raya',
                 value: AFconvert.matNumber(item.thr),
               ),
-              item.bonus == 0 ? Container() :
               barisKonten(
                 label: 'Bonus',
                 value: AFconvert.matNumber(item.bonus),
               ),
-              item.insentif == 0 ? Container() :
               barisKonten(
                 label: 'Insentif',
                 value: AFconvert.matNumber(item.insentif),
               ),
-              item.telkomsel == 0 ? Container() :
               barisKonten(
                 label: 'Telkomsel',
                 value: AFconvert.matNumber(item.telkomsel),
               ),
-              item.lain == 0 ? Container() :
               barisKonten(
                 label: 'Lain-lain',
                 value: AFconvert.matNumber(item.lain),
@@ -235,27 +241,22 @@ class KaryawanPayrollView extends StatelessWidget {
                 label: 'Keterlambatan Kehadiran 25%',
                 value: AFconvert.matNumber(item.pot25jumlah),
               ),
-              item.potTelepon == 0 ? Container() :
               barisKonten(
                 label: 'Pemakaian Telepon/Telkomsel',
                 value: AFconvert.matNumber(item.potTelepon),
               ),
-              item.potKas == 0 ? Container() :
               barisKonten(
                 label: 'Pinjaman Kas',
                 value: AFconvert.matNumber(item.potKas),
               ),
-              item.potCicilan == 0 ? Container() :
               barisKonten(
                 label: 'Pinjaman / Cicilan ',
                 value: AFconvert.matNumber(item.potCicilan),
               ),
-              item.potBpjs == 0 ? Container() :
               barisKonten(
                 label: 'BPJS Kesehatan',
                 value: AFconvert.matNumber(item.potBpjs),
               ),
-              item.potBensin == 0 ? Container() :
               barisKonten(
                 label: 'Pemakaian Bensin',
                 value: AFconvert.matNumber(item.potBensin),
@@ -264,7 +265,6 @@ class KaryawanPayrollView extends StatelessWidget {
                 label: 'Unpaid Leave / Cuti Bersama',
                 value: AFconvert.matNumber(item.potCuti),
               ),
-              item.potLain == 0 ? Container() :
               barisKonten(
                 label: 'Lain-lain',
                 value: AFconvert.matNumber(item.potLain),

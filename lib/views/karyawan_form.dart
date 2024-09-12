@@ -277,9 +277,12 @@ class KaryawanForm extends StatelessWidget {
       body: Column(
         children: [
           Container(
-            padding: const EdgeInsets.fromLTRB(50, 15, 15, 0),
-            decoration: const BoxDecoration(
-              color: Colors.white,
+            padding: const EdgeInsets.fromLTRB(50, 8, 20, 8),
+            decoration: BoxDecoration(
+              color: const Color(0xFFf2fbfe),
+              border: Border.all(
+                color: Colors.brown.shade100, width: 1.5,
+              ),
             ),
             child: Row(
               children: [
@@ -293,10 +296,18 @@ class KaryawanForm extends StatelessWidget {
                   padding: const EdgeInsets.all(0),
                 ),
                 const SizedBox(width: 50),
-                const Text('Data Karyawan',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                  decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(7)),
+                      color: Colors.brown
+                  ),
+                  child: const Text('DETAIL DATA KARYAWAN',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ],

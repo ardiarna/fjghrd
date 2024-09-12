@@ -825,225 +825,270 @@ class RunpayrollView extends StatelessWidget {
   }
 
   Widget wgPeriode() {
-    return Row(
-      children: [
-        const Spacer(),
-        Container(
-          padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-          ),
-          child: Column(
-            children: [
-              const Text('RUN PAYROLL',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 240,
-                      padding: const EdgeInsets.only(right: 15),
-                      child: const Text('Periode Penggajian'),
-                    ),
-                    SizedBox(
-                      width: 170,
-                      child: GetBuilder<PayrollControl>(
-                        builder: (_) {
-                          return AFwidget.comboField(
-                            value: controller.bulan.label,
-                            label: '',
-                            onTap: () async {
-                              var a = await controller.pilihBulan(value: controller.bulan.value);
-                              if(a != null && a.value != controller.bulan.value) {
-                                controller.bulan = a;
-                                int vTahun = AFconvert.keInt(controller.tahun.value);
-                                int vBulan = AFconvert.keInt(a.value);
-                                controller.txtTanggalAwal.text = AFconvert.matDate(DateTime(vBulan == 1 ? vTahun-1 : vTahun, vBulan == 1 ? 12 : vBulan-1, 19));
-                                controller.txtTanggalAkhir.text = AFconvert.matDate(DateTime(vTahun, vBulan, 18));
-                                controller.update();
-                              }
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                    const SizedBox(width: 40),
-                    SizedBox(
-                      width: 170,
-                      child: GetBuilder<PayrollControl>(
-                        builder: (_) {
-                          return AFwidget.comboField(
-                            value: controller.tahun.label,
-                            label: '',
-                            onTap: () async {
-                              var a = await controller.pilihTahun(value: controller.tahun.value);
-                              if(a != null && a.value != controller.tahun.value) {
-                                controller.tahun = a;
-                                int vTahun = AFconvert.keInt(a.value);
-                                int vBulan = AFconvert.keInt(controller.bulan.value);
-                                controller.txtTanggalAwal.text = AFconvert.matDate(DateTime(vBulan == 1 ? vTahun-1 : vTahun, vBulan == 1 ? 12 : vBulan-1, 19));
-                                controller.txtTanggalAkhir.text = AFconvert.matDate(DateTime(vTahun, vBulan, 18));
-                                controller.update();
-                              }
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 11, 0, 0),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 240,
-                      padding: const EdgeInsets.only(right: 15),
-                      child: const Text('Periode Batas (Cut-Off)'),
-                    ),
-                    SizedBox(
-                      width: 170,
-                      child: AFwidget.textField(
-                        marginTop: 0,
-                        controller: controller.txtTanggalAwal,
-                        readOnly: true,
-                        prefixIcon: const Icon(Icons.calendar_month),
-                        ontap: () async {
-                          var a = await AFwidget.pickDate(
-                            context: controller.homeControl.scaffoldKey.currentContext!,
-                            initialDate: AFconvert.keTanggal(AFconvert.matDMYtoYMD(controller.txtTanggalAwal.text)),
-                          );
-                          if(a != null) {
-                            controller.txtTanggalAwal.text = AFconvert.matDate(a);
-                          }
-                        },
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 40,
-                      child: Text('s/d', textAlign: TextAlign.center),
-                    ),
-                    SizedBox(
-                      width: 170,
-                      child: AFwidget.textField(
-                        marginTop: 0,
-                        controller: controller.txtTanggalAkhir,
-                        readOnly: true,
-                        prefixIcon: const Icon(Icons.calendar_month),
-                        ontap: () async {
-                          var a = await AFwidget.pickDate(
-                            context: controller.homeControl.scaffoldKey.currentContext!,
-                            initialDate: AFconvert.keTanggal(AFconvert.matDMYtoYMD(controller.txtTanggalAkhir.text)),
-                          );
-                          if(a != null) {
-                            controller.txtTanggalAkhir.text = AFconvert.matDate(a);
-                          }
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Spacer(),
-              Container(
-                width: double.infinity,
-                constraints: const BoxConstraints(
-                  maxWidth: 625,
-                ),
-                padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    AFwidget.tombol(
-                      label: 'Batal',
-                      color: Colors.orange,
-                      onPressed: () {
-                        controller.homeControl.kontener = PayrollView();
-                        controller.homeControl.update();
-                      },
-                      minimumSize: const Size(120, 40),
-                    ),
-                    FilledButton.icon(
-                      onPressed: () async {
-                        var isExist = await controller.payrollPeriodeIsExist(controller.tahun.value, controller.bulan.value);
-                        if(isExist) {
-                          AFwidget.snackbar('Payroll untuk periode ${controller.bulan.label} ${controller.tahun.label} sudah ada di database, jika ada perubahan data silakan edit payroll tersebut (lihat di menu utama Payroll).');
-                          return;
-                        }
-                        controller.loadOvertimes();
-                        controller.loadMedicals();
-                        controller.loadPenghasilans();
-                        controller.loadPotongans();
-                        controller.loadHariLiburs();
-                        controller.homeControl.kontener = wgKaryawans();
-                        controller.homeControl.update();
-                      },
-                      icon: const Text('Selanjutnya'),
-                      label: const Icon(Icons.navigate_next),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/images/line-blue.png'),
+          alignment: Alignment.topRight,
+          repeat: ImageRepeat.repeatY,
+          fit: BoxFit.fitWidth,
+          opacity: 0.1,
         ),
-        const Spacer(),
-      ],
+      ),
+      child: Row(
+        children: [
+          const Spacer(),
+          Container(
+            padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+            ),
+            child: Column(
+              children: [
+                const Text('RUN PAYROLL',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 240,
+                        padding: const EdgeInsets.only(right: 15),
+                        child: const Text('Periode Penggajian'),
+                      ),
+                      SizedBox(
+                        width: 170,
+                        child: GetBuilder<PayrollControl>(
+                          builder: (_) {
+                            return AFwidget.comboField(
+                              value: controller.bulan.label,
+                              label: '',
+                              onTap: () async {
+                                var a = await controller.pilihBulan(value: controller.bulan.value);
+                                if(a != null && a.value != controller.bulan.value) {
+                                  controller.bulan = a;
+                                  int vTahun = AFconvert.keInt(controller.tahun.value);
+                                  int vBulan = AFconvert.keInt(a.value);
+                                  controller.txtTanggalAwal.text = AFconvert.matDate(DateTime(vBulan == 1 ? vTahun-1 : vTahun, vBulan == 1 ? 12 : vBulan-1, 19));
+                                  controller.txtTanggalAkhir.text = AFconvert.matDate(DateTime(vTahun, vBulan, 18));
+                                  controller.update();
+                                }
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 40),
+                      SizedBox(
+                        width: 170,
+                        child: GetBuilder<PayrollControl>(
+                          builder: (_) {
+                            return AFwidget.comboField(
+                              value: controller.tahun.label,
+                              label: '',
+                              onTap: () async {
+                                var a = await controller.pilihTahun(value: controller.tahun.value);
+                                if(a != null && a.value != controller.tahun.value) {
+                                  controller.tahun = a;
+                                  int vTahun = AFconvert.keInt(a.value);
+                                  int vBulan = AFconvert.keInt(controller.bulan.value);
+                                  controller.txtTanggalAwal.text = AFconvert.matDate(DateTime(vBulan == 1 ? vTahun-1 : vTahun, vBulan == 1 ? 12 : vBulan-1, 19));
+                                  controller.txtTanggalAkhir.text = AFconvert.matDate(DateTime(vTahun, vBulan, 18));
+                                  controller.update();
+                                }
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 11, 0, 0),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 240,
+                        padding: const EdgeInsets.only(right: 15),
+                        child: const Text('Periode Batas (Cut-Off)'),
+                      ),
+                      SizedBox(
+                        width: 170,
+                        child: AFwidget.textField(
+                          marginTop: 0,
+                          controller: controller.txtTanggalAwal,
+                          readOnly: true,
+                          prefixIcon: const Icon(Icons.calendar_month),
+                          ontap: () async {
+                            var a = await AFwidget.pickDate(
+                              context: controller.homeControl.scaffoldKey.currentContext!,
+                              initialDate: AFconvert.keTanggal(AFconvert.matDMYtoYMD(controller.txtTanggalAwal.text)),
+                            );
+                            if(a != null) {
+                              controller.txtTanggalAwal.text = AFconvert.matDate(a);
+                            }
+                          },
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 40,
+                        child: Text('s/d', textAlign: TextAlign.center),
+                      ),
+                      SizedBox(
+                        width: 170,
+                        child: AFwidget.textField(
+                          marginTop: 0,
+                          controller: controller.txtTanggalAkhir,
+                          readOnly: true,
+                          prefixIcon: const Icon(Icons.calendar_month),
+                          ontap: () async {
+                            var a = await AFwidget.pickDate(
+                              context: controller.homeControl.scaffoldKey.currentContext!,
+                              initialDate: AFconvert.keTanggal(AFconvert.matDMYtoYMD(controller.txtTanggalAkhir.text)),
+                            );
+                            if(a != null) {
+                              controller.txtTanggalAkhir.text = AFconvert.matDate(a);
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Spacer(),
+                Container(
+                  width: double.infinity,
+                  constraints: const BoxConstraints(
+                    maxWidth: 625,
+                  ),
+                  padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      AFwidget.tombol(
+                        label: 'Batal',
+                        color: Colors.orange,
+                        onPressed: () {
+                          controller.homeControl.kontener = PayrollView();
+                          controller.homeControl.update();
+                        },
+                        minimumSize: const Size(120, 40),
+                      ),
+                      FilledButton.icon(
+                        onPressed: () async {
+                          var isExist = await controller.payrollPeriodeIsExist(controller.tahun.value, controller.bulan.value);
+                          if(isExist) {
+                            AFwidget.snackbar('Payroll untuk periode ${controller.bulan.label} ${controller.tahun.label} sudah ada di database, jika ada perubahan data silakan edit payroll tersebut (lihat di menu utama Payroll).');
+                            return;
+                          }
+                          controller.loadOvertimes();
+                          controller.loadMedicals();
+                          controller.loadPenghasilans();
+                          controller.loadPotongans();
+                          controller.loadHariLiburs();
+                          controller.homeControl.kontener = wgKaryawans();
+                          controller.homeControl.update();
+                        },
+                        icon: const Text('Selanjutnya'),
+                        label: const Icon(Icons.navigate_next),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Spacer(),
+        ],
+      ),
     );
   }
   
   Widget wgKaryawans() {
-    return Row(
-      children: [
-        const Spacer(),
-        Container(
-          padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
-          decoration: const BoxDecoration(
-            color: Colors.white,
-          ),
-          child: Column(
-            children: [
-              const Text('RUN PAYROLL',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+    return Container(
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('assets/images/line-blue.png'),
+          alignment: Alignment.topRight,
+          repeat: ImageRepeat.repeatY,
+          fit: BoxFit.fitWidth,
+          opacity: 0.1,
+        ),
+      ),
+      child: Row(
+        children: [
+          const Spacer(),
+          Container(
+            padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
+            decoration: const BoxDecoration(
+              color: Colors.white,
+            ),
+            child: Column(
+              children: [
+                const Text('RUN PAYROLL',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              const Text('PILIH KARYAWAN',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 17,
-                  color: Colors.blue,
+                const SizedBox(height: 20),
+                const Text('PILIH KARYAWAN',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 17,
+                    color: Colors.blue,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              Expanded(
-                child: GetBuilder<PayrollControl>(
-                  builder: (_) {
-                    List<Widget> children = [];
-                    var no = 1;
-                    controller.totalKaryawanPerArea.forEach((key, value) {
-                      children.add(
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(20, 0, 20, 3),
-                            child: Text(key,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 17,
-                                color: Colors.blue,
+                const SizedBox(height: 10),
+                Expanded(
+                  child: GetBuilder<PayrollControl>(
+                    builder: (_) {
+                      List<Widget> children = [];
+                      var no = 1;
+                      controller.totalKaryawanPerArea.forEach((key, value) {
+                        children.add(
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 3),
+                              child: Text(key,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 17,
+                                  color: Colors.blue,
+                                ),
                               ),
-                            ),
-                          )
-                      );
+                            )
+                        );
+                        for (var i = 0; i < controller.listKaryawan.length; i++) {
+                          if(controller.listKaryawan[i].staf && controller.listKaryawan[i].area.nama == key) {
+                            children.add(
+                              Row(
+                                children: [
+                                  Checkbox(
+                                    value: controller.listKaryawan[i].dipilih,
+                                    onChanged: (value) {
+                                      if(value != null) {
+                                        controller.listKaryawan[i].dipilih = value;
+                                        controller.update();
+                                      }
+                                    },
+                                  ),
+                                  Text('$no. ${controller.listKaryawan[i].nama}'),
+                                  const SizedBox(width: 100),
+                                ],
+                              ),
+                            );
+                            no++;
+                          }
+                        }
+                        children.add(const SizedBox(height: 20));
+                      });
                       for (var i = 0; i < controller.listKaryawan.length; i++) {
-                        if(controller.listKaryawan[i].staf && controller.listKaryawan[i].area.nama == key) {
+                        if(!controller.listKaryawan[i].staf) {
                           children.add(
                             Row(
                               children: [
@@ -1064,88 +1109,65 @@ class RunpayrollView extends StatelessWidget {
                           no++;
                         }
                       }
-                      children.add(const SizedBox(height: 20));
-                    });
-                    for (var i = 0; i < controller.listKaryawan.length; i++) {
-                      if(!controller.listKaryawan[i].staf) {
-                        children.add(
-                          Row(
-                            children: [
-                              Checkbox(
-                                value: controller.listKaryawan[i].dipilih,
-                                onChanged: (value) {
-                                  if(value != null) {
-                                    controller.listKaryawan[i].dipilih = value;
-                                    controller.update();
-                                  }
-                                },
-                              ),
-                              Text('$no. ${controller.listKaryawan[i].nama}'),
-                              const SizedBox(width: 100),
-                            ],
-                          ),
-                        );
-                        no++;
-                      }
-                    }
-                    return Scrollbar(
-                      controller: _scrollController,
-                      thumbVisibility: true,
-                      child: SingleChildScrollView(
+                      return Scrollbar(
                         controller: _scrollController,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: children,
+                        thumbVisibility: true,
+                        child: SingleChildScrollView(
+                          controller: _scrollController,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: children,
+                          ),
                         ),
+                      );
+                    },
+                  ),
+                ),
+                Container(
+                  width: double.infinity,
+                  constraints: const BoxConstraints(
+                    maxWidth: 625,
+                  ),
+                  padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      AFwidget.tombol(
+                        label: 'Batal',
+                        color: Colors.orange,
+                        onPressed: () {
+                          controller.homeControl.kontener = PayrollView();
+                          controller.homeControl.update();
+                        },
+                        minimumSize: const Size(120, 40),
                       ),
-                    );
-                  },
+                      const Spacer(),
+                      FilledButton.icon(
+                        onPressed: () {
+                          controller.homeControl.kontener = wgPeriode();
+                          controller.homeControl.update();
+                        },
+                        icon: const Icon(Icons.navigate_before),
+                        label: const Text('Sebelumnya'),
+                      ),
+                      const SizedBox(width: 25),
+                      FilledButton.icon(
+                        onPressed: () {
+                          controller.homeControl.kontener = wgGaji();
+                          controller.homeControl.update();
+                        },
+                        icon: const Text('Selanjutnya'),
+                        label: const Icon(Icons.navigate_next),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Container(
-                width: double.infinity,
-                constraints: const BoxConstraints(
-                  maxWidth: 625,
-                ),
-                padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    AFwidget.tombol(
-                      label: 'Batal',
-                      color: Colors.orange,
-                      onPressed: () {
-                        controller.homeControl.kontener = PayrollView();
-                        controller.homeControl.update();
-                      },
-                      minimumSize: const Size(120, 40),
-                    ),
-                    const Spacer(),
-                    FilledButton.icon(
-                      onPressed: () {
-                        controller.homeControl.kontener = wgPeriode();
-                        controller.homeControl.update();
-                      },
-                      icon: const Icon(Icons.navigate_before),
-                      label: const Text('Sebelumnya'),
-                    ),
-                    const SizedBox(width: 25),
-                    FilledButton.icon(
-                      onPressed: () {
-                        controller.homeControl.kontener = wgGaji();
-                        controller.homeControl.update();
-                      },
-                      icon: const Text('Selanjutnya'),
-                      label: const Icon(Icons.navigate_next),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        const Spacer(),
-      ],
+          const Spacer(),
+        ],
+      ),
     );
   }
 
@@ -1153,9 +1175,12 @@ class RunpayrollView extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-          decoration: const BoxDecoration(
-            color: Colors.white,
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
+          decoration: BoxDecoration(
+            color: const Color(0xFFf2fbfe),
+            border: Border.all(
+              color: Colors.brown.shade100, width: 1.5,
+            ),
           ),
           child: Row(
             children: [

@@ -96,7 +96,7 @@ class KaryawanView extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: () {
-                  controller.ubahForm(rdrCtx.row.cells['id']!.value);
+                  controller.ubahForm(rdrCtx.row.cells['id']!.value, true);
                 },
                 icon: const Icon(
                   Icons.edit_square,
@@ -146,6 +146,7 @@ class KaryawanView extends StatelessWidget {
         readOnly: true,
         minWidth: 230,
         backgroundColor: Colors.brown.shade100,
+        enableFilterMenuItem: false,
       ),
       PlutoColumn(
         title: 'NIK',
@@ -317,16 +318,27 @@ class KaryawanView extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-          decoration: const BoxDecoration(
-            color: Colors.white,
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
+          decoration: BoxDecoration(
+            color: const Color(0xFFf2fbfe),
+            border: Border.all(
+              color: Colors.brown.shade100, width: 1.5,
+            ),
           ),
           child: Row(
             children: [
-              const Text('DATA KARYAWAN',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(7)),
+                    color: Colors.brown
+                ),
+                child: const Text('DATA KARYAWAN',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
               ),
               const SizedBox(width: 20),
@@ -341,6 +353,30 @@ class KaryawanView extends StatelessWidget {
                         var a = await controller.pilihStaf(value: controller.cariStaf.value);
                         if(a != null && a.value != controller.cariStaf.value) {
                           controller.cariStaf = a;
+                          controller.loadKaryawans();
+                        }
+                      },
+                    );
+                  },
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
+                child: Text('Area: ',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              SizedBox(
+                width: 300,
+                child: GetBuilder<KaryawanControl>(
+                  builder: (_) {
+                    return AFwidget.comboField(
+                      value: controller.cariArea.label,
+                      label: '',
+                      onTap: () async {
+                        var a = await controller.pilihArea(value: controller.cariArea.value, withSemua: true);
+                        if(a != null && a.value != controller.cariArea.value) {
+                          controller.cariArea = a;
                           controller.loadKaryawans();
                         }
                       },

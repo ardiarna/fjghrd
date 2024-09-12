@@ -56,6 +56,7 @@ class KaryawanControl extends GetxController {
   List<Payroll> listPayroll = [];
 
   Opsi cariStaf = Opsi(value: 'Y', label: 'Staf');
+  Opsi cariArea = Opsi(value: '', label: 'SEMUA');
   Map<String, int> totalKaryawanPerArea = {};
 
   late TextEditingController txtId, txtNama, txtNik, txtTanggalMasuk, txtTanggalKeluar, txtNomorKk,
@@ -101,17 +102,19 @@ class KaryawanControl extends GetxController {
   };
 
   Future<void> loadKaryawans() async {
-    var hasil = await _repo.findAll(isStaf: cariStaf.value);
+    var hasil = await _repo.findAll(isStaf: cariStaf.value, area: cariArea.value);
     if (hasil.success) {
       listKaryawan.clear();
       totalKaryawanPerArea.clear();
       for (var data in hasil.daftar) {
         var k = Karyawan.fromMap(data);
         listKaryawan.add(k);
-        if (totalKaryawanPerArea.containsKey('TOTAL KARYAWAN')) {
-          totalKaryawanPerArea['TOTAL KARYAWAN'] = totalKaryawanPerArea['TOTAL KARYAWAN']! + 1;
-        } else {
-          totalKaryawanPerArea['TOTAL KARYAWAN'] = 1;
+        if(cariArea.value == '') {
+          if (totalKaryawanPerArea.containsKey('TOTAL KARYAWAN')) {
+            totalKaryawanPerArea['TOTAL KARYAWAN'] = totalKaryawanPerArea['TOTAL KARYAWAN']! + 1;
+          } else {
+            totalKaryawanPerArea['TOTAL KARYAWAN'] = 1;
+          }
         }
         if (totalKaryawanPerArea.containsKey(k.area.nama)) {
           totalKaryawanPerArea[k.area.nama] = totalKaryawanPerArea[k.area.nama]! + 1;
@@ -791,8 +794,12 @@ class KaryawanControl extends GetxController {
     );
   }
 
-  void ubahForm(String id) {
-    current = listKaryawan.where((element) => element.id == id).first;
+  void ubahForm(String id, bool isGeneral) {
+    if(isGeneral) {
+      current = listKaryawan.where((element) => element.id == id).first;
+    } else {
+      current = listMantanKaryawan.where((element) => element.id == id).first;
+    }
     txtId.text = current.id;
     txtNama.text = current.nama;
     txtNik.text = current.nik;
@@ -2709,9 +2716,13 @@ class KaryawanControl extends GetxController {
     return a;
   }
 
-  Future<Opsi?> pilihArea({String value = ''}) async {
+  Future<Opsi?> pilihArea({String value = '', bool withSemua = false}) async {
+    List<Opsi> list = [...listArea];
+    if(withSemua) {
+      list.add(Opsi(value: '', label: 'SEMUA'));
+    }
     var a = await AFcombobox.bottomSheet(
-      listOpsi: listArea,
+      listOpsi: list,
       valueSelected: value,
       judul: 'Pilih Area',
     );

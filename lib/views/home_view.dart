@@ -216,6 +216,37 @@ class HomeView extends StatelessWidget {
                       controller.update();
                     },
                   ),
+                  drawItem(
+                    label: 'Uang PHK',
+                    icon: Icons.money_off,
+                    color: Colors.brown,
+                    onTap: () {
+                      controller.tabId = 4;
+                      controller.kontener = UpahView();
+                      Get.back();
+                      controller.update();
+                    },
+                  ),
+                  drawItem(
+                    label: 'Ubah Email',
+                    icon: Icons.email_outlined,
+                    color: Colors.red,
+                    onTap: () {
+                      Get.back();
+                      controller.tabId = 4;
+                      dialogChangeEmail();
+                    },
+                  ),
+                  drawItem(
+                    label: 'Ubah Password',
+                    icon: Icons.key,
+                    color: Colors.red,
+                    onTap: () {
+                      Get.back();
+                      controller.tabId = 4;
+                      dialogChangePassword();
+                    },
+                  ),
                 ],
               ),
             ),
@@ -350,6 +381,197 @@ class HomeView extends StatelessWidget {
         trailing: Icon(Icons.keyboard_arrow_right, color: color),
         onTap: onTap,
       ),
+    );
+  }
+
+  void dialogChangeEmail() {
+    controller.resetEmailForm();
+    AFwidget.dialog(
+      Container(
+        width: 500,
+        height: 250,
+        padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        child: Column(
+          children: [
+            Container(
+              height: 65,
+              width: double.infinity,
+              padding: const EdgeInsets.all(15),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(15),
+                ),
+              ),
+              child: const Text('UBAH EMAIL',
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            AFwidget.textField(
+              controller: controller.txtEmail,
+              label: 'Email',
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 25, 0, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  AFwidget.tombol(
+                    label: 'Batal',
+                    color: Colors.orange,
+                    onPressed: Get.back,
+                    minimumSize: const Size(120, 40),
+                  ),
+                  const SizedBox(width: 40),
+                  AFwidget.tombol(
+                    label: 'Simpan Perubahan',
+                    color: Colors.blue,
+                    onPressed: controller.changeEmail,
+                    minimumSize: const Size(120, 40),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      scrollable: false,
+      barrierDismissible: false,
+      backgroundColor: Colors.white,
+      contentPadding: const EdgeInsets.all(0),
+    );
+  }
+
+  void dialogChangePassword() {
+    controller.resetPasswordForm();
+    AFwidget.dialog(
+      Container(
+        width: 500,
+        height: 350,
+        padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        child: Column(
+          children: [
+            Container(
+              height: 65,
+              width: double.infinity,
+              padding: const EdgeInsets.all(15),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(15),
+                ),
+              ),
+              child: const Text('UBAH PASSWORD',
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            GetBuilder<HomeControl>(
+              builder: (_) {
+                return AFwidget.textField(
+                  controller: controller.txtPassOld,
+                  label: 'Password Lama',
+                  obscureText: !controller.isTampilPassOld,
+                  suffixIcon: GestureDetector(
+                    child: Icon(
+                      controller.isTampilPassOld
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      size: 20,
+                    ),
+                    onTap: () {
+                      controller.isTampilPassOld = !controller.isTampilPassOld;
+                      controller.update();
+                    },
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 15),
+            GetBuilder<HomeControl>(
+              builder: (_) {
+                return AFwidget.textField(
+                  controller: controller.txtPassword,
+                  label: 'Password Baru',
+                  obscureText: !controller.isTampilPassword,
+                  suffixIcon: GestureDetector(
+                    child: Icon(
+                      controller.isTampilPassword
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      size: 20,
+                    ),
+                    onTap: () {
+                      controller.isTampilPassword = !controller.isTampilPassword;
+                      controller.update();
+                    },
+                  ),
+                );
+              },
+            ),
+            const SizedBox(height: 15),
+            GetBuilder<HomeControl>(
+              builder: (_) {
+                return AFwidget.textField(
+                  controller: controller.txtPassConfirm,
+                  label: 'Konfirmasi Password Baru',
+                  obscureText: !controller.isTampilPassConfirm,
+                  suffixIcon: GestureDetector(
+                    child: Icon(
+                      controller.isTampilPassConfirm
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      size: 20,
+                    ),
+                    onTap: () {
+                      controller.isTampilPassConfirm = !controller.isTampilPassConfirm;
+                      controller.update();
+                    },
+                  ),
+                );
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 25, 0, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  AFwidget.tombol(
+                    label: 'Batal',
+                    color: Colors.orange,
+                    onPressed: Get.back,
+                    minimumSize: const Size(120, 40),
+                  ),
+                  const SizedBox(width: 40),
+                  AFwidget.tombol(
+                    label: 'Simpan Perubahan',
+                    color: Colors.blue,
+                    onPressed: controller.changePassword,
+                    minimumSize: const Size(120, 40),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      scrollable: false,
+      barrierDismissible: false,
+      backgroundColor: Colors.white,
+      contentPadding: const EdgeInsets.all(0),
     );
   }
 

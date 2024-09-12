@@ -112,20 +112,31 @@ class AgamaView extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: GetBuilder<AgamaControl>(
-            builder: (_) {
-              return PlutoGrid(
-                key: UniqueKey(),
-                columns: columns,
-                rows: _buildRows(controller.listAgama),
-                onChanged: (PlutoGridOnChangedEvent event) {},
-                onLoaded: (PlutoGridOnLoadedEvent event) {
-                  event.stateManager.setShowColumnFilter(true);
-                  event.stateManager.autoFitColumn(context, columns[1]);
-                },
-                configuration: AFplutogridConfig.configSatu(),
-              );
-            },
+          child: Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/line-blue.png'),
+                alignment: Alignment.topLeft,
+                repeat: ImageRepeat.repeatY,
+                fit: BoxFit.fitWidth,
+                opacity: 0.1,
+              ),
+            ),
+            child: GetBuilder<AgamaControl>(
+              builder: (_) {
+                return PlutoGrid(
+                  key: UniqueKey(),
+                  columns: columns,
+                  rows: _buildRows(controller.listAgama),
+                  onChanged: (PlutoGridOnChangedEvent event) {},
+                  onLoaded: (PlutoGridOnLoadedEvent event) {
+                    event.stateManager.setShowColumnFilter(true);
+                    event.stateManager.autoFitColumn(context, columns[1]);
+                  },
+                  configuration: AFplutogridConfig.configSatu(),
+                );
+              },
+            ),
           ),
         ),
       ],
