@@ -33,7 +33,7 @@ class MantanKaryawanView extends StatelessWidget {
           'alamat_ktp': PlutoCell(value: rowData[index].alamatKtp),
           'alamat_tinggal': PlutoCell(value: rowData[index].alamatTinggal),
           'telepon': PlutoCell(value: rowData[index].telepon),
-          'kawin': PlutoCell(value: rowData[index].kawin ? 'Kawin' : 'Single'),
+          'kawin': PlutoCell(value: '${rowData[index].kawin == 'Y' ? 'Kawin' : (rowData[index].kawin == 'N' ? 'Single' : 'Single Parent')} ${ rowData[index].jumlahAnak > 0 ? '/ ${rowData[index].jumlahAnak}' : ''}'),
           'pendidikan': PlutoCell(value: '${rowData[index].pendidikan.nama} ${rowData[index].pendidikanAlmamater} ${rowData[index].pendidikanJurusan != '' ? ', Jurusan: ${rowData[index].pendidikanJurusan}' : ''}'),
           'email': PlutoCell(value: rowData[index].email),
           'status_kerja': PlutoCell(value: rowData[index].statusKerja.nama),

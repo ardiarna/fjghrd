@@ -26,7 +26,7 @@ class Karyawan {
   String alamatTinggal;
   String telepon;
   String email;
-  bool kawin;
+  String kawin;
   String kelamin;
   StatusKerja statusKerja = StatusKerja();
   Ptkp ptkp = Ptkp();
@@ -42,6 +42,7 @@ class Karyawan {
   Upah upah = Upah();
   DateTime? createdAt;
   DateTime? updatedAt;
+  int jumlahAnak;
   bool dipilih;
 
   Karyawan({
@@ -57,7 +58,7 @@ class Karyawan {
     this.alamatTinggal = '',
     this.telepon = '',
     this.email = '',
-    this.kawin = false,
+    this.kawin = '',
     this.kelamin = '',
     this.pendidikanAlmamater = '',
     this.pendidikanJurusan = '',
@@ -68,6 +69,7 @@ class Karyawan {
     this.nomorPwp = '',
     this.createdAt,
     this.updatedAt,
+    this.jumlahAnak = 0,
     this.dipilih = true,
   }) ;
 
@@ -85,7 +87,7 @@ class Karyawan {
       alamatTinggal: AFconvert.keString(data['alamat_tinggal']),
       telepon: AFconvert.keString(data['telepon']),
       email: AFconvert.keString(data['email']),
-      kawin: AFconvert.keBool(data['kawin']),
+      kawin: AFconvert.keString(data['kawin']),
       kelamin: AFconvert.keString(data['kelamin']),
       pendidikanAlmamater: AFconvert.keString(data['pendidikan_almamater']),
       pendidikanJurusan: AFconvert.keString(data['pendidikan_jurusan']),
@@ -96,6 +98,7 @@ class Karyawan {
       nomorPwp: AFconvert.keString(data['nomor_pwp']),
       createdAt: AFconvert.keTanggal(data['created_at']),
       updatedAt: AFconvert.keTanggal(data['updated_at']),
+      jumlahAnak: AFconvert.keInt(data['jumlah_anak']),
     );
     if(data['agama'] != null) {
       a.agama = Agama.fromMap(data['agama']);
@@ -145,7 +148,7 @@ class Karyawan {
       'alamat_tinggal': alamatTinggal,
       'telepon': telepon,
       'email': email,
-      'kawin': kawin ? 'Y' : 'N',
+      'kawin': kawin,
       'kelamin': kelamin,
       'pendidikan_almamater': pendidikanAlmamater,
       'pendidikan_jurusan': pendidikanJurusan,

@@ -698,8 +698,8 @@ class KaryawanForm extends StatelessWidget {
                                             builder: (_) {
                                               return Row(
                                                 children: [
-                                                  Radio<bool>(
-                                                    value: true,
+                                                  Radio<String>(
+                                                    value: 'Y',
                                                     groupValue: controller.kawin,
                                                     onChanged: (a) {
                                                       if(a != null && a != controller.kawin) {
@@ -712,8 +712,22 @@ class KaryawanForm extends StatelessWidget {
                                                     padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
                                                     child: Text('Kawin'),
                                                   ),
-                                                  Radio<bool>(
-                                                    value: false,
+                                                  Radio<String>(
+                                                    value: 'N',
+                                                    groupValue: controller.kawin,
+                                                    onChanged: (a) {
+                                                      if(a != null && a != controller.kawin) {
+                                                        controller.kawin = a;
+                                                        controller.update();
+                                                      }
+                                                    },
+                                                  ),
+                                                  const Padding(
+                                                    padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                                                    child: Text('Single'),
+                                                  ),
+                                                  Radio<String>(
+                                                    value: 'P',
                                                     groupValue: controller.kawin,
                                                     onChanged: (a) {
                                                       if(a != null && a != controller.kawin) {
@@ -724,7 +738,7 @@ class KaryawanForm extends StatelessWidget {
                                                   ),
                                                   const Padding(
                                                     padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                                    child: Text('Single'),
+                                                    child: Text('Single Parent'),
                                                   ),
                                                 ],
                                               );
@@ -838,33 +852,36 @@ class KaryawanForm extends StatelessWidget {
                                     label: 'NPWP',
                                     controller: controller.txtNomorPwp,
                                   ),
-                                  Padding(
-                                    padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          width: 150,
-                                          padding: const EdgeInsets.only(right: 15),
-                                          child: const Text('PTKP'),
-                                        ),
-                                        Expanded(
-                                          child: GetBuilder<KaryawanControl>(
-                                            builder: (_) {
-                                              return AFwidget.comboField(
-                                                value: controller.ptkp.kode,
-                                                label: '',
-                                                onTap: () async {
-                                                  var a = await controller.pilihPtkp(value: controller.ptkp.id);
-                                                  if(a != null && a.value != controller.ptkp.id) {
-                                                    controller.ptkp = Ptkp.fromMap(a.data!);
-                                                    controller.update();
-                                                  }
-                                                },
-                                              );
-                                            },
+                                  Visibility(
+                                    visible: false,
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                                      child: Row(
+                                        children: [
+                                          Container(
+                                            width: 150,
+                                            padding: const EdgeInsets.only(right: 15),
+                                            child: const Text('PTKP'),
                                           ),
-                                        ),
-                                      ],
+                                          Expanded(
+                                            child: GetBuilder<KaryawanControl>(
+                                              builder: (_) {
+                                                return AFwidget.comboField(
+                                                  value: controller.ptkp.kode,
+                                                  label: '',
+                                                  onTap: () async {
+                                                    var a = await controller.pilihPtkp(value: controller.ptkp.id);
+                                                    if(a != null && a.value != controller.ptkp.id) {
+                                                      controller.ptkp = Ptkp.fromMap(a.data!);
+                                                      controller.update();
+                                                    }
+                                                  },
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ],

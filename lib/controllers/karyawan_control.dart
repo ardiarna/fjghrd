@@ -78,7 +78,7 @@ class KaryawanControl extends GetxController {
   StatusPhk statusPhk = StatusPhk();
   Ptkp ptkp = Ptkp();
 
-  bool? kawin = false;
+  String kawin = '';
   String kelamin = '';
   bool? staf = true;
   String keluargaHubungan = '';
@@ -230,7 +230,7 @@ class KaryawanControl extends GetxController {
     pendidikan = Pendidikan();
     statusKerja = StatusKerja();
     ptkp = Ptkp();
-    kawin = null;
+    kawin = '';
     kelamin = '';
     staf = null;
     AFwidget.dialog(
@@ -575,8 +575,8 @@ class KaryawanControl extends GetxController {
                           builder: (_) {
                             return Row(
                               children: [
-                                Radio<bool>(
-                                  value: true,
+                                Radio<String>(
+                                  value: 'Y',
                                   groupValue: kawin,
                                   onChanged: (a) {
                                     if(a != null && a != kawin) {
@@ -589,8 +589,22 @@ class KaryawanControl extends GetxController {
                                   padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
                                   child: Text('Kawin'),
                                 ),
-                                Radio<bool>(
-                                  value: false,
+                                Radio<String>(
+                                  value: 'N',
+                                  groupValue: kawin,
+                                  onChanged: (a) {
+                                    if(a != null && a != kawin) {
+                                      kawin = a;
+                                      update();
+                                    }
+                                  },
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                                  child: Text('Single'),
+                                ),
+                                Radio<String>(
+                                  value: 'P',
                                   groupValue: kawin,
                                   onChanged: (a) {
                                     if(a != null && a != kawin) {
@@ -601,7 +615,7 @@ class KaryawanControl extends GetxController {
                                 ),
                                 const Padding(
                                   padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                  child: Text('Single'),
+                                  child: Text('Single Parent'),
                                 ),
                               ],
                             );
@@ -715,33 +729,36 @@ class KaryawanControl extends GetxController {
                   label: 'NPWP',
                   controller: txtNomorPwp,
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('PTKP'),
-                      ),
-                      Expanded(
-                        child: GetBuilder<KaryawanControl>(
-                          builder: (_) {
-                            return AFwidget.comboField(
-                              value: ptkp.kode,
-                              label: '',
-                              onTap: () async {
-                                var a = await pilihPtkp(value: ptkp.id);
-                                if(a != null && a.value != ptkp.id) {
-                                  ptkp = Ptkp.fromMap(a.data!);
-                                  update();
-                                }
-                              },
-                            );
-                          },
+                Visibility(
+                  visible: false,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 150,
+                          padding: const EdgeInsets.only(right: 15),
+                          child: const Text('PTKP'),
                         ),
-                      ),
-                    ],
+                        Expanded(
+                          child: GetBuilder<KaryawanControl>(
+                            builder: (_) {
+                              return AFwidget.comboField(
+                                value: ptkp.kode,
+                                label: '',
+                                onTap: () async {
+                                  var a = await pilihPtkp(value: ptkp.id);
+                                  if(a != null && a.value != ptkp.id) {
+                                    ptkp = Ptkp.fromMap(a.data!);
+                                    update();
+                                  }
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Padding(
@@ -2093,7 +2110,7 @@ class KaryawanControl extends GetxController {
       if(txtTelepon.text.isEmpty) {
         throw 'Nomor telepon harus diisi';
       }
-      if(kawin == null) {
+      if(kawin == '') {
         throw 'Silakan isi status kawin';
       }
       if(kelamin == '') {
@@ -2110,7 +2127,7 @@ class KaryawanControl extends GetxController {
         alamatTinggal: txtAlamatTinggal.text,
         telepon: txtTelepon.text,
         email: txtEmail.text,
-        kawin: kawin ?? false,
+        kawin: kawin,
         kelamin: kelamin,
         nomorKk: txtNomorKk.text,
         nomorPaspor: txtNomorPaspor.text,
@@ -2173,7 +2190,7 @@ class KaryawanControl extends GetxController {
       if(txtTelepon.text.isEmpty) {
         throw 'Nomor telepon harus diisi';
       }
-      if(kawin == null) {
+      if(kawin == '') {
         throw 'Silakan isi status kawin';
       }
       if(staf == null) {
@@ -2197,7 +2214,7 @@ class KaryawanControl extends GetxController {
         alamatTinggal: txtAlamatTinggal.text,
         telepon: txtTelepon.text,
         email: txtEmail.text,
-        kawin: kawin ?? false,
+        kawin: kawin,
         kelamin: kelamin,
         nomorKk: txtNomorKk.text,
         nomorPaspor: txtNomorPaspor.text,
@@ -2277,6 +2294,7 @@ class KaryawanControl extends GetxController {
       Get.back();
       if(hasil.success) {
         loadKeluargas();
+        loadKaryawans();
         Get.back();
       }
       AFwidget.snackbar(hasil.message);
@@ -2319,6 +2337,7 @@ class KaryawanControl extends GetxController {
       Get.back();
       if(hasil.success) {
         loadKeluargas();
+        loadKaryawans();
         Get.back();
       }
       AFwidget.snackbar(hasil.message);
@@ -2340,6 +2359,7 @@ class KaryawanControl extends GetxController {
       Get.back();
       if(hasil.success) {
         loadKeluargas();
+        loadKaryawans();
         Get.back();
         Get.back();
       }
