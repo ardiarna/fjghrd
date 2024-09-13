@@ -1,7 +1,7 @@
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:fjghrd/controllers/auth_control.dart';
 import 'package:fjghrd/controllers/home_control.dart';
-import 'package:fjghrd/models/Potongan.dart';
+import 'package:fjghrd/models/potongan.dart';
 import 'package:fjghrd/models/hari_libur.dart';
 import 'package:fjghrd/models/karyawan.dart';
 import 'package:fjghrd/models/medical.dart';

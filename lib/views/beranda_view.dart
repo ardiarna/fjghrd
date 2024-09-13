@@ -100,9 +100,9 @@ class BerandaView extends StatelessWidget {
                       if(snap.hasData) {
                         if(snap.data != null) {
                           if(snap.data!.isNotEmpty) {
-                            var a = snap.data!.entries.map((e) {
+                            // var a = snap.data!.entries.map((e) {
 
-                            }).toList();
+                            // }).toList();
                             return Container();
                           }
                         }

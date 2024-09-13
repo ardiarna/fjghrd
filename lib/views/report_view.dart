@@ -27,7 +27,7 @@ class ReportView extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                 margin: const EdgeInsets.only(right: 40),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(7)),
+                    borderRadius: const BorderRadius.all(Radius.circular(7)),
                     color: Colors.green.shade700,
                 ),
                 child: const Text('REPORT',

@@ -452,8 +452,8 @@ class KaryawanForm extends StatelessWidget {
                                                       }
                                                     },
                                                   ),
-                                                  const Padding(
-                                                    padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                                                  const SizedBox(
+                                                    width: 90,
                                                     child: Text('Staf'),
                                                   ),
                                                   Radio<bool>(
@@ -466,8 +466,8 @@ class KaryawanForm extends StatelessWidget {
                                                       }
                                                     },
                                                   ),
-                                                  const Padding(
-                                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                                  const SizedBox(
+                                                    width: 110,
                                                     child: Text('Non Staf'),
                                                   ),
                                                 ],
@@ -658,8 +658,8 @@ class KaryawanForm extends StatelessWidget {
                                                       }
                                                     },
                                                   ),
-                                                  const Padding(
-                                                    padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                                                  const SizedBox(
+                                                    width: 90,
                                                     child: Text('Laki-laki'),
                                                   ),
                                                   Radio<String>(
@@ -672,8 +672,8 @@ class KaryawanForm extends StatelessWidget {
                                                       }
                                                     },
                                                   ),
-                                                  const Padding(
-                                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                                  const SizedBox(
+                                                    width: 110,
                                                     child: Text('Perempuan'),
                                                   ),
                                                 ],
@@ -708,8 +708,8 @@ class KaryawanForm extends StatelessWidget {
                                                       }
                                                     },
                                                   ),
-                                                  const Padding(
-                                                    padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                                                  const SizedBox(
+                                                    width: 90,
                                                     child: Text('Kawin'),
                                                   ),
                                                   Radio<String>(
@@ -722,8 +722,8 @@ class KaryawanForm extends StatelessWidget {
                                                       }
                                                     },
                                                   ),
-                                                  const Padding(
-                                                    padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                                                  const SizedBox(
+                                                    width: 110,
                                                     child: Text('Single'),
                                                   ),
                                                   Radio<String>(
@@ -736,8 +736,8 @@ class KaryawanForm extends StatelessWidget {
                                                       }
                                                     },
                                                   ),
-                                                  const Padding(
-                                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                                  const SizedBox(
+                                                    width: 110,
                                                     child: Text('Single Parent'),
                                                   ),
                                                 ],
