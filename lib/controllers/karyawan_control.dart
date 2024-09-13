@@ -1604,10 +1604,28 @@ class KaryawanControl extends GetxController {
                             );
                             if(a != null) {
                               txtPerjanjianTglAkhir.text = AFconvert.matYMD(a);
+                              update();
                             }
                           },
                         ),
-                      )
+                      ),
+                      GetBuilder<KaryawanControl>(
+                        builder: (_) {
+                          if(txtPerjanjianTglAkhir.text.isNotEmpty) {
+                            return Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: IconButton(
+                                onPressed: () {
+                                  txtPerjanjianTglAkhir.text = '';
+                                  update();
+                                },
+                                icon: const Icon(Icons.highlight_off),
+                              ),
+                            );
+                          }
+                          return Container();
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -1784,10 +1802,28 @@ class KaryawanControl extends GetxController {
                             );
                             if(a != null) {
                               txtPerjanjianTglAkhir.text = AFconvert.matYMD(a);
+                              update();
                             }
                           },
                         ),
-                      )
+                      ),
+                      GetBuilder<KaryawanControl>(
+                        builder: (_) {
+                          if(txtPerjanjianTglAkhir.text.isNotEmpty) {
+                            return Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: IconButton(
+                                onPressed: () {
+                                  txtPerjanjianTglAkhir.text = '';
+                                  update();
+                                },
+                                icon: const Icon(Icons.highlight_off),
+                              ),
+                            );
+                          }
+                          return Container();
+                        },
+                      ),
                     ],
                   ),
                 ),
