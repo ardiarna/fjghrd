@@ -1,16 +1,15 @@
 import 'package:fjghrd/controllers/karyawan_control.dart';
 import 'package:fjghrd/models/karyawan.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
-import 'package:fjghrd/views/calon_karyawan_view.dart';
-import 'package:fjghrd/views/mantan_karyawan_view.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
+import 'package:fjghrd/views/karyawan_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
-class KaryawanView extends StatelessWidget {
-  KaryawanView({super.key});
+class CalonKaryawanView extends StatelessWidget {
+  CalonKaryawanView({super.key});
 
   final KaryawanControl controller = Get.put(KaryawanControl());
 
@@ -18,7 +17,7 @@ class KaryawanView extends StatelessWidget {
     var now = DateTime.now();
     return List.generate(
       rowData.length,
-      (index) {
+          (index) {
         Duration d = now.difference(rowData[index].tanggalMasuk ?? now); // dalama hari
         int tahun = d.inDays ~/ 365; // Membagi dengan 365 untuk tahun
         int bulan = (d.inDays % 365) ~/ 30; // Menggunakan modulo 365, lalu dibagi dengan 30 untuk bulan
@@ -97,7 +96,7 @@ class KaryawanView extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: () {
-                  controller.ubahForm(rdrCtx.row.cells['id']!.value, 'Y');
+                  controller.ubahForm(rdrCtx.row.cells['id']!.value, 'P');
                 },
                 icon: const Icon(
                   Icons.edit_square,
@@ -307,7 +306,7 @@ class KaryawanView extends StatelessWidget {
         hide: true,
       ),
     ];
-    controller.loadKaryawans();
+    controller.loadCalonKaryawans();
     return Column(
       children: [
         Container(
@@ -320,13 +319,26 @@ class KaryawanView extends StatelessWidget {
           ),
           child: Row(
             children: [
+              IconButton(
+                onPressed: () {
+                  controller.homeControl.kontener = KaryawanView();
+                  controller.homeControl.update();
+                },
+                icon: const Icon(
+                  Icons.arrow_back_ios,
+                ),
+                iconSize: 25,
+                color: Colors.orange,
+                padding: const EdgeInsets.all(0),
+              ),
+              const SizedBox(width: 50),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                 decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(7)),
-                    color: Colors.brown
+                    color: Colors.green
                 ),
-                child: const Text('DATA KARYAWAN',
+                child: const Text('DATA CALON KARYAWAN',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -346,7 +358,7 @@ class KaryawanView extends StatelessWidget {
                         var a = await controller.pilihStaf(value: controller.cariStaf.value);
                         if(a != null && a.value != controller.cariStaf.value) {
                           controller.cariStaf = a;
-                          controller.loadKaryawans();
+                          controller.loadCalonKaryawans();
                         }
                       },
                     );
@@ -370,48 +382,12 @@ class KaryawanView extends StatelessWidget {
                         var a = await controller.pilihArea(value: controller.cariArea.value, withSemua: true);
                         if(a != null && a.value != controller.cariArea.value) {
                           controller.cariArea = a;
-                          controller.loadKaryawans();
+                          controller.loadCalonKaryawans();
                         }
                       },
                     );
                   },
                 ),
-              ),
-              const SizedBox(width: 40),
-              IconButton(
-                onPressed: () {
-                  controller.tambahForm(context);
-                },
-                icon: const Icon(
-                  Icons.add_circle,
-                ),
-                iconSize: 30,
-                color: Colors.blue,
-                padding: const EdgeInsets.all(0),
-              ),
-              const Spacer(),
-              OutlinedButton(
-                style: ButtonStyle(
-                  side: WidgetStateProperty.all<BorderSide>(const BorderSide(color: Colors.green)),
-                  foregroundColor: WidgetStateProperty.all<Color>(Colors.green),
-                ),
-                onPressed: () {
-                  controller.homeControl.kontener = CalonKaryawanView();
-                  controller.homeControl.update();
-                },
-                child: const Text('DATA CALON'),
-              ),
-              const SizedBox(width: 20),
-              OutlinedButton(
-                style: ButtonStyle(
-                  side: WidgetStateProperty.all<BorderSide>(const BorderSide(color: Colors.red)),
-                  foregroundColor: WidgetStateProperty.all<Color>(Colors.red),
-                ),
-                onPressed: () {
-                  controller.homeControl.kontener = MantanKaryawanView();
-                  controller.homeControl.update();
-                },
-                child: const Text('DATA EX KARYAWAN'),
               ),
             ],
           ),
@@ -422,7 +398,7 @@ class KaryawanView extends StatelessWidget {
               return PlutoGrid(
                 key: UniqueKey(),
                 columns: columns,
-                rows: _buildRows(controller.listKaryawan),
+                rows: _buildRows(controller.listCalonKaryawan),
                 columnGroups: columnGroups,
                 onChanged: (PlutoGridOnChangedEvent event) {},
                 onLoaded: (PlutoGridOnLoadedEvent event) {
@@ -430,13 +406,6 @@ class KaryawanView extends StatelessWidget {
                   for (int i = 2; i <= 21; i++) {
                     event.stateManager.autoFitColumn(context, columns[i]);
                   }
-                  // event.stateManager.setRowGroup(
-                  //   PlutoRowGroupByColumnDelegate(
-                  //     columns: [
-                  //       columns[0],
-                  //     ],
-                  //   ),
-                  // );
                 },
                 rowColorCallback: (rtx) {
                   switch(rtx.row.cells['status_kerja_id']!.value) {
@@ -467,7 +436,7 @@ class KaryawanView extends StatelessWidget {
                 spacing: 15,
                 runSpacing: 5,
                 alignment: WrapAlignment.end,
-                children: controller.totalKaryawanPerArea.entries.map((e) {
+                children: controller.totalCalonKaryawanPerArea.entries.map((e) {
                   return Text(
                     '💫${e.key}: ${e.value}',
                     style: TextStyle(

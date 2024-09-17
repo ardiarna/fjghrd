@@ -33,7 +33,7 @@ class Karyawan {
   Pendidikan pendidikan = Pendidikan();
   String pendidikanAlmamater;
   String pendidikanJurusan;
-  bool aktif;
+  String aktif;
   bool staf;
   String nomorKk;
   String nomorPaspor;
@@ -62,7 +62,7 @@ class Karyawan {
     this.kelamin = '',
     this.pendidikanAlmamater = '',
     this.pendidikanJurusan = '',
-    this.aktif = false,
+    this.aktif = '',
     this.staf = true,
     this.nomorKk = '',
     this.nomorPaspor = '',
@@ -91,7 +91,7 @@ class Karyawan {
       kelamin: AFconvert.keString(data['kelamin']),
       pendidikanAlmamater: AFconvert.keString(data['pendidikan_almamater']),
       pendidikanJurusan: AFconvert.keString(data['pendidikan_jurusan']),
-      aktif: AFconvert.keBool(data['aktif']),
+      aktif: AFconvert.keString(data['aktif']),
       staf: AFconvert.keBool(data['staf']),
       nomorKk: AFconvert.keString(data['nomor_kk']),
       nomorPaspor: AFconvert.keString(data['nomor_paspor']),
@@ -152,7 +152,7 @@ class Karyawan {
       'kelamin': kelamin,
       'pendidikan_almamater': pendidikanAlmamater,
       'pendidikan_jurusan': pendidikanJurusan,
-      'aktif': aktif ? 'Y' : 'N',
+      'aktif': aktif,
       'staf': staf ? 'Y' : 'N',
       'nomor_kk': nomorKk,
       'nomor_paspor': nomorPaspor,

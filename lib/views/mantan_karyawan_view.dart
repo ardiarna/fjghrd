@@ -93,7 +93,7 @@ class MantanKaryawanView extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: () {
-                  controller.ubahForm(rdrCtx.row.cells['id']!.value, false);
+                  controller.ubahForm(rdrCtx.row.cells['id']!.value, 'N');
                 },
                 icon: const Icon(
                   Icons.edit_square,
@@ -270,6 +270,19 @@ class MantanKaryawanView extends StatelessWidget {
           ),
           child: Row(
             children: [
+              IconButton(
+                onPressed: () {
+                  controller.homeControl.kontener = KaryawanView();
+                  controller.homeControl.update();
+                },
+                icon: const Icon(
+                  Icons.arrow_back_ios,
+                ),
+                iconSize: 25,
+                color: Colors.orange,
+                padding: const EdgeInsets.all(0),
+              ),
+              const SizedBox(width: 50),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                 decoration: const BoxDecoration(
@@ -302,18 +315,6 @@ class MantanKaryawanView extends StatelessWidget {
                     );
                   },
                 ),
-              ),
-              const Spacer(),
-              OutlinedButton(
-                style: ButtonStyle(
-                  side: WidgetStateProperty.all<BorderSide>(const BorderSide(color: Colors.green)),
-                  foregroundColor: WidgetStateProperty.all<Color>(Colors.green),
-                ),
-                onPressed: () {
-                  controller.homeControl.kontener = KaryawanView();
-                  controller.homeControl.update();
-                },
-                child: const Text('DATA GENERAL KARYAWAN'),
               ),
             ],
           ),

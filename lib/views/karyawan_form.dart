@@ -277,7 +277,7 @@ class KaryawanForm extends StatelessWidget {
       body: Column(
         children: [
           Container(
-            padding: const EdgeInsets.fromLTRB(50, 8, 20, 8),
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
             decoration: BoxDecoration(
               color: const Color(0xFFf2fbfe),
               border: Border.all(
@@ -310,6 +310,31 @@ class KaryawanForm extends StatelessWidget {
                     ),
                   ),
                 ),
+                const Spacer(),
+                GetBuilder<KaryawanControl>(
+                  builder: (_) {
+                    if(controller.aktif == 'Y') {
+                      return AFwidget.tombol(
+                        label: 'PHK',
+                        color: Colors.orange,
+                        onPressed: () {
+                          controller.tambahPhkForm(context);
+                        },
+                        minimumSize: const Size(120, 40),
+                      );
+                    }
+                    return Container();
+                  }
+                ),
+                const SizedBox(width: 25),
+                AFwidget.tombol(
+                  label: 'Hapus Data Karyawan',
+                  color: Colors.red,
+                  onPressed: () {
+                    controller.hapusForm();
+                  },
+                  minimumSize: const Size(120, 40),
+                ),
               ],
             ),
           ),
@@ -324,6 +349,7 @@ class KaryawanForm extends StatelessWidget {
                 children: [
                   Flexible(
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Expanded(
                           child: Scrollbar(
@@ -469,6 +495,56 @@ class KaryawanForm extends StatelessWidget {
                                                   const SizedBox(
                                                     width: 110,
                                                     child: Text('Non Staf'),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: 150,
+                                          padding: const EdgeInsets.only(right: 15),
+                                          child: const Text('Status Aktif'),
+                                        ),
+                                        Expanded(
+                                          child: GetBuilder<KaryawanControl>(
+                                            builder: (_) {
+                                              return Row(
+                                                children: [
+                                                  Radio<String>(
+                                                    value: 'Y',
+                                                    groupValue: controller.aktif,
+                                                    onChanged: (a) {
+                                                      if(a != null && a != controller.aktif) {
+                                                        controller.aktif = a;
+                                                        controller.update();
+                                                      }
+                                                    },
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 90,
+                                                    child: Text('Sudah'),
+                                                  ),
+                                                  Radio<String>(
+                                                    value: 'P',
+                                                    groupValue: controller.aktif,
+                                                    onChanged: (a) {
+                                                      if(a != null && a != controller.aktif) {
+                                                        controller.aktif = a;
+                                                        controller.update();
+                                                      }
+                                                    },
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 110,
+                                                    child: Text('Belum'),
                                                   ),
                                                 ],
                                               );
@@ -892,34 +968,11 @@ class KaryawanForm extends StatelessWidget {
                         Container(
                           color: Colors.white,
                           padding: const EdgeInsets.fromLTRB(0, 15, 20, 0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              AFwidget.tombol(
-                                label: 'Hapus Data',
-                                color: Colors.red,
-                                onPressed: () {
-                                  controller.hapusForm();
-                                },
-                                minimumSize: const Size(120, 40),
-                              ),
-                              const SizedBox(width: 25),
-                              AFwidget.tombol(
-                                label: 'PHK',
-                                color: Colors.orange,
-                                onPressed: () {
-                                  controller.tambahPhkForm(context);
-                                },
-                                minimumSize: const Size(120, 40),
-                              ),
-                              const Spacer(),
-                              AFwidget.tombol(
-                                label: 'Simpan Perubahan',
-                                color: Colors.blue,
-                                onPressed: controller.ubahData,
-                                minimumSize: const Size(120, 40),
-                              ),
-                            ],
+                          child: AFwidget.tombol(
+                            label: 'Simpan Perubahan',
+                            color: Colors.blue,
+                            onPressed: controller.ubahData,
+                            minimumSize: const Size(120, 40),
                           ),
                         ),
                       ],

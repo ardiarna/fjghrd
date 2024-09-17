@@ -125,6 +125,12 @@ class KaryawanRepository {
     );
   }
 
+  Future<Hasil> calonFindAll({String isStaf = '', String area = ''}) async {
+    return await AFdatabase.send(
+      url: 'karyawan?aktif=P&staf=$isStaf&area=$area&sort_by=tanggal_masuk&sort_order=asc',
+    );
+  }
+
   Future<Hasil> phkFindAll(String id) async {
     return await AFdatabase.send(
       url: 'karyawan/$id/phk?sort_by=tanggal_akhir&sort_order=asc',

@@ -40,6 +40,7 @@ class KaryawanControl extends GetxController {
 
   Karyawan current = Karyawan();
   List<Karyawan> listKaryawan = [];
+  List<Karyawan> listCalonKaryawan = [];
   List<Karyawan> listMantanKaryawan = [];
   List<Opsi> listAgama = [];
   List<Opsi> listArea = [];
@@ -58,6 +59,7 @@ class KaryawanControl extends GetxController {
   Opsi cariStaf = Opsi(value: 'Y', label: 'Staf');
   Opsi cariArea = Opsi(value: '', label: 'SEMUA');
   Map<String, int> totalKaryawanPerArea = {};
+  Map<String, int> totalCalonKaryawanPerArea = {};
 
   late TextEditingController txtId, txtNama, txtNik, txtTanggalMasuk, txtTanggalKeluar, txtNomorKk,
       txtNomorKtp, txtNomorPaspor, txtNomorPwp, txtTempatLahir, txtTanggalLahir, txtAlamatKtp,
@@ -80,6 +82,7 @@ class KaryawanControl extends GetxController {
 
   String kawin = '';
   String kelamin = '';
+  String aktif = '';
   bool? staf = true;
   String keluargaHubungan = '';
 
@@ -120,6 +123,33 @@ class KaryawanControl extends GetxController {
           totalKaryawanPerArea[k.area.nama] = totalKaryawanPerArea[k.area.nama]! + 1;
         } else {
           totalKaryawanPerArea[k.area.nama] = 1;
+        }
+      }
+      update();
+    } else {
+      AFwidget.snackbar(hasil.message);
+    }
+  }
+
+  Future<void> loadCalonKaryawans() async {
+    var hasil = await _repo.calonFindAll(isStaf: cariStaf.value, area: cariArea.value);
+    if (hasil.success) {
+      listCalonKaryawan.clear();
+      totalCalonKaryawanPerArea.clear();
+      for (var data in hasil.daftar) {
+        var k = Karyawan.fromMap(data);
+        listCalonKaryawan.add(k);
+        if(cariArea.value == '') {
+          if (totalCalonKaryawanPerArea.containsKey('TOTAL KARYAWAN')) {
+            totalCalonKaryawanPerArea['TOTAL KARYAWAN'] = totalCalonKaryawanPerArea['TOTAL KARYAWAN']! + 1;
+          } else {
+            totalCalonKaryawanPerArea['TOTAL KARYAWAN'] = 1;
+          }
+        }
+        if (totalCalonKaryawanPerArea.containsKey(k.area.nama)) {
+          totalCalonKaryawanPerArea[k.area.nama] = totalCalonKaryawanPerArea[k.area.nama]! + 1;
+        } else {
+          totalCalonKaryawanPerArea[k.area.nama] = 1;
         }
       }
       update();
@@ -232,6 +262,7 @@ class KaryawanControl extends GetxController {
     ptkp = Ptkp();
     kawin = '';
     kelamin = '';
+    aktif = '';
     staf = null;
     AFwidget.dialog(
       Container(
@@ -315,6 +346,56 @@ class KaryawanControl extends GetxController {
                                 const SizedBox(
                                   width: 110,
                                   child: Text('Non Staf'),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 150,
+                        padding: const EdgeInsets.only(right: 15),
+                        child: const Text('Status Aktif'),
+                      ),
+                      Expanded(
+                        child: GetBuilder<KaryawanControl>(
+                          builder: (_) {
+                            return Row(
+                              children: [
+                                Radio<String>(
+                                  value: 'Y',
+                                  groupValue: aktif,
+                                  onChanged: (a) {
+                                    if(a != null && a != aktif) {
+                                      aktif = a;
+                                      update();
+                                    }
+                                  },
+                                ),
+                                const SizedBox(
+                                  width: 90,
+                                  child: Text('Sudah'),
+                                ),
+                                Radio<String>(
+                                  value: 'P',
+                                  groupValue: aktif,
+                                  onChanged: (a) {
+                                    if(a != null && a != aktif) {
+                                      aktif = a;
+                                      update();
+                                    }
+                                  },
+                                ),
+                                const SizedBox(
+                                  width: 110,
+                                  child: Text('Belum'),
                                 ),
                               ],
                             );
@@ -811,11 +892,13 @@ class KaryawanControl extends GetxController {
     );
   }
 
-  void ubahForm(String id, bool isGeneral) {
-    if(isGeneral) {
-      current = listKaryawan.where((element) => element.id == id).first;
-    } else {
+  void ubahForm(String id, String statusAktif) {
+    if(statusAktif == 'P') {
+      current = listCalonKaryawan.where((element) => element.id == id).first;
+    } else if(statusAktif == 'N') {
       current = listMantanKaryawan.where((element) => element.id == id).first;
+    } else {
+      current = listKaryawan.where((element) => element.id == id).first;
     }
     txtId.text = current.id;
     txtNama.text = current.nama;
@@ -842,6 +925,7 @@ class KaryawanControl extends GetxController {
     ptkp = current.ptkp;
     kawin = current.kawin;
     kelamin = current.kelamin;
+    aktif = current.aktif;
     staf = current.staf;
     loadKeluargas();
     loadKontaks();
@@ -2125,6 +2209,9 @@ class KaryawanControl extends GetxController {
       if(staf == null) {
         throw 'Silakan pilih jenis karyawan (staf atau non staf)';
       }
+      if(aktif == '') {
+        throw 'Silakan pilih status aktif';
+      }
       if(txtNama.text.isEmpty) {
         throw 'Nama harus diisi';
       }
@@ -2170,7 +2257,7 @@ class KaryawanControl extends GetxController {
         nomorPwp: txtNomorPwp.text,
         pendidikanAlmamater: txtPendidikanAlmamater.text,
         pendidikanJurusan: txtPendidikanJurusan.text,
-        aktif: true,
+        aktif: aktif,
         staf: staf ?? true,
       );
       a.agama = agama;
@@ -2232,6 +2319,9 @@ class KaryawanControl extends GetxController {
       if(staf == null) {
         throw 'Silakan pilih jenis karyawan (staf atau non staf)';
       }
+      if(aktif == '') {
+        throw 'Silakan pilih status aktif';
+      }
       if(kelamin == '') {
         throw 'Silakan pilih jenis kelamin';
       }
@@ -2257,7 +2347,7 @@ class KaryawanControl extends GetxController {
         nomorPwp: txtNomorPwp.text,
         pendidikanAlmamater: txtPendidikanAlmamater.text,
         pendidikanJurusan: txtPendidikanJurusan.text,
-        aktif: true,
+        aktif: aktif,
         staf: staf ?? true,
       );
       a.agama = agama;
@@ -2273,6 +2363,8 @@ class KaryawanControl extends GetxController {
       Get.back();
       if(hasil.success) {
         loadKaryawans();
+        loadCalonKaryawans();
+        loadMantanKaryawans();
         Get.back();
       }
       AFwidget.snackbar(hasil.message);
