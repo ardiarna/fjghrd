@@ -38,28 +38,16 @@ class PtkpView extends StatelessWidget {
         enableContextMenu: false,
         enableDropToResize: false,
         renderer: (rdrCtx) {
-          return Row(
-            children: [
-              IconButton(
-                onPressed: () {
-                  controller.ubahForm(rdrCtx.row.cells['id']!.value);
-                },
-                icon: const Icon(
-                  Icons.edit_square,
-                ),
-                iconSize: 18,
-                color: Colors.green,
-                padding: const EdgeInsets.all(0),
-              ),
-              // Expanded(
-              //   child: Text(
-              //     rdrCtx.row.cells['id']!.value
-              //         .toString(),
-              //     maxLines: 1,
-              //     overflow: TextOverflow.ellipsis,
-              //   ),
-              // ),
-            ],
+          return IconButton(
+            onPressed: () {
+              controller.ubahForm(rdrCtx.row.cells['id']!.value);
+            },
+            icon: const Icon(
+              Icons.edit_square,
+            ),
+            iconSize: 18,
+            color: Colors.green,
+            padding: const EdgeInsets.all(0),
           );
         },
       ),

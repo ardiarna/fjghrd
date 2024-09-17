@@ -92,31 +92,16 @@ class CalonKaryawanView extends StatelessWidget {
           if(rdrCtx.row.cells['id']!.value == null) {
             return const Text('');
           }
-          return Row(
-            children: [
-              IconButton(
-                onPressed: () {
-                  controller.ubahForm(rdrCtx.row.cells['id']!.value, 'P');
-                },
-                icon: const Icon(
-                  Icons.edit_square,
-                ),
-                iconSize: 18,
-                color: Colors.green,
-                padding: const EdgeInsets.all(0),
-              ),
-              IconButton(
-                onPressed: () {
-                  controller.payrollView(rdrCtx.row.cells['id']!.value);
-                },
-                icon: const Icon(
-                  Icons.assignment_outlined,
-                ),
-                iconSize: 18,
-                color: Colors.lightBlueAccent,
-                padding: const EdgeInsets.all(0),
-              ),
-            ],
+          return IconButton(
+            onPressed: () {
+              controller.ubahForm(rdrCtx.row.cells['id']!.value, 'P');
+            },
+            icon: const Icon(
+              Icons.edit_square,
+            ),
+            iconSize: 18,
+            color: Colors.green,
+            padding: const EdgeInsets.all(0),
           );
         },
       ),

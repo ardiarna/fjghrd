@@ -390,7 +390,7 @@ class HomeView extends StatelessWidget {
     AFwidget.dialog(
       Container(
         width: 500,
-        height: 250,
+        height: 210,
         padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -420,7 +420,7 @@ class HomeView extends StatelessWidget {
               label: 'Email',
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 25, 0, 0),
+              padding: const EdgeInsets.fromLTRB(0, 35, 0, 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -546,7 +546,7 @@ class HomeView extends StatelessWidget {
               },
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 25, 0, 0),
+              padding: const EdgeInsets.fromLTRB(0, 35, 0, 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [

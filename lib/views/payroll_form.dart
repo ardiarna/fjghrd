@@ -173,20 +173,16 @@ class PayrollForm extends StatelessWidget {
           if(!isEdit) {
             return Container();
           }
-          return Row(
-            children: [
-              IconButton(
-                onPressed: () {
-                  controller.ubahDetilForm(rdrCtx.row.cells['id']!.value, context);
-                },
-                icon: const Icon(
-                  Icons.edit_square,
-                ),
-                iconSize: 18,
-                color: Colors.green,
-                padding: const EdgeInsets.all(0),
-              ),
-            ],
+          return IconButton(
+            onPressed: () {
+              controller.ubahDetilForm(rdrCtx.row.cells['id']!.value, context);
+            },
+            icon: const Icon(
+              Icons.edit_square,
+            ),
+            iconSize: 18,
+            color: Colors.green,
+            padding: const EdgeInsets.all(0),
           );
         },
       ),
