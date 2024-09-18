@@ -115,8 +115,8 @@ class StatusPhkControl extends GetxController {
     );
   }
 
-  void ubahForm(int idx) {
-    StatusPhk item = listStatusPhk[idx];
+  void ubahForm(String id) {
+    var item = listStatusPhk.where((element) => element.id == id).first;
     txtId.text = item.id;
     txtNama.text = item.nama;
     txtUrutan.text = item.urutan.toString();
@@ -193,7 +193,7 @@ class StatusPhkControl extends GetxController {
                   label: 'Hapus Data',
                   color: Colors.red,
                   onPressed: () {
-                    hapusForm(idx);
+                    hapusForm(item);
                   },
                 ),
                 AFwidget.tombol(
@@ -211,8 +211,7 @@ class StatusPhkControl extends GetxController {
     );
   }
 
-  void hapusForm(int idx) {
-    StatusPhk item = listStatusPhk[idx];
+  void hapusForm(StatusPhk item) {
     AFwidget.formHapus(
       label: 'status_phk ${item.nama}',
       aksi: () {

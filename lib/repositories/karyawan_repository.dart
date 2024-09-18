@@ -3,9 +3,9 @@ import 'package:fjghrd/utils/hasil.dart';
 
 class KaryawanRepository {
 
-  Future<Hasil> findAll({String isStaf = '', String area = ''}) async {
+  Future<Hasil> findAll({String isStaf = '', String area = '', String statusKerja = ''}) async {
     return await AFdatabase.send(
-      url: 'karyawan?aktif=Y&staf=$isStaf&area=$area&sort_by=tanggal_masuk&sort_order=asc',
+      url: 'karyawan?aktif=Y&staf=$isStaf&area=$area&status_kerja=$statusKerja&sort_by=tanggal_masuk&sort_order=asc',
     );
   }
 

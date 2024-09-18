@@ -115,8 +115,8 @@ class AgamaControl extends GetxController {
     );
   }
 
-  void ubahForm(int idx) {
-    Agama item = listAgama[idx];
+  void ubahForm(String id) {
+    var item = listAgama.where((element) => element.id == id).first;
     txtId.text = item.id;
     txtNama.text = item.nama;
     txtUrutan.text = item.urutan.toString();
@@ -193,7 +193,7 @@ class AgamaControl extends GetxController {
                   label: 'Hapus Data',
                   color: Colors.red,
                   onPressed: () {
-                    hapusForm(idx);
+                    hapusForm(item);
                   },
                 ),
                 AFwidget.tombol(
@@ -211,8 +211,7 @@ class AgamaControl extends GetxController {
     );
   }
 
-  void hapusForm(int idx) {
-    Agama item = listAgama[idx];
+  void hapusForm(Agama item) {
     AFwidget.formHapus(
       label: 'agama ${item.nama}',
       aksi: () {

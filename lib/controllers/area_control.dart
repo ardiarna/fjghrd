@@ -12,7 +12,7 @@ class AreaControl extends GetxController {
 
   List<Area> listArea = [];
 
-  late TextEditingController txtId, txtNama, txtUrutan;
+  late TextEditingController txtId, txtKode, txtNama, txtUrutan;
 
   Future<void> loadAreas() async {
     var hasil = await _repo.findAll();
@@ -29,6 +29,7 @@ class AreaControl extends GetxController {
 
   void tambahForm() {
     txtId.text = 'Otomatis';
+    txtKode.text = '';
     txtNama.text = '';
     txtUrutan.text = '';
     AFwidget.dialog(
@@ -64,6 +65,22 @@ class AreaControl extends GetxController {
             //     )
             //   ],
             // ),
+            const SizedBox(height: 11),
+            Row(
+              children: [
+                Container(
+                  width: 100,
+                  padding: const EdgeInsets.only(right: 15),
+                  child: const Text('Kode'),
+                ),
+                Expanded(
+                  child: AFwidget.textField(
+                    marginTop: 0,
+                    controller: txtKode,
+                  ),
+                )
+              ],
+            ),
             const SizedBox(height: 11),
             Row(
               children: [
@@ -115,9 +132,10 @@ class AreaControl extends GetxController {
     );
   }
 
-  void ubahForm(int idx) {
-    Area item = listArea[idx];
+  void ubahForm(String id) {
+    var item = listArea.where((element) => element.id == id).first;
     txtId.text = item.id;
+    txtKode.text = item.kode;
     txtNama.text = item.nama;
     txtUrutan.text = item.urutan.toString();
     AFwidget.dialog(
@@ -159,6 +177,22 @@ class AreaControl extends GetxController {
                 Container(
                   width: 100,
                   padding: const EdgeInsets.only(right: 15),
+                  child: const Text('Kode'),
+                ),
+                Expanded(
+                  child: AFwidget.textField(
+                    marginTop: 0,
+                    controller: txtKode,
+                  ),
+                )
+              ],
+            ),
+            const SizedBox(height: 11),
+            Row(
+              children: [
+                Container(
+                  width: 100,
+                  padding: const EdgeInsets.only(right: 15),
                   child: const Text('Nama'),
                 ),
                 Expanded(
@@ -193,7 +227,7 @@ class AreaControl extends GetxController {
                   label: 'Hapus Data',
                   color: Colors.red,
                   onPressed: () {
-                    hapusForm(idx);
+                    hapusForm(item);
                   },
                 ),
                 AFwidget.tombol(
@@ -211,8 +245,7 @@ class AreaControl extends GetxController {
     );
   }
 
-  void hapusForm(int idx) {
-    Area item = listArea[idx];
+  void hapusForm(Area item) {
     AFwidget.formHapus(
       label: 'area ${item.nama}',
       aksi: () {
@@ -223,6 +256,9 @@ class AreaControl extends GetxController {
 
   Future<void> tambahData() async {
     try {
+      if(txtKode.text.isEmpty) {
+        throw 'Kode harus diisi';
+      }
       if(txtNama.text.isEmpty) {
         throw 'Nama harus diisi';
       }
@@ -231,6 +267,7 @@ class AreaControl extends GetxController {
       }
 
       var a = Area(
+        kode: txtKode.text,
         nama: txtNama.text,
         urutan: AFconvert.keInt(txtUrutan.text),
       );
@@ -253,6 +290,9 @@ class AreaControl extends GetxController {
       if(txtId.text.isEmpty) {
         throw 'ID harus diisi';
       }
+      if(txtKode.text.isEmpty) {
+        throw 'Kode harus diisi';
+      }
       if(txtNama.text.isEmpty) {
         throw 'Nama harus diisi';
       }
@@ -262,6 +302,7 @@ class AreaControl extends GetxController {
 
       var a = Area(
         id: txtId.text,
+        kode: txtKode.text,
         nama: txtNama.text,
         urutan: AFconvert.keInt(txtUrutan.text),
       );
@@ -301,6 +342,7 @@ class AreaControl extends GetxController {
   @override
   void onInit() {
     txtId = TextEditingController();
+    txtKode = TextEditingController();
     txtNama = TextEditingController();
     txtUrutan = TextEditingController();
     super.onInit();
@@ -309,6 +351,7 @@ class AreaControl extends GetxController {
   @override
   void onClose() {
     txtId.dispose();
+    txtKode.dispose();
     txtNama.dispose();
     txtUrutan.dispose();
     super.onClose();

@@ -115,8 +115,8 @@ class JabatanControl extends GetxController {
     );
   }
 
-  void ubahForm(int idx) {
-    Jabatan item = listJabatan[idx];
+  void ubahForm(String id) {
+    Jabatan item = listJabatan.where((element) => element.id == id).first;
     txtId.text = item.id;
     txtNama.text = item.nama;
     txtUrutan.text = item.urutan.toString();
@@ -193,7 +193,7 @@ class JabatanControl extends GetxController {
                   label: 'Hapus Data',
                   color: Colors.red,
                   onPressed: () {
-                    hapusForm(idx);
+                    hapusForm(item);
                   },
                 ),
                 AFwidget.tombol(
@@ -211,8 +211,7 @@ class JabatanControl extends GetxController {
     );
   }
 
-  void hapusForm(int idx) {
-    Jabatan item = listJabatan[idx];
+  void hapusForm(Jabatan item) {
     AFwidget.formHapus(
       label: 'jabatan ${item.nama}',
       aksi: () {

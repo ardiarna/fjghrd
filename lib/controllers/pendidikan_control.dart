@@ -115,8 +115,8 @@ class PendidikanControl extends GetxController {
     );
   }
 
-  void ubahForm(int idx) {
-    Pendidikan item = listPendidikan[idx];
+  void ubahForm(String id) {
+    var item = listPendidikan.where((element) => element.id == id).first;
     txtId.text = item.id;
     txtNama.text = item.nama;
     txtUrutan.text = item.urutan.toString();
@@ -193,7 +193,7 @@ class PendidikanControl extends GetxController {
                   label: 'Hapus Data',
                   color: Colors.red,
                   onPressed: () {
-                    hapusForm(idx);
+                    hapusForm(item);
                   },
                 ),
                 AFwidget.tombol(
@@ -211,8 +211,7 @@ class PendidikanControl extends GetxController {
     );
   }
 
-  void hapusForm(int idx) {
-    Pendidikan item = listPendidikan[idx];
+  void hapusForm(Pendidikan item) {
     AFwidget.formHapus(
       label: 'pendidikan ${item.nama}',
       aksi: () {

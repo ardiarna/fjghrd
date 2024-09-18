@@ -40,7 +40,7 @@ class DivisiView extends StatelessWidget {
         renderer: (rdrCtx) {
           return IconButton(
             onPressed: () {
-              controller.ubahForm(rdrCtx.rowIdx);
+              controller.ubahForm(rdrCtx.row.cells['id']!.value);
             },
             icon: const Icon(
               Icons.edit_square,
@@ -64,7 +64,7 @@ class DivisiView extends StatelessWidget {
         field: 'nama',
         type: PlutoColumnType.text(),
         readOnly: true,
-        minWidth: 180,
+        minWidth: 230,
         backgroundColor: Colors.brown.shade100,
       ),
       PlutoColumn(
@@ -139,6 +139,7 @@ class DivisiView extends StatelessWidget {
                   onLoaded: (PlutoGridOnLoadedEvent event) {
                     event.stateManager.setShowColumnFilter(true);
                     event.stateManager.autoFitColumn(context, columns[1]);
+                    event.stateManager.autoFitColumn(context, columns[2]);
                   },
                   configuration: AFplutogridConfig.configSatu(),
                 );

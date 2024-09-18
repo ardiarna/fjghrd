@@ -39,7 +39,7 @@ class StatusKerjaView extends StatelessWidget {
         renderer: (rdrCtx) {
           return IconButton(
             onPressed: () {
-              controller.ubahForm(rdrCtx.rowIdx);
+              controller.ubahForm(rdrCtx.row.cells['id']!.value);
             },
             icon: const Icon(
               Icons.edit_square,

@@ -299,12 +299,12 @@ class MantanKaryawanView extends StatelessWidget {
                 child: GetBuilder<KaryawanControl>(
                   builder: (_) {
                     return AFwidget.comboField(
-                      value: controller.cariStaf.label,
+                      value: controller.filterStaf.label,
                       label: '',
                       onTap: () async {
-                        var a = await controller.pilihStaf(value: controller.cariStaf.value);
-                        if(a != null && a.value != controller.cariStaf.value) {
-                          controller.cariStaf = a;
+                        var a = await controller.pilihStaf(value: controller.filterStaf.value);
+                        if(a != null && a.value != controller.filterStaf.value) {
+                          controller.filterStaf = a;
                           controller.loadMantanKaryawans();
                         }
                       },

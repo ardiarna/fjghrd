@@ -115,8 +115,8 @@ class StatusKerjaControl extends GetxController {
     );
   }
 
-  void ubahForm(int idx) {
-    StatusKerja item = listStatusKerja[idx];
+  void ubahForm(String id) {
+    var item = listStatusKerja.where((element) => element.id == id).first;
     txtId.text = item.id;
     txtNama.text = item.nama;
     txtUrutan.text = item.urutan.toString();
@@ -193,7 +193,7 @@ class StatusKerjaControl extends GetxController {
                   label: 'Hapus Data',
                   color: Colors.red,
                   onPressed: () {
-                    hapusForm(idx);
+                    hapusForm(item);
                   },
                 ),
                 AFwidget.tombol(
@@ -211,8 +211,7 @@ class StatusKerjaControl extends GetxController {
     );
   }
 
-  void hapusForm(int idx) {
-    StatusKerja item = listStatusKerja[idx];
+  void hapusForm(StatusKerja item) {
     AFwidget.formHapus(
       label: 'status_kerja ${item.nama}',
       aksi: () {

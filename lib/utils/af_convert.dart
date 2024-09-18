@@ -105,6 +105,11 @@ abstract class AFconvert {
     return nilai != null ? mat.format(nilai) : '';
   }
 
+  static String matMD(DateTime? nilai) {
+    final mat = DateFormat('MM-dd');
+    return nilai != null ? mat.format(nilai) : '';
+  }
+
   static String matDMYtoYMD(String nilai) {
     List<String> tanggal = nilai.split('-');
     return '${tanggal[2]}-${tanggal[1]}-${tanggal[0]}';

@@ -16,6 +16,7 @@ class AreaView extends StatelessWidget {
       (index) => PlutoRow(
         cells: {
           'id': PlutoCell(value: rowData[index].id),
+          'kode': PlutoCell(value: rowData[index].kode),
           'nama': PlutoCell(value: rowData[index].nama),
           'urutan': PlutoCell(value: rowData[index].urutan),
         },
@@ -39,7 +40,7 @@ class AreaView extends StatelessWidget {
         renderer: (rdrCtx) {
           return IconButton(
             onPressed: () {
-              controller.ubahForm(rdrCtx.rowIdx);
+              controller.ubahForm(rdrCtx.row.cells['id']!.value);
             },
             icon: const Icon(
               Icons.edit_square,
@@ -51,11 +52,19 @@ class AreaView extends StatelessWidget {
         },
       ),
       PlutoColumn(
+        title: 'Kode',
+        field: 'kode',
+        type: PlutoColumnType.text(),
+        readOnly: true,
+        width: 150,
+        backgroundColor: Colors.brown.shade100,
+      ),
+      PlutoColumn(
         title: 'Nama',
         field: 'nama',
         type: PlutoColumnType.text(),
         readOnly: true,
-        minWidth: 180,
+        minWidth: 250,
         backgroundColor: Colors.brown.shade100,
       ),
       PlutoColumn(
@@ -130,6 +139,7 @@ class AreaView extends StatelessWidget {
                   onLoaded: (PlutoGridOnLoadedEvent event) {
                     event.stateManager.setShowColumnFilter(true);
                     event.stateManager.autoFitColumn(context, columns[1]);
+                    event.stateManager.autoFitColumn(context, columns[2]);
                   },
                   configuration: AFplutogridConfig.configSatu(),
                 );

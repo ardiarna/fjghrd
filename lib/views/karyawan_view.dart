@@ -297,6 +297,7 @@ class KaryawanView extends StatelessWidget {
         readOnly: true,
         minWidth: 180,
         backgroundColor: Colors.brown.shade100,
+        enableFilterMenuItem: false,
       ),
       PlutoColumn(
         title: '',
@@ -335,49 +336,6 @@ class KaryawanView extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 20),
-              SizedBox(
-                width: 200,
-                child: GetBuilder<KaryawanControl>(
-                  builder: (_) {
-                    return AFwidget.comboField(
-                      value: controller.cariStaf.label,
-                      label: '',
-                      onTap: () async {
-                        var a = await controller.pilihStaf(value: controller.cariStaf.value);
-                        if(a != null && a.value != controller.cariStaf.value) {
-                          controller.cariStaf = a;
-                          controller.loadKaryawans();
-                        }
-                      },
-                    );
-                  },
-                ),
-              ),
-              const Padding(
-                padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
-                child: Text('Area: ',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ),
-              SizedBox(
-                width: 300,
-                child: GetBuilder<KaryawanControl>(
-                  builder: (_) {
-                    return AFwidget.comboField(
-                      value: controller.cariArea.label,
-                      label: '',
-                      onTap: () async {
-                        var a = await controller.pilihArea(value: controller.cariArea.value, withSemua: true);
-                        if(a != null && a.value != controller.cariArea.value) {
-                          controller.cariArea = a;
-                          controller.loadKaryawans();
-                        }
-                      },
-                    );
-                  },
-                ),
-              ),
-              const SizedBox(width: 40),
               IconButton(
                 onPressed: () {
                   controller.tambahForm(context);
@@ -389,6 +347,73 @@ class KaryawanView extends StatelessWidget {
                 color: Colors.blue,
                 padding: const EdgeInsets.all(0),
               ),
+              const SizedBox(width: 20),
+              SizedBox(
+                width: 190,
+                child: GetBuilder<KaryawanControl>(
+                  builder: (_) {
+                    return AFwidget.comboField(
+                      value: controller.filterStaf.label,
+                      label: '',
+                      onTap: () async {
+                        var a = await controller.pilihStaf(value: controller.filterStaf.value);
+                        if(a != null && a.value != controller.filterStaf.value) {
+                          controller.filterStaf = a;
+                          controller.loadKaryawans();
+                        }
+                      },
+                    );
+                  },
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                child: Text('Area: ',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              SizedBox(
+                width: 250,
+                child: GetBuilder<KaryawanControl>(
+                  builder: (_) {
+                    return AFwidget.comboField(
+                      value: controller.filterArea.label,
+                      label: '',
+                      onTap: () async {
+                        var a = await controller.pilihArea(value: controller.filterArea.value, withSemua: true);
+                        if(a != null && a.value != controller.filterArea.value) {
+                          controller.filterArea = a;
+                          controller.loadKaryawans();
+                        }
+                      },
+                    );
+                  },
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                child: Text('Status: ',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ),
+              SizedBox(
+                width: 200,
+                child: GetBuilder<KaryawanControl>(
+                  builder: (_) {
+                    return AFwidget.comboField(
+                      value: controller.filterStatusKerja.label,
+                      label: '',
+                      onTap: () async {
+                        var a = await controller.pilihStatusKerja(value: controller.filterStatusKerja.value, withSemua: true);
+                        if(a != null && a.value != controller.filterStatusKerja.value) {
+                          controller.filterStatusKerja = a;
+                          controller.loadKaryawans();
+                        }
+                      },
+                    );
+                  },
+                ),
+              ),
               const Spacer(),
               OutlinedButton(
                 style: ButtonStyle(
@@ -399,7 +424,7 @@ class KaryawanView extends StatelessWidget {
                   controller.homeControl.kontener = CalonKaryawanView();
                   controller.homeControl.update();
                 },
-                child: const Text('DATA CALON'),
+                child: const Text('CALON'),
               ),
               const SizedBox(width: 20),
               OutlinedButton(
@@ -411,7 +436,7 @@ class KaryawanView extends StatelessWidget {
                   controller.homeControl.kontener = MantanKaryawanView();
                   controller.homeControl.update();
                 },
-                child: const Text('DATA EX KARYAWAN'),
+                child: const Text('EX KARYAWAN'),
               ),
             ],
           ),
@@ -456,31 +481,152 @@ class KaryawanView extends StatelessWidget {
           ),
         ),
         Container(
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+          padding: const EdgeInsets.fromLTRB(20, 10, 0, 10),
           width: double.infinity,
           decoration: const BoxDecoration(
             color: Colors.white,
           ),
-          child: GetBuilder<KaryawanControl>(
-            builder: (_) {
-              return Wrap(
-                spacing: 15,
-                runSpacing: 5,
-                alignment: WrapAlignment.end,
-                children: controller.totalKaryawanPerArea.entries.map((e) {
-                  return Text(
-                    '💫${e.key}: ${e.value}',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: e.key == 'TOTAL KARYAWAN' ? FontWeight.bold : FontWeight.normal,
-                      color: e.key == 'TOTAL KARYAWAN' ? Colors.blue : Colors.black54,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Flexible(
+                child: GetBuilder<KaryawanControl>(
+                  builder: (_) {
+                    if(controller.listUlangTahun.isEmpty) {
+                      return Container();
+                    }
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'BERULANG TAHUN HARI INI: ',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.green.shade300,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Wrap(
+                          spacing: 15,
+                          children: controller.listUlangTahun.map((e) {
+                            return Text(
+                              '🎂${e.nama} (${AFconvert.matDate(e.tanggalLahir)})',
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: Colors.green.shade500,
+                              ),
+                            );
+                          }).toList(),
+                        ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(left: 15),
+                constraints: const BoxConstraints(
+                  minWidth: 720,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    GetBuilder<KaryawanControl>(
+                      builder: (_) {
+                        List<Widget> widgets = [];
+                        for(var a in controller.listStatusKerja) {
+                          if (controller.totalKaryawanPerStatuskerjaPerArea.containsKey(a.label)) {
+                            var areas = controller.totalKaryawanPerStatuskerjaPerArea[a.label]!;
+                            List<Widget> areaWidgets = [];
+                            areaWidgets.add(
+                              SizedBox(
+                                width: 220,
+                                child: Text('🟥${a.label}: ${areas['TOTAL KARYAWAN'] ?? 0}',
+                                  style: const TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                              ),
+                            );
+                            for (var op in controller.listArea) {
+                              String kode = op.data!['kode'];
+                              areaWidgets.add(
+                                SizedBox(
+                                  width: 100,
+                                  child: Text(
+                                    '$kode: ${areas[kode] ?? 0}',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.red.shade300,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }
+                            widgets.add(
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: areaWidgets,
+                              ),
+                            );
+                          }
+                        }
+                        return Column(
+                          children: widgets,
+                        );
+                      },
                     ),
-                  );
-                }).toList(),
-              );
-            },
+                    const SizedBox(height: 5),
+                    GetBuilder<KaryawanControl>(
+                      builder: (_) {
+                        List<Widget> areaWidgets = [];
+                        areaWidgets.add(
+                          SizedBox(
+                            width: 220,
+                            child: Text(
+                              '🟥TOTAL KARYAWAN: ${controller.totalKaryawanPerArea['TOTAL KARYAWAN'] ?? 0}',
+                              style: const TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.red,
+                              ),
+                            ),
+                          ),
+                        );
+                        for (var op in controller.listArea) {
+                          String kode = op.data!['kode'];
+                          areaWidgets.add(
+                            SizedBox(
+                              width: 100,
+                              child: Text(
+                                '$kode: ${controller.totalKaryawanPerArea[kode] ?? 0}',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.red.shade300,
+                                ),
+                              ),
+                            ),
+                          );
+                        }
+                        return Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: areaWidgets,
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        )
+        ),
       ],
     );
   }

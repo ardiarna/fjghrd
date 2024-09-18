@@ -42,6 +42,7 @@ class KaryawanControl extends GetxController {
   List<Karyawan> listKaryawan = [];
   List<Karyawan> listCalonKaryawan = [];
   List<Karyawan> listMantanKaryawan = [];
+  List<Karyawan> listUlangTahun = [];
   List<Opsi> listAgama = [];
   List<Opsi> listArea = [];
   List<Opsi> listDivisi = [];
@@ -56,10 +57,12 @@ class KaryawanControl extends GetxController {
   List<TimelineMasakerja> listTimelineMasakerja = [];
   List<Payroll> listPayroll = [];
 
-  Opsi cariStaf = Opsi(value: 'Y', label: 'Staf');
-  Opsi cariArea = Opsi(value: '', label: 'SEMUA');
+  Opsi filterStaf = Opsi(value: 'Y', label: 'STAF');
+  Opsi filterArea = Opsi(value: '', label: 'SEMUA');
+  Opsi filterStatusKerja = Opsi(value: '', label: 'SEMUA');
   Map<String, int> totalKaryawanPerArea = {};
   Map<String, int> totalCalonKaryawanPerArea = {};
+  Map<String, Map<String, int>> totalKaryawanPerStatuskerjaPerArea = {};
 
   late TextEditingController txtId, txtNama, txtNik, txtTanggalMasuk, txtTanggalKeluar, txtNomorKk,
       txtNomorKtp, txtNomorPaspor, txtNomorPwp, txtTempatLahir, txtTanggalLahir, txtAlamatKtp,
@@ -105,25 +108,46 @@ class KaryawanControl extends GetxController {
   };
 
   Future<void> loadKaryawans() async {
-    var hasil = await _repo.findAll(isStaf: cariStaf.value, area: cariArea.value);
+    var hasil = await _repo.findAll(
+      isStaf: filterStaf.value,
+      area: filterArea.value,
+      statusKerja: filterStatusKerja.value,
+    );
     if (hasil.success) {
       listKaryawan.clear();
+      listUlangTahun.clear();
       totalKaryawanPerArea.clear();
+      totalKaryawanPerStatuskerjaPerArea.clear();
+      String hariUltah = AFconvert.matMD(_now);
       for (var data in hasil.daftar) {
         var k = Karyawan.fromMap(data);
         listKaryawan.add(k);
-        if(cariArea.value == '') {
-          if (totalKaryawanPerArea.containsKey('TOTAL KARYAWAN')) {
-            totalKaryawanPerArea['TOTAL KARYAWAN'] = totalKaryawanPerArea['TOTAL KARYAWAN']! + 1;
-          } else {
-            totalKaryawanPerArea['TOTAL KARYAWAN'] = 1;
-          }
+
+        if(AFconvert.matMD(k.tanggalLahir) == hariUltah) {
+          listUlangTahun.add(k);
         }
-        if (totalKaryawanPerArea.containsKey(k.area.nama)) {
-          totalKaryawanPerArea[k.area.nama] = totalKaryawanPerArea[k.area.nama]! + 1;
+
+        if (totalKaryawanPerArea.containsKey('TOTAL KARYAWAN')) {
+          totalKaryawanPerArea['TOTAL KARYAWAN'] = totalKaryawanPerArea['TOTAL KARYAWAN']! + 1;
         } else {
-          totalKaryawanPerArea[k.area.nama] = 1;
+          totalKaryawanPerArea['TOTAL KARYAWAN'] = 1;
         }
+        if (totalKaryawanPerArea.containsKey(k.area.kode)) {
+          totalKaryawanPerArea[k.area.kode] = totalKaryawanPerArea[k.area.kode]! + 1;
+        } else {
+          totalKaryawanPerArea[k.area.kode] = 1;
+        }
+
+        if (!totalKaryawanPerStatuskerjaPerArea.containsKey(k.statusKerja.nama)) {
+          totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama] = {};
+          totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]!['TOTAL KARYAWAN'] = 0;
+        }
+        if (totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]!.containsKey(k.area.kode)) {
+          totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]![k.area.kode] = totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]![k.area.kode]! + 1;
+        } else {
+          totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]![k.area.kode] = 1;
+        }
+        totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]!['TOTAL KARYAWAN'] = totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]!['TOTAL KARYAWAN']! + 1;
       }
       update();
     } else {
@@ -132,24 +156,24 @@ class KaryawanControl extends GetxController {
   }
 
   Future<void> loadCalonKaryawans() async {
-    var hasil = await _repo.calonFindAll(isStaf: cariStaf.value, area: cariArea.value);
+    var hasil = await _repo.calonFindAll(isStaf: filterStaf.value, area: filterArea.value);
     if (hasil.success) {
       listCalonKaryawan.clear();
       totalCalonKaryawanPerArea.clear();
       for (var data in hasil.daftar) {
         var k = Karyawan.fromMap(data);
         listCalonKaryawan.add(k);
-        if(cariArea.value == '') {
+        if(filterArea.value == '') {
           if (totalCalonKaryawanPerArea.containsKey('TOTAL KARYAWAN')) {
             totalCalonKaryawanPerArea['TOTAL KARYAWAN'] = totalCalonKaryawanPerArea['TOTAL KARYAWAN']! + 1;
           } else {
             totalCalonKaryawanPerArea['TOTAL KARYAWAN'] = 1;
           }
         }
-        if (totalCalonKaryawanPerArea.containsKey(k.area.nama)) {
-          totalCalonKaryawanPerArea[k.area.nama] = totalCalonKaryawanPerArea[k.area.nama]! + 1;
+        if (totalCalonKaryawanPerArea.containsKey(k.area.kode)) {
+          totalCalonKaryawanPerArea[k.area.kode] = totalCalonKaryawanPerArea[k.area.kode]! + 1;
         } else {
-          totalCalonKaryawanPerArea[k.area.nama] = 1;
+          totalCalonKaryawanPerArea[k.area.kode] = 1;
         }
       }
       update();
@@ -159,7 +183,7 @@ class KaryawanControl extends GetxController {
   }
 
   Future<void> loadMantanKaryawans() async {
-    var hasil = await _repo.mantanFindAll(isStaf: cariStaf.value);
+    var hasil = await _repo.mantanFindAll(isStaf: filterStaf.value);
     if (hasil.success) {
       listMantanKaryawan.clear();
       for (var data in hasil.daftar) {
@@ -2904,9 +2928,13 @@ class KaryawanControl extends GetxController {
     return a;
   }
 
-  Future<Opsi?> pilihStatusKerja({String value = ''}) async {
+  Future<Opsi?> pilihStatusKerja({String value = '', bool withSemua = false}) async {
+    List<Opsi> list = [...listStatusKerja];
+    if(withSemua) {
+      list.add(Opsi(value: '', label: 'SEMUA'));
+    }
     var a = await AFcombobox.bottomSheet(
-      listOpsi: listStatusKerja,
+      listOpsi: list,
       valueSelected: value,
       judul: 'Pilih Status Karyawan',
     );
@@ -2925,9 +2953,9 @@ class KaryawanControl extends GetxController {
   Future<Opsi?> pilihStaf({String value = ''}) async {
     var a = await AFcombobox.bottomSheet(
       listOpsi: [
-        Opsi(value: 'Y', label: 'Staf'),
-        Opsi(value: 'N', label: 'Non Staf'),
-        Opsi(value: '', label: 'Staf & Non Staf'),
+        Opsi(value: 'Y', label: 'STAF'),
+        Opsi(value: 'N', label: 'NON STAF'),
+        Opsi(value: '', label: 'STAF & NON STAF'),
       ],
       valueSelected: value,
       judul: 'Pilih Jenis Karyawan',

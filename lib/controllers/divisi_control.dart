@@ -132,8 +132,8 @@ class DivisiControl extends GetxController {
     );
   }
 
-  void ubahForm(int idx) {
-    Divisi item = listDivisi[idx];
+  void ubahForm(String id) {
+    var item = listDivisi.where((element) => element.id == id).first;
     txtId.text = item.id;
     txtKode.text = item.kode;
     txtNama.text = item.nama;
@@ -227,7 +227,7 @@ class DivisiControl extends GetxController {
                   label: 'Hapus Data',
                   color: Colors.red,
                   onPressed: () {
-                    hapusForm(idx);
+                    hapusForm(item);
                   },
                 ),
                 AFwidget.tombol(
@@ -245,8 +245,7 @@ class DivisiControl extends GetxController {
     );
   }
 
-  void hapusForm(int idx) {
-    Divisi item = listDivisi[idx];
+  void hapusForm(Divisi item) {
     AFwidget.formHapus(
       label: 'divisi ${item.nama}',
       aksi: () {
