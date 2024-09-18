@@ -1,25 +1,18 @@
-import 'package:fjghrd/repositories/karyawan_repository.dart';
+import 'package:fjghrd/controllers/karyawan_control.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../repositories/payroll_repository.dart';
 
 class BerandaView extends StatelessWidget {
   BerandaView({super.key});
 
-  final _now = DateTime.now();
+  final KaryawanControl karyawanControl = Get.put(KaryawanControl());
 
-  Future<Map<String, dynamic>> getKaryawan() async {
-    Map<String, dynamic> rekap = {};
-    final KaryawanRepository karyawanRepo = KaryawanRepository();
-    var hasil = await karyawanRepo.rekapAreaKelamin();
-    if(hasil.success) {
-      rekap = hasil.data;
-    }
-    return rekap;
-  }
+  final _now = DateTime.now();
 
   Future<Map<int, double>> getPayrolls() async {
     Map<int, double> rekap = {};
@@ -86,6 +79,7 @@ class BerandaView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    karyawanControl.loadKaryawans();
     return Column(
       children: [
         Expanded(
@@ -93,22 +87,215 @@ class BerandaView extends StatelessWidget {
             children: [
               Expanded(
                 child: Container(
-                  padding: const EdgeInsets.fromLTRB(0, 30, 30, 10),
-                  child: FutureBuilder<Map<String, dynamic>>(
-                    future: getKaryawan(),
-                    builder: (_, snap) {
-                      if(snap.hasData) {
-                        if(snap.data != null) {
-                          if(snap.data!.isNotEmpty) {
-                            // var a = snap.data!.entries.map((e) {
+                  padding: const EdgeInsets.all(20),
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/line-blue.png'),
+                      alignment: Alignment.topRight,
+                      repeat: ImageRepeat.repeatY,
+                      fit: BoxFit.fitWidth,
+                      opacity: 0.1,
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      GetBuilder<KaryawanControl>(
+                        builder: (_) {
+                          List<Widget> widgets = [];
+                          List<Widget> areaWidgets = [];
+                          for(var a in karyawanControl.listStatusKerja) {
+                            areaWidgets.add(
+                              Text('🟥${a.label}',
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            );
+                          }
+                          areaWidgets.add(
+                            const Padding(
+                              padding: EdgeInsets.only(top: 5),
+                              child: Text('🟥TOTAL KARYAWAN',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          );
+                          widgets.add(
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: areaWidgets,
+                              ),
+                            ),
+                          );
+                          areaWidgets = [];
+                          for(var a in karyawanControl.listStatusKerja) {
+                            int? nilai = 0;
+                            if(karyawanControl.totalKaryawanPerStatuskerjaPerArea[a.label] != null) {
+                              nilai = karyawanControl.totalKaryawanPerStatuskerjaPerArea[a.label]!['TOTAL KARYAWAN'];
+                            }
+                            areaWidgets.add(
+                              Text('= ${nilai ?? 0}',
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            );
+                          }
+                          areaWidgets.add(
+                            Padding(
+                              padding: const EdgeInsets.only(top: 5),
+                              child: Text('= ${karyawanControl.totalKaryawanPerArea['TOTAL KARYAWAN'] ?? 0}',
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          );
+                          widgets.add(
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 0, 35, 0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: areaWidgets,
+                              ),
+                            ),
+                          );
 
-                            // }).toList();
+                          for (var op in karyawanControl.listArea) {
+                            String kodeArea = op.data!['kode'];
+                            areaWidgets = [];
+                            for(var a in karyawanControl.listStatusKerja) {
+                              int? nilai = 0;
+                              if(karyawanControl.totalKaryawanPerStatuskerjaPerArea[a.label] != null) {
+                                nilai = karyawanControl.totalKaryawanPerStatuskerjaPerArea[a.label]![kodeArea];
+                              }
+                              areaWidgets.add(
+                                Text(
+                                  '$kodeArea: ${nilai ?? 0}',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.red.shade300,
+                                  ),
+                                ),
+                              );
+                            }
+                            areaWidgets.add(
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Text(
+                                  '$kodeArea: ${karyawanControl.totalKaryawanPerArea[kodeArea] ?? 0}',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.red.shade300,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            );
+                            widgets.add(
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: areaWidgets,
+                                ),
+                              ),
+                            );
+                          }
+                          return Container(
+                            padding: const EdgeInsets.all(15),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.7),
+                              borderRadius: const BorderRadius.all(Radius.circular(15)),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.blue,
+                                  blurRadius: 1,
+                                  blurStyle: BlurStyle.outer,
+                                  offset: Offset(1, 1),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              children: [
+                                const Text(
+                                  'KETERANGAN STATUS KARYAWAN :',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                                const SizedBox(height: 15),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: widgets,
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                      GetBuilder<KaryawanControl>(
+                        builder: (_) {
+                          if(karyawanControl.listUlangTahun.isEmpty) {
                             return Container();
                           }
-                        }
-                      }
-                      return AFwidget.circularProgress();
-                    }
+                          return Container(
+                            padding: const EdgeInsets.all(15),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.7),
+                              borderRadius: const BorderRadius.all(Radius.circular(15)),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.green,
+                                  blurRadius: 1,
+                                  blurStyle: BlurStyle.outer,
+                                  offset: Offset(1, 1),
+                                ),
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'BERULANG TAHUN HARI INI: ',
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: Colors.green.shade300,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 5),
+                                Wrap(
+                                  spacing: 15,
+                                  children: karyawanControl.listUlangTahun.map((e) {
+                                    return Text(
+                                      '🎂${e.nama} (${AFconvert.matDate(e.tanggalLahir)})',
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.green.shade500,
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   ),
                 ),
               ),

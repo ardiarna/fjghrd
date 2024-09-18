@@ -1,3 +1,4 @@
+import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/controllers/karyawan_control.dart';
 import 'package:fjghrd/models/karyawan.dart';
 import 'package:fjghrd/utils/af_convert.dart';
@@ -11,7 +12,8 @@ import 'package:pluto_grid/pluto_grid.dart';
 class MantanKaryawanView extends StatelessWidget {
   MantanKaryawanView({super.key});
 
-  final KaryawanControl controller = Get.put(KaryawanControl());
+  final KaryawanControl controller = Get.find<KaryawanControl>();
+  final homeControl = Get.find<HomeControl>();
 
   List<PlutoRow> _buildRows(List<Karyawan> rowData) {
     return List.generate(
@@ -268,8 +270,8 @@ class MantanKaryawanView extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: () {
-                  controller.homeControl.kontener = KaryawanView();
-                  controller.homeControl.update();
+                  homeControl.kontener = KaryawanView();
+                  homeControl.update();
                 },
                 icon: const Icon(
                   Icons.arrow_back_ios,

@@ -1,5 +1,4 @@
 import 'package:fjghrd/controllers/auth_control.dart';
-import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/models/agama.dart';
 import 'package:fjghrd/models/area.dart';
 import 'package:fjghrd/models/divisi.dart';
@@ -33,7 +32,6 @@ import 'package:get/get.dart';
 
 class KaryawanControl extends GetxController {
   final authControl = Get.find<AuthControl>();
-  final homeControl = Get.find<HomeControl>();
   final KaryawanRepository _repo = KaryawanRepository();
 
   final DateTime _now = DateTime.now();

@@ -1,3 +1,4 @@
+import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/controllers/karyawan_control.dart';
 import 'package:fjghrd/models/karyawan.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
@@ -13,6 +14,8 @@ class KaryawanView extends StatelessWidget {
   KaryawanView({super.key});
 
   final KaryawanControl controller = Get.put(KaryawanControl());
+  final homeControl = Get.find<HomeControl>();
+
 
   List<PlutoRow> _buildRows(List<Karyawan> rowData) {
     var now = DateTime.now();
@@ -421,8 +424,8 @@ class KaryawanView extends StatelessWidget {
                   foregroundColor: WidgetStateProperty.all<Color>(Colors.green),
                 ),
                 onPressed: () {
-                  controller.homeControl.kontener = CalonKaryawanView();
-                  controller.homeControl.update();
+                  homeControl.kontener = CalonKaryawanView();
+                  homeControl.update();
                 },
                 child: const Text('CALON'),
               ),
@@ -433,8 +436,8 @@ class KaryawanView extends StatelessWidget {
                   foregroundColor: WidgetStateProperty.all<Color>(Colors.red),
                 ),
                 onPressed: () {
-                  controller.homeControl.kontener = MantanKaryawanView();
-                  controller.homeControl.update();
+                  homeControl.kontener = MantanKaryawanView();
+                  homeControl.update();
                 },
                 child: const Text('EX KARYAWAN'),
               ),
@@ -526,102 +529,123 @@ class KaryawanView extends StatelessWidget {
               ),
               Container(
                 margin: const EdgeInsets.only(left: 15),
-                constraints: const BoxConstraints(
-                  minWidth: 720,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    GetBuilder<KaryawanControl>(
-                      builder: (_) {
-                        List<Widget> widgets = [];
-                        for(var a in controller.listStatusKerja) {
-                          if (controller.totalKaryawanPerStatuskerjaPerArea.containsKey(a.label)) {
-                            var areas = controller.totalKaryawanPerStatuskerjaPerArea[a.label]!;
-                            List<Widget> areaWidgets = [];
-                            areaWidgets.add(
-                              SizedBox(
-                                width: 220,
-                                child: Text('🟥${a.label}: ${areas['TOTAL KARYAWAN'] ?? 0}',
-                                  style: const TextStyle(
-                                    fontSize: 13,
-                                    color: Colors.red,
-                                  ),
-                                ),
-                              ),
-                            );
-                            for (var op in controller.listArea) {
-                              String kode = op.data!['kode'];
-                              areaWidgets.add(
-                                SizedBox(
-                                  width: 100,
-                                  child: Text(
-                                    '$kode: ${areas[kode] ?? 0}',
-                                    style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.red.shade300,
-                                    ),
-                                  ),
-                                ),
-                              );
-                            }
-                            widgets.add(
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: areaWidgets,
-                              ),
-                            );
-                          }
+                child: GetBuilder<KaryawanControl>(
+                  builder: (_) {
+                    List<Widget> widgets = [];
+                    List<Widget> areaWidgets = [];
+                    for(var a in controller.listStatusKerja) {
+                      areaWidgets.add(
+                        Text('🟥${a.label}',
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: Colors.red,
+                          ),
+                        ),
+                      );
+                    }
+                    areaWidgets.add(
+                      const Padding(
+                        padding: EdgeInsets.only(top: 5),
+                        child: Text('🟥TOTAL KARYAWAN',
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    );
+                    widgets.add(
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: areaWidgets,
+                        ),
+                      ),
+                    );
+                    areaWidgets = [];
+                    for(var a in controller.listStatusKerja) {
+                      int? nilai = 0;
+                      if(controller.totalKaryawanPerStatuskerjaPerArea[a.label] != null) {
+                        nilai = controller.totalKaryawanPerStatuskerjaPerArea[a.label]!['TOTAL KARYAWAN'];
+                      }
+                      areaWidgets.add(
+                        Text('= ${nilai ?? 0}',
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: Colors.red,
+                          ),
+                        ),
+                      );
+                    }
+                    areaWidgets.add(
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5),
+                        child: Text('= ${controller.totalKaryawanPerArea['TOTAL KARYAWAN'] ?? 0}',
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: Colors.red,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    );
+                    widgets.add(
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 40, 0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: areaWidgets,
+                        ),
+                      ),
+                    );
+
+                    for (var op in controller.listArea) {
+                      String kodeArea = op.data!['kode'];
+                      areaWidgets = [];
+                      for(var a in controller.listStatusKerja) {
+                        int? nilai = 0;
+                        if(controller.totalKaryawanPerStatuskerjaPerArea[a.label] != null) {
+                          nilai = controller.totalKaryawanPerStatuskerjaPerArea[a.label]![kodeArea];
                         }
-                        return Column(
-                          children: widgets,
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 5),
-                    GetBuilder<KaryawanControl>(
-                      builder: (_) {
-                        List<Widget> areaWidgets = [];
                         areaWidgets.add(
-                          SizedBox(
-                            width: 220,
-                            child: Text(
-                              '🟥TOTAL KARYAWAN: ${controller.totalKaryawanPerArea['TOTAL KARYAWAN'] ?? 0}',
-                              style: const TextStyle(
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.red,
-                              ),
+                          Text(
+                            '$kodeArea: ${nilai ?? 0}',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.red.shade300,
                             ),
                           ),
                         );
-                        for (var op in controller.listArea) {
-                          String kode = op.data!['kode'];
-                          areaWidgets.add(
-                            SizedBox(
-                              width: 100,
-                              child: Text(
-                                '$kode: ${controller.totalKaryawanPerArea[kode] ?? 0}',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.red.shade300,
-                                ),
-                              ),
+                      }
+                      areaWidgets.add(
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            '$kodeArea: ${controller.totalKaryawanPerArea[kodeArea] ?? 0}',
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: Colors.red.shade300,
+                              fontWeight: FontWeight.bold,
                             ),
-                          );
-                        }
-                        return Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: areaWidgets,
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ],
+                          ),
+                        ),
+                      );
+                      widgets.add(
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 25, 0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: areaWidgets,
+                          ),
+                        ),
+                      );
+                    }
+                    return Row(
+                      children: widgets,
+                    );
+                  },
                 ),
               ),
             ],
