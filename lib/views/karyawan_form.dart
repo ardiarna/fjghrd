@@ -994,9 +994,9 @@ class KaryawanForm extends StatelessWidget {
                                 var a = controller.listTimelineMasakerja[0].tanggalAwal;
                                 // var b = controller.listTimelineMasakerja[controller.listTimelineMasakerja.length-1].tanggalAKhir ?? DateTime.now();
                                 var b = DateTime.now();
-                                Duration d = b.difference(a ?? b); // dalam hari
-                                int tahun = d.inDays ~/ 365; // Membagi dengan 365 untuk tahun
-                                int bulan = (d.inDays % 365) ~/ 30; // Menggunakan modulo 365, lalu dibagi dengan 30 untuk bulan
+                                Duration d = b.difference(a ?? b);
+                                int tahun = d.inDays ~/ 365;
+                                int bulan = (d.inDays % 365) ~/ 30;
                                 return Padding(
                                   padding: const EdgeInsets.fromLTRB(10, 0, 15, 10),
                                   child: Column(

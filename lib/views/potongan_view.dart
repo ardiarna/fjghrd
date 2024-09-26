@@ -19,6 +19,7 @@ class PotonganView extends StatelessWidget {
       rowData.length,
       (index) {
         var jenis = controller.listJenis.where((element) => element.value == rowData[index].jenis).first;
+        String hari = rowData[index].hari == 0 ? '' : (jenis.value == 'KJ' ? '${rowData[index].hari} jam' : '${AFconvert.matNumber(rowData[index].hari)} hari');
         return PlutoRow(
           cells: {
             'id': PlutoCell(value: rowData[index].id),
@@ -30,7 +31,7 @@ class PotonganView extends StatelessWidget {
             'tanggal': PlutoCell(value: AFconvert.matDate(rowData[index].tanggal)),
             'tahun': PlutoCell(value: rowData[index].tahun),
             'bulan': PlutoCell(value: rowData[index].bulan),
-            'hari': PlutoCell(value: rowData[index].hari),
+            'hari': PlutoCell(value: hari),
             'jumlah': PlutoCell(value: rowData[index].jumlah),
             'keterangan': PlutoCell(value: rowData[index].keterangan),
           },
@@ -109,28 +110,17 @@ class PotonganView extends StatelessWidget {
         backgroundColor: Colors.brown.shade100,
         suppressedAutoSize: true,
       ),
-      // PlutoColumn(
-      //   title: 'TANGGAL',
-      //   field: 'tanggal',
-      //   type: PlutoColumnType.text(),
-      //   readOnly: true,
-      //   width: 120,
-      //   backgroundColor: Colors.brown.shade100,
-      //   textAlign: PlutoColumnTextAlign.center,
-      //   suppressedAutoSize: true,
-      //   footerRenderer: (rendererContext) {
-      //     return PlutoAggregateColumnFooter(
-      //       rendererContext: rendererContext,
-      //       type: PlutoAggregateColumnType.count,
-      //       alignment: Alignment.centerLeft,
-      //       titleSpanBuilder: (text) {
-      //         return [
-      //           const TextSpan(text: 'TOTAL'),
-      //         ];
-      //       },
-      //     );
-      //   },
-      // ),
+      PlutoColumn(
+        title: 'HARI / JAM',
+        field: 'hari',
+        type: PlutoColumnType.text(),
+        readOnly: true,
+        width: 120,
+        backgroundColor: Colors.brown.shade100,
+        textAlign: PlutoColumnTextAlign.right,
+        // titleTextAlign: PlutoColumnTextAlign.center,
+        suppressedAutoSize: true,
+      ),
       PlutoColumn(
         title: 'JUMLAH IDR',
         field: 'jumlah',

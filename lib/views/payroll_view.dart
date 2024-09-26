@@ -316,7 +316,11 @@ class PayrollView extends StatelessWidget {
           ),
           barisKonten(
             label: 'Unpaid Leave / Cuti Bersama',
-            value: AFconvert.matNumber(item.potCuti),
+            value: AFconvert.matNumber(item.potCutiJumlah),
+          ),
+          barisKonten(
+            label: 'Kompensasi Kehadiran (Jam)',
+            value: AFconvert.matNumber(item.potKompensasiJumlah),
           ),
           barisKonten(
             label: 'Lain-lain',

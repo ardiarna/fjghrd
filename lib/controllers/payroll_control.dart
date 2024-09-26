@@ -48,8 +48,8 @@ class PayrollControl extends GetxController {
   late TextEditingController txtTanggalAwal, txtTanggalAkhir,
       txtGaji, txtKenaikanGaji, txtHariMakan, txtUangMakanHarian, txtUangMakanJumlah, txtOvertimeFjg, txtOvertimeCus,
       txtMedical, txtThr, txtBonus, txtInsentif, txtTelkomsel, txtLain, txtPot25hari, txtPot25jumlah,
-      txtPotTelepon, txtPotBensin, txtPotKas, txtPotCicilan, txtPotBpjs, txtPotCuti, txtPotLain,
-      txtTotalDiterima, txtKeterangan;
+      txtPotTelepon, txtPotBensin, txtPotKas, txtPotCicilan, txtPotBpjs, txtPotCutiHari, txtPotCutiJumlah, txtPotLain,
+      txtPotKompensasiJam, txtPotKompensasiJumlah, txtTotalDiterima, txtKeterangan;
   late Opsi filterTahun;
   late Opsi tahun;
   late Opsi bulan;
@@ -212,7 +212,7 @@ class PayrollControl extends GetxController {
     var b = AFconvert.keInt(txtPot25jumlah.text) + AFconvert.keInt(txtPotTelepon.text) +
         AFconvert.keInt(txtPotBensin.text) + AFconvert.keInt(txtPotKas.text) +
         AFconvert.keInt(txtPotCicilan.text) + AFconvert.keInt(txtPotBpjs.text) +
-        AFconvert.keInt(txtPotCuti.text) + AFconvert.keInt(txtPotLain.text);
+        AFconvert.keInt(txtPotCutiJumlah.text) + AFconvert.keInt(txtPotKompensasiJumlah.text) + AFconvert.keInt(txtPotLain.text);
     var c = a - b;
     txtTotalDiterima.text = AFconvert.matNumber(c);
   }
@@ -482,7 +482,10 @@ class PayrollControl extends GetxController {
     txtPotKas.text = AFconvert.matNumber(currentDetilPayroll.potKas);
     txtPotCicilan.text = AFconvert.matNumber(currentDetilPayroll.potCicilan);
     txtPotBpjs.text = AFconvert.matNumber(currentDetilPayroll.potBpjs);
-    txtPotCuti.text = AFconvert.matNumber(currentDetilPayroll.potCuti);
+    txtPotCutiHari.text = AFconvert.matNumber(currentDetilPayroll.potCutiHari);
+    txtPotCutiJumlah.text = AFconvert.matNumber(currentDetilPayroll.potCutiJumlah);
+    txtPotKompensasiJam.text = AFconvert.matNumberWithDecimal(currentDetilPayroll.potKompensasiJam, decimal: 1);
+    txtPotKompensasiJumlah.text = AFconvert.matNumber(currentDetilPayroll.potKompensasiJumlah);
     txtPotLain.text = AFconvert.matNumber(currentDetilPayroll.potLain);
     txtTotalDiterima.text = AFconvert.matNumber(currentDetilPayroll.totalDiterima);
     txtKeterangan.text = currentDetilPayroll.keterangan;
@@ -803,10 +806,125 @@ class PayrollControl extends GetxController {
                   controller: txtPotBpjs,
                   onchanged: hitungPenerimaanBersih,
                 ),
-                barisText(
-                  label: 'Unpaid Leave',
-                  controller: txtPotCuti,
-                  onchanged: hitungPenerimaanBersih,
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 21, 20, 0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 230,
+                        padding: const EdgeInsets.only(right: 15),
+                        child: const Text('Unpaid Leave'),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Hari :'),
+                            AFwidget.textField(
+                              marginTop: 0,
+                              controller: txtPotCutiHari,
+                              inputformatters: [
+                                CurrencyTextInputFormatter.currency(
+                                  symbol: '',
+                                  decimalDigits: 0,
+                                ),
+                              ],
+                              textAlign: TextAlign.end,
+                              onchanged: (nilai) {
+                                var jumlah = ((AFconvert.keInt(txtGaji.text)+AFconvert.keInt(txtKenaikanGaji.text))/21) * AFconvert.keInt(nilai) ;
+                                txtPotCutiJumlah.text = AFconvert.matNumber(jumlah);
+                                hitungPenerimaanBersih(nilai);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 15),
+                      Expanded(
+                        flex: 3,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Jumlah IDR :'),
+                            AFwidget.textField(
+                              readOnly: true,
+                              marginTop: 0,
+                              controller: txtPotCutiJumlah,
+                              inputformatters: [
+                                CurrencyTextInputFormatter.currency(
+                                  symbol: '',
+                                  decimalDigits: 0,
+                                ),
+                              ],
+                              textAlign: TextAlign.end,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 21, 20, 0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 230,
+                        padding: const EdgeInsets.only(right: 15),
+                        child: const Text('Kompensasi Hadir (Jam)'),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Jam :'),
+                            AFwidget.textField(
+                              marginTop: 0,
+                              controller: txtPotKompensasiJam,
+                              inputformatters: [
+                                CurrencyTextInputFormatter.currency(
+                                  symbol: '',
+                                  decimalDigits: 1,
+                                ),
+                              ],
+                              textAlign: TextAlign.end,
+                              onchanged: (nilai) {
+                                var jumlah = ((AFconvert.keInt(txtGaji.text)+AFconvert.keInt(txtKenaikanGaji.text))/168) * AFconvert.keDouble(nilai) ;
+                                txtPotKompensasiJumlah.text = AFconvert.matNumber(jumlah);
+                                hitungPenerimaanBersih(nilai);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 15),
+                      Expanded(
+                        flex: 3,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Jumlah IDR :'),
+                            AFwidget.textField(
+                              readOnly: true,
+                              marginTop: 0,
+                              controller: txtPotKompensasiJumlah,
+                              inputformatters: [
+                                CurrencyTextInputFormatter.currency(
+                                  symbol: '',
+                                  decimalDigits: 0,
+                                ),
+                              ],
+                              textAlign: TextAlign.end,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 barisText(
                   label: 'Lain Lain',
@@ -860,7 +978,7 @@ class PayrollControl extends GetxController {
                   topRight: Radius.circular(15),
                 ),
               ),
-              child: const Text('Form Ubah Payroll',
+              child: const Text('Form Ubah Payroll Karyawan',
                 style: TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.bold,
@@ -964,7 +1082,10 @@ class PayrollControl extends GetxController {
         potKas: AFconvert.keInt(txtPotKas.text),
         potCicilan: AFconvert.keInt(txtPotCicilan.text),
         potBpjs: AFconvert.keInt(txtPotBpjs.text),
-        potCuti: AFconvert.keInt(txtPotCuti.text),
+        potCutiHari: AFconvert.keInt(txtPotCutiHari.text),
+        potCutiJumlah: AFconvert.keInt(txtPotCutiJumlah.text),
+        potKompensasiJam: AFconvert.keDouble(txtPotKompensasiJam.text),
+        potKompensasiJumlah: AFconvert.keInt(txtPotKompensasiJumlah.text),
         potLain: AFconvert.keInt(txtPotLain.text),
         totalDiterima: AFconvert.keInt(txtTotalDiterima.text),
         keterangan: txtKeterangan.text,
@@ -1101,7 +1222,10 @@ class PayrollControl extends GetxController {
     txtPotKas = TextEditingController();
     txtPotCicilan = TextEditingController();
     txtPotBpjs = TextEditingController();
-    txtPotCuti = TextEditingController();
+    txtPotCutiHari = TextEditingController();
+    txtPotCutiJumlah = TextEditingController();
+    txtPotKompensasiJam = TextEditingController();
+    txtPotKompensasiJumlah = TextEditingController();
     txtPotLain = TextEditingController();
     txtTotalDiterima = TextEditingController();
     txtKeterangan = TextEditingController();
@@ -1132,7 +1256,10 @@ class PayrollControl extends GetxController {
     txtPotKas.dispose();
     txtPotCicilan.dispose();
     txtPotBpjs.dispose();
-    txtPotCuti.dispose();
+    txtPotCutiHari.dispose();
+    txtPotCutiJumlah.dispose();
+    txtPotKompensasiJam.dispose();
+    txtPotKompensasiJumlah.dispose();
     txtPotLain.dispose();
     txtTotalDiterima.dispose();
     txtKeterangan.dispose();

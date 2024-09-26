@@ -13,7 +13,7 @@ class HomeControl extends GetxController {
   final UserRepository _userRepository = UserRepository();
 
   int tabId = 0;
-  Widget kontener = BerandaView();
+  Widget kontener = Container();
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   var isTampilPassword = false;
@@ -110,6 +110,7 @@ class HomeControl extends GetxController {
     txtPassword = TextEditingController();
     txtPassOld = TextEditingController();
     txtPassConfirm = TextEditingController();
+
     super.onInit();
   }
 

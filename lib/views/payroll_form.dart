@@ -47,7 +47,10 @@ class PayrollForm extends StatelessWidget {
           'pot_kas': PlutoCell(value: e.potKas),
           'pot_cicilan': PlutoCell(value: e.potCicilan),
           'pot_bpjs': PlutoCell(value: e.potBpjs),
-          'pot_cuti': PlutoCell(value: e.potCuti),
+          'pot_cuti_hari': PlutoCell(value: e.potCutiHari),
+          'pot_cuti_jumlah': PlutoCell(value: e.potCutiJumlah),
+          'pot_kompensasi_jam': PlutoCell(value: e.potKompensasiJam),
+          'pot_kompensasi_jumlah': PlutoCell(value: e.potKompensasiJumlah),
           'pot_lain': PlutoCell(value: e.potLain),
           'total_diterima': PlutoCell(value: e.totalDiterima),
           'keterangan': PlutoCell(value: e.keterangan),
@@ -139,9 +142,14 @@ class PayrollForm extends StatelessWidget {
           expandedColumn: true,
         ),
         PlutoColumnGroup(
-          title: '',
-          fields: ['pot_cuti'],
-          expandedColumn: true,
+          title: 'UNPAID LEAVE',
+          fields: ['pot_cuti_hari', 'pot_cuti_jumlah'],
+          backgroundColor: Colors.red.shade100,
+        ),
+        PlutoColumnGroup(
+          title: 'KOMPENSASI',
+          fields: ['pot_kompensasi_jam', 'pot_kompensasi_jumlah'],
+          backgroundColor: Colors.red.shade100,
         ),
         PlutoColumnGroup(
           title: '',
@@ -239,6 +247,16 @@ class PayrollForm extends StatelessWidget {
         enableContextMenu: false,
         enableSorting: false,
         enableColumnDrag: false,
+        renderer: (rendererContext) {
+          final value = rendererContext.cell.value;
+          if(value == 0) {
+            return const Text('');
+          }
+          return Text(
+            AFconvert.matNumber(value),
+            textAlign: TextAlign.right,
+          );
+        },
         footerRenderer: (rendererContext) {
           return PlutoAggregateColumnFooter(
             rendererContext: rendererContext,
@@ -266,6 +284,16 @@ class PayrollForm extends StatelessWidget {
         enableContextMenu: false,
         enableSorting: false,
         enableColumnDrag: false,
+        renderer: (rendererContext) {
+          final value = rendererContext.cell.value;
+          if(value == 0) {
+            return const Text('');
+          }
+          return Text(
+            AFconvert.matNumber(value),
+            textAlign: TextAlign.right,
+          );
+        },
         footerRenderer: (rendererContext) {
           return PlutoAggregateColumnFooter(
             rendererContext: rendererContext,
@@ -291,6 +319,16 @@ class PayrollForm extends StatelessWidget {
         enableContextMenu: false,
         enableSorting: false,
         enableColumnDrag: false,
+        renderer: (rendererContext) {
+          final value = rendererContext.cell.value;
+          if(value == 0) {
+            return const Text('');
+          }
+          return Text(
+            AFconvert.matNumber(value),
+            textAlign: TextAlign.right,
+          );
+        },
       ),
       PlutoColumn(
         title: '@HARI IDR',
@@ -303,6 +341,16 @@ class PayrollForm extends StatelessWidget {
         enableContextMenu: false,
         enableSorting: false,
         enableColumnDrag: false,
+        renderer: (rendererContext) {
+          final value = rendererContext.cell.value;
+          if(value == 0) {
+            return const Text('');
+          }
+          return Text(
+            AFconvert.matNumber(value),
+            textAlign: TextAlign.right,
+          );
+        },
       ),
       PlutoColumn(
         title: 'JUMLAH IDR',
@@ -315,6 +363,16 @@ class PayrollForm extends StatelessWidget {
         enableContextMenu: false,
         enableSorting: false,
         enableColumnDrag: false,
+        renderer: (rendererContext) {
+          final value = rendererContext.cell.value;
+          if(value == 0) {
+            return const Text('');
+          }
+          return Text(
+            AFconvert.matNumber(value),
+            textAlign: TextAlign.right,
+          );
+        },
         footerRenderer: (rendererContext) {
           return PlutoAggregateColumnFooter(
             rendererContext: rendererContext,
@@ -340,6 +398,16 @@ class PayrollForm extends StatelessWidget {
         enableContextMenu: false,
         enableSorting: false,
         enableColumnDrag: false,
+        renderer: (rendererContext) {
+          final value = rendererContext.cell.value;
+          if(value == 0) {
+            return const Text('');
+          }
+          return Text(
+            AFconvert.matNumber(value),
+            textAlign: TextAlign.right,
+          );
+        },
         footerRenderer: (rendererContext) {
           return PlutoAggregateColumnFooter(
             rendererContext: rendererContext,
@@ -365,6 +433,16 @@ class PayrollForm extends StatelessWidget {
         enableContextMenu: false,
         enableSorting: false,
         enableColumnDrag: false,
+        renderer: (rendererContext) {
+          final value = rendererContext.cell.value;
+          if(value == 0) {
+            return const Text('');
+          }
+          return Text(
+            AFconvert.matNumber(value),
+            textAlign: TextAlign.right,
+          );
+        },
         footerRenderer: (rendererContext) {
           return PlutoAggregateColumnFooter(
             rendererContext: rendererContext,
@@ -390,6 +468,16 @@ class PayrollForm extends StatelessWidget {
         enableContextMenu: false,
         enableSorting: false,
         enableColumnDrag: false,
+        renderer: (rendererContext) {
+          final value = rendererContext.cell.value;
+          if(value == 0) {
+            return const Text('');
+          }
+          return Text(
+            AFconvert.matNumber(value),
+            textAlign: TextAlign.right,
+          );
+        },
         footerRenderer: (rendererContext) {
           return PlutoAggregateColumnFooter(
             rendererContext: rendererContext,
@@ -415,6 +503,16 @@ class PayrollForm extends StatelessWidget {
         enableContextMenu: false,
         enableSorting: false,
         enableColumnDrag: false,
+        renderer: (rendererContext) {
+          final value = rendererContext.cell.value;
+          if(value == 0) {
+            return const Text('');
+          }
+          return Text(
+            AFconvert.matNumber(value),
+            textAlign: TextAlign.right,
+          );
+        },
         footerRenderer: (rendererContext) {
           return PlutoAggregateColumnFooter(
             rendererContext: rendererContext,
@@ -440,6 +538,16 @@ class PayrollForm extends StatelessWidget {
         enableContextMenu: false,
         enableSorting: false,
         enableColumnDrag: false,
+        renderer: (rendererContext) {
+          final value = rendererContext.cell.value;
+          if(value == 0) {
+            return const Text('');
+          }
+          return Text(
+            AFconvert.matNumber(value),
+            textAlign: TextAlign.right,
+          );
+        },
         footerRenderer: (rendererContext) {
           return PlutoAggregateColumnFooter(
             rendererContext: rendererContext,
@@ -465,6 +573,16 @@ class PayrollForm extends StatelessWidget {
         enableContextMenu: false,
         enableSorting: false,
         enableColumnDrag: false,
+        renderer: (rendererContext) {
+          final value = rendererContext.cell.value;
+          if(value == 0) {
+            return const Text('');
+          }
+          return Text(
+            AFconvert.matNumber(value),
+            textAlign: TextAlign.right,
+          );
+        },
         footerRenderer: (rendererContext) {
           return PlutoAggregateColumnFooter(
             rendererContext: rendererContext,
@@ -490,6 +608,16 @@ class PayrollForm extends StatelessWidget {
         enableContextMenu: false,
         enableSorting: false,
         enableColumnDrag: false,
+        renderer: (rendererContext) {
+          final value = rendererContext.cell.value;
+          if(value == 0) {
+            return const Text('');
+          }
+          return Text(
+            AFconvert.matNumber(value),
+            textAlign: TextAlign.right,
+          );
+        },
         footerRenderer: (rendererContext) {
           return PlutoAggregateColumnFooter(
             rendererContext: rendererContext,
@@ -515,6 +643,16 @@ class PayrollForm extends StatelessWidget {
         enableContextMenu: false,
         enableSorting: false,
         enableColumnDrag: false,
+        renderer: (rendererContext) {
+          final value = rendererContext.cell.value;
+          if(value == 0) {
+            return const Text('');
+          }
+          return Text(
+            AFconvert.matNumber(value),
+            textAlign: TextAlign.right,
+          );
+        },
         footerRenderer: (rendererContext) {
           return PlutoAggregateColumnFooter(
             rendererContext: rendererContext,
@@ -540,6 +678,16 @@ class PayrollForm extends StatelessWidget {
         enableContextMenu: false,
         enableSorting: false,
         enableColumnDrag: false,
+        renderer: (rendererContext) {
+          final value = rendererContext.cell.value;
+          if(value == 0) {
+            return const Text('');
+          }
+          return Text(
+            AFconvert.matNumber(value),
+            textAlign: TextAlign.right,
+          );
+        },
         footerRenderer: (rendererContext) {
           return PlutoAggregateColumnFooter(
             rendererContext: rendererContext,
@@ -565,6 +713,16 @@ class PayrollForm extends StatelessWidget {
         enableSorting: false,
         enableColumnDrag: false,
         readOnly: true,
+        renderer: (rendererContext) {
+          final value = rendererContext.cell.value;
+          if(value == 0) {
+            return const Text('');
+          }
+          return Text(
+            AFconvert.matNumber(value),
+            textAlign: TextAlign.right,
+          );
+        },
         footerRenderer: (rendererContext) {
           return PlutoAggregateColumnFooter(
             rendererContext: rendererContext,
@@ -590,6 +748,16 @@ class PayrollForm extends StatelessWidget {
         enableContextMenu: false,
         enableSorting: false,
         enableColumnDrag: false,
+        renderer: (rendererContext) {
+          final value = rendererContext.cell.value;
+          if(value == 0) {
+            return const Text('');
+          }
+          return Text(
+            AFconvert.matNumber(value),
+            textAlign: TextAlign.right,
+          );
+        },
         footerRenderer: (rendererContext) {
           return PlutoAggregateColumnFooter(
             rendererContext: rendererContext,
@@ -615,6 +783,16 @@ class PayrollForm extends StatelessWidget {
         enableContextMenu: false,
         enableSorting: false,
         enableColumnDrag: false,
+        renderer: (rendererContext) {
+          final value = rendererContext.cell.value;
+          if(value == 0) {
+            return const Text('');
+          }
+          return Text(
+            AFconvert.matNumber(value),
+            textAlign: TextAlign.right,
+          );
+        },
         footerRenderer: (rendererContext) {
           return PlutoAggregateColumnFooter(
             rendererContext: rendererContext,
@@ -640,6 +818,16 @@ class PayrollForm extends StatelessWidget {
         enableContextMenu: false,
         enableSorting: false,
         enableColumnDrag: false,
+        renderer: (rendererContext) {
+          final value = rendererContext.cell.value;
+          if(value == 0) {
+            return const Text('');
+          }
+          return Text(
+            AFconvert.matNumber(value),
+            textAlign: TextAlign.right,
+          );
+        },
         footerRenderer: (rendererContext) {
           return PlutoAggregateColumnFooter(
             rendererContext: rendererContext,
@@ -665,6 +853,16 @@ class PayrollForm extends StatelessWidget {
         enableContextMenu: false,
         enableSorting: false,
         enableColumnDrag: false,
+        renderer: (rendererContext) {
+          final value = rendererContext.cell.value;
+          if(value == 0) {
+            return const Text('');
+          }
+          return Text(
+            AFconvert.matNumber(value),
+            textAlign: TextAlign.right,
+          );
+        },
         footerRenderer: (rendererContext) {
           return PlutoAggregateColumnFooter(
             rendererContext: rendererContext,
@@ -690,6 +888,16 @@ class PayrollForm extends StatelessWidget {
         enableContextMenu: false,
         enableSorting: false,
         enableColumnDrag: false,
+        renderer: (rendererContext) {
+          final value = rendererContext.cell.value;
+          if(value == 0) {
+            return const Text('');
+          }
+          return Text(
+            AFconvert.matNumber(value),
+            textAlign: TextAlign.right,
+          );
+        },
         footerRenderer: (rendererContext) {
           return PlutoAggregateColumnFooter(
             rendererContext: rendererContext,
@@ -705,16 +913,131 @@ class PayrollForm extends StatelessWidget {
         },
       ),
       PlutoColumn(
-        title: 'UNPAID LEAVE',
-        field: 'pot_cuti',
+        title: 'HR',
+        field: 'pot_cuti_hari',
         type: PlutoColumnType.number(),
         readOnly: true,
-        width: 150,
+        width: 70,
         backgroundColor: Colors.red.shade100,
         textAlign: PlutoColumnTextAlign.right,
         enableContextMenu: false,
         enableSorting: false,
         enableColumnDrag: false,
+        renderer: (rendererContext) {
+          final value = rendererContext.cell.value;
+          if(value == 0) {
+            return const Text('');
+          }
+          return Text(
+            AFconvert.matNumber(value),
+            textAlign: TextAlign.right,
+          );
+        },
+        footerRenderer: (rendererContext) {
+          return PlutoAggregateColumnFooter(
+            rendererContext: rendererContext,
+            type: PlutoAggregateColumnType.sum,
+            format: '#,###',
+            alignment: Alignment.centerRight,
+            titleSpanBuilder: (text) {
+              return [
+                TextSpan(text: text),
+              ];
+            },
+          );
+        },
+      ),
+      PlutoColumn(
+        title: 'JUMLAH IDR',
+        field: 'pot_cuti_jumlah',
+        type: PlutoColumnType.number(),
+        readOnly: true,
+        width: 130,
+        backgroundColor: Colors.red.shade100,
+        textAlign: PlutoColumnTextAlign.right,
+        enableContextMenu: false,
+        enableSorting: false,
+        enableColumnDrag: false,
+        renderer: (rendererContext) {
+          final value = rendererContext.cell.value;
+          if(value == 0) {
+            return const Text('');
+          }
+          return Text(
+            AFconvert.matNumber(value),
+            textAlign: TextAlign.right,
+          );
+        },
+        footerRenderer: (rendererContext) {
+          return PlutoAggregateColumnFooter(
+            rendererContext: rendererContext,
+            type: PlutoAggregateColumnType.sum,
+            format: '#,###',
+            alignment: Alignment.centerRight,
+            titleSpanBuilder: (text) {
+              return [
+                TextSpan(text: text),
+              ];
+            },
+          );
+        },
+      ),
+      PlutoColumn(
+        title: 'JAM',
+        field: 'pot_kompensasi_jam',
+        type: PlutoColumnType.number(format: '#,##0.0'),
+        readOnly: true,
+        width: 70,
+        backgroundColor: Colors.red.shade100,
+        textAlign: PlutoColumnTextAlign.right,
+        enableContextMenu: false,
+        enableSorting: false,
+        enableColumnDrag: false,
+        renderer: (rendererContext) {
+          final value = rendererContext.cell.value;
+          if(value == 0) {
+            return const Text('');
+          }
+          return Text(
+            AFconvert.matNumberWithDecimal(value, decimal: 1),
+            textAlign: TextAlign.right,
+          );
+        },
+        footerRenderer: (rendererContext) {
+          return PlutoAggregateColumnFooter(
+            rendererContext: rendererContext,
+            type: PlutoAggregateColumnType.sum,
+            format: '#,##0.0',
+            alignment: Alignment.centerRight,
+            titleSpanBuilder: (text) {
+              return [
+                TextSpan(text: text),
+              ];
+            },
+          );
+        },
+      ),
+      PlutoColumn(
+        title: 'JUMLAH IDR',
+        field: 'pot_kompensasi_jumlah',
+        type: PlutoColumnType.number(),
+        width: 130,
+        backgroundColor: Colors.red.shade100,
+        textAlign: PlutoColumnTextAlign.right,
+        enableContextMenu: false,
+        enableSorting: false,
+        enableColumnDrag: false,
+        readOnly: true,
+        renderer: (rendererContext) {
+          final value = rendererContext.cell.value;
+          if(value == 0) {
+            return const Text('');
+          }
+          return Text(
+            AFconvert.matNumber(value),
+            textAlign: TextAlign.right,
+          );
+        },
         footerRenderer: (rendererContext) {
           return PlutoAggregateColumnFooter(
             rendererContext: rendererContext,
@@ -740,6 +1063,16 @@ class PayrollForm extends StatelessWidget {
         enableContextMenu: false,
         enableSorting: false,
         enableColumnDrag: false,
+        renderer: (rendererContext) {
+          final value = rendererContext.cell.value;
+          if(value == 0) {
+            return const Text('');
+          }
+          return Text(
+            AFconvert.matNumber(value),
+            textAlign: TextAlign.right,
+          );
+        },
         footerRenderer: (rendererContext) {
           return PlutoAggregateColumnFooter(
             rendererContext: rendererContext,
@@ -767,6 +1100,16 @@ class PayrollForm extends StatelessWidget {
         enableSorting: false,
         enableColumnDrag: false,
         readOnly: true,
+        renderer: (rendererContext) {
+          final value = rendererContext.cell.value;
+          if(value == 0) {
+            return const Text('');
+          }
+          return Text(
+            AFconvert.matNumber(value),
+            textAlign: TextAlign.right,
+          );
+        },
         footerRenderer: (rdrCtx) {
           return PlutoAggregateColumnFooter(
             rendererContext: rdrCtx,

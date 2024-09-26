@@ -51,7 +51,7 @@ class RunpayrollView extends StatelessWidget {
           .fold(0, (sum, element) => sum + element.jumlah);
       var pot25Hari = controller.listPotongan
           .where((element) => element.karyawan.id == e.id && element.jenis == 'TB')
-          .fold(0, (sum, element) => sum + element.hari);
+          .fold(0.0, (sum, element) => sum + element.hari);
       var pot25HJumlah = controller.listPotongan
           .where((element) => element.karyawan.id == e.id && element.jenis == 'TB')
           .fold(0, (sum, element) => sum + element.jumlah);
@@ -70,8 +70,17 @@ class RunpayrollView extends StatelessWidget {
       var potBpjs = controller.listPotongan
           .where((element) => element.karyawan.id == e.id && element.jenis == 'BP')
           .fold(0, (sum, element) => sum + element.jumlah);
-      var potCuti = controller.listPotongan
+      var potCutiHari = controller.listPotongan
           .where((element) => element.karyawan.id == e.id && element.jenis == 'UL')
+          .fold(0.0, (sum, element) => sum + element.hari);
+      var potCutiJumlah = controller.listPotongan
+          .where((element) => element.karyawan.id == e.id && element.jenis == 'UL')
+          .fold(0, (sum, element) => sum + element.jumlah);
+      var potKompensasiJam = controller.listPotongan
+          .where((element) => element.karyawan.id == e.id && element.jenis == 'KJ')
+          .fold(0.0, (sum, element) => sum + element.hari);
+      var potKompensasiJumlah = controller.listPotongan
+          .where((element) => element.karyawan.id == e.id && element.jenis == 'KJ')
           .fold(0, (sum, element) => sum + element.jumlah);
       var potLain = controller.listPotongan
           .where((element) => element.karyawan.id == e.id && element.jenis == 'LL')
@@ -88,7 +97,7 @@ class RunpayrollView extends StatelessWidget {
       if(keteranganPen.isNotEmpty) keteranganAll.add(keteranganPen);
       if(keteranganPot.isNotEmpty) keteranganAll.add(keteranganPot);
       int totalDiterima = (e.upah.gaji + uangMakanJumlah + overtimeFjg + overtimeCus + medical + thr + bonus + insentif + telkomsel + lain) -
-          (pot25HJumlah + potTelepon + potBensin + potKas + potCicilan + potBpjs + potCuti + potLain);
+          (pot25HJumlah + potTelepon + potBensin + potKas + potCicilan + potBpjs + potCutiJumlah + potKompensasiJumlah + potLain);
       return PlutoRow(
         cells: {
           'karyawan_id': PlutoCell(value: e.id),
@@ -116,7 +125,10 @@ class RunpayrollView extends StatelessWidget {
           'pot_kas': PlutoCell(value: potKas),
           'pot_cicilan': PlutoCell(value: potCicilan),
           'pot_bpjs': PlutoCell(value: potBpjs),
-          'pot_cuti': PlutoCell(value: potCuti),
+          'pot_cuti_hari': PlutoCell(value: potCutiHari),
+          'pot_cuti_jumlah': PlutoCell(value: potCutiJumlah),
+          'pot_kompensasi_jam': PlutoCell(value: potKompensasiJam),
+          'pot_kompensasi_jumlah': PlutoCell(value: potKompensasiJumlah),
           'pot_lain': PlutoCell(value: potLain),
           'total_diterima': PlutoCell(value: totalDiterima),
           'keterangan': PlutoCell(value: keteranganAll.join(', ')),
@@ -208,9 +220,14 @@ class RunpayrollView extends StatelessWidget {
           expandedColumn: true,
         ),
         PlutoColumnGroup(
-          title: '',
-          fields: ['pot_cuti'],
-          expandedColumn: true,
+          title: 'UNPAID LEAVE',
+          fields: ['pot_cuti_hari', 'pot_cuti_jumlah'],
+          backgroundColor: Colors.red.shade100,
+        ),
+        PlutoColumnGroup(
+          title: 'KOMPENSASI',
+          fields: ['pot_kompensasi_jam', 'pot_kompensasi_jumlah'],
+          backgroundColor: Colors.red.shade100,
         ),
         PlutoColumnGroup(
           title: '',
@@ -274,6 +291,16 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      renderer: (rendererContext) {
+        final value = rendererContext.cell.value;
+        if(value == 0) {
+          return const Text('');
+        }
+        return Text(
+          AFconvert.matNumber(value),
+          textAlign: TextAlign.right,
+        );
+      },
       footerRenderer: (rendererContext) {
         return PlutoAggregateColumnFooter(
           rendererContext: rendererContext,
@@ -300,6 +327,16 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      renderer: (rendererContext) {
+        final value = rendererContext.cell.value;
+        if(value == 0) {
+          return const Text('');
+        }
+        return Text(
+          AFconvert.matNumber(value),
+          textAlign: TextAlign.right,
+        );
+      },
       footerRenderer: (rendererContext) {
         return PlutoAggregateColumnFooter(
           rendererContext: rendererContext,
@@ -324,6 +361,16 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      renderer: (rendererContext) {
+        final value = rendererContext.cell.value;
+        if(value == 0) {
+          return const Text('');
+        }
+        return Text(
+          AFconvert.matNumber(value),
+          textAlign: TextAlign.right,
+        );
+      },
     ),
     PlutoColumn(
       title: '@HARI IDR',
@@ -335,6 +382,16 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      renderer: (rendererContext) {
+        final value = rendererContext.cell.value;
+        if(value == 0) {
+          return const Text('');
+        }
+        return Text(
+          AFconvert.matNumber(value),
+          textAlign: TextAlign.right,
+        );
+      },
     ),
     PlutoColumn(
       title: 'JUMLAH IDR',
@@ -346,6 +403,16 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      renderer: (rendererContext) {
+        final value = rendererContext.cell.value;
+        if(value == 0) {
+          return const Text('');
+        }
+        return Text(
+          AFconvert.matNumber(value),
+          textAlign: TextAlign.right,
+        );
+      },
       footerRenderer: (rendererContext) {
         return PlutoAggregateColumnFooter(
           rendererContext: rendererContext,
@@ -370,6 +437,16 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      renderer: (rendererContext) {
+        final value = rendererContext.cell.value;
+        if(value == 0) {
+          return const Text('');
+        }
+        return Text(
+          AFconvert.matNumber(value),
+          textAlign: TextAlign.right,
+        );
+      },
       footerRenderer: (rendererContext) {
         return PlutoAggregateColumnFooter(
           rendererContext: rendererContext,
@@ -394,6 +471,16 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      renderer: (rendererContext) {
+        final value = rendererContext.cell.value;
+        if(value == 0) {
+          return const Text('');
+        }
+        return Text(
+          AFconvert.matNumber(value),
+          textAlign: TextAlign.right,
+        );
+      },
       footerRenderer: (rendererContext) {
         return PlutoAggregateColumnFooter(
           rendererContext: rendererContext,
@@ -418,6 +505,16 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      renderer: (rendererContext) {
+        final value = rendererContext.cell.value;
+        if(value == 0) {
+          return const Text('');
+        }
+        return Text(
+          AFconvert.matNumber(value),
+          textAlign: TextAlign.right,
+        );
+      },
       footerRenderer: (rendererContext) {
         return PlutoAggregateColumnFooter(
           rendererContext: rendererContext,
@@ -442,6 +539,16 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      renderer: (rendererContext) {
+        final value = rendererContext.cell.value;
+        if(value == 0) {
+          return const Text('');
+        }
+        return Text(
+          AFconvert.matNumber(value),
+          textAlign: TextAlign.right,
+        );
+      },
       footerRenderer: (rendererContext) {
         return PlutoAggregateColumnFooter(
           rendererContext: rendererContext,
@@ -466,6 +573,16 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      renderer: (rendererContext) {
+        final value = rendererContext.cell.value;
+        if(value == 0) {
+          return const Text('');
+        }
+        return Text(
+          AFconvert.matNumber(value),
+          textAlign: TextAlign.right,
+        );
+      },
       footerRenderer: (rendererContext) {
         return PlutoAggregateColumnFooter(
           rendererContext: rendererContext,
@@ -490,6 +607,16 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      renderer: (rendererContext) {
+        final value = rendererContext.cell.value;
+        if(value == 0) {
+          return const Text('');
+        }
+        return Text(
+          AFconvert.matNumber(value),
+          textAlign: TextAlign.right,
+        );
+      },
       footerRenderer: (rendererContext) {
         return PlutoAggregateColumnFooter(
           rendererContext: rendererContext,
@@ -514,6 +641,16 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      renderer: (rendererContext) {
+        final value = rendererContext.cell.value;
+        if(value == 0) {
+          return const Text('');
+        }
+        return Text(
+          AFconvert.matNumber(value),
+          textAlign: TextAlign.right,
+        );
+      },
       footerRenderer: (rendererContext) {
         return PlutoAggregateColumnFooter(
           rendererContext: rendererContext,
@@ -538,6 +675,16 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      renderer: (rendererContext) {
+        final value = rendererContext.cell.value;
+        if(value == 0) {
+          return const Text('');
+        }
+        return Text(
+          AFconvert.matNumber(value),
+          textAlign: TextAlign.right,
+        );
+      },
       footerRenderer: (rendererContext) {
         return PlutoAggregateColumnFooter(
           rendererContext: rendererContext,
@@ -562,6 +709,16 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      renderer: (rendererContext) {
+        final value = rendererContext.cell.value;
+        if(value == 0) {
+          return const Text('');
+        }
+        return Text(
+          AFconvert.matNumber(value),
+          textAlign: TextAlign.right,
+        );
+      },
       footerRenderer: (rendererContext) {
         return PlutoAggregateColumnFooter(
           rendererContext: rendererContext,
@@ -587,6 +744,16 @@ class RunpayrollView extends StatelessWidget {
       enableSorting: false,
       enableColumnDrag: false,
       readOnly: true,
+      renderer: (rendererContext) {
+        final value = rendererContext.cell.value;
+        if(value == 0) {
+          return const Text('');
+        }
+        return Text(
+          AFconvert.matNumber(value),
+          textAlign: TextAlign.right,
+        );
+      },
       footerRenderer: (rendererContext) {
         return PlutoAggregateColumnFooter(
           rendererContext: rendererContext,
@@ -611,6 +778,16 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      renderer: (rendererContext) {
+        final value = rendererContext.cell.value;
+        if(value == 0) {
+          return const Text('');
+        }
+        return Text(
+          AFconvert.matNumber(value),
+          textAlign: TextAlign.right,
+        );
+      },
       footerRenderer: (rendererContext) {
         return PlutoAggregateColumnFooter(
           rendererContext: rendererContext,
@@ -635,6 +812,16 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      renderer: (rendererContext) {
+        final value = rendererContext.cell.value;
+        if(value == 0) {
+          return const Text('');
+        }
+        return Text(
+          AFconvert.matNumber(value),
+          textAlign: TextAlign.right,
+        );
+      },
       footerRenderer: (rendererContext) {
         return PlutoAggregateColumnFooter(
           rendererContext: rendererContext,
@@ -659,6 +846,16 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      renderer: (rendererContext) {
+        final value = rendererContext.cell.value;
+        if(value == 0) {
+          return const Text('');
+        }
+        return Text(
+          AFconvert.matNumber(value),
+          textAlign: TextAlign.right,
+        );
+      },
       footerRenderer: (rendererContext) {
         return PlutoAggregateColumnFooter(
           rendererContext: rendererContext,
@@ -683,6 +880,16 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      renderer: (rendererContext) {
+        final value = rendererContext.cell.value;
+        if(value == 0) {
+          return const Text('');
+        }
+        return Text(
+          AFconvert.matNumber(value),
+          textAlign: TextAlign.right,
+        );
+      },
       footerRenderer: (rendererContext) {
         return PlutoAggregateColumnFooter(
           rendererContext: rendererContext,
@@ -707,6 +914,16 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      renderer: (rendererContext) {
+        final value = rendererContext.cell.value;
+        if(value == 0) {
+          return const Text('');
+        }
+        return Text(
+          AFconvert.matNumber(value),
+          textAlign: TextAlign.right,
+        );
+      },
       footerRenderer: (rendererContext) {
         return PlutoAggregateColumnFooter(
           rendererContext: rendererContext,
@@ -722,15 +939,129 @@ class RunpayrollView extends StatelessWidget {
       },
     ),
     PlutoColumn(
-      title: 'UNPAID LEAVE',
-      field: 'pot_cuti',
+      title: 'HR',
+      field: 'pot_cuti_hari',
       type: PlutoColumnType.number(),
-      width: 150,
+      width: 70,
       backgroundColor: Colors.red.shade100,
       textAlign: PlutoColumnTextAlign.right,
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      renderer: (rendererContext) {
+        final value = rendererContext.cell.value;
+        if(value == 0) {
+          return const Text('');
+        }
+        return Text(
+          AFconvert.matNumber(value),
+          textAlign: TextAlign.right,
+        );
+      },
+      footerRenderer: (rendererContext) {
+        return PlutoAggregateColumnFooter(
+          rendererContext: rendererContext,
+          type: PlutoAggregateColumnType.sum,
+          format: '#,###',
+          alignment: Alignment.centerRight,
+          titleSpanBuilder: (text) {
+            return [
+              TextSpan(text: text),
+            ];
+          },
+        );
+      },
+    ),
+    PlutoColumn(
+      title: 'JUMLAH IDR',
+      field: 'pot_cuti_jumlah',
+      type: PlutoColumnType.number(),
+      width: 130,
+      backgroundColor: Colors.red.shade100,
+      textAlign: PlutoColumnTextAlign.right,
+      enableContextMenu: false,
+      enableSorting: false,
+      enableColumnDrag: false,
+      readOnly: true,
+      renderer: (rendererContext) {
+        final value = rendererContext.cell.value;
+        if(value == 0) {
+          return const Text('');
+        }
+        return Text(
+          AFconvert.matNumber(value),
+          textAlign: TextAlign.right,
+        );
+      },
+      footerRenderer: (rendererContext) {
+        return PlutoAggregateColumnFooter(
+          rendererContext: rendererContext,
+          type: PlutoAggregateColumnType.sum,
+          format: '#,###',
+          alignment: Alignment.centerRight,
+          titleSpanBuilder: (text) {
+            return [
+              TextSpan(text: text),
+            ];
+          },
+        );
+      },
+    ),
+    PlutoColumn(
+      title: 'JAM',
+      field: 'pot_kompensasi_jam',
+      type: PlutoColumnType.number(format: '#,##0.0'),
+      width: 70,
+      backgroundColor: Colors.red.shade100,
+      textAlign: PlutoColumnTextAlign.right,
+      enableContextMenu: false,
+      enableSorting: false,
+      enableColumnDrag: false,
+      renderer: (rendererContext) {
+        final value = rendererContext.cell.value;
+        if(value == 0) {
+          return const Text('');
+        }
+        return Text(
+          AFconvert.matNumberWithDecimal(value, decimal: 1),
+          textAlign: TextAlign.right,
+        );
+      },
+      footerRenderer: (rendererContext) {
+        return PlutoAggregateColumnFooter(
+          rendererContext: rendererContext,
+          type: PlutoAggregateColumnType.sum,
+          format: '#,##0.0',
+          alignment: Alignment.centerRight,
+          titleSpanBuilder: (text) {
+            return [
+              TextSpan(text: text),
+            ];
+          },
+        );
+      },
+    ),
+    PlutoColumn(
+      title: 'JUMLAH IDR',
+      field: 'pot_kompensasi_jumlah',
+      type: PlutoColumnType.number(),
+      width: 130,
+      backgroundColor: Colors.red.shade100,
+      textAlign: PlutoColumnTextAlign.right,
+      enableContextMenu: false,
+      enableSorting: false,
+      enableColumnDrag: false,
+      readOnly: true,
+      renderer: (rendererContext) {
+        final value = rendererContext.cell.value;
+        if(value == 0) {
+          return const Text('');
+        }
+        return Text(
+          AFconvert.matNumber(value),
+          textAlign: TextAlign.right,
+        );
+      },
       footerRenderer: (rendererContext) {
         return PlutoAggregateColumnFooter(
           rendererContext: rendererContext,
@@ -755,6 +1086,16 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      renderer: (rendererContext) {
+        final value = rendererContext.cell.value;
+        if(value == 0) {
+          return const Text('');
+        }
+        return Text(
+          AFconvert.matNumber(value),
+          textAlign: TextAlign.right,
+        );
+      },
       footerRenderer: (rendererContext) {
         return PlutoAggregateColumnFooter(
           rendererContext: rendererContext,
@@ -782,6 +1123,16 @@ class RunpayrollView extends StatelessWidget {
       enableSorting: false,
       enableColumnDrag: false,
       readOnly: true,
+      renderer: (rendererContext) {
+        final value = rendererContext.cell.value;
+        if(value == 0) {
+          return const Text('');
+        }
+        return Text(
+          AFconvert.matNumber(value),
+          textAlign: TextAlign.right,
+        );
+      },
       footerRenderer: (rdrCtx) {
         return PlutoAggregateColumnFooter(
           rendererContext: rdrCtx,
@@ -1217,25 +1568,35 @@ class RunpayrollView extends StatelessWidget {
                 rows: _buildRows(controller.listKaryawan.where((element) => element.dipilih).toList()),
                 columnGroups: columnGroups,
                 onChanged: (ev) {
-                  if(ev.columnIdx == 4 || ev.columnIdx == 5) {
+                  if(ev.columnIdx == 5) { // hari_makan
                     if(ev.row.cells['makan_harian']!.value == 'Y') {
                       ev.row.cells['uang_makan_jumlah']!.value = ev.row.cells['hari_makan']!.value * ev.row.cells['uang_makan_harian']!.value;
                     }
-                  } else if(ev.columnIdx == 15 || ev.columnIdx == 5) {
+                  } else if(ev.columnIdx == 6) { // uang_makan_harian
+                    if(ev.row.cells['makan_harian']!.value == 'Y') {
+                      ev.row.cells['uang_makan_jumlah']!.value = ev.row.cells['hari_makan']!.value * ev.row.cells['uang_makan_harian']!.value;
+                      double a = ev.row.cells['pot_25_hari']!.value * (ev.row.cells['uang_makan_harian']!.value/4);
+                      ev.row.cells['pot_25_jumlah']!.value = a.toInt();
+                    }
+                  } else if(ev.columnIdx == 16) { // pot_25_hari
                     if(ev.row.cells['makan_harian']!.value == 'Y') {
                       double a = ev.row.cells['pot_25_hari']!.value * (ev.row.cells['uang_makan_harian']!.value/4);
                       ev.row.cells['pot_25_jumlah']!.value = a.toInt();
                     }
+                  } else if(ev.columnIdx == 23) { // pot_cuti_hari
+                    double a = ev.row.cells['pot_cuti_hari']!.value * ((ev.row.cells['gaji']!.value + ev.row.cells['kenaikan_gaji']!.value)/21);
+                    ev.row.cells['pot_cuti_jumlah']!.value = a.toInt();
+                  } else if(ev.columnIdx == 25) { // pot_kompensasi_jam
+                    double a = ev.row.cells['pot_kompensasi_jam']!.value * ((ev.row.cells['gaji']!.value + ev.row.cells['kenaikan_gaji']!.value)/168);
+                    ev.row.cells['pot_kompensasi_jumlah']!.value = a.toInt();
                   }
                   int penghasilan = ev.row.cells['gaji']!.value + ev.row.cells['kenaikan_gaji']!.value + ev.row.cells['uang_makan_jumlah']!.value +
-                      ev.row.cells['overtime_fjg']!.value + ev.row.cells['overtime_cus']!.value +
-                      ev.row.cells['medical']!.value + ev.row.cells['thr']!.value +
-                      ev.row.cells['bonus']!.value + ev.row.cells['insentif']!.value +
+                      ev.row.cells['overtime_fjg']!.value + ev.row.cells['overtime_cus']!.value + ev.row.cells['medical']!.value +
+                      ev.row.cells['thr']!.value + ev.row.cells['bonus']!.value + ev.row.cells['insentif']!.value +
                       ev.row.cells['telkomsel']!.value + ev.row.cells['lain']!.value;
-                  int potongan =  ev.row.cells['pot_25_jumlah']!.value + ev.row.cells['pot_telepon']!.value +
-                      ev.row.cells['pot_bensin']!.value + ev.row.cells['pot_kas']!.value +
-                      ev.row.cells['pot_cicilan']!.value + ev.row.cells['pot_bpjs']!.value +
-                      ev.row.cells['pot_cuti']!.value + ev.row.cells['pot_lain']!.value;
+                  int potongan =  ev.row.cells['pot_25_jumlah']!.value + ev.row.cells['pot_telepon']!.value + ev.row.cells['pot_bensin']!.value +
+                      ev.row.cells['pot_kas']!.value + ev.row.cells['pot_cicilan']!.value + ev.row.cells['pot_bpjs']!.value +
+                      ev.row.cells['pot_cuti_jumlah']!.value + ev.row.cells['pot_kompensasi_jumlah']!.value + ev.row.cells['pot_lain']!.value;
                   ev.row.cells['total_diterima']!.value = penghasilan - potongan;
                 },
                 onLoaded: (PlutoGridOnLoadedEvent ev) {

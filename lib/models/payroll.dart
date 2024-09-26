@@ -31,7 +31,10 @@ class Payroll {
   int potKas;
   int potCicilan;
   int potBpjs;
-  int potCuti;
+  int potCutiHari;
+  int potCutiJumlah;
+  double potKompensasiJam;
+  int potKompensasiJumlah;
   int potLain;
   int totalDiterima;
   int kantorJp;
@@ -75,7 +78,10 @@ class Payroll {
     this.potKas = 0,
     this.potCicilan = 0,
     this.potBpjs = 0,
-    this.potCuti = 0,
+    this.potCutiHari = 0,
+    this.potCutiJumlah = 0,
+    this.potKompensasiJam = 0,
+    this.potKompensasiJumlah = 0,
     this.potLain = 0,
     this.totalDiterima = 0,
     this.kantorJp = 0,
@@ -121,7 +127,10 @@ class Payroll {
       potKas: AFconvert.keInt(data['pot_kas']),
       potCicilan: AFconvert.keInt(data['pot_cicilan']),
       potBpjs: AFconvert.keInt(data['pot_bpjs']),
-      potCuti: AFconvert.keInt(data['pot_cuti']),
+      potCutiHari: AFconvert.keInt(data['pot_cuti_hari']),
+      potCutiJumlah: AFconvert.keInt(data['pot_cuti_jumlah']),
+      potKompensasiJam: AFconvert.keDouble(data['pot_kompensasi_jam']),
+      potKompensasiJumlah: AFconvert.keInt(data['pot_kompensasi_jumlah']),
       potLain: AFconvert.keInt(data['pot_lain']),
       totalDiterima: AFconvert.keInt(data['total_diterima']),
       keterangan: AFconvert.keString(data['keterangan']),
@@ -173,7 +182,10 @@ class Payroll {
       'pot_kas': AFconvert.keString(potKas),
       'pot_cicilan': AFconvert.keString(potCicilan),
       'pot_bpjs': AFconvert.keString(potBpjs),
-      'pot_cuti': AFconvert.keString(potCuti),
+      'pot_cuti_hari': AFconvert.keString(potCutiHari),
+      'pot_cuti_jumlah': AFconvert.keString(potCutiJumlah),
+      'pot_kompensasi_jam': AFconvert.keString(potKompensasiJam),
+      'pot_kompensasi_jumlah': AFconvert.keString(potKompensasiJumlah),
       'pot_lain': AFconvert.keString(potLain),
       'total_diterima': AFconvert.keString(totalDiterima),
       'keterangan': keterangan,

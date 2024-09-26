@@ -9,6 +9,12 @@ class UpahRepository {
     );
   }
 
+  Future<Hasil> find(String karyawanId, String tahun) async {
+    return await AFdatabase.send(
+      url: 'karyawan/$karyawanId/upah/$tahun',
+    );
+  }
+
   Future<Hasil> create(String karyawanId, Map<String, String> body) async {
     return await AFdatabase.send(
       url: 'karyawan/$karyawanId/upah',

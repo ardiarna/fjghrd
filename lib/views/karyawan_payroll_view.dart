@@ -263,7 +263,11 @@ class KaryawanPayrollView extends StatelessWidget {
               ),
               barisKonten(
                 label: 'Unpaid Leave / Cuti Bersama',
-                value: AFconvert.matNumber(item.potCuti),
+                value: AFconvert.matNumber(item.potCutiJumlah),
+              ),
+              barisKonten(
+                label: 'Kompensasi Kehadiran (Jam)',
+                value: AFconvert.matNumber(item.potKompensasiJumlah),
               ),
               barisKonten(
                 label: 'Lain-lain',
@@ -271,7 +275,7 @@ class KaryawanPayrollView extends StatelessWidget {
               ),
               barisKonten(
                 label: 'Total B',
-                value: AFconvert.matNumber(item.pot25jumlah+item.potTelepon+item.potKas+item.potCicilan+item.potBpjs+item.potBensin+item.potCuti+item.potLain),
+                value: AFconvert.matNumber(item.pot25jumlah+item.potTelepon+item.potKas+item.potCicilan+item.potBpjs+item.potBensin+item.potCutiJumlah+item.potKompensasiJumlah+item.potLain),
                 withBorder: true,
                 color: Colors.grey.shade400,
                 textAlign: TextAlign.right,

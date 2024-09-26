@@ -2,9 +2,11 @@ import 'package:currency_text_input_formatter/currency_text_input_formatter.dart
 import 'package:fjghrd/controllers/auth_control.dart';
 import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/models/karyawan.dart';
+import 'package:fjghrd/models/payroll.dart';
 import 'package:fjghrd/models/potongan.dart';
 import 'package:fjghrd/repositories/karyawan_repository.dart';
 import 'package:fjghrd/repositories/potongan_repository.dart';
+import 'package:fjghrd/repositories/upah_repository.dart';
 import 'package:fjghrd/utils/af_combobox.dart';
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_convert.dart';
@@ -23,6 +25,7 @@ class PotonganControl extends GetxController {
   List<Opsi> listKaryawan = [];
   List<Opsi> listJenis = [
     Opsi(value: 'TB', label: 'Keterlambatan Hadir'),
+    Opsi(value: 'KJ', label: 'Kompensasi Hadir (Jam)'),
     Opsi(value: 'TP', label: 'Telepon'),
     Opsi(value: 'BN', label: 'Bensin'),
     Opsi(value: 'KS', label: 'Pinjaman Kas'),
@@ -43,6 +46,7 @@ class PotonganControl extends GetxController {
   Opsi jenis = Opsi(value: '', label: '');
   late Opsi tahun;
   late Opsi bulan;
+  Payroll payroll = Payroll();
 
   Future<void> loadPotongans() async {
     var hasil = await _repo.findAll(
@@ -75,6 +79,15 @@ class PotonganControl extends GetxController {
     } else {
       AFwidget.snackbar(hasil.message);
     }
+  }
+
+  Future<void> loadPayroll() async {
+    UpahRepository repo = UpahRepository();
+    var hasil = await repo.find(karyawan.id, tahun.value);
+    if(hasil.success) {
+      payroll = Payroll.fromMap(hasil.data);
+    }
+    update();
   }
 
   void tambahForm(BuildContext context) {
@@ -122,6 +135,7 @@ class PotonganControl extends GetxController {
                                 var a = await pilihJenis(value: jenis.value);
                                 if(a != null && a.value != jenis.value) {
                                   jenis = a;
+                                  hitungJumlahIdr(txtHari.text);
                                   update();
                                 }
                               },
@@ -130,88 +144,6 @@ class PotonganControl extends GetxController {
                         ),
                       ),
                     ],
-                  ),
-                ),
-                Visibility(
-                  visible: false,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 150,
-                          padding: const EdgeInsets.only(right: 15),
-                          child: const Text('Periode'),
-                        ),
-                        Expanded(
-                          child: GetBuilder<PotonganControl>(
-                            builder: (_) {
-                              return AFwidget.comboField(
-                                value: bulan.label,
-                                label: '',
-                                onTap: () async {
-                                  var a = await pilihBulan(value: bulan.value);
-                                  if(a != null && a.value != bulan.value) {
-                                    bulan = a;
-                                    update();
-                                  }
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                        const SizedBox(width: 40),
-                        Expanded(
-                          child: GetBuilder<PotonganControl>(
-                            builder: (_) {
-                              return AFwidget.comboField(
-                                value: tahun.label,
-                                label: '',
-                                onTap: () async {
-                                  var a = await pilihTahun(value: tahun.value);
-                                  if(a != null && a.value != tahun.value) {
-                                    tahun = a;
-                                    update();
-                                  }
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Visibility(
-                  visible: false,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 150,
-                          padding: const EdgeInsets.only(right: 15),
-                          child: const Text('Tanggal'),
-                        ),
-                        Expanded(
-                          child: AFwidget.textField(
-                            marginTop: 0,
-                            controller: txtTanggal,
-                            readOnly: true,
-                            prefixIcon: const Icon(Icons.calendar_month),
-                            ontap: () async {
-                              var a = await AFwidget.pickDate(
-                                context: context,
-                                initialDate: AFconvert.keTanggal(AFconvert.matDMYtoYMD(txtTanggal.text)),
-                              );
-                              if(a != null) {
-                                txtTanggal.text = AFconvert.matDate(a);
-                              }
-                            },
-                          ),
-                        )
-                      ],
-                    ),
                   ),
                 ),
                 Padding(
@@ -233,7 +165,8 @@ class PotonganControl extends GetxController {
                                 var a = await pilihKaryawan(value: karyawan.id);
                                 if(a != null && a.value != karyawan.id) {
                                   karyawan = Karyawan.fromMap(a.data!);
-                                  update();
+                                  await loadPayroll();
+                                  hitungJumlahIdr(txtHari.text);
                                 }
                               },
                             );
@@ -245,11 +178,60 @@ class PotonganControl extends GetxController {
                 ),
                 GetBuilder<PotonganControl>(
                   builder: (_) {
+                    if(karyawan.id != '' && (jenis.value == 'TB' || jenis.value == 'UL' || jenis.value == 'KJ')) {
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(160, 10, 25, 10),
+                        child: Row(
+                          children: [
+                            const Text('Gaji: '),
+                            Text(AFconvert.matNumber(payroll.gaji+payroll.kenaikanGaji),
+                              style: const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(width: 50),
+                            const Text('Uang Makan Harian: '),
+                            Text(AFconvert.matNumber(payroll.uangMakanHarian),
+                              style: const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                    return Container();
+                  },
+                ),
+                GetBuilder<PotonganControl>(
+                  builder: (_) {
                     if(jenis.value == 'TB' || jenis.value == 'UL') {
                       return barisText(
                         label: 'Jumlah Hari',
                         controller: txtHari,
                         isNumber: true,
+                        onchanged: hitungJumlahIdr,
+                      );
+                    } else if(jenis.value == 'KJ') {
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Expanded(
+                            child: barisText(
+                              label: 'Jumlah Jam',
+                              controller: txtHari,
+                              isNumber: true,
+                              decimalDigits: 1,
+                              onchanged: hitungJumlahIdr,
+                              paddingRight: 0,
+                            ),
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.fromLTRB(5, 11, 25, 5),
+                            child: Text('*Desimal menggunakan titik (.)',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                          ),
+                        ],
                       );
                     }
                     txtHari.text = '';
@@ -316,17 +298,22 @@ class PotonganControl extends GetxController {
     );
   }
 
-  void ubahForm(String id, BuildContext context) {
+  Future<void> ubahForm(String id, BuildContext context) async {
     var item = listPotongan.where((element) => element.id == id).first;
     txtId.text = item.id;
     tahun = Opsi(value: '${item.tahun}', label: '${item.tahun}');
     bulan = Opsi(value: '${item.bulan}', label: mapBulan[item.bulan]!);
     txtTanggal.text = AFconvert.matDate(item.tanggal);
     txtKeterangan.text = item.keterangan;
-    txtHari.text = AFconvert.matNumber(item.hari);
+    if(item.jenis == 'KJ') {
+      txtHari.text = AFconvert.matNumberWithDecimal(item.hari, decimal: 1);
+    } else {
+      txtHari.text = AFconvert.matNumber(item.hari);
+    }
     txtJumlah.text = AFconvert.matNumber(item.jumlah);
     karyawan = item.karyawan;
     jenis = listJenis.where((element) => element.value == item.jenis).first;
+    await loadPayroll();
     AFwidget.dialog(
       Container(
         padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
@@ -352,6 +339,16 @@ class PotonganControl extends GetxController {
                   label: 'Masa Kerja',
                   nilai: AFconvert.matDate(karyawan.tanggalMasuk),
                 ),
+                barisInfo(
+                  label: 'Gaji',
+                  nilai: AFconvert.matNumber(payroll.gaji+payroll.kenaikanGaji),
+                ),
+                item.jenis == 'TB' ?
+                barisInfo(
+                  label: 'Uang Makan Harian',
+                  nilai: AFconvert.matNumber(payroll.uangMakanHarian),
+                ) :
+                Container(),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
                   child: Row(
@@ -371,6 +368,7 @@ class PotonganControl extends GetxController {
                                 var a = await pilihJenis(value: jenis.value);
                                 if(a != null && a.value != jenis.value) {
                                   jenis = a;
+                                  hitungJumlahIdr(txtHari.text);
                                   update();
                                 }
                               },
@@ -428,45 +426,39 @@ class PotonganControl extends GetxController {
                     ],
                   ),
                 ),
-                Visibility(
-                  visible: false,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 150,
-                          padding: const EdgeInsets.only(right: 15),
-                          child: const Text('Tanggal'),
-                        ),
-                        Expanded(
-                          child: AFwidget.textField(
-                            marginTop: 0,
-                            controller: txtTanggal,
-                            readOnly: true,
-                            prefixIcon: const Icon(Icons.calendar_month),
-                            ontap: () async {
-                              var a = await AFwidget.pickDate(
-                                context: context,
-                                initialDate: AFconvert.keTanggal(AFconvert.matDMYtoYMD(txtTanggal.text)),
-                              );
-                              if(a != null) {
-                                txtTanggal.text = AFconvert.matDate(a);
-                              }
-                            },
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
                 GetBuilder<PotonganControl>(
                   builder: (_) {
                     if(jenis.value == 'TB' || jenis.value == 'UL') {
                       return barisText(
-                        label: 'Hari Hari',
+                        label: 'Jumlah Hari',
                         controller: txtHari,
                         isNumber: true,
+                        onchanged: hitungJumlahIdr,
+                      );
+                    } else if(jenis.value == 'KJ') {
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Expanded(
+                            child: barisText(
+                              label: 'Jumlah Jam',
+                              controller: txtHari,
+                              isNumber: true,
+                              decimalDigits: 1,
+                              onchanged: hitungJumlahIdr,
+                              paddingRight: 0,
+                            ),
+                          ),
+                          const Padding(
+                            padding: EdgeInsets.fromLTRB(5, 11, 25, 5),
+                            child: Text('*Desimal menggunakan titik (.)',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                          ),
+                        ],
                       );
                     }
                     txtHari.text = '';
@@ -577,7 +569,7 @@ class PotonganControl extends GetxController {
         tanggal: AFconvert.keTanggal('${AFconvert.matDMYtoYMD(txtTanggal.text)} 08:00:00'),
         tahun: AFconvert.keInt(tahun.value),
         bulan: AFconvert.keInt(bulan.value),
-        hari: AFconvert.keInt(txtHari.text),
+        hari: AFconvert.keDouble(txtHari.text),
         jumlah: AFconvert.keInt(txtJumlah.text),
         keterangan: txtKeterangan.text,
       );
@@ -624,7 +616,7 @@ class PotonganControl extends GetxController {
         tanggal: AFconvert.keTanggal('${AFconvert.matDMYtoYMD(txtTanggal.text)} 08:00:00'),
         tahun: AFconvert.keInt(tahun.value),
         bulan: AFconvert.keInt(bulan.value),
-        hari: AFconvert.keInt(txtHari.text),
+        hari: AFconvert.keDouble(txtHari.text),
         jumlah: AFconvert.keInt(txtJumlah.text),
         keterangan: txtKeterangan.text,
       );
@@ -704,15 +696,36 @@ class PotonganControl extends GetxController {
     return a;
   }
 
+  void hitungJumlahIdr(String nilai) {
+    if(jenis.value == 'TB') {
+      int jumlahHari = AFconvert.keInt(nilai);
+      double jumlahIdr = (payroll.uangMakanHarian/4)*jumlahHari;
+      txtJumlah.text = AFconvert.matNumber(jumlahIdr.toInt());
+    } else if(jenis.value == 'UL') {
+      int jumlahHari = AFconvert.keInt(nilai);
+      double jumlahIdr = ((payroll.gaji+payroll.kenaikanGaji)/21)*jumlahHari;
+      txtJumlah.text = AFconvert.matNumber(jumlahIdr.toInt());
+    } else if(jenis.value == 'KJ') {
+      double jumlahJam = AFconvert.keDouble(nilai);
+      double jumlahIdr = ((payroll.gaji+payroll.kenaikanGaji)/168)*jumlahJam;
+      txtJumlah.text = AFconvert.matNumber(jumlahIdr.toInt());
+    } else {
+      txtHari.text = '';
+    }
+  }
+
   Widget barisText({
     String label = '',
     TextEditingController? controller,
     double paddingTop = 11,
+    double paddingRight = 20,
     bool isTextArea = false,
     bool isNumber = false,
+    int decimalDigits = 0,
+    Function(String)? onchanged
   }) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(0, paddingTop, 20, 0),
+      padding: EdgeInsets.fromLTRB(0, paddingTop, paddingRight, 0),
       child: Row(
         crossAxisAlignment: isTextArea ? CrossAxisAlignment.start : CrossAxisAlignment.center,
         children: [
@@ -731,10 +744,11 @@ class PotonganControl extends GetxController {
               inputformatters: !isNumber ? null : [
                 CurrencyTextInputFormatter.currency(
                   symbol: '',
-                  decimalDigits: 0,
+                  decimalDigits: decimalDigits,
                 ),
               ],
               textAlign: isNumber ? TextAlign.end : TextAlign.start,
+              onchanged: onchanged,
             ),
           ),
         ],

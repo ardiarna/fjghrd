@@ -1,16 +1,19 @@
+import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/controllers/karyawan_control.dart';
+import 'package:fjghrd/models/opsi.dart';
+import 'package:fjghrd/repositories/payroll_repository.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
+import 'package:fjghrd/views/karyawan_view.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../repositories/payroll_repository.dart';
 
 class BerandaView extends StatelessWidget {
   BerandaView({super.key});
 
   final KaryawanControl karyawanControl = Get.put(KaryawanControl());
+  final HomeControl homeControl = Get.find<HomeControl>();
 
   final _now = DateTime.now();
 
@@ -101,151 +104,71 @@ class BerandaView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      GetBuilder<KaryawanControl>(
-                        builder: (_) {
-                          List<Widget> widgets = [];
-                          List<Widget> areaWidgets = [];
-                          for(var a in karyawanControl.listStatusKerja) {
-                            areaWidgets.add(
-                              Text('🟥${a.label}',
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            );
-                          }
-                          areaWidgets.add(
-                            const Padding(
-                              padding: EdgeInsets.only(top: 5),
-                              child: Text('🟥TOTAL KARYAWAN',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(15, 20, 15, 25),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.7),
+                          borderRadius: const BorderRadius.all(Radius.circular(15)),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.blue,
+                              blurRadius: 1,
+                              blurStyle: BlurStyle.outer,
+                              offset: Offset(1, 1),
                             ),
-                          );
-                          widgets.add(
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: areaWidgets,
-                              ),
-                            ),
-                          );
-                          areaWidgets = [];
-                          for(var a in karyawanControl.listStatusKerja) {
-                            int? nilai = 0;
-                            if(karyawanControl.totalKaryawanPerStatuskerjaPerArea[a.label] != null) {
-                              nilai = karyawanControl.totalKaryawanPerStatuskerjaPerArea[a.label]!['TOTAL KARYAWAN'];
-                            }
-                            areaWidgets.add(
-                              Text('= ${nilai ?? 0}',
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.red,
-                                ),
-                              ),
-                            );
-                          }
-                          areaWidgets.add(
-                            Padding(
-                              padding: const EdgeInsets.only(top: 5),
-                              child: Text('= ${karyawanControl.totalKaryawanPerArea['TOTAL KARYAWAN'] ?? 0}',
-                                style: const TextStyle(
-                                  fontSize: 13,
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          );
-                          widgets.add(
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 0, 35, 0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: areaWidgets,
-                              ),
-                            ),
-                          );
-
-                          for (var op in karyawanControl.listArea) {
-                            String kodeArea = op.data!['kode'];
-                            areaWidgets = [];
-                            for(var a in karyawanControl.listStatusKerja) {
-                              int? nilai = 0;
-                              if(karyawanControl.totalKaryawanPerStatuskerjaPerArea[a.label] != null) {
-                                nilai = karyawanControl.totalKaryawanPerStatuskerjaPerArea[a.label]![kodeArea];
-                              }
-                              areaWidgets.add(
-                                Text(
-                                  '$kodeArea: ${nilai ?? 0}',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    color: Colors.red.shade300,
-                                  ),
-                                ),
-                              );
-                            }
-                            areaWidgets.add(
-                              Padding(
-                                padding: const EdgeInsets.only(top: 5),
-                                child: Text(
-                                  '$kodeArea: ${karyawanControl.totalKaryawanPerArea[kodeArea] ?? 0}',
-                                  style: TextStyle(
-                                    fontSize: 13,
-                                    color: Colors.red.shade300,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            );
-                            widgets.add(
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: areaWidgets,
-                                ),
-                              ),
-                            );
-                          }
-                          return Container(
-                            padding: const EdgeInsets.all(15),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.7),
-                              borderRadius: const BorderRadius.all(Radius.circular(15)),
-                              boxShadow: const [
-                                BoxShadow(
-                                  color: Colors.blue,
-                                  blurRadius: 1,
-                                  blurStyle: BlurStyle.outer,
-                                  offset: Offset(1, 1),
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              children: [
-                                const Text(
-                                  'KETERANGAN STATUS KARYAWAN :',
-                                  style: TextStyle(
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            GetBuilder<KaryawanControl>(
+                              builder: (_) {
+                                return Text(
+                                  'KETERANGAN STATUS KARYAWAN ${karyawanControl.filterStaf.label} :',
+                                  style: const TextStyle(
                                     fontSize: 13,
                                     color: Colors.red,
                                   ),
-                                ),
-                                const SizedBox(height: 15),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: widgets,
-                                ),
-                              ],
+                                );
+                              },
                             ),
-                          );
-                        },
+                            GetBuilder<KaryawanControl>(
+                              builder: (_) {
+                                return Visibility(
+                                  visible: karyawanControl.filterArea.value != '',
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: Text(
+                                      'AREA ${karyawanControl.filterArea.label}',
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                            GetBuilder<KaryawanControl>(
+                              builder: (_) {
+                                return Visibility(
+                                  visible: karyawanControl.filterStatusKerja.value != '',
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: Text(
+                                      'STATUS ${karyawanControl.filterStatusKerja.label}',
+                                      style: const TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                            const SizedBox(height: 15),
+                            summaryInfo(),
+                          ],
+                        ),
                       ),
                       GetBuilder<KaryawanControl>(
                         builder: (_) {
@@ -602,6 +525,170 @@ class BerandaView extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  Widget summaryInfo() {
+    return GetBuilder<KaryawanControl>(
+      builder: (_) {
+        List<Widget> widgets = [];
+        List<Widget> areaWidgets = [];
+        Map<String, int> listTotalPerStatusKerja = {};
+        for(var opStatus in karyawanControl.listStatusKerja) {
+          int nilaiTotal = 0;
+          if(karyawanControl.totalKaryawanPerStatuskerjaPerArea[opStatus.label] != null) {
+            nilaiTotal = karyawanControl.totalKaryawanPerStatuskerjaPerArea[opStatus.label]!['TOTAL KARYAWAN'] ?? 0;
+          }
+          listTotalPerStatusKerja[opStatus.label] = nilaiTotal;
+          if(nilaiTotal > 0) {
+            areaWidgets.add(
+              textButton(
+                label: '🟥${opStatus.label}',
+                area: Opsi(value: '', label: 'SEMUA'),
+                statusKerja: opStatus,
+              ),
+            );
+          }
+        }
+        if(karyawanControl.filterStatusKerja.value == '') {
+          areaWidgets.add(
+            Padding(
+              padding: const EdgeInsets.only(top: 5),
+              child: textButton(
+                label: '🟥TOTAL KARYAWAN',
+                area: Opsi(value: '', label: 'SEMUA'),
+                statusKerja: Opsi(value: '', label: 'SEMUA'),
+              ),
+            ),
+          );
+        }
+        widgets.add(
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: areaWidgets,
+            ),
+          ),
+        );
+        areaWidgets = [];
+        for(var opStatus in karyawanControl.listStatusKerja) {
+          int nilaiTotal = listTotalPerStatusKerja[opStatus.label] ?? 0;
+          if (nilaiTotal > 0) {
+            areaWidgets.add(
+              Text('= $nilaiTotal',
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: Colors.red,
+                ),
+              ),
+            );
+          }
+        }
+        if(karyawanControl.filterStatusKerja.value == '') {
+          areaWidgets.add(
+            Padding(
+              padding: const EdgeInsets.only(top: 5),
+              child: Text('= ${karyawanControl.totalKaryawanPerArea['TOTAL KARYAWAN'] ?? 0}',
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          );
+        }
+        widgets.add(
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 35, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: areaWidgets,
+            ),
+          ),
+        );
+
+        for (var opArea in karyawanControl.listArea) {
+          areaWidgets = [];
+          String kodeArea = opArea.data!['kode'];
+          int totalKaryawanPerArea = karyawanControl.totalKaryawanPerArea[kodeArea] ?? 0;
+          if(totalKaryawanPerArea > 0 ) {
+            for(var opStatus in karyawanControl.listStatusKerja) {
+              int nilaiTotal = listTotalPerStatusKerja[opStatus.label] ?? 0;
+              if(nilaiTotal > 0) {
+                int nilai = 0;
+                if(karyawanControl.totalKaryawanPerStatuskerjaPerArea[opStatus.label] != null) {
+                  nilai = karyawanControl.totalKaryawanPerStatuskerjaPerArea[opStatus.label]![kodeArea] ?? 0;
+                }
+                areaWidgets.add(
+                  textButton(
+                    label: '$kodeArea: $nilai',
+                    area: opArea,
+                    statusKerja: opStatus,
+                  ),
+                );
+              }
+            }
+            if(karyawanControl.filterStatusKerja.value == '') {
+              areaWidgets.add(
+                Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: textButton(
+                    label: '$kodeArea: $totalKaryawanPerArea',
+                    area: opArea,
+                    statusKerja: Opsi(value: '', label: 'SEMUA'),
+                  ),
+                ),
+              );
+            }
+            widgets.add(
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: areaWidgets,
+                ),
+              ),
+            );
+          }
+        }
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: widgets,
+        );
+      },
+    );
+  }
+
+  Widget textButton({
+    required String label,
+    required Opsi area,
+    required Opsi statusKerja,
+  }) {
+    return TextButton(
+      style: TextButton.styleFrom(
+        padding: EdgeInsets.zero,
+        minimumSize: const Size(0, 0),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.zero,
+        ),
+      ),
+      onPressed: () {
+        karyawanControl.filterArea = area;
+        karyawanControl.filterStatusKerja = statusKerja;
+        karyawanControl.loadKaryawans();
+        homeControl.tabId = 1;
+        homeControl.kontener = KaryawanView();
+        homeControl.update();
+      },
+      child: Text(label,
+        style: const TextStyle(
+          fontSize: 13,
+          color: Colors.red,
+        ),
+      ),
     );
   }
 

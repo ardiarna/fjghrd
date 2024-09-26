@@ -20,9 +20,9 @@ class CalonKaryawanView extends StatelessWidget {
     return List.generate(
       rowData.length,
           (index) {
-        Duration d = now.difference(rowData[index].tanggalMasuk ?? now); // dalama hari
-        int tahun = d.inDays ~/ 365; // Membagi dengan 365 untuk tahun
-        int bulan = (d.inDays % 365) ~/ 30; // Menggunakan modulo 365, lalu dibagi dengan 30 untuk bulan
+        Duration d = now.difference(rowData[index].tanggalMasuk ?? now);
+        int tahun = d.inDays ~/ 365;
+        int bulan = (d.inDays % 365) ~/ 30;
         return PlutoRow(
           cells: {
             'urutan': PlutoCell(value: index+1),

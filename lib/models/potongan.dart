@@ -8,7 +8,7 @@ class Potongan {
   DateTime? tanggal;
   int tahun;
   int bulan;
-  int hari;
+  double hari;
   int jumlah;
   String keterangan;
   DateTime? createdAt;
@@ -34,7 +34,7 @@ class Potongan {
       tanggal: AFconvert.keTanggal(data['tanggal']),
       tahun: AFconvert.keInt(data['tahun']),
       bulan: AFconvert.keInt(data['bulan']),
-      hari: AFconvert.keInt(data['hari']),
+      hari: AFconvert.keDouble(data['hari']),
       jumlah: AFconvert.keInt(data['jumlah']),
       keterangan: AFconvert.keString(data['keterangan']),
       createdAt: AFconvert.keTanggal(data['created_at']),
