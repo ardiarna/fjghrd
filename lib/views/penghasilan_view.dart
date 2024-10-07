@@ -131,7 +131,7 @@ class PenghasilanView extends StatelessWidget {
       //   },
       // ),
       PlutoColumn(
-        title: 'JUMLAH IDR',
+        title: 'JUMLAH',
         field: 'jumlah',
         type: PlutoColumnType.number(),
         readOnly: true,

@@ -22,6 +22,7 @@ class PenghasilanControl extends GetxController {
   List<Penghasilan> listPenghasilan = [];
   List<Opsi> listKaryawan = [];
   List<Opsi> listJenis = [
+    Opsi(value: 'AB', label: 'Kehadiran'),
     Opsi(value: 'HR', label: 'THR'),
     Opsi(value: 'BN', label: 'Bonus'),
     Opsi(value: 'IN', label: 'Insentif'),
@@ -239,10 +240,14 @@ class PenghasilanControl extends GetxController {
                     ],
                   ),
                 ),
-                barisText(
-                  label: 'Jumlah IDR',
-                  controller: txtJumlah,
-                  isNumber: true,
+                GetBuilder<PenghasilanControl>(
+                  builder: (_) {
+                    return barisText(
+                      label: 'Jumlah ${jenis.value == 'AB' ? 'Hari' : 'IDR'}',
+                      controller: txtJumlah,
+                      isNumber: true,
+                    );
+                  },
                 ),
                 barisText(
                   label: 'Keterangan',
@@ -442,10 +447,14 @@ class PenghasilanControl extends GetxController {
                     ),
                   ),
                 ),
-                barisText(
-                  label: 'Jumlah IDR',
-                  controller: txtJumlah,
-                  isNumber: true,
+                GetBuilder<PenghasilanControl>(
+                  builder: (_) {
+                    return barisText(
+                      label: 'Jumlah ${jenis.value == 'AB' ? 'Hari' : 'IDR'}',
+                      controller: txtJumlah,
+                      isNumber: true,
+                    );
+                  },
                 ),
                 barisText(
                   label: 'Keterangan',
@@ -535,7 +544,7 @@ class PenghasilanControl extends GetxController {
         throw 'Silakan pilih karyawan';
       }
       if(txtJumlah.text.isEmpty) {
-        throw 'Jumlah IDR harus diisi';
+        throw 'Jumlah ${jenis.value == 'AB' ? 'Hari' : 'IDR'} harus diisi';
       }
 
       var a = Penghasilan(
@@ -579,7 +588,7 @@ class PenghasilanControl extends GetxController {
         throw 'Tanggal harus diisi';
       }
       if(txtJumlah.text.isEmpty) {
-        throw 'Jumlah IDR harus diisi';
+        throw 'Jumlah ${jenis.value == 'AB' ? 'Hari' : 'IDR'} harus diisi';
       }
       var a = Penghasilan(
         jenis: jenis.value,

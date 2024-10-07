@@ -21,8 +21,14 @@ class RunpayrollView extends StatelessWidget {
   PlutoGridStateManager? stateManager;
 
   List<PlutoRow> _buildRows(List<Karyawan> rowData) {
-    int hariMakan = controller.countWorkingDays();
+    int hariMakanDefault = controller.countWorkingDays();
     return rowData.map((e) {
+      var hariMakan = controller.listPenghasilan
+          .where((element) => element.karyawan.id == e.id && element.jenis == 'AB')
+          .fold(0, (sum, element) => sum + element.jumlah);
+      if(hariMakan == 0) {
+        hariMakan = hariMakanDefault;
+      }
       int uangMakanHarian = e.upah.makanHarian ? e.upah.uangMakan : 0;
       int uangMakanJumlah = e.upah.makanHarian ? uangMakanHarian*hariMakan : e.upah.uangMakan;
       int medical = controller.listMedical
