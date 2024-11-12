@@ -349,7 +349,6 @@ class KaryawanForm extends StatelessWidget {
                 children: [
                   Flexible(
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Expanded(
                           child: Scrollbar(
@@ -968,11 +967,27 @@ class KaryawanForm extends StatelessWidget {
                         Container(
                           color: Colors.white,
                           padding: const EdgeInsets.fromLTRB(0, 15, 20, 0),
-                          child: AFwidget.tombol(
-                            label: 'Simpan Perubahan',
-                            color: Colors.blue,
-                            onPressed: controller.ubahData,
-                            minimumSize: const Size(120, 40),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(
+                                onPressed: () async {
+                                  AFwidget.loading();
+                                  await controller.loadAllData();
+                                  Get.back();
+                                },
+                                icon: const Icon(
+                                  Icons.refresh,
+                                ),
+                                padding: const EdgeInsets.all(0),
+                              ),
+                              AFwidget.tombol(
+                                label: 'Simpan Perubahan',
+                                color: Colors.blue,
+                                onPressed: controller.ubahData,
+                                minimumSize: const Size(120, 40),
+                              ),
+                            ],
                           ),
                         ),
                       ],

@@ -288,7 +288,7 @@ class KaryawanControl extends GetxController {
     staf = null;
     AFwidget.dialog(
       Container(
-        padding: const EdgeInsets.fromLTRB(15, 0, 0, 15),
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
         width: 700,
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -299,7 +299,7 @@ class KaryawanControl extends GetxController {
             ListView(
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 60, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(15, 70, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -328,7 +328,7 @@ class KaryawanControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(15, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -378,7 +378,7 @@ class KaryawanControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(15, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -436,7 +436,7 @@ class KaryawanControl extends GetxController {
                   controller: txtNik,
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(15, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -465,7 +465,7 @@ class KaryawanControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(15, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -494,7 +494,7 @@ class KaryawanControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(15, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -523,7 +523,7 @@ class KaryawanControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(15, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -564,7 +564,7 @@ class KaryawanControl extends GetxController {
                   controller: txtNomorPaspor,
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(15, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -615,7 +615,7 @@ class KaryawanControl extends GetxController {
                   controller: txtTelepon,
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(15, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -665,7 +665,7 @@ class KaryawanControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(15, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -729,7 +729,7 @@ class KaryawanControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(15, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -758,7 +758,7 @@ class KaryawanControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(15, 11, 20, 0),
                   child: Row(
                     children: [
                       const SizedBox(width: 150),
@@ -777,7 +777,7 @@ class KaryawanControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(15, 11, 20, 0),
                   child: Row(
                     children: [
                       const SizedBox(width: 150),
@@ -800,7 +800,7 @@ class KaryawanControl extends GetxController {
                   controller: txtEmail,
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(15, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -835,7 +835,7 @@ class KaryawanControl extends GetxController {
                 Visibility(
                   visible: false,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                    padding: const EdgeInsets.fromLTRB(15, 11, 20, 0),
                     child: Row(
                       children: [
                         Container(
@@ -865,7 +865,7 @@ class KaryawanControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(15, 25, 20, 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -890,18 +890,38 @@ class KaryawanControl extends GetxController {
             Container(
               height: 55,
               width: double.infinity,
-              padding: const EdgeInsets.all(15),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
+              padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+              decoration: BoxDecoration(
+                color: const Color(0xFFf2fbfe),
+                border: Border.all(
+                  color: Colors.brown.shade100, width: 1,
+                ),
+                borderRadius: const BorderRadius.only(
                   topRight: Radius.circular(15),
+                  topLeft: Radius.circular(15),
                 ),
               ),
-              child: const Text('Form Tambah Karyawan',
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Form Tambah Karyawan',
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () async {
+                      AFwidget.loading();
+                      await loadAllData();
+                      Get.back();
+                    },
+                    icon: const Icon(
+                      Icons.refresh,
+                    ),
+                    padding: const EdgeInsets.all(0),
+                  ),
+                ],
               ),
             ),
           ],
@@ -2759,7 +2779,6 @@ class KaryawanControl extends GetxController {
           Opsi(value: AFconvert.keString(data['id']), label: data['nama'], data: data),
         );
       }
-      update();
     } else {
       AFwidget.snackbar(hasil.message);
     }
@@ -2775,7 +2794,6 @@ class KaryawanControl extends GetxController {
           Opsi(value: AFconvert.keString(data['id']), label: data['nama'], data: data),
         );
       }
-      update();
     } else {
       AFwidget.snackbar(hasil.message);
     }
@@ -2791,7 +2809,6 @@ class KaryawanControl extends GetxController {
           Opsi(value: AFconvert.keString(data['id']), label: '${data['nama']} (${data['kode']})', data: data),
         );
       }
-      update();
     } else {
       AFwidget.snackbar(hasil.message);
     }
@@ -2807,7 +2824,6 @@ class KaryawanControl extends GetxController {
           Opsi(value: AFconvert.keString(data['id']), label: data['nama'], data: data),
         );
       }
-      update();
     } else {
       AFwidget.snackbar(hasil.message);
     }
@@ -2823,7 +2839,6 @@ class KaryawanControl extends GetxController {
           Opsi(value: AFconvert.keString(data['id']), label: data['nama'], data: data),
         );
       }
-      update();
     } else {
       AFwidget.snackbar(hasil.message);
     }
@@ -2839,7 +2854,6 @@ class KaryawanControl extends GetxController {
           Opsi(value: AFconvert.keString(data['id']), label: data['nama'], data: data),
         );
       }
-      update();
     } else {
       AFwidget.snackbar(hasil.message);
     }
@@ -2855,7 +2869,6 @@ class KaryawanControl extends GetxController {
           Opsi(value: AFconvert.keString(data['id']), label: data['nama'], data: data),
         );
       }
-      update();
     } else {
       AFwidget.snackbar(hasil.message);
     }
@@ -2871,10 +2884,21 @@ class KaryawanControl extends GetxController {
           Opsi(value: AFconvert.keString(data['id']), label: data['kode'], data: data),
         );
       }
-      update();
     } else {
       AFwidget.snackbar(hasil.message);
     }
+  }
+
+  Future<void> loadAllData() async {
+    await loadAgamas();
+    await loadAreas();
+    await loadDivisis();
+    await loadJabatans();
+    await loadPendidikans();
+    await loadStatusKerjas();
+    await loadStatusPhks();
+    await loadPtkps();
+    update();
   }
 
   Future<Opsi?> pilihAgama({String value = ''}) async {
@@ -2988,7 +3012,7 @@ class KaryawanControl extends GetxController {
     bool isTextArea = false
   }) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(0, paddingTop, 20, 0),
+      padding: EdgeInsets.fromLTRB(15, paddingTop, 20, 0),
       child: Row(
         crossAxisAlignment: isTextArea ? CrossAxisAlignment.start : CrossAxisAlignment.center,
         children: [
@@ -3040,14 +3064,6 @@ class KaryawanControl extends GetxController {
 
   @override
   void onInit() {
-    loadAgamas();
-    loadAreas();
-    loadDivisis();
-    loadJabatans();
-    loadPendidikans();
-    loadStatusKerjas();
-    loadStatusPhks();
-    loadPtkps();
     filterTahun = Opsi(value: '${_now.year}', label: '${_now.year}');
     listTahun = List.generate(_now.year-2019, (index) => Opsi(value: '${_now.year-index}', label: '${_now.year-index}'));
     txtId = TextEditingController();

@@ -312,6 +312,7 @@ class KaryawanView extends StatelessWidget {
       ),
     ];
     controller.loadKaryawans();
+    controller.loadAllData();
     return Column(
       children: [
         Container(
