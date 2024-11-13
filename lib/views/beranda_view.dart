@@ -82,7 +82,6 @@ class BerandaView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    karyawanControl.loadKaryawans();
     return Column(
       children: [
         Expanded(

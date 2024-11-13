@@ -3100,6 +3100,8 @@ class KaryawanControl extends GetxController {
     txtPerjanjianTglAkhir = TextEditingController();
     txtPhkId = TextEditingController();
     txtPhkKeterangan = TextEditingController();
+    loadKaryawans();
+    loadAllData();
     super.onInit();
   }
 
