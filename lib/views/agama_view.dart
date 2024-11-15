@@ -39,7 +39,7 @@ class AgamaView extends StatelessWidget {
         renderer: (rdrCtx) {
           return IconButton(
             onPressed: () {
-              controller.ubahForm(rdrCtx.row.cells['id']!.value);
+              controller.inputForm(rdrCtx.row.cells['id']!.value);
             },
             icon: const Icon(
               Icons.edit_square,
@@ -87,7 +87,7 @@ class AgamaView extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () {
-                  controller.tambahForm();
+                  controller.inputForm('');
                 },
                 icon: const Icon(
                   Icons.add_circle,

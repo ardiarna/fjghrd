@@ -41,7 +41,7 @@ class HariLiburView extends StatelessWidget {
         renderer: (rdrCtx) {
           return IconButton(
             onPressed: () {
-              controller.ubahForm(rdrCtx.row.cells['id']!.value, context);
+              controller.inputForm(rdrCtx.row.cells['id']!.value, context);
             },
             icon: const Icon(
               Icons.edit_square,
@@ -121,7 +121,7 @@ class HariLiburView extends StatelessWidget {
               const SizedBox(width: 40),
               IconButton(
                 onPressed: () {
-                  controller.tambahForm(context);
+                  controller.inputForm('', context);
                 },
                 icon: const Icon(
                   Icons.add_circle,

@@ -121,32 +121,15 @@ class ReportView extends StatelessWidget {
       Container(
         width: 500,
         height: 300,
-        padding: const EdgeInsets.fromLTRB(15, 0, 0, 15),
         decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(15)),
         ),
         child: Column(
           children: [
-            Container(
-              height: 65,
-              width: double.infinity,
-              padding: const EdgeInsets.all(15),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(15),
-                ),
-              ),
-              child: Text('Excel Rekap Payroll Per Karyawan ${controller.filterTahun.label}',
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+            AFwidget.formHeader('Excel Rekap Payroll Per Karyawan ${controller.filterTahun.label}'),
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Row(
                 children: [
                   Container(
@@ -232,7 +215,7 @@ class ReportView extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 20, 20, 0),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Row(
                 children: [
                   Container(
@@ -261,7 +244,7 @@ class ReportView extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
+              padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -296,32 +279,15 @@ class ReportView extends StatelessWidget {
       Container(
         width: 500,
         height: 300,
-        padding: const EdgeInsets.fromLTRB(15, 0, 0, 15),
         decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(15)),
         ),
         child: Column(
           children: [
-            Container(
-              height: 65,
-              width: double.infinity,
-              padding: const EdgeInsets.all(15),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(15),
-                ),
-              ),
-              child: Text('Excel Rekap PPh21 Tahun ${controller.filterTahun.label}',
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+            AFwidget.formHeader('Excel Rekap PPh21 Tahun ${controller.filterTahun.label}'),
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Row(
                 children: [
                   Container(
@@ -407,7 +373,7 @@ class ReportView extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 20, 20, 0),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Row(
                 children: [
                   Container(
@@ -436,7 +402,7 @@ class ReportView extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
+              padding: const EdgeInsets.fromLTRB(0, 25, 20, 25),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -471,32 +437,15 @@ class ReportView extends StatelessWidget {
       Container(
         width: 500,
         height: 370,
-        padding: const EdgeInsets.fromLTRB(15, 0, 0, 15),
         decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(15)),
         ),
         child: Column(
           children: [
-            Container(
-              height: 65,
-              width: double.infinity,
-              padding: const EdgeInsets.all(15),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(15),
-                ),
-              ),
-              child: Text('Excel Slip Gaji ${controller.filterTahun.label}',
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+            AFwidget.formHeader('Excel Slip Gaji ${controller.filterTahun.label}'),
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Row(
                 children: [
                   Container(
@@ -525,7 +474,7 @@ class ReportView extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 20, 20, 0),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Row(
                 children: [
                   Container(
@@ -611,7 +560,7 @@ class ReportView extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 20, 20, 0),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Row(
                 children: [
                   Container(
@@ -640,7 +589,7 @@ class ReportView extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
+              padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [

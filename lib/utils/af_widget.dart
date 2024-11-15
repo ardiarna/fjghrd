@@ -1,3 +1,4 @@
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
@@ -840,6 +841,105 @@ abstract class AFwidget {
       child: Container(
         padding: const EdgeInsets.all(20),
         child: Text(label),
+      ),
+    );
+  }
+
+  static Widget formHeader(String label, {
+    bool radiusLeft = true,
+    bool radiusRight = true,
+  }) {
+    return Container(
+      height: 55,
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+      alignment: Alignment.centerLeft,
+      decoration: BoxDecoration(
+        color: const Color(0xFFf2fbfe),
+        border: Border(
+          bottom: BorderSide(color: Colors.brown.shade100),
+        ),
+        borderRadius: BorderRadius.only(
+          topLeft: radiusLeft ? const Radius.circular(15) : Radius.zero,
+          topRight: radiusRight ? const Radius.circular(15) : Radius.zero,
+        ),
+      ),
+      child: Text(label,
+        style: const TextStyle(
+          fontSize: 17,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  static Widget barisText({
+    String label = '',
+    TextEditingController? controller,
+    double paddingTop = 11,
+    double paddingRight = 20,
+    double labelWidth = 150,
+    bool isTextArea = false,
+    bool isNumber = false,
+    int decimalDigits = 0,
+    Function(String)? onchanged
+  }) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(20, paddingTop, paddingRight, 0),
+      child: Row(
+        crossAxisAlignment: isTextArea ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: labelWidth,
+            padding: EdgeInsets.only(right: 15, top: isTextArea ? 15 : 0),
+            child: Text(label),
+          ),
+          Expanded(
+            child: AFwidget.textField(
+              marginTop: 0,
+              controller: controller,
+              maxLines: isTextArea ? 4 : 1,
+              minLines: isTextArea ? 2 : 1,
+              keyboard: isTextArea ? TextInputType.multiline : TextInputType.text,
+              inputformatters: !isNumber ? null : [
+                CurrencyTextInputFormatter.currency(
+                  symbol: '',
+                  decimalDigits: decimalDigits,
+                ),
+              ],
+              textAlign: isNumber ? TextAlign.end : TextAlign.start,
+              onchanged: onchanged,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static Widget barisInfo({
+    String label = '',
+    String nilai = '',
+    double paddingTop = 20,
+    double labelWidth = 150,
+  }) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(20, paddingTop, 20, 0),
+      child: Row(
+        children: [
+          Container(
+            width: labelWidth,
+            padding: const EdgeInsets.only(right: 15),
+            child: Text(label),
+          ),
+          Expanded(
+            child: Text(': $nilai',
+              style: const TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

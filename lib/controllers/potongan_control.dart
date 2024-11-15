@@ -1,4 +1,3 @@
-import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:fjghrd/controllers/auth_control.dart';
 import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/models/karyawan.dart';
@@ -106,7 +105,6 @@ class PotonganControl extends GetxController {
     }
     AFwidget.dialog(
       Container(
-        padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
         width: Get.width,
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -117,7 +115,7 @@ class PotonganControl extends GetxController {
             ListView(
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 60, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 70, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -147,7 +145,7 @@ class PotonganControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -202,7 +200,7 @@ class PotonganControl extends GetxController {
                 GetBuilder<PotonganControl>(
                   builder: (_) {
                     if(jenis.value == 'TB' || jenis.value == 'UL') {
-                      return barisText(
+                      return AFwidget.barisText(
                         label: 'Jumlah Hari',
                         controller: txtHari,
                         isNumber: true,
@@ -213,7 +211,7 @@ class PotonganControl extends GetxController {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Expanded(
-                            child: barisText(
+                            child: AFwidget.barisText(
                               label: 'Jumlah Jam',
                               controller: txtHari,
                               isNumber: true,
@@ -238,18 +236,18 @@ class PotonganControl extends GetxController {
                     return Container();
                   },
                 ),
-                barisText(
+                AFwidget.barisText(
                   label: 'Jumlah IDR',
                   controller: txtJumlah,
                   isNumber: true,
                 ),
-                barisText(
+                AFwidget.barisText(
                   label: 'Keterangan',
                   controller: txtKeterangan,
                   isTextArea: true,
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -271,23 +269,7 @@ class PotonganControl extends GetxController {
                 ),
               ],
             ),
-            Container(
-              height: 55,
-              width: double.infinity,
-              padding: const EdgeInsets.all(15),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(15),
-                ),
-              ),
-              child: Text('Form Tambah Potongan - ${bulan.label} ${tahun.label}',
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+            AFwidget.formHeader('Form Tambah Potongan - ${bulan.label} ${tahun.label}'),
           ],
         ),
       ),
@@ -316,7 +298,6 @@ class PotonganControl extends GetxController {
     await loadPayroll();
     AFwidget.dialog(
       Container(
-        padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
         width: Get.width,
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -326,31 +307,31 @@ class PotonganControl extends GetxController {
           children: [
             ListView(
               children: [
-                barisInfo(
+                AFwidget.barisInfo(
                   label: 'Nama Karyawan',
                   nilai: karyawan.nama,
-                  paddingTop: 60,
+                  paddingTop: 70,
                 ),
-                barisInfo(
+                AFwidget.barisInfo(
                   label: 'Jabatan',
                   nilai: karyawan.jabatan.nama,
                 ),
-                barisInfo(
+                AFwidget.barisInfo(
                   label: 'Masa Kerja',
                   nilai: AFconvert.matDate(karyawan.tanggalMasuk),
                 ),
-                barisInfo(
+                AFwidget.barisInfo(
                   label: 'Gaji',
                   nilai: AFconvert.matNumber(payroll.gaji+payroll.kenaikanGaji),
                 ),
                 item.jenis == 'TB' ?
-                barisInfo(
+                AFwidget.barisInfo(
                   label: 'Uang Makan Harian',
                   nilai: AFconvert.matNumber(payroll.uangMakanHarian),
                 ) :
                 Container(),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -380,7 +361,7 @@ class PotonganControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -429,7 +410,7 @@ class PotonganControl extends GetxController {
                 GetBuilder<PotonganControl>(
                   builder: (_) {
                     if(jenis.value == 'TB' || jenis.value == 'UL') {
-                      return barisText(
+                      return AFwidget.barisText(
                         label: 'Jumlah Hari',
                         controller: txtHari,
                         isNumber: true,
@@ -440,7 +421,7 @@ class PotonganControl extends GetxController {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Expanded(
-                            child: barisText(
+                            child: AFwidget.barisText(
                               label: 'Jumlah Jam',
                               controller: txtHari,
                               isNumber: true,
@@ -465,18 +446,18 @@ class PotonganControl extends GetxController {
                     return Container();
                   },
                 ),
-                barisText(
+                AFwidget.barisText(
                   label: 'Jumlah IDR',
                   controller: txtJumlah,
                   isNumber: true,
                 ),
-                barisText(
+                AFwidget.barisText(
                   label: 'Keterangan',
                   controller: txtKeterangan,
                   isTextArea: true,
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -507,23 +488,7 @@ class PotonganControl extends GetxController {
                 ),
               ],
             ),
-            Container(
-              height: 55,
-              width: double.infinity,
-              padding: const EdgeInsets.all(15),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(15),
-                ),
-              ),
-              child: const Text('Form Ubah Potongan',
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+            AFwidget.formHeader('Form Ubah Potongan'),
           ],
         ),
       ),
@@ -712,75 +677,6 @@ class PotonganControl extends GetxController {
     } else {
       txtHari.text = '';
     }
-  }
-
-  Widget barisText({
-    String label = '',
-    TextEditingController? controller,
-    double paddingTop = 11,
-    double paddingRight = 20,
-    bool isTextArea = false,
-    bool isNumber = false,
-    int decimalDigits = 0,
-    Function(String)? onchanged
-  }) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0, paddingTop, paddingRight, 0),
-      child: Row(
-        crossAxisAlignment: isTextArea ? CrossAxisAlignment.start : CrossAxisAlignment.center,
-        children: [
-          Container(
-            width: 150,
-            padding: EdgeInsets.only(right: 15, top: isTextArea ? 15 : 0),
-            child: Text(label),
-          ),
-          Expanded(
-            child: AFwidget.textField(
-              marginTop: 0,
-              controller: controller,
-              maxLines: isTextArea ? 4 : 1,
-              minLines: isTextArea ? 2 : 1,
-              keyboard: isTextArea ? TextInputType.multiline : TextInputType.text,
-              inputformatters: !isNumber ? null : [
-                CurrencyTextInputFormatter.currency(
-                  symbol: '',
-                  decimalDigits: decimalDigits,
-                ),
-              ],
-              textAlign: isNumber ? TextAlign.end : TextAlign.start,
-              onchanged: onchanged,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget barisInfo({
-    String label = '',
-    String nilai = '',
-    double paddingTop = 20,
-  }) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0, paddingTop, 20, 0),
-      child: Row(
-        children: [
-          Container(
-            width: 150,
-            padding: const EdgeInsets.only(right: 15),
-            child: Text(label),
-          ),
-          Expanded(
-            child: Text(': $nilai',
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
   @override

@@ -103,7 +103,7 @@ class OncallCustomerView extends StatelessWidget {
         field: 'jumlah',
         type: PlutoColumnType.number(),
         readOnly: true,
-        width: 180,
+        minWidth: 150,
         backgroundColor: Colors.brown.shade100,
         textAlign: PlutoColumnTextAlign.right,
         titleTextAlign: PlutoColumnTextAlign.center,

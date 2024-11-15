@@ -393,36 +393,22 @@ class HomeView extends StatelessWidget {
       Container(
         width: 500,
         height: 210,
-        padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
         decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(15)),
         ),
         child: Column(
           children: [
-            Container(
-              height: 65,
-              width: double.infinity,
-              padding: const EdgeInsets.all(15),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(15),
-                ),
+            AFwidget.formHeader('UBAH EMAIL'),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: AFwidget.textField(
+                controller: controller.txtEmail,
+                label: 'Email',
               ),
-              child: const Text('UBAH EMAIL',
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            AFwidget.textField(
-              controller: controller.txtEmail,
-              label: 'Email',
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 35, 0, 0),
+              padding: const EdgeInsets.fromLTRB(20, 5, 20, 25),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -458,97 +444,87 @@ class HomeView extends StatelessWidget {
       Container(
         width: 500,
         height: 350,
-        padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
         decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(15)),
         ),
         child: Column(
           children: [
-            Container(
-              height: 65,
-              width: double.infinity,
-              padding: const EdgeInsets.all(15),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(15),
-                ),
+            AFwidget.formHeader('UBAH PASSWORD'),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 15),
+              child: GetBuilder<HomeControl>(
+                builder: (_) {
+                  return AFwidget.textField(
+                    controller: controller.txtPassOld,
+                    label: 'Password Lama',
+                    obscureText: !controller.isTampilPassOld,
+                    suffixIcon: GestureDetector(
+                      child: Icon(
+                        controller.isTampilPassOld
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        size: 20,
+                      ),
+                      onTap: () {
+                        controller.isTampilPassOld = !controller.isTampilPassOld;
+                        controller.update();
+                      },
+                    ),
+                  );
+                },
               ),
-              child: const Text('UBAH PASSWORD',
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            GetBuilder<HomeControl>(
-              builder: (_) {
-                return AFwidget.textField(
-                  controller: controller.txtPassOld,
-                  label: 'Password Lama',
-                  obscureText: !controller.isTampilPassOld,
-                  suffixIcon: GestureDetector(
-                    child: Icon(
-                      controller.isTampilPassOld
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                      size: 20,
-                    ),
-                    onTap: () {
-                      controller.isTampilPassOld = !controller.isTampilPassOld;
-                      controller.update();
-                    },
-                  ),
-                );
-              },
-            ),
-            const SizedBox(height: 15),
-            GetBuilder<HomeControl>(
-              builder: (_) {
-                return AFwidget.textField(
-                  controller: controller.txtPassword,
-                  label: 'Password Baru',
-                  obscureText: !controller.isTampilPassword,
-                  suffixIcon: GestureDetector(
-                    child: Icon(
-                      controller.isTampilPassword
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                      size: 20,
-                    ),
-                    onTap: () {
-                      controller.isTampilPassword = !controller.isTampilPassword;
-                      controller.update();
-                    },
-                  ),
-                );
-              },
-            ),
-            const SizedBox(height: 15),
-            GetBuilder<HomeControl>(
-              builder: (_) {
-                return AFwidget.textField(
-                  controller: controller.txtPassConfirm,
-                  label: 'Konfirmasi Password Baru',
-                  obscureText: !controller.isTampilPassConfirm,
-                  suffixIcon: GestureDetector(
-                    child: Icon(
-                      controller.isTampilPassConfirm
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                      size: 20,
-                    ),
-                    onTap: () {
-                      controller.isTampilPassConfirm = !controller.isTampilPassConfirm;
-                      controller.update();
-                    },
-                  ),
-                );
-              },
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 35, 0, 0),
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 15),
+              child: GetBuilder<HomeControl>(
+                builder: (_) {
+                  return AFwidget.textField(
+                    controller: controller.txtPassword,
+                    label: 'Password Baru',
+                    obscureText: !controller.isTampilPassword,
+                    suffixIcon: GestureDetector(
+                      child: Icon(
+                        controller.isTampilPassword
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        size: 20,
+                      ),
+                      onTap: () {
+                        controller.isTampilPassword = !controller.isTampilPassword;
+                        controller.update();
+                      },
+                    ),
+                  );
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+              child: GetBuilder<HomeControl>(
+                builder: (_) {
+                  return AFwidget.textField(
+                    controller: controller.txtPassConfirm,
+                    label: 'Konfirmasi Password Baru',
+                    obscureText: !controller.isTampilPassConfirm,
+                    suffixIcon: GestureDetector(
+                      child: Icon(
+                        controller.isTampilPassConfirm
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        size: 20,
+                      ),
+                      onTap: () {
+                        controller.isTampilPassConfirm = !controller.isTampilPassConfirm;
+                        controller.update();
+                      },
+                    ),
+                  );
+                },
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [

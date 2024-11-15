@@ -7,7 +7,6 @@ import 'package:fjghrd/utils/af_combobox.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/utils/hasil.dart';
-import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -58,7 +57,6 @@ class UpahControl extends GetxController {
     overtime = current.upah.id.isEmpty ? null : current.upah.overtime;
     AFwidget.dialog(
       Container(
-        padding: const EdgeInsets.fromLTRB(15, 0, 0, 15),
         width: 700,
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -68,98 +66,39 @@ class UpahControl extends GetxController {
           children: [
             ListView(
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 60, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 200,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Nama Karyawan'),
-                      ),
-                      Expanded(
-                        child: Text(': ${current.nama}',
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                AFwidget.barisInfo(
+                  label: 'Nama Karyawan',
+                  nilai: current.nama,
+                  paddingTop: 70,
+                  labelWidth: 200,
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 20, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 200,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Jabatan'),
-                      ),
-                      Expanded(
-                        child: Text(': ${current.jabatan.nama}',
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                AFwidget.barisInfo(
+                  label: 'Jabatan',
+                  nilai: current.jabatan.nama,
+                  labelWidth: 200,
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 20, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 200,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Masa Kerja'),
-                      ),
-                      Expanded(
-                        child: Text(': ${AFconvert.matDate(current.tanggalMasuk)}',
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                AFwidget.barisInfo(
+                  label: 'Masa Kerja',
+                  nilai: AFconvert.matDate(current.tanggalMasuk),
+                  labelWidth: 200,
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 20, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 200,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Gaji Pokok Terakhir'),
-                      ),
-                      Expanded(
-                        child: Text(': ${AFconvert.matNumber(current.upah.gaji)}',
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                AFwidget.barisInfo(
+                  label: 'Gaji Pokok Terakhir',
+                  nilai: AFconvert.matNumber(current.upah.gaji),
+                  labelWidth: 200,
                 ),
-                barisText(
+                AFwidget.barisText(
                   label: 'Jumlah Uang Makan',
                   controller: txtUangMakan,
+                  labelWidth: 200,
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
-                      Container(
+                      const SizedBox(
                         width: 200,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Jenis Uang Makan'),
+                        child: Text('Jenis Uang Makan'),
                       ),
                       Expanded(
                         child: GetBuilder<UpahControl>(
@@ -203,13 +142,12 @@ class UpahControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
-                      Container(
+                      const SizedBox(
                         width: 200,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Status Overtime'),
+                        child: Text('Status Overtime'),
                       ),
                       Expanded(
                         child: GetBuilder<UpahControl>(
@@ -253,7 +191,7 @@ class UpahControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 50, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 30, 20, 25),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -275,23 +213,7 @@ class UpahControl extends GetxController {
                 ),
               ],
             ),
-            Container(
-              height: 55,
-              width: double.infinity,
-              padding: const EdgeInsets.all(15),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(15),
-                ),
-              ),
-              child: const Text('Form Salary Karyawan',
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+            AFwidget.formHeader('Form Salary Karyawan'),
           ],
         ),
       ),
@@ -353,43 +275,6 @@ class UpahControl extends GetxController {
       withCari: false,
     );
     return a;
-  }
-
-  Widget barisText({
-    String label = '',
-    TextEditingController? controller,
-    double paddingTop = 11,
-    bool isTextArea = false
-  }) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0, paddingTop, 20, 0),
-      child: Row(
-        crossAxisAlignment: isTextArea ? CrossAxisAlignment.start : CrossAxisAlignment.center,
-        children: [
-          Container(
-            width: 200,
-            padding: EdgeInsets.only(right: 15, top: isTextArea ? 15 : 0),
-            child: Text(label),
-          ),
-          Expanded(
-            child: AFwidget.textField(
-              marginTop: 0,
-              controller: controller,
-              maxLines: isTextArea ? 4 : 1,
-              minLines: isTextArea ? 2 : 1,
-              keyboard: isTextArea ? TextInputType.multiline : TextInputType.text,
-              inputformatters: [
-                CurrencyTextInputFormatter.currency(
-                  symbol: '',
-                  decimalDigits: 0,
-                ),
-              ],
-              textAlign: TextAlign.end,
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
   @override

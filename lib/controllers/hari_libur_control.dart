@@ -29,87 +29,13 @@ class HariLiburControl extends GetxController {
     }
   }
 
-  void tambahForm(BuildContext context) {
-    txtId.text = '';
-    txtNama.text = '';
-    txtTanggal.text = AFconvert.matYMD(DateTime.now());
-    AFwidget.dialog(
-      Container(
-        padding: const EdgeInsets.all(20),
-        width: 700,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-        ),
-        child: Column(
-          children: [
-            const Text('Form Tambah Hari Libur',
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
-              child: Row(
-                children: [
-                  Container(
-                    width: 150,
-                    padding: const EdgeInsets.only(right: 15),
-                    child: const Text('Tanggal'),
-                  ),
-                  Expanded(
-                    child: AFwidget.textField(
-                      marginTop: 0,
-                      controller: txtTanggal,
-                      readOnly: true,
-                      prefixIcon: const Icon(Icons.calendar_month),
-                      ontap: () async {
-                        var a = await AFwidget.pickDate(
-                          context: context,
-                          initialDate: AFconvert.keTanggal(txtTanggal.text),
-                        );
-                        if(a != null) {
-                          txtTanggal.text = AFconvert.matYMD(a);
-                        }
-                      },
-                    ),
-                  )
-                ],
-              ),
-            ),
-            const SizedBox(height: 11),
-            barisText(
-              label: 'Nama',
-              controller: txtNama,
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                AFwidget.tombol(
-                  label: 'Simpan',
-                  color: Colors.blue,
-                  onPressed: tambahData,
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-      backgroundColor: Colors.white,
-      contentPadding: const EdgeInsets.all(0),
-    );
-  }
-
-  void ubahForm(String id, BuildContext context) {
-    var item = listHariLibur.where((element) => element.id == id).first;
+  void inputForm(String id, BuildContext context) {
+    HariLibur item = id == '' ? HariLibur(tanggal: DateTime.now()) : listHariLibur.where((element) => element.id == id).first;
     txtId.text = item.id;
     txtNama.text = item.nama;
     txtTanggal.text = AFconvert.matYMD(item.tanggal);
     AFwidget.dialog(
       Container(
-        padding: const EdgeInsets.all(20),
         width: 700,
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -117,14 +43,9 @@ class HariLiburControl extends GetxController {
         ),
         child: Column(
           children: [
-            const Text('Form Ubah Hari Libur',
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            AFwidget.formHeader('Form ${id == '' ? 'Tambah' : 'Ubah'} Hari Libur'),
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+              padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
               child: Row(
                 children: [
                   Container(
@@ -152,28 +73,40 @@ class HariLiburControl extends GetxController {
                 ],
               ),
             ),
-            const SizedBox(height: 11),
-            barisText(
+            AFwidget.barisText(
               label: 'Nama',
               controller: txtNama,
             ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                AFwidget.tombol(
-                  label: 'Hapus Data',
-                  color: Colors.red,
-                  onPressed: () {
-                    hapusForm(item);
-                  },
-                ),
-                AFwidget.tombol(
-                  label: 'Simpan',
-                  color: Colors.blue,
-                  onPressed: ubahData,
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  id == '' ? Container() :
+                  AFwidget.tombol(
+                    label: 'Hapus Data',
+                    color: Colors.red,
+                    onPressed: () {
+                      hapusForm(item);
+                    },
+                    minimumSize: const Size(120, 40),
+                  ),
+                  const Spacer(),
+                  AFwidget.tombol(
+                    label: 'Batal',
+                    color: Colors.orange,
+                    onPressed: Get.back,
+                    minimumSize: const Size(120, 40),
+                  ),
+                  const SizedBox(width: 40),
+                  AFwidget.tombol(
+                    label: 'Simpan',
+                    color: Colors.blue,
+                    onPressed: id == '' ? tambahData : ubahData,
+                    minimumSize: const Size(120, 40),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

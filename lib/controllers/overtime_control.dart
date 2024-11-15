@@ -1,4 +1,3 @@
-import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:fjghrd/controllers/auth_control.dart';
 import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/models/karyawan.dart';
@@ -85,7 +84,6 @@ class OvertimeControl extends GetxController {
     jenis = '';
     AFwidget.dialog(
       Container(
-        padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
         width: Get.width,
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -98,7 +96,7 @@ class OvertimeControl extends GetxController {
                 Visibility(
                   visible: false,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                    padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                     child: Row(
                       children: [
                         Container(
@@ -148,7 +146,7 @@ class OvertimeControl extends GetxController {
                 Visibility(
                   visible: false,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                    padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                     child: Row(
                       children: [
                         Container(
@@ -178,7 +176,7 @@ class OvertimeControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 60, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 70, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -206,23 +204,23 @@ class OvertimeControl extends GetxController {
                     ],
                   ),
                 ),
-                barisText(
+                AFwidget.barisText(
                   label: 'Fratekindo IDR',
                   controller: txtJumlah,
                   isNumber: true,
                 ),
-                barisText(
+                AFwidget.barisText(
                   label: 'Customer IDR',
                   controller: txtJum2,
                   isNumber: true,
                 ),
-                barisText(
+                AFwidget.barisText(
                   label: 'Keterangan',
                   controller: txtKeterangan,
                   isTextArea: true,
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -244,23 +242,7 @@ class OvertimeControl extends GetxController {
                 ),
               ],
             ),
-            Container(
-              height: 55,
-              width: double.infinity,
-              padding: const EdgeInsets.all(15),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(15),
-                ),
-              ),
-              child: Text('Form Tambah Overtime - ${bulan.label} ${tahun.label}',
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+            AFwidget.formHeader('Form Tambah Overtime - ${bulan.label} ${tahun.label}'),
           ],
         ),
       ),
@@ -283,7 +265,6 @@ class OvertimeControl extends GetxController {
     jenis = item.jenis;
     AFwidget.dialog(
       Container(
-        padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
         width: Get.width,
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -293,21 +274,21 @@ class OvertimeControl extends GetxController {
           children: [
             ListView(
               children: [
-                barisInfo(
+                AFwidget.barisInfo(
                   label: 'Nama Karyawan',
                   nilai: karyawan.nama,
-                  paddingTop: 60,
+                  paddingTop: 70,
                 ),
-                barisInfo(
+                AFwidget.barisInfo(
                   label: 'Jabatan',
                   nilai: karyawan.jabatan.nama,
                 ),
-                barisInfo(
+                AFwidget.barisInfo(
                   label: 'Masa Kerja',
                   nilai: AFconvert.matDate(karyawan.tanggalMasuk),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -357,7 +338,7 @@ class OvertimeControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -406,7 +387,7 @@ class OvertimeControl extends GetxController {
                 Visibility(
                   visible: false,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                    padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                     child: Row(
                       children: [
                         Container(
@@ -435,18 +416,18 @@ class OvertimeControl extends GetxController {
                     ),
                   ),
                 ),
-                barisText(
+                AFwidget.barisText(
                   label: 'Jumlah',
                   controller: txtJumlah,
                   isNumber: true,
                 ),
-                barisText(
+                AFwidget.barisText(
                   label: 'Keterangan',
                   controller: txtKeterangan,
                   isTextArea: true,
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -477,23 +458,7 @@ class OvertimeControl extends GetxController {
                 ),
               ],
             ),
-            Container(
-              height: 55,
-              width: double.infinity,
-              padding: const EdgeInsets.all(15),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(15),
-                ),
-              ),
-              child: const Text('Form Ubah Overtime',
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+            AFwidget.formHeader('Form Ubah Overtime'),
           ],
         ),
       ),
@@ -674,71 +639,6 @@ class OvertimeControl extends GetxController {
       withCari: false,
     );
     return a;
-  }
-
-  Widget barisText({
-    String label = '',
-    TextEditingController? controller,
-    double paddingTop = 11,
-    bool isTextArea = false,
-    bool isNumber = false,
-  }) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0, paddingTop, 20, 0),
-      child: Row(
-        crossAxisAlignment: isTextArea ? CrossAxisAlignment.start : CrossAxisAlignment.center,
-        children: [
-          Container(
-            width: 150,
-            padding: EdgeInsets.only(right: 15, top: isTextArea ? 15 : 0),
-            child: Text(label),
-          ),
-          Expanded(
-            child: AFwidget.textField(
-              marginTop: 0,
-              controller: controller,
-              maxLines: isTextArea ? 4 : 1,
-              minLines: isTextArea ? 2 : 1,
-              keyboard: isTextArea ? TextInputType.multiline : TextInputType.text,
-              inputformatters: !isNumber ? null : [
-                CurrencyTextInputFormatter.currency(
-                  symbol: '',
-                  decimalDigits: 0,
-                ),
-              ],
-              textAlign: isNumber ? TextAlign.end : TextAlign.start,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget barisInfo({
-    String label = '',
-    String nilai = '',
-    double paddingTop = 20,
-  }) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0, paddingTop, 20, 0),
-      child: Row(
-        children: [
-          Container(
-            width: 150,
-            padding: const EdgeInsets.only(right: 15),
-            child: Text(label),
-          ),
-          Expanded(
-            child: Text(': $nilai',
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
   @override

@@ -27,102 +27,13 @@ class JabatanControl extends GetxController {
     }
   }
 
-  void tambahForm() {
-    txtId.text = 'Otomatis';
-    txtNama.text = '';
-    txtUrutan.text = '';
-    AFwidget.dialog(
-      Container(
-        padding: const EdgeInsets.all(20),
-        width: 700,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-        ),
-        child: Column(
-          children: [
-            const Text('Form Tambah Jabatan',
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            // const SizedBox(height: 11),
-            // Row(
-            //   children: [
-            //     Container(
-            //       width: 100,
-            //       padding: const EdgeInsets.only(right: 15),
-            //       child: const Text('ID'),
-            //     ),
-            //     Expanded(
-            //       child: AFwidget.textField(
-            //         marginTop: 0,
-            //         controller: txtId,
-            //         readOnly: true,
-            //       ),
-            //     )
-            //   ],
-            // ),
-            const SizedBox(height: 11),
-            Row(
-              children: [
-                Container(
-                  width: 100,
-                  padding: const EdgeInsets.only(right: 15),
-                  child: const Text('Nama'),
-                ),
-                Expanded(
-                  child: AFwidget.textField(
-                    marginTop: 0,
-                    controller: txtNama,
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(height: 11),
-            Row(
-              children: [
-                Container(
-                  width: 100,
-                  padding: const EdgeInsets.only(right: 15),
-                  child: const Text('Urutan'),
-                ),
-                Expanded(
-                  child: AFwidget.textField(
-                    marginTop: 0,
-                    controller: txtUrutan,
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                AFwidget.tombol(
-                  label: 'Simpan',
-                  color: Colors.blue,
-                  onPressed: tambahData,
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-      backgroundColor: Colors.white,
-      contentPadding: const EdgeInsets.all(0),
-    );
-  }
-
-  void ubahForm(String id) {
-    Jabatan item = listJabatan.where((element) => element.id == id).first;
+  void inputForm(String id) {
+    Jabatan item = id == '' ? Jabatan() : listJabatan.where((element) => element.id == id).first;
     txtId.text = item.id;
     txtNama.text = item.nama;
     txtUrutan.text = item.urutan.toString();
     AFwidget.dialog(
       Container(
-        padding: const EdgeInsets.all(20),
         width: 700,
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -130,82 +41,51 @@ class JabatanControl extends GetxController {
         ),
         child: Column(
           children: [
-            const Text('Form Ubah Jabatan',
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.bold,
+            AFwidget.formHeader('Form ${id == '' ? 'Tambah' : 'Ubah'} Jabatan'),
+            AFwidget.barisText(
+              label: 'Nama',
+              controller: txtNama,
+            ),
+            AFwidget.barisText(
+              label: 'Urutan',
+              controller: txtUrutan,
+              isNumber: true,
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  id == '' ? Container() :
+                  AFwidget.tombol(
+                    label: 'Hapus Data',
+                    color: Colors.red,
+                    onPressed: () {
+                      hapusForm(item);
+                    },
+                    minimumSize: const Size(120, 40),
+                  ),
+                  const Spacer(),
+                  AFwidget.tombol(
+                    label: 'Batal',
+                    color: Colors.orange,
+                    onPressed: Get.back,
+                    minimumSize: const Size(120, 40),
+                  ),
+                  const SizedBox(width: 40),
+                  AFwidget.tombol(
+                    label: 'Simpan',
+                    color: Colors.blue,
+                    onPressed: id == '' ? tambahData : ubahData,
+                    minimumSize: const Size(120, 40),
+                  ),
+                ],
               ),
-            ),
-            // const SizedBox(height: 11),
-            // Row(
-            //   children: [
-            //     Container(
-            //       width: 100,
-            //       padding: const EdgeInsets.only(right: 15),
-            //       child: const Text('ID'),
-            //     ),
-            //     Expanded(
-            //       child: AFwidget.textField(
-            //         marginTop: 0,
-            //         controller: txtId,
-            //         readOnly: true,
-            //       ),
-            //     )
-            //   ],
-            // ),
-            const SizedBox(height: 11),
-            Row(
-              children: [
-                Container(
-                  width: 100,
-                  padding: const EdgeInsets.only(right: 15),
-                  child: const Text('Nama'),
-                ),
-                Expanded(
-                  child: AFwidget.textField(
-                    marginTop: 0,
-                    controller: txtNama,
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(height: 11),
-            Row(
-              children: [
-                Container(
-                  width: 100,
-                  padding: const EdgeInsets.only(right: 15),
-                  child: const Text('Urutan'),
-                ),
-                Expanded(
-                  child: AFwidget.textField(
-                    marginTop: 0,
-                    controller: txtUrutan,
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                AFwidget.tombol(
-                  label: 'Hapus Data',
-                  color: Colors.red,
-                  onPressed: () {
-                    hapusForm(item);
-                  },
-                ),
-                AFwidget.tombol(
-                  label: 'Simpan',
-                  color: Colors.blue,
-                  onPressed: ubahData,
-                ),
-              ],
             ),
           ],
         ),
       ),
+      barrierDismissible: false,
       backgroundColor: Colors.white,
       contentPadding: const EdgeInsets.all(0),
     );
