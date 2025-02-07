@@ -153,6 +153,7 @@ class MedicalView extends StatelessWidget {
       ),
     ];
     controller.loadMedicals();
+    controller.loadKaryawans();
     return Column(
       children: [
         Container(

@@ -133,6 +133,7 @@ class OncallCustomerView extends StatelessWidget {
       ),
     ];
     controller.loadOncallCustomers();
+    controller.loadCustomers();
     return Column(
       children: [
         Container(

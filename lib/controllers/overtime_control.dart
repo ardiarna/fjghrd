@@ -643,7 +643,6 @@ class OvertimeControl extends GetxController {
 
   @override
   void onInit() {
-    loadKaryawans();
     filterTahun = Opsi(value: '${_now.year}', label: '${_now.year}');
     filterBulan = Opsi(value: '${_now.month}', label: mapBulan[_now.month]!);
     tahun = Opsi(value: '${_now.year}', label: '${_now.year}');

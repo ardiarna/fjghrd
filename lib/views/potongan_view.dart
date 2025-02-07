@@ -156,6 +156,7 @@ class PotonganView extends StatelessWidget {
       ),
     ];
     controller.loadPotongans();
+    controller.loadKaryawans();
     return Column(
       children: [
         Container(

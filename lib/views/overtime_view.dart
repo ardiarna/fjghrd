@@ -163,6 +163,7 @@ class OvertimeView extends StatelessWidget {
       ),
     ];
     controller.loadOvertimes();
+    controller.loadKaryawans();
     return Column(
       children: [
         Container(

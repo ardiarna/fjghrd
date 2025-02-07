@@ -165,6 +165,7 @@ class PenghasilanView extends StatelessWidget {
       ),
     ];
     controller.loadPenghasilans();
+    controller.loadKaryawans();
     return Column(
       children: [
         Container(
