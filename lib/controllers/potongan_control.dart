@@ -1,8 +1,8 @@
-import 'package:fjghrd/controllers/auth_control.dart';
 import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/models/karyawan.dart';
 import 'package:fjghrd/models/payroll.dart';
 import 'package:fjghrd/models/potongan.dart';
+import 'package:fjghrd/models/upah.dart';
 import 'package:fjghrd/repositories/karyawan_repository.dart';
 import 'package:fjghrd/repositories/potongan_repository.dart';
 import 'package:fjghrd/repositories/upah_repository.dart';
@@ -14,7 +14,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class PotonganControl extends GetxController {
-  final authControl = Get.find<AuthControl>();
   final homeControl = Get.find<HomeControl>();
   final PotonganRepository _repo = PotonganRepository();
 
@@ -82,9 +81,31 @@ class PotonganControl extends GetxController {
 
   Future<void> loadPayroll() async {
     UpahRepository repo = UpahRepository();
-    var hasil = await repo.find(karyawan.id, tahun.value);
+    var hasil = await repo.findInPayroll(karyawan.id, tahun.value);
     if(hasil.success) {
-      payroll = Payroll.fromMap(hasil.data);
+      if(hasil.data.isNotEmpty) {
+        payroll = Payroll.fromMap(hasil.data);
+      } else {
+        hasil = await repo.find(karyawan.id);
+        if(hasil.success) {
+          payroll = Payroll(
+            gaji: AFconvert.keInt(hasil.data['gaji']),
+            uangMakanHarian: AFconvert.keInt(hasil.data['uang_makan']),
+          );
+        } else {
+          payroll = Payroll();
+        }
+      }
+    } else {
+      hasil = await repo.find(karyawan.id);
+      if(hasil.success) {
+        payroll = Payroll(
+          gaji: AFconvert.keInt(hasil.data['gaji']),
+          uangMakanHarian: AFconvert.keInt(hasil.data['uang_makan']),
+        );
+      } else {
+        payroll = Payroll();
+      }
     }
     update();
   }
@@ -178,7 +199,7 @@ class PotonganControl extends GetxController {
                   builder: (_) {
                     if(karyawan.id != '' && (jenis.value == 'TB' || jenis.value == 'UL' || jenis.value == 'KJ')) {
                       return Padding(
-                        padding: const EdgeInsets.fromLTRB(160, 10, 25, 10),
+                        padding: const EdgeInsets.fromLTRB(170, 15, 25, 10),
                         child: Row(
                           children: [
                             const Text('Gaji: '),
@@ -189,6 +210,13 @@ class PotonganControl extends GetxController {
                             const Text('Uang Makan Harian: '),
                             Text(AFconvert.matNumber(payroll.uangMakanHarian),
                               style: const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(width: 50),
+                            IconButton(
+                              onPressed: () {
+                                gajiForm(context);
+                              },
+                              icon: const Icon(Icons.edit, color: Colors.green),
                             ),
                           ],
                         ),
@@ -505,6 +533,89 @@ class PotonganControl extends GetxController {
       aksi: () {
         hapusData(item.id);
       },
+    );
+  }
+
+  void gajiForm(BuildContext context) {
+    TextEditingController txtGaji = TextEditingController(text: AFconvert.matNumber(payroll.gaji));
+    TextEditingController txtUangMakan = TextEditingController(text:  AFconvert.matNumber(payroll.uangMakanHarian));
+    UpahRepository repo = UpahRepository();
+    AFwidget.dialog(
+      Container(
+        width: 500,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        padding: EdgeInsets.only(top: 20),
+        child: Column(
+          children: [
+            AFwidget.barisText(
+              label: 'Jumlah Gaji',
+              controller: txtGaji,
+              isNumber: true,
+              labelWidth: 200,
+            ),
+            AFwidget.barisText(
+              label: 'Jumlah Uang Makan',
+              controller: txtUangMakan,
+              isNumber: true,
+              labelWidth: 200,
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 30, 20, 25),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  AFwidget.tombol(
+                    label: 'Batal',
+                    color: Colors.orange,
+                    onPressed: Get.back,
+                    minimumSize: const Size(120, 40),
+                  ),
+                  const SizedBox(width: 40),
+                  AFwidget.tombol(
+                    label: 'Simpan',
+                    color: Colors.blue,
+                    onPressed: () async {
+                      if(txtGaji.text.isEmpty) {
+                        AFwidget.snackbar('Gaji harus diisi');
+                        return;
+                      }
+                      if(txtUangMakan.text.isEmpty) {
+                        AFwidget.snackbar('Uang Makan harus diisi');
+                        return;
+                      }
+                      var a = Upah(
+                        karyawanId: karyawan.id,
+                        gaji: AFconvert.keInt(txtGaji.text),
+                        uangMakan: AFconvert.keInt(txtUangMakan.text),
+                      );
+                      AFwidget.loading();
+                      var hasil = await repo.create(a.karyawanId, a.toMap());
+                      Get.back();
+                      if(hasil.success) {
+                        Get.back();
+                        AFwidget.snackbar(hasil.message);
+                        payroll.gaji = a.gaji;
+                        payroll.uangMakanHarian = a.uangMakan;
+                        update();
+                        hitungJumlahIdr(txtHari.text);
+                      } else {
+                        AFwidget.snackbar(hasil.message);
+                      }
+                    },
+                    minimumSize: const Size(120, 40),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      barrierDismissible: false,
+      backgroundColor: Colors.white,
+      contentPadding: const EdgeInsets.all(0),
     );
   }
 

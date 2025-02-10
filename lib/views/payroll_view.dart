@@ -167,7 +167,7 @@ class PayrollView extends StatelessWidget {
     return Container(
       width: 430,
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.7),
+        color: Colors.white.withValues(alpha: 0.7),
         borderRadius: const BorderRadius.all(Radius.circular(15)),
         boxShadow: const [
           BoxShadow(

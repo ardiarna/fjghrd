@@ -58,7 +58,7 @@ abstract class AFwidget {
       icon: Container(
         padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.3),
+            color: Colors.white.withValues(alpha: 0.3),
             shape: BoxShape.circle
         ),
         child: icon,
@@ -113,7 +113,7 @@ abstract class AFwidget {
         ),
       ),
       barrierDismissible: false,
-      barrierColor: Colors.grey.withOpacity(0.7),
+      barrierColor: Colors.grey.withValues(alpha: 0.7),
     );
   }
 

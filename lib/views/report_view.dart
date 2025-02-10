@@ -627,7 +627,7 @@ class ReportView extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.8),
+        color: Colors.white.withValues(alpha: 0.8),
         borderRadius: const BorderRadius.all(Radius.circular(15)),
         boxShadow: const [
           BoxShadow(

@@ -9,7 +9,13 @@ class UpahRepository {
     );
   }
 
-  Future<Hasil> find(String karyawanId, String tahun) async {
+  Future<Hasil> find(String karyawanId) async {
+    return await AFdatabase.send(
+      url: 'karyawan/$karyawanId/upah',
+    );
+  }
+
+  Future<Hasil> findInPayroll(String karyawanId, String tahun) async {
     return await AFdatabase.send(
       url: 'karyawan/$karyawanId/upah/$tahun',
     );

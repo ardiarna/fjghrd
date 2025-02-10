@@ -106,7 +106,7 @@ class BerandaView extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.fromLTRB(15, 20, 15, 25),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.7),
+                          color: Colors.white.withValues(alpha: 0.7),
                           borderRadius: const BorderRadius.all(Radius.circular(15)),
                           boxShadow: const [
                             BoxShadow(
@@ -177,7 +177,7 @@ class BerandaView extends StatelessWidget {
                           return Container(
                             padding: const EdgeInsets.all(15),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.7),
+                              color: Colors.white.withValues(alpha: 0.7),
                               borderRadius: const BorderRadius.all(Radius.circular(15)),
                               boxShadow: const [
                                 BoxShadow(
@@ -371,8 +371,8 @@ class BerandaView extends StatelessWidget {
                                             show: true,
                                             gradient: LinearGradient(
                                               colors: [
-                                                Colors.green.withOpacity(0.3),
-                                                Colors.blue.withOpacity(0.3),
+                                                Colors.green.withValues(alpha: 0.3),
+                                                Colors.blue.withValues(alpha: 0.3),
                                               ],
                                             ),
                                           ),
@@ -467,9 +467,9 @@ class BerandaView extends StatelessWidget {
                                             show: true,
                                             gradient: LinearGradient(
                                               colors: [
-                                                Colors.red.withOpacity(0.3),
-                                                Colors.red.withOpacity(0.3),
-                                                Colors.orange.withOpacity(0.3),
+                                                Colors.red.withValues(alpha: 0.3),
+                                                Colors.red.withValues(alpha: 0.3),
+                                                Colors.orange.withValues(alpha: 0.3),
                                               ],
                                             ),
                                           ),
@@ -735,7 +735,7 @@ class BerandaView extends StatelessWidget {
     }
 
     return SideTitleWidget(
-      axisSide: meta.axisSide,
+      meta: meta,
       space: 4,
       child: Text(
         text,
@@ -750,7 +750,7 @@ class BerandaView extends StatelessWidget {
 
   Widget leftTitleWidgets(double value, TitleMeta meta) {
     return SideTitleWidget(
-      axisSide: meta.axisSide,
+      meta: meta,
       child: Text(
         '${AFconvert.matNumber(value)} juta',
         style: const TextStyle(
@@ -763,7 +763,7 @@ class BerandaView extends StatelessWidget {
 
   Widget leftTitleWithDecimalWidgets(double value, TitleMeta meta) {
     return SideTitleWidget(
-      axisSide: meta.axisSide,
+      meta: meta,
       child: Text(
         '${AFconvert.matNumberWithDecimal(value)} juta',
         style: const TextStyle(

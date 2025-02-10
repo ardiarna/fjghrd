@@ -348,7 +348,7 @@ class HomeView extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(5, 3, 5, 3),
       height: 50,
       decoration: BoxDecoration(
-        color: controller.tabId == idx ? Colors.brown.withOpacity(0.1) : Colors.transparent,
+        color: controller.tabId == idx ? Colors.brown.withValues(alpha: 0.1) : Colors.transparent,
         borderRadius: const BorderRadius.all(Radius.circular(10)),
       ),
       child: GestureDetector(

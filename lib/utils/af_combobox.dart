@@ -55,7 +55,7 @@ class _DaftarOpsiState extends State<DaftarOpsi> {
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(10, 0, 20, 0),
                   decoration: BoxDecoration(
-                    color: _listFilter[i].value == widget.valueSelected ? Get.theme.primaryColor.withOpacity(0.25) : Colors.white,
+                    color: _listFilter[i].value == widget.valueSelected ? Get.theme.primaryColor.withValues(alpha: 0.25) : Colors.white,
                     // border: Border(
                     //   bottom: BorderSide(color: Colors.grey.shade300),
                     // ),
@@ -194,7 +194,7 @@ abstract class AFcombobox {
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                color: e.key == valueSelected ? Colors.grey.shade400.withOpacity(0.5) : Colors.transparent,
+                                color: e.key == valueSelected ? Colors.grey.shade400.withValues(alpha: 0.5) : Colors.transparent,
                               ),
                               child: IconButton(
                                 icon: Icon(e.value, size: size),
