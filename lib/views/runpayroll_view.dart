@@ -25,12 +25,14 @@ class RunpayrollView extends StatelessWidget {
     return rowData.map((e) {
       var hariMakan = controller.listPenghasilan
           .where((element) => element.karyawan.id == e.id && element.jenis == 'AB')
-          .fold(0, (sum, element) => sum + element.jumlah);
+          .fold(0.0, (sum, element) => sum + element.hari);
       if(hariMakan == 0) {
-        hariMakan = hariMakanDefault;
+        hariMakan = hariMakanDefault.toDouble();
       }
       int uangMakanHarian = e.upah.makanHarian ? e.upah.uangMakan : 0;
-      int uangMakanJumlah = e.upah.makanHarian ? uangMakanHarian*hariMakan : e.upah.uangMakan;
+      int uangMakanJumlah = controller.listPenghasilan
+          .where((element) => element.karyawan.id == e.id && element.jenis == 'AB')
+          .fold(0, (sum, element) => sum + element.jumlah);
       int medical = controller.listMedical
           .where((element) => element.karyawan.id == e.id)
           .fold(0, (sum, element) => sum + element.jumlah);
@@ -39,6 +41,9 @@ class RunpayrollView extends StatelessWidget {
           .fold(0, (sum, element) => sum + element.jumlah);
       var overtimeCus = controller.listOvertime
           .where((element) => element.karyawan.id == e.id && element.jenis == 'C')
+          .fold(0, (sum, element) => sum + element.jumlah);
+      var kenaikanGaji = controller.listPenghasilan
+          .where((element) => element.karyawan.id == e.id && element.jenis == 'KG')
           .fold(0, (sum, element) => sum + element.jumlah);
       var thr = controller.listPenghasilan
           .where((element) => element.karyawan.id == e.id && element.jenis == 'HR')
@@ -102,7 +107,7 @@ class RunpayrollView extends StatelessWidget {
       List<String> keteranganAll = [];
       if(keteranganPen.isNotEmpty) keteranganAll.add(keteranganPen);
       if(keteranganPot.isNotEmpty) keteranganAll.add(keteranganPot);
-      int totalDiterima = (e.upah.gaji + uangMakanJumlah + overtimeFjg + overtimeCus + medical + thr + bonus + insentif + telkomsel + lain) -
+      int totalDiterima = (e.upah.gaji + kenaikanGaji + uangMakanJumlah + overtimeFjg + overtimeCus + medical + thr + bonus + insentif + telkomsel + lain) -
           (pot25HJumlah + potTelepon + potBensin + potKas + potCicilan + potBpjs + potCutiJumlah + potKompensasiJumlah + potLain);
       return PlutoRow(
         cells: {
@@ -111,7 +116,7 @@ class RunpayrollView extends StatelessWidget {
           'nama': PlutoCell(value: e.nama),
           'jabatan': PlutoCell(value: e.jabatan.nama),
           'gaji': PlutoCell(value: e.upah.gaji),
-          'kenaikan_gaji': PlutoCell(value: 0),
+          'kenaikan_gaji': PlutoCell(value: kenaikanGaji),
           'makan_harian': PlutoCell(value: e.upah.makanHarian ? 'Y' : 'N'),
           'hari_makan': PlutoCell(value: hariMakan),
           'uang_makan_harian': PlutoCell(value: uangMakanHarian),
@@ -249,7 +254,6 @@ class RunpayrollView extends StatelessWidget {
       title: 'NAMA',
       field: 'nama',
       type: PlutoColumnType.text(),
-      readOnly: true,
       width: 260,
       backgroundColor: Colors.brown.shade100,
       frozen: PlutoColumnFrozen.start,
@@ -258,12 +262,12 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      readOnly: true,
     ),
     PlutoColumn(
       title: 'AREA',
       field: 'area',
       type: PlutoColumnType.text(),
-      readOnly: true,
       width: 210,
       backgroundColor: Colors.brown.shade100,
       titleTextAlign: PlutoColumnTextAlign.center,
@@ -271,12 +275,12 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      readOnly: true,
     ),
     PlutoColumn(
       title: 'JABATAN',
       field: 'jabatan',
       type: PlutoColumnType.text(),
-      readOnly: true,
       width: 230,
       backgroundColor: Colors.brown.shade100,
       titleTextAlign: PlutoColumnTextAlign.center,
@@ -284,11 +288,13 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      readOnly: true,
     ),
     PlutoColumn(
       title: 'GAJI / UPAH',
       field: 'gaji',
       type: PlutoColumnType.number(),
+
       width: 150,
       backgroundColor: Colors.brown.shade100,
       textAlign: PlutoColumnTextAlign.right,
@@ -297,6 +303,7 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
         if(value == 0) {
@@ -333,6 +340,7 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
         if(value == 0) {
@@ -367,6 +375,7 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
         if(value == 0) {
@@ -388,6 +397,7 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
         if(value == 0) {
@@ -409,6 +419,7 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
         if(value == 0) {
@@ -443,6 +454,7 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
         if(value == 0) {
@@ -477,6 +489,7 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
         if(value == 0) {
@@ -511,6 +524,7 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
         if(value == 0) {
@@ -545,6 +559,7 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
         if(value == 0) {
@@ -579,6 +594,7 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
         if(value == 0) {
@@ -613,6 +629,7 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
         if(value == 0) {
@@ -647,6 +664,7 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
         if(value == 0) {
@@ -681,6 +699,7 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
         if(value == 0) {
@@ -715,6 +734,7 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
         if(value == 0) {
@@ -784,6 +804,7 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
         if(value == 0) {
@@ -818,6 +839,7 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
         if(value == 0) {
@@ -852,6 +874,7 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
         if(value == 0) {
@@ -886,6 +909,7 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
         if(value == 0) {
@@ -920,6 +944,7 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
         if(value == 0) {
@@ -954,6 +979,7 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
         if(value == 0) {
@@ -1023,6 +1049,7 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
         if(value == 0) {
@@ -1092,6 +1119,7 @@ class RunpayrollView extends StatelessWidget {
       enableContextMenu: false,
       enableSorting: false,
       enableColumnDrag: false,
+      readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
         if(value == 0) {
@@ -1607,7 +1635,7 @@ class RunpayrollView extends StatelessWidget {
                 },
                 onLoaded: (PlutoGridOnLoadedEvent ev) {
                   stateManager = ev.stateManager;
-                  // ev.stateManager.setShowColumnFilter(true);
+                  ev.stateManager.setShowColumnFilter(true);
                   // ev.stateManager.setAutoEditing(true);
                 },
                 configuration: AFplutogridConfig.configSatu(iconSize: 1),

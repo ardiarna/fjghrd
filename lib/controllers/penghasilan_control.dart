@@ -1,9 +1,10 @@
-import 'package:fjghrd/controllers/auth_control.dart';
 import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/models/karyawan.dart';
 import 'package:fjghrd/models/penghasilan.dart';
+import 'package:fjghrd/models/upah.dart';
 import 'package:fjghrd/repositories/karyawan_repository.dart';
 import 'package:fjghrd/repositories/penghasilan_repository.dart';
+import 'package:fjghrd/repositories/upah_repository.dart';
 import 'package:fjghrd/utils/af_combobox.dart';
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_convert.dart';
@@ -12,7 +13,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class PenghasilanControl extends GetxController {
-  final authControl = Get.find<AuthControl>();
   final homeControl = Get.find<HomeControl>();
   final PenghasilanRepository _repo = PenghasilanRepository();
 
@@ -26,6 +26,7 @@ class PenghasilanControl extends GetxController {
     Opsi(value: 'BN', label: 'Bonus'),
     Opsi(value: 'IN', label: 'Insentif'),
     Opsi(value: 'TK', label: 'Telkomsel'),
+    Opsi(value: 'KG', label: 'Kenaikan Gaji'),
     Opsi(value: 'LL', label: 'Lain-Lain'),
   ];
   List<Opsi> listBulan = mapBulan.entries.map((e) => Opsi(value: e.key.toString(), label: e.value)).toList();
@@ -35,11 +36,12 @@ class PenghasilanControl extends GetxController {
   late Opsi filterTahun;
   late Opsi filterBulan;
 
-  late TextEditingController txtId, txtTanggal, txtJumlah, txtKeterangan;
+  late TextEditingController txtId, txtTanggal, txtHari, txtJumlah, txtKeterangan;
   Karyawan karyawan = Karyawan();
   Opsi jenis = Opsi(value: '', label: '');
   late Opsi tahun;
   late Opsi bulan;
+  Upah upah = Upah();
 
   Future<void> loadPenghasilans() async {
     var hasil = await _repo.findAll(
@@ -74,12 +76,24 @@ class PenghasilanControl extends GetxController {
     }
   }
 
+  Future<void> loadPayroll() async {
+    UpahRepository repo = UpahRepository();
+    var hasil = await repo.find(karyawan.id);
+    if(hasil.success) {
+      upah = Upah.fromMap(hasil.data);
+    } else {
+      upah = Upah();
+    }
+    update();
+  }
+
   void tambahForm(BuildContext context) {
     txtId.text = '';
     tahun = Opsi(value: filterTahun.value, label: filterTahun.label);
     bulan = Opsi(value: filterBulan.value, label: filterBulan.label);
     txtTanggal.text = AFconvert.matDate(DateTime(AFconvert.keInt(filterTahun.value), AFconvert.keInt(filterBulan.value)));
     txtKeterangan.text = '';
+    txtHari.text = '';
     txtJumlah.text = '';
     karyawan = Karyawan();
     if(filterJenis.value == '') {
@@ -117,6 +131,7 @@ class PenghasilanControl extends GetxController {
                                 var a = await pilihJenis(value: jenis.value);
                                 if(a != null && a.value != jenis.value) {
                                   jenis = a;
+                                  hitungJumlahIdr(txtHari.text);
                                   update();
                                 }
                               },
@@ -125,88 +140,6 @@ class PenghasilanControl extends GetxController {
                         ),
                       ),
                     ],
-                  ),
-                ),
-                Visibility(
-                  visible: false,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 150,
-                          padding: const EdgeInsets.only(right: 15),
-                          child: const Text('Periode'),
-                        ),
-                        Expanded(
-                          child: GetBuilder<PenghasilanControl>(
-                            builder: (_) {
-                              return AFwidget.comboField(
-                                value: bulan.label,
-                                label: '',
-                                onTap: () async {
-                                  var a = await pilihBulan(value: bulan.value);
-                                  if(a != null && a.value != bulan.value) {
-                                    bulan = a;
-                                    update();
-                                  }
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                        const SizedBox(width: 40),
-                        Expanded(
-                          child: GetBuilder<PenghasilanControl>(
-                            builder: (_) {
-                              return AFwidget.comboField(
-                                value: tahun.label,
-                                label: '',
-                                onTap: () async {
-                                  var a = await pilihTahun(value: tahun.value);
-                                  if(a != null && a.value != tahun.value) {
-                                    tahun = a;
-                                    update();
-                                  }
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Visibility(
-                  visible: false,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 150,
-                          padding: const EdgeInsets.only(right: 15),
-                          child: const Text('Tanggal'),
-                        ),
-                        Expanded(
-                          child: AFwidget.textField(
-                            marginTop: 0,
-                            controller: txtTanggal,
-                            readOnly: true,
-                            prefixIcon: const Icon(Icons.calendar_month),
-                            ontap: () async {
-                              var a = await AFwidget.pickDate(
-                                context: context,
-                                initialDate: AFconvert.keTanggal(AFconvert.matDMYtoYMD(txtTanggal.text)),
-                              );
-                              if(a != null) {
-                                txtTanggal.text = AFconvert.matDate(a);
-                              }
-                            },
-                          ),
-                        )
-                      ],
-                    ),
                   ),
                 ),
                 Padding(
@@ -228,7 +161,8 @@ class PenghasilanControl extends GetxController {
                                 var a = await pilihKaryawan(value: karyawan.id);
                                 if(a != null && a.value != karyawan.id) {
                                   karyawan = Karyawan.fromMap(a.data!);
-                                  update();
+                                  await loadPayroll();
+                                  hitungJumlahIdr(txtHari.text);
                                 }
                               },
                             );
@@ -240,8 +174,52 @@ class PenghasilanControl extends GetxController {
                 ),
                 GetBuilder<PenghasilanControl>(
                   builder: (_) {
+                    if(karyawan.id != '' && (jenis.value == 'AB')) {
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(170, 15, 25, 10),
+                        child: Row(
+                          children: [
+                            const Text('Gaji: '),
+                            Text(AFconvert.matNumber(upah.gaji),
+                              style: const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(width: 50),
+                            const Text('Uang Makan: '),
+                            Text('${AFconvert.matNumber(upah.uangMakan)}   ${upah.makanHarian ? 'Harian' : 'Tetap'}',
+                              style: const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(width: 50),
+                            IconButton(
+                              onPressed: () {
+                                gajiForm(context);
+                              },
+                              icon: const Icon(Icons.edit, color: Colors.green),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                    return Container();
+                  },
+                ),
+                GetBuilder<PenghasilanControl>(
+                  builder: (_) {
+                    if(jenis.value == 'AB') {
+                      return AFwidget.barisText(
+                        label: 'Jumlah Hari',
+                        controller: txtHari,
+                        isNumber: true,
+                        onchanged:hitungJumlahIdr,
+                      );
+                    }
+                    txtHari.text = '';
+                    return Container();
+                  },
+                ),
+                GetBuilder<PenghasilanControl>(
+                  builder: (_) {
                     return AFwidget.barisText(
-                      label: 'Jumlah ${jenis.value == 'AB' ? 'Hari' : 'IDR'}',
+                      label: 'Jumlah IDR',
                       controller: txtJumlah,
                       isNumber: true,
                     );
@@ -286,16 +264,20 @@ class PenghasilanControl extends GetxController {
     );
   }
 
-  void ubahForm(String id, BuildContext context) {
+  Future<void> ubahForm(String id, BuildContext context) async {
     var item = listPenghasilan.where((element) => element.id == id).first;
     txtId.text = item.id;
     tahun = Opsi(value: '${item.tahun}', label: '${item.tahun}');
     bulan = Opsi(value: '${item.bulan}', label: mapBulan[item.bulan]!);
     txtTanggal.text = AFconvert.matDate(item.tanggal);
     txtKeterangan.text = item.keterangan;
+    txtHari.text = AFconvert.matNumber(item.hari);
     txtJumlah.text = AFconvert.matNumber(item.jumlah);
     karyawan = item.karyawan;
     jenis = listJenis.where((element) => element.value == item.jenis).first;
+    if (jenis.value == 'AB') {
+      await loadPayroll();
+    }
     AFwidget.dialog(
       Container(
         width: Get.width,
@@ -339,6 +321,7 @@ class PenghasilanControl extends GetxController {
                                 var a = await pilihJenis(value: jenis.value);
                                 if(a != null && a.value != jenis.value) {
                                   jenis = a;
+                                  hitungJumlahIdr(txtHari.text);
                                   update();
                                 }
                               },
@@ -396,42 +379,54 @@ class PenghasilanControl extends GetxController {
                     ],
                   ),
                 ),
-                Visibility(
-                  visible: false,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 150,
-                          padding: const EdgeInsets.only(right: 15),
-                          child: const Text('Tanggal'),
+                GetBuilder<PenghasilanControl>(
+                  builder: (_) {
+                    if(karyawan.id != '' && (jenis.value == 'AB')) {
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(170, 15, 25, 10),
+                        child: Row(
+                          children: [
+                            const Text('Gaji: '),
+                            Text(AFconvert.matNumber(upah.gaji),
+                              style: const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(width: 50),
+                            const Text('Uang Makan: '),
+                            Text('${AFconvert.matNumber(upah.uangMakan)}   ${upah.makanHarian ? 'Harian' : 'Tetap'}',
+                              style: const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(width: 50),
+                            IconButton(
+                              onPressed: () {
+                                gajiForm(context);
+                              },
+                              icon: const Icon(Icons.edit, color: Colors.green),
+                            ),
+                          ],
                         ),
-                        Expanded(
-                          child: AFwidget.textField(
-                            marginTop: 0,
-                            controller: txtTanggal,
-                            readOnly: true,
-                            prefixIcon: const Icon(Icons.calendar_month),
-                            ontap: () async {
-                              var a = await AFwidget.pickDate(
-                                context: context,
-                                initialDate: AFconvert.keTanggal(AFconvert.matDMYtoYMD(txtTanggal.text)),
-                              );
-                              if(a != null) {
-                                txtTanggal.text = AFconvert.matDate(a);
-                              }
-                            },
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
+                      );
+                    }
+                    return Container();
+                  },
+                ),
+                GetBuilder<PenghasilanControl>(
+                  builder: (_) {
+                    if(jenis.value == 'AB') {
+                      return AFwidget.barisText(
+                        label: 'Jumlah Hari',
+                        controller: txtHari,
+                        isNumber: true,
+                        onchanged:hitungJumlahIdr,
+                      );
+                    }
+                    txtHari.text = '';
+                    return Container();
+                  },
                 ),
                 GetBuilder<PenghasilanControl>(
                   builder: (_) {
                     return AFwidget.barisText(
-                      label: 'Jumlah ${jenis.value == 'AB' ? 'Hari' : 'IDR'}',
+                      label: 'Jumlah IDR',
                       controller: txtJumlah,
                       isNumber: true,
                     );
@@ -494,6 +489,143 @@ class PenghasilanControl extends GetxController {
     );
   }
 
+  void gajiForm(BuildContext context) {
+    TextEditingController txtGaji = TextEditingController(text: AFconvert.matNumber(upah.gaji));
+    TextEditingController txtUangMakan = TextEditingController(text: AFconvert.matNumber(upah.uangMakan));
+    bool makanHarian = upah.makanHarian;
+    UpahRepository repo = UpahRepository();
+    AFwidget.dialog(
+      Container(
+        width: 500,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        padding: EdgeInsets.only(top: 20),
+        child: Column(
+          children: [
+            AFwidget.barisText(
+              label: 'Jumlah Gaji',
+              controller: txtGaji,
+              isNumber: true,
+              labelWidth: 200,
+            ),
+            AFwidget.barisText(
+              label: 'Jumlah Uang Makan',
+              controller: txtUangMakan,
+              isNumber: true,
+              labelWidth: 200,
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
+              child: Row(
+                children: [
+                  const SizedBox(
+                    width: 200,
+                    child: Text('Jenis Uang Makan'),
+                  ),
+                  Expanded(
+                    child: GetBuilder<PenghasilanControl>(
+                      builder: (_) {
+                        return Row(
+                          children: [
+                            Radio<bool>(
+                              value: true,
+                              groupValue: makanHarian,
+                              onChanged: (a) {
+                                if(a != null && a != makanHarian) {
+                                  makanHarian = a;
+                                  update();
+                                }
+                              },
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                              child: Text('Harian'),
+                            ),
+                            Radio<bool>(
+                              value: false,
+                              groupValue: makanHarian,
+                              onChanged: (a) {
+                                if(a != null && a != makanHarian) {
+                                  makanHarian = a;
+                                  update();
+                                }
+                              },
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                              child: Text('Tetap'),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 30, 20, 25),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  AFwidget.tombol(
+                    label: 'Batal',
+                    color: Colors.orange,
+                    onPressed: Get.back,
+                    minimumSize: const Size(120, 40),
+                  ),
+                  const SizedBox(width: 40),
+                  AFwidget.tombol(
+                    label: 'Simpan',
+                    color: Colors.blue,
+                    onPressed: () async {
+                      if(txtGaji.text.isEmpty) {
+                        AFwidget.snackbar('Gaji harus diisi');
+                        return;
+                      }
+                      if(txtUangMakan.text.isEmpty) {
+                        AFwidget.snackbar('Uang Makan harus diisi');
+                        return;
+                      }
+                      var a = Upah(
+                        karyawanId: karyawan.id,
+                        gaji: AFconvert.keInt(txtGaji.text),
+                        uangMakan: AFconvert.keInt(txtUangMakan.text),
+                        makanHarian: makanHarian,
+                      );
+                      AFwidget.loading();
+                      var hasil = await repo.create(a.karyawanId, a.toMap());
+                      Get.back();
+                      if(hasil.success) {
+                        Get.back();
+                        AFwidget.snackbar(hasil.message);
+                        upah.gaji = a.gaji;
+                        upah.uangMakan = a.uangMakan;
+                        upah.makanHarian = a.makanHarian;
+                        hitungJumlahIdr(txtHari.text);
+                        txtGaji.dispose();
+                        txtUangMakan.dispose();
+                        update();
+                      } else {
+                        AFwidget.snackbar(hasil.message);
+                      }
+                    },
+                    minimumSize: const Size(120, 40),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      barrierDismissible: false,
+      backgroundColor: Colors.white,
+      contentPadding: const EdgeInsets.all(0),
+    );
+  }
+
   Future<void> tambahData() async {
     try {
       if(jenis.value.isEmpty) {
@@ -508,8 +640,11 @@ class PenghasilanControl extends GetxController {
       if(karyawan.id.isEmpty) {
         throw 'Silakan pilih karyawan';
       }
+      if(jenis.value == 'AB' && txtHari.text.isEmpty) {
+        throw 'Jumlah hari harus diisi';
+      }
       if(txtJumlah.text.isEmpty) {
-        throw 'Jumlah ${jenis.value == 'AB' ? 'Hari' : 'IDR'} harus diisi';
+        throw 'Jumlah IDR harus diisi';
       }
 
       var a = Penghasilan(
@@ -517,6 +652,7 @@ class PenghasilanControl extends GetxController {
         tanggal: AFconvert.keTanggal('${AFconvert.matDMYtoYMD(txtTanggal.text)} 08:00:00'),
         tahun: AFconvert.keInt(tahun.value),
         bulan: AFconvert.keInt(bulan.value),
+        hari: AFconvert.keDouble(txtHari.text),
         jumlah: AFconvert.keInt(txtJumlah.text),
         keterangan: txtKeterangan.text,
       );
@@ -552,14 +688,18 @@ class PenghasilanControl extends GetxController {
       if(txtTanggal.text.isEmpty) {
         throw 'Tanggal harus diisi';
       }
+      if(jenis.value == 'AB' && txtHari.text.isEmpty) {
+        throw 'Jumlah hari harus diisi';
+      }
       if(txtJumlah.text.isEmpty) {
-        throw 'Jumlah ${jenis.value == 'AB' ? 'Hari' : 'IDR'} harus diisi';
+        throw 'Jumlah IDR harus diisi';
       }
       var a = Penghasilan(
         jenis: jenis.value,
         tanggal: AFconvert.keTanggal('${AFconvert.matDMYtoYMD(txtTanggal.text)} 08:00:00'),
         tahun: AFconvert.keInt(tahun.value),
         bulan: AFconvert.keInt(bulan.value),
+        hari: AFconvert.keDouble(txtHari.text),
         jumlah: AFconvert.keInt(txtJumlah.text),
         keterangan: txtKeterangan.text,
       );
@@ -639,6 +779,19 @@ class PenghasilanControl extends GetxController {
     return a;
   }
 
+  void hitungJumlahIdr(String nilai) {
+    if(jenis.value == 'AB') {
+      if(upah.makanHarian) {
+        var jumlahIdr = AFconvert.keInt(upah.uangMakan)*AFconvert.keInt(nilai);
+        txtJumlah.text = AFconvert.matNumber(jumlahIdr);
+      } else {
+        txtJumlah.text = AFconvert.matNumber(upah.uangMakan);
+      }
+    } else {
+      txtHari.text = '';
+    }
+  }
+
   @override
   void onInit() {
     filterTahun = Opsi(value: '${_now.year}', label: '${_now.year}');
@@ -648,6 +801,7 @@ class PenghasilanControl extends GetxController {
     listTahun = List.generate(_now.year-2019, (index) => Opsi(value: '${_now.year-index}', label: '${_now.year-index}'));
     txtId = TextEditingController();
     txtTanggal = TextEditingController();
+    txtHari = TextEditingController();
     txtJumlah = TextEditingController();
     txtKeterangan = TextEditingController();
     super.onInit();
@@ -657,6 +811,7 @@ class PenghasilanControl extends GetxController {
   void onClose() {
     txtId.dispose();
     txtTanggal.dispose();
+    txtHari.dispose();
     txtJumlah.dispose();
     txtKeterangan.dispose();
     super.onClose();

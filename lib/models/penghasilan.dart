@@ -8,6 +8,7 @@ class Penghasilan {
   DateTime? tanggal;
   int tahun;
   int bulan;
+  double hari;
   int jumlah;
   String keterangan;
   DateTime? createdAt;
@@ -19,6 +20,7 @@ class Penghasilan {
     this.tanggal,
     this.tahun = 0,
     this.bulan = 0,
+    this.hari = 0,
     this.jumlah = 0,
     this.keterangan = '',
     this.createdAt,
@@ -32,6 +34,7 @@ class Penghasilan {
       tanggal: AFconvert.keTanggal(data['tanggal']),
       tahun: AFconvert.keInt(data['tahun']),
       bulan: AFconvert.keInt(data['bulan']),
+      hari: AFconvert.keDouble(data['hari']),
       jumlah: AFconvert.keInt(data['jumlah']),
       keterangan: AFconvert.keString(data['keterangan']),
       createdAt: AFconvert.keTanggal(data['created_at']),
@@ -51,6 +54,7 @@ class Penghasilan {
       'tanggal': AFconvert.matYMDTime(tanggal),
       'tahun': AFconvert.keString(tahun),
       'bulan': AFconvert.keString(bulan),
+      'hari': AFconvert.keString(hari),
       'jumlah': AFconvert.keString(jumlah),
       'keterangan': keterangan,
     };

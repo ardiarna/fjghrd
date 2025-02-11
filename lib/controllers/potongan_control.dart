@@ -1,6 +1,5 @@
 import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/models/karyawan.dart';
-import 'package:fjghrd/models/payroll.dart';
 import 'package:fjghrd/models/potongan.dart';
 import 'package:fjghrd/models/upah.dart';
 import 'package:fjghrd/repositories/karyawan_repository.dart';
@@ -44,7 +43,7 @@ class PotonganControl extends GetxController {
   Opsi jenis = Opsi(value: '', label: '');
   late Opsi tahun;
   late Opsi bulan;
-  Payroll payroll = Payroll();
+  Upah upah = Upah();
 
   Future<void> loadPotongans() async {
     var hasil = await _repo.findAll(
@@ -81,31 +80,11 @@ class PotonganControl extends GetxController {
 
   Future<void> loadPayroll() async {
     UpahRepository repo = UpahRepository();
-    var hasil = await repo.findInPayroll(karyawan.id, tahun.value);
+    var hasil = await repo.find(karyawan.id);
     if(hasil.success) {
-      if(hasil.data.isNotEmpty) {
-        payroll = Payroll.fromMap(hasil.data);
-      } else {
-        hasil = await repo.find(karyawan.id);
-        if(hasil.success) {
-          payroll = Payroll(
-            gaji: AFconvert.keInt(hasil.data['gaji']),
-            uangMakanHarian: AFconvert.keInt(hasil.data['uang_makan']),
-          );
-        } else {
-          payroll = Payroll();
-        }
-      }
+      upah = Upah.fromMap(hasil.data);
     } else {
-      hasil = await repo.find(karyawan.id);
-      if(hasil.success) {
-        payroll = Payroll(
-          gaji: AFconvert.keInt(hasil.data['gaji']),
-          uangMakanHarian: AFconvert.keInt(hasil.data['uang_makan']),
-        );
-      } else {
-        payroll = Payroll();
-      }
+      upah = Upah();
     }
     update();
   }
@@ -203,12 +182,12 @@ class PotonganControl extends GetxController {
                         child: Row(
                           children: [
                             const Text('Gaji: '),
-                            Text(AFconvert.matNumber(payroll.gaji+payroll.kenaikanGaji),
+                            Text(AFconvert.matNumber(upah.gaji),
                               style: const TextStyle(fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(width: 50),
-                            const Text('Uang Makan Harian: '),
-                            Text(AFconvert.matNumber(payroll.uangMakanHarian),
+                            const Text('Uang Makan: '),
+                            Text('${AFconvert.matNumber(upah.uangMakan)}   ${upah.makanHarian ? 'Harian' : 'Tetap'}',
                               style: const TextStyle(fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(width: 50),
@@ -350,12 +329,12 @@ class PotonganControl extends GetxController {
                 ),
                 AFwidget.barisInfo(
                   label: 'Gaji',
-                  nilai: AFconvert.matNumber(payroll.gaji+payroll.kenaikanGaji),
+                  nilai: AFconvert.matNumber(upah.gaji),
                 ),
                 item.jenis == 'TB' ?
                 AFwidget.barisInfo(
-                  label: 'Uang Makan Harian',
-                  nilai: AFconvert.matNumber(payroll.uangMakanHarian),
+                  label: 'Uang Makan',
+                  nilai: '${AFconvert.matNumber(upah.uangMakan)}   ${upah.makanHarian ? 'Harian' : 'Tetap'}',
                 ) :
                 Container(),
                 Padding(
@@ -537,8 +516,9 @@ class PotonganControl extends GetxController {
   }
 
   void gajiForm(BuildContext context) {
-    TextEditingController txtGaji = TextEditingController(text: AFconvert.matNumber(payroll.gaji));
-    TextEditingController txtUangMakan = TextEditingController(text:  AFconvert.matNumber(payroll.uangMakanHarian));
+    TextEditingController txtGaji = TextEditingController(text: AFconvert.matNumber(upah.gaji));
+    TextEditingController txtUangMakan = TextEditingController(text: AFconvert.matNumber(upah.uangMakan));
+    bool makanHarian = upah.makanHarian;
     UpahRepository repo = UpahRepository();
     AFwidget.dialog(
       Container(
@@ -561,6 +541,55 @@ class PotonganControl extends GetxController {
               controller: txtUangMakan,
               isNumber: true,
               labelWidth: 200,
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
+              child: Row(
+                children: [
+                  const SizedBox(
+                    width: 200,
+                    child: Text('Jenis Uang Makan'),
+                  ),
+                  Expanded(
+                    child: GetBuilder<PotonganControl>(
+                      builder: (_) {
+                        return Row(
+                          children: [
+                            Radio<bool>(
+                              value: true,
+                              groupValue: makanHarian,
+                              onChanged: (a) {
+                                if(a != null && a != makanHarian) {
+                                  makanHarian = a;
+                                  update();
+                                }
+                              },
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                              child: Text('Harian'),
+                            ),
+                            Radio<bool>(
+                              value: false,
+                              groupValue: makanHarian,
+                              onChanged: (a) {
+                                if(a != null && a != makanHarian) {
+                                  makanHarian = a;
+                                  update();
+                                }
+                              },
+                            ),
+                            const Padding(
+                              padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                              child: Text('Tetap'),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 30, 20, 25),
@@ -590,6 +619,7 @@ class PotonganControl extends GetxController {
                         karyawanId: karyawan.id,
                         gaji: AFconvert.keInt(txtGaji.text),
                         uangMakan: AFconvert.keInt(txtUangMakan.text),
+                        makanHarian: makanHarian,
                       );
                       AFwidget.loading();
                       var hasil = await repo.create(a.karyawanId, a.toMap());
@@ -597,10 +627,13 @@ class PotonganControl extends GetxController {
                       if(hasil.success) {
                         Get.back();
                         AFwidget.snackbar(hasil.message);
-                        payroll.gaji = a.gaji;
-                        payroll.uangMakanHarian = a.uangMakan;
-                        update();
+                        upah.gaji = a.gaji;
+                        upah.uangMakan = a.uangMakan;
+                        upah.makanHarian = a.makanHarian;
                         hitungJumlahIdr(txtHari.text);
+                        txtGaji.dispose();
+                        txtUangMakan.dispose();
+                        update();
                       } else {
                         AFwidget.snackbar(hasil.message);
                       }
@@ -775,15 +808,15 @@ class PotonganControl extends GetxController {
   void hitungJumlahIdr(String nilai) {
     if(jenis.value == 'TB') {
       int jumlahHari = AFconvert.keInt(nilai);
-      double jumlahIdr = (payroll.uangMakanHarian/4)*jumlahHari;
+      double jumlahIdr = (upah.uangMakan/4)*jumlahHari;
       txtJumlah.text = AFconvert.matNumber(jumlahIdr.toInt());
     } else if(jenis.value == 'UL') {
       int jumlahHari = AFconvert.keInt(nilai);
-      double jumlahIdr = ((payroll.gaji+payroll.kenaikanGaji)/21)*jumlahHari;
+      double jumlahIdr = (upah.gaji/21)*jumlahHari;
       txtJumlah.text = AFconvert.matNumber(jumlahIdr.toInt());
     } else if(jenis.value == 'KJ') {
       double jumlahJam = AFconvert.keDouble(nilai);
-      double jumlahIdr = ((payroll.gaji+payroll.kenaikanGaji)/168)*jumlahJam;
+      double jumlahIdr = (upah.gaji/168)*jumlahJam;
       txtJumlah.text = AFconvert.matNumber(jumlahIdr.toInt());
     } else {
       txtHari.text = '';
