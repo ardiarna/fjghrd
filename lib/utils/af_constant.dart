@@ -9,7 +9,7 @@ abstract class Rute {
   static const passwordForm = '/passwordform';
 }
 
-Map<int, String> mapBulan = {
+final Map<int, String> mapBulan = {
   1: 'Januari',
   2: 'Februari',
   3: 'Maret',
@@ -24,7 +24,7 @@ Map<int, String> mapBulan = {
   12: 'Desember',
 };
 
-Map<int, String> mapHari = {
+final Map<int, String> mapHari = {
   1: 'Senin',
   2: 'Selasa',
   3: 'Rabu',
@@ -34,7 +34,7 @@ Map<int, String> mapHari = {
   7: 'Minggu',
 };
 
-Map<String, IconData?> mapIkon = {
+final Map<String, IconData?> mapIkon = {
   'access_time': Icons.access_time_outlined,
   'account_balance_wallet': Icons.account_balance_wallet_outlined,
   'app_registration': Icons.app_registration_outlined,
@@ -86,3 +86,16 @@ Map<String, IconData?> mapIkon = {
   'table_chart': Icons.table_chart_outlined,
   'table_rows': Icons.table_rows_outlined,
 };
+
+final List<Color> listColor = [
+  Colors.red,
+  Colors.blue,
+  Colors.green,
+  Colors.orange,
+  Colors.purple,
+  Colors.cyan,
+  Colors.pink,
+  Colors.lime,
+  Colors.indigo,
+  Colors.amber,
+];

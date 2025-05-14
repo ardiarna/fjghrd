@@ -61,6 +61,11 @@ class KaryawanControl extends GetxController {
   Map<String, int> totalKaryawanPerArea = {};
   Map<String, int> totalCalonKaryawanPerArea = {};
   Map<String, Map<String, int>> totalKaryawanPerStatuskerjaPerArea = {};
+  Map<String, Map<String, int>> totalKaryawanPerKelamin = {};
+  Map<String, Map<String, int>> totalKaryawanPerKawin = {};
+  Map<String, Map<String, int>> totalKaryawanPerAgama = {};
+  Map<String, Map<String, int>> totalKaryawanPerPendidikan = {};
+  Map<String, Map<String, int>> totalKaryawanPerUsia = {};
 
   late TextEditingController txtId, txtNama, txtNik, txtTanggalMasuk, txtTanggalKeluar, txtNomorKk,
       txtNomorKtp, txtNomorPaspor, txtNomorPwp, txtTempatLahir, txtTanggalLahir, txtAlamatKtp,
@@ -116,6 +121,11 @@ class KaryawanControl extends GetxController {
       listUlangTahun.clear();
       totalKaryawanPerArea.clear();
       totalKaryawanPerStatuskerjaPerArea.clear();
+      totalKaryawanPerKelamin.clear();
+      totalKaryawanPerKawin.clear();
+      totalKaryawanPerAgama.clear();
+      totalKaryawanPerPendidikan.clear();
+      totalKaryawanPerUsia.clear();
       String hariUltah = AFconvert.matMD(_now);
       for (var data in hasil.daftar) {
         var k = Karyawan.fromMap(data);
@@ -146,6 +156,61 @@ class KaryawanControl extends GetxController {
           totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]![k.area.kode] = 1;
         }
         totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]!['TOTAL KARYAWAN'] = totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]!['TOTAL KARYAWAN']! + 1;
+
+        if (!totalKaryawanPerKelamin.containsKey(k.kelamin)) {
+          totalKaryawanPerKelamin[k.kelamin] = {};
+          totalKaryawanPerKelamin[k.kelamin]!['TOTAL KARYAWAN'] = 0;
+        }
+        if (totalKaryawanPerKelamin[k.kelamin]!.containsKey(k.area.kode)) {
+          totalKaryawanPerKelamin[k.kelamin]![k.area.kode] = totalKaryawanPerKelamin[k.kelamin]![k.area.kode]! + 1;
+        } else {
+          totalKaryawanPerKelamin[k.kelamin]![k.area.kode] = 1;
+        }
+        totalKaryawanPerKelamin[k.kelamin]!['TOTAL KARYAWAN'] = totalKaryawanPerKelamin[k.kelamin]!['TOTAL KARYAWAN']! + 1;
+
+        if (!totalKaryawanPerKawin.containsKey(k.kawin)) {
+          totalKaryawanPerKawin[k.kawin] = {};
+          totalKaryawanPerKawin[k.kawin]!['TOTAL KARYAWAN'] = 0;
+        }
+        if (totalKaryawanPerKawin[k.kawin]!.containsKey(k.area.kode)) {
+          totalKaryawanPerKawin[k.kawin]![k.area.kode] = totalKaryawanPerKawin[k.kawin]![k.area.kode]! + 1;
+        } else {
+          totalKaryawanPerKawin[k.kawin]![k.area.kode] = 1;
+        }
+        totalKaryawanPerKawin[k.kawin]!['TOTAL KARYAWAN'] = totalKaryawanPerKawin[k.kawin]!['TOTAL KARYAWAN']! + 1;
+
+        if (!totalKaryawanPerAgama.containsKey(k.agama.nama)) {
+          totalKaryawanPerAgama[k.agama.nama] = {};
+          totalKaryawanPerAgama[k.agama.nama]!['TOTAL KARYAWAN'] = 0;
+        }
+        if (totalKaryawanPerAgama[k.agama.nama]!.containsKey(k.area.kode)) {
+          totalKaryawanPerAgama[k.agama.nama]![k.area.kode] = totalKaryawanPerAgama[k.agama.nama]![k.area.kode]! + 1;
+        } else {
+          totalKaryawanPerAgama[k.agama.nama]![k.area.kode] = 1;
+        }
+        totalKaryawanPerAgama[k.agama.nama]!['TOTAL KARYAWAN'] = totalKaryawanPerAgama[k.agama.nama]!['TOTAL KARYAWAN']! + 1;
+
+        if (!totalKaryawanPerPendidikan.containsKey(k.pendidikan.nama)) {
+          totalKaryawanPerPendidikan[k.pendidikan.nama] = {};
+          totalKaryawanPerPendidikan[k.pendidikan.nama]!['TOTAL KARYAWAN'] = 0;
+        }
+        if (totalKaryawanPerPendidikan[k.pendidikan.nama]!.containsKey(k.area.kode)) {
+          totalKaryawanPerPendidikan[k.pendidikan.nama]![k.area.kode] = totalKaryawanPerPendidikan[k.pendidikan.nama]![k.area.kode]! + 1;
+        } else {
+          totalKaryawanPerPendidikan[k.pendidikan.nama]![k.area.kode] = 1;
+        }
+        totalKaryawanPerPendidikan[k.pendidikan.nama]!['TOTAL KARYAWAN'] = totalKaryawanPerPendidikan[k.pendidikan.nama]!['TOTAL KARYAWAN']! + 1;
+
+        if (!totalKaryawanPerUsia.containsKey(getKelompokUsia(k.tanggalLahir))) {
+          totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)] = {};
+          totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]!['TOTAL KARYAWAN'] = 0;
+        }
+        if (totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]!.containsKey(k.area.kode)) {
+          totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]![k.area.kode] = totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]![k.area.kode]! + 1;
+        } else {
+          totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]![k.area.kode] = 1;
+        }
+        totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]!['TOTAL KARYAWAN'] = totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]!['TOTAL KARYAWAN']! + 1;
       }
       update();
     } else {
@@ -3060,6 +3125,28 @@ class KaryawanControl extends GetxController {
     } else {
       AFwidget.snackbar('Gagal membuat excel. [${hasil.message}]');
     }
+  }
+
+  String getKelompokUsia(DateTime? birthDate) {
+    if (birthDate == null) return "0";
+
+    final now = DateTime.now();
+    int age = now.year - birthDate.year;
+
+    // Koreksi jika belum ulang tahun tahun ini
+    if (now.month < birthDate.month || (now.month == birthDate.month && now.day < birthDate.day)) {
+      age--;
+    }
+
+    if (age < 20) return "< 20";
+    if (age <= 25) return "20–25";
+    if (age <= 30) return "26–30";
+    if (age <= 35) return "31–35";
+    if (age <= 40) return "36–40";
+    if (age <= 45) return "41–45";
+    if (age <= 50) return "46–50";
+    if (age <= 55) return "51–55";
+    return "56+";
   }
 
   @override
