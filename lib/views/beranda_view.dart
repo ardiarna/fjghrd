@@ -810,7 +810,7 @@ class BerandaView extends StatelessWidget {
     );
   }
 
-  Map<int, String> mapBulan = {
+  final Map<int, String> mapBulan = {
     1: 'Jan',
     2: 'Feb',
     3: 'Mar',

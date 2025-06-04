@@ -33,7 +33,7 @@ class KaryawanForm extends StatelessWidget {
           'id': PlutoCell(value: rowData[index].id),
           'nama': PlutoCell(value: rowData[index].nama),
           'nomor_ktp': PlutoCell(value: rowData[index].nomorKtp),
-          'hubungan': PlutoCell(value: rowData[index].hubungan == 'S' ? 'Suami' : rowData[index].hubungan == 'I' ? 'Istri' : 'Anak'),
+          'hubungan': PlutoCell(value: controller.mapKeluargaHubungan[rowData[index].hubungan]),
           'ttl': PlutoCell(value: '${rowData[index].tempatLahir} ${AFconvert.matDate(rowData[index].tanggalLahir)}'),
           'telepon': PlutoCell(value: rowData[index].telepon),
           'email': PlutoCell(value: rowData[index].email),

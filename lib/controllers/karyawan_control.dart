@@ -110,6 +110,17 @@ class KaryawanControl extends GetxController {
     12: false,
   };
 
+  Map<String, String> mapKeluargaHubungan = {
+    'S' : 'Suami',
+    'I' : 'Istri',
+    'A' : 'Anak',
+    'M' : 'Menantu',
+    'C' : 'Cucu',
+    'O' : 'Orang Tua',
+    'T' : 'Mertua',
+    'F' : 'Famili Lain',
+  };
+
   Future<void> loadKaryawans() async {
     var hasil = await _repo.findAll(
       isStaf: filterStaf.value,
@@ -1111,51 +1122,11 @@ class KaryawanControl extends GetxController {
                       Expanded(
                         child: GetBuilder<KaryawanControl>(
                           builder: (_) {
-                            return Row(
-                              children: [
-                                Radio<String>(
-                                  value: 'S',
-                                  groupValue: keluargaHubungan,
-                                  onChanged: (a) {
-                                    if(a != null && a != keluargaHubungan) {
-                                      keluargaHubungan = a;
-                                      update();
-                                    }
-                                  },
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
-                                  child: Text('Suami'),
-                                ),
-                                Radio<String>(
-                                  value: 'I',
-                                  groupValue: keluargaHubungan,
-                                  onChanged: (a) {
-                                    if(a != null && a != keluargaHubungan) {
-                                      keluargaHubungan = a;
-                                      update();
-                                    }
-                                  },
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
-                                  child: Text('Istri'),
-                                ),
-                                Radio<String>(
-                                  value: 'A',
-                                  groupValue: keluargaHubungan,
-                                  onChanged: (a) {
-                                    if(a != null && a != keluargaHubungan) {
-                                      keluargaHubungan = a;
-                                      update();
-                                    }
-                                  },
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                  child: Text('Anak'),
-                                ),
-                              ],
+                            return Wrap(
+                              spacing: 35,
+                              children: mapKeluargaHubungan.entries.map((entry) {
+                                return radioKeluargaHubungan(label: entry.value, value: entry.key);
+                              }).toList(),
                             );
                           },
                         ),
@@ -1320,51 +1291,11 @@ class KaryawanControl extends GetxController {
                       Expanded(
                         child: GetBuilder<KaryawanControl>(
                           builder: (_) {
-                            return Row(
-                              children: [
-                                Radio<String>(
-                                  value: 'S',
-                                  groupValue: keluargaHubungan,
-                                  onChanged: (a) {
-                                    if(a != null && a != keluargaHubungan) {
-                                      keluargaHubungan = a;
-                                      update();
-                                    }
-                                  },
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
-                                  child: Text('Suami'),
-                                ),
-                                Radio<String>(
-                                  value: 'I',
-                                  groupValue: keluargaHubungan,
-                                  onChanged: (a) {
-                                    if(a != null && a != keluargaHubungan) {
-                                      keluargaHubungan = a;
-                                      update();
-                                    }
-                                  },
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
-                                  child: Text('Istri'),
-                                ),
-                                Radio<String>(
-                                  value: 'A',
-                                  groupValue: keluargaHubungan,
-                                  onChanged: (a) {
-                                    if(a != null && a != keluargaHubungan) {
-                                      keluargaHubungan = a;
-                                      update();
-                                    }
-                                  },
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                  child: Text('Anak'),
-                                ),
-                              ],
+                            return Wrap(
+                              spacing: 35,
+                              children: mapKeluargaHubungan.entries.map((entry) {
+                                return radioKeluargaHubungan(label: entry.value, value: entry.key);
+                              }).toList(),
                             );
                           },
                         ),
@@ -3077,7 +3008,7 @@ class KaryawanControl extends GetxController {
     bool isTextArea = false
   }) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(15, paddingTop, 20, 0),
+      padding: EdgeInsets.fromLTRB(0, paddingTop, 20, 0),
       child: Row(
         crossAxisAlignment: isTextArea ? CrossAxisAlignment.start : CrossAxisAlignment.center,
         children: [
@@ -3097,6 +3028,28 @@ class KaryawanControl extends GetxController {
           ),
         ],
       ),
+    );
+  }
+
+  Widget radioKeluargaHubungan({
+    required String label,
+    required String value,
+  }) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Radio<String>(
+          value: value,
+          groupValue: keluargaHubungan,
+          onChanged: (a) {
+            if(a != null && a != keluargaHubungan) {
+              keluargaHubungan = a;
+              update();
+            }
+          },
+        ),
+        Text(label),
+      ],
     );
   }
 
