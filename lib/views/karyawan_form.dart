@@ -90,7 +90,7 @@ class KaryawanForm extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: () {
-                  controller.ubahKeluargaForm(rdrCtx.row.cells['id']!.value, context);
+                  controller.keluargaForm(rdrCtx.row.cells['id']!.value, context);
                 },
                 icon: const Icon(
                   Icons.edit_square,
@@ -170,7 +170,7 @@ class KaryawanForm extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: () {
-                  controller.ubahKontakForm(rdrCtx.row.cells['id']!.value, context);
+                  controller.kontakForm(rdrCtx.row.cells['id']!.value, context);
                 },
                 icon: const Icon(
                   Icons.edit_square,
@@ -227,7 +227,7 @@ class KaryawanForm extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: () {
-                  controller.ubahPerjanjianForm(rdrCtx.row.cells['id']!.value, context);
+                  controller.perjanjianForm(rdrCtx.row.cells['id']!.value, context);
                 },
                 icon: const Icon(
                   Icons.edit_square,
@@ -313,12 +313,12 @@ class KaryawanForm extends StatelessWidget {
                 const Spacer(),
                 GetBuilder<KaryawanControl>(
                   builder: (_) {
-                    if(controller.aktif == 'Y') {
+                    if(controller.aktif == 'Y' || controller.aktif == 'N') {
                       return AFwidget.tombol(
                         label: 'PHK',
                         color: Colors.orange,
                         onPressed: () {
-                          controller.tambahPhkForm(context);
+                          controller.phkForm(context);
                         },
                         minimumSize: const Size(120, 40),
                       );
@@ -1117,7 +1117,7 @@ class KaryawanForm extends StatelessWidget {
                                 ),
                                 IconButton(
                                   onPressed: () {
-                                    controller.tambahKeluargaForm(context);
+                                    controller.keluargaForm('', context);
                                   },
                                   icon: const Icon(
                                     Icons.add,
@@ -1177,7 +1177,7 @@ class KaryawanForm extends StatelessWidget {
                                   ),
                                   IconButton(
                                     onPressed: () {
-                                      controller.tambahKontakForm(context);
+                                      controller.kontakForm('', context);
                                     },
                                     icon: const Icon(
                                       Icons.add,
@@ -1238,7 +1238,7 @@ class KaryawanForm extends StatelessWidget {
                                   ),
                                   IconButton(
                                     onPressed: () {
-                                      controller.tambahPerjanjianForm(context);
+                                      controller.perjanjianForm('', context);
                                     },
                                     icon: const Icon(
                                       Icons.add,

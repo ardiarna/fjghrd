@@ -848,6 +848,8 @@ abstract class AFwidget {
   static Widget formHeader(String label, {
     bool radiusLeft = true,
     bool radiusRight = true,
+    List<Widget>? actions,
+    MainAxisAlignment mainAxisAlignment = MainAxisAlignment.spaceBetween,
   }) {
     return Container(
       height: 55,
@@ -864,11 +866,17 @@ abstract class AFwidget {
           topRight: radiusRight ? const Radius.circular(15) : Radius.zero,
         ),
       ),
-      child: Text(label,
-        style: const TextStyle(
-          fontSize: 17,
-          fontWeight: FontWeight.bold,
-        ),
+      child: Row(
+        mainAxisAlignment: mainAxisAlignment,
+        children: [
+          Text(label,
+            style: const TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          if (actions != null && actions.isNotEmpty) Row(children: actions),
+        ],
       ),
     );
   }

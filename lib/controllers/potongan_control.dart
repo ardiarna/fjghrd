@@ -217,22 +217,23 @@ class PotonganControl extends GetxController {
                       return Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Expanded(
+                          SizedBox(
+                            width: 250,
                             child: AFwidget.barisText(
                               label: 'Jumlah Jam',
                               controller: txtHari,
-                              isNumber: true,
-                              decimalDigits: 1,
                               onchanged: hitungJumlahIdr,
                               paddingRight: 0,
                             ),
                           ),
-                          const Padding(
-                            padding: EdgeInsets.fromLTRB(5, 11, 25, 5),
-                            child: Text('*Desimal menggunakan titik (.)',
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontStyle: FontStyle.italic,
+                          Expanded(
+                            child: const Padding(
+                              padding: EdgeInsets.fromLTRB(5, 11, 25, 5),
+                              child: Text('*Desimal menggunakan titik, contoh: 3.5',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontStyle: FontStyle.italic,
+                                ),
                               ),
                             ),
                           ),
@@ -427,22 +428,23 @@ class PotonganControl extends GetxController {
                       return Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Expanded(
+                          SizedBox(
+                            width: 250,
                             child: AFwidget.barisText(
                               label: 'Jumlah Jam',
                               controller: txtHari,
-                              isNumber: true,
-                              decimalDigits: 1,
                               onchanged: hitungJumlahIdr,
                               paddingRight: 0,
                             ),
                           ),
-                          const Padding(
-                            padding: EdgeInsets.fromLTRB(5, 11, 25, 5),
-                            child: Text('*Desimal menggunakan titik (.)',
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontStyle: FontStyle.italic,
+                          Expanded(
+                            child: const Padding(
+                              padding: EdgeInsets.fromLTRB(5, 11, 25, 5),
+                              child: Text('*Desimal menggunakan titik, contoh: 3.5',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontStyle: FontStyle.italic,
+                                ),
                               ),
                             ),
                           ),

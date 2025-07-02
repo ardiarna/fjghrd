@@ -74,7 +74,7 @@ class KaryawanControl extends GetxController {
       txtKeluargaTanggalLahir, txtKeluargaTelepon, txtKeluargaEmail,
       txtKontakId, txtKontakNama, txtKontakTelepon, txtKontakEmail,
       txtPerjanjianId, txtPerjanjianNomor, txtPerjanjianTglAwal, txtPerjanjianTglAkhir,
-      txtPhkId, txtPhkKeterangan;
+      txtPhkKeterangan;
 
   Agama agama = Agama();
   Area area = Area();
@@ -375,7 +375,7 @@ class KaryawanControl extends GetxController {
             ListView(
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 70, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 70, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -404,7 +404,7 @@ class KaryawanControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -454,7 +454,7 @@ class KaryawanControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -503,16 +503,16 @@ class KaryawanControl extends GetxController {
                     ],
                   ),
                 ),
-                barisText(
+                AFwidget.barisText(
                   label: 'Nama',
                   controller: txtNama,
                 ),
-                barisText(
+                AFwidget.barisText(
                   label: 'NIK',
                   controller: txtNik,
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -541,7 +541,7 @@ class KaryawanControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -570,7 +570,7 @@ class KaryawanControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -599,7 +599,7 @@ class KaryawanControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -627,20 +627,20 @@ class KaryawanControl extends GetxController {
                     ],
                   ),
                 ),
-                barisText(
+                AFwidget.barisText(
                   label: 'Nomor KK',
                   controller: txtNomorKk,
                 ),
-                barisText(
+                AFwidget.barisText(
                   label: 'Nomor KTP',
                   controller: txtNomorKtp,
                 ),
-                barisText(
+                AFwidget.barisText(
                   label: 'Nomor Paspor',
                   controller: txtNomorPaspor,
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -676,22 +676,22 @@ class KaryawanControl extends GetxController {
                     ],
                   ),
                 ),
-                barisText(
+                AFwidget.barisText(
                   label: 'Alamat KTP',
                   controller: txtAlamatKtp,
                   isTextArea: true,
                 ),
-                barisText(
+                AFwidget.barisText(
                   label: 'Alamat Tinggal Sekarang',
                   controller: txtAlamatTinggal,
                   isTextArea: true,
                 ),
-                barisText(
+                AFwidget.barisText(
                   label: 'No. Telepon',
                   controller: txtTelepon,
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -741,7 +741,7 @@ class KaryawanControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -805,7 +805,7 @@ class KaryawanControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -834,7 +834,7 @@ class KaryawanControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       const SizedBox(width: 150),
@@ -853,7 +853,7 @@ class KaryawanControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       const SizedBox(width: 150),
@@ -871,12 +871,12 @@ class KaryawanControl extends GetxController {
                     ],
                   ),
                 ),
-                barisText(
+                AFwidget.barisText(
                   label: 'Email Pribadi',
                   controller: txtEmail,
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -904,14 +904,14 @@ class KaryawanControl extends GetxController {
                     ],
                   ),
                 ),
-                barisText(
+                AFwidget.barisText(
                   label: 'NPWP',
                   controller: txtNomorPwp,
                 ),
                 Visibility(
                   visible: false,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(15, 11, 20, 0),
+                    padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                     child: Row(
                       children: [
                         Container(
@@ -941,7 +941,7 @@ class KaryawanControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(15, 25, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -963,42 +963,19 @@ class KaryawanControl extends GetxController {
                 ),
               ],
             ),
-            Container(
-              height: 55,
-              width: double.infinity,
-              padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-              decoration: BoxDecoration(
-                color: const Color(0xFFf2fbfe),
-                border: Border.all(
-                  color: Colors.brown.shade100, width: 1,
+            AFwidget.formHeader(
+              'Form Tambah Karyawan',
+              actions: [
+                IconButton(
+                  onPressed: () async {
+                    AFwidget.loading();
+                    await loadAllData();
+                    Get.back();
+                  },
+                  icon: const Icon(Icons.refresh),
+                  padding: EdgeInsets.zero,
                 ),
-                borderRadius: const BorderRadius.only(
-                  topRight: Radius.circular(15),
-                  topLeft: Radius.circular(15),
-                ),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('Form Tambah Karyawan',
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () async {
-                      AFwidget.loading();
-                      await loadAllData();
-                      Get.back();
-                    },
-                    icon: const Icon(
-                      Icons.refresh,
-                    ),
-                    padding: const EdgeInsets.all(0),
-                  ),
-                ],
-              ),
+              ],
             ),
           ],
         ),
@@ -1061,187 +1038,20 @@ class KaryawanControl extends GetxController {
     );
   }
 
-  void tambahKeluargaForm(BuildContext context) {
-    txtKeluargaId.text = '';
-    txtKeluargaNama.text = '';
-    txtKeluargaNomorKtp.text = '';
-    txtKeluargaTempatLahir.text = '';
-    txtKeluargaTanggalLahir.text = AFconvert.matYMD(_now);
-    txtKeluargaTelepon.text = '';
-    txtKeluargaEmail.text = '';
-    keluargaHubungan = '';
-    AFwidget.dialog(
-      Container(
-        padding: const EdgeInsets.fromLTRB(15, 0, 0, 15),
-        width: 700,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-        ),
-        child: Stack(
-          children: [
-            ListView(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 60, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Nama Karyawan'),
-                      ),
-                      Expanded(
-                        child: Text(': ${current.nama}',
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                barisText(
-                  label: 'Nama',
-                  controller: txtKeluargaNama,
-                ),
-                barisText(
-                  label: 'Nomor KTP',
-                  controller: txtKeluargaNomorKtp,
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Hubungan'),
-                      ),
-                      Expanded(
-                        child: GetBuilder<KaryawanControl>(
-                          builder: (_) {
-                            return Wrap(
-                              spacing: 35,
-                              children: mapKeluargaHubungan.entries.map((entry) {
-                                return radioKeluargaHubungan(label: entry.value, value: entry.key);
-                              }).toList(),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Tempat & Tgl Lahir'),
-                      ),
-                      Expanded(
-                        child: AFwidget.textField(
-                          marginTop: 0,
-                          controller: txtKeluargaTempatLahir,
-                        ),
-                      ),
-                      Container(
-                        width: 165,
-                        margin: const EdgeInsets.only(left: 15),
-                        child: AFwidget.textField(
-                          marginTop: 0,
-                          controller: txtKeluargaTanggalLahir,
-                          readOnly: true,
-                          prefixIcon: const Icon(Icons.calendar_month),
-                          ontap: () async {
-                            var a = await AFwidget.pickDate(
-                              context: context,
-                              initialDate: AFconvert.keTanggal(txtKeluargaTanggalLahir.text),
-                            );
-                            if(a != null) {
-                              txtKeluargaTanggalLahir.text = AFconvert.matYMD(a);
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                barisText(
-                  label: 'No. Telepon',
-                  controller: txtKeluargaTelepon,
-                ),
-                barisText(
-                  label: 'Email Pribadi',
-                  controller: txtKeluargaEmail,
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 50, 20, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      AFwidget.tombol(
-                        label: 'Batal',
-                        color: Colors.orange,
-                        onPressed: Get.back,
-                        minimumSize: const Size(120, 40),
-                      ),
-                      const SizedBox(width: 40),
-                      AFwidget.tombol(
-                        label: 'Simpan',
-                        color: Colors.blue,
-                        onPressed: tambahKeluargaData,
-                        minimumSize: const Size(120, 40),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Container(
-              height: 55,
-              width: double.infinity,
-              padding: const EdgeInsets.all(15),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(15),
-                ),
-              ),
-              child: const Text('Form Tambah Anggota Keluarga',
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-      barrierDismissible: false,
-      scrollable: false,
-      backgroundColor: Colors.white,
-      contentPadding: const EdgeInsets.all(0),
-    );
-  }
-
-  void ubahKeluargaForm(String id, BuildContext context) {
-    var item = listKeluarga.where((element) => element.id == id).first;
+  void keluargaForm(String id, BuildContext context) {
+    KeluargaKaryawan item = KeluargaKaryawan();
+    if(id != '') item = listKeluarga.where((element) => element.id == id).first;
     txtKeluargaId.text = item.id;
     txtKeluargaNama.text = item.nama;
     txtKeluargaNomorKtp.text = item.nomorKtp;
     txtKeluargaTempatLahir.text = item.tempatLahir;
-    txtKeluargaTanggalLahir.text = AFconvert.matYMD(item.tanggalLahir);
+    txtKeluargaTanggalLahir.text = AFconvert.matYMD(item.tanggalLahir ?? _now);
     txtKeluargaTelepon.text = item.telepon;
     txtKeluargaEmail.text = item.email;
     keluargaHubungan = item.hubungan;
     AFwidget.dialog(
       Container(
-        padding: const EdgeInsets.fromLTRB(15, 0, 0, 15),
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
         width: 700,
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -1251,36 +1061,21 @@ class KaryawanControl extends GetxController {
           children: [
             ListView(
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 60, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Nama Karyawan'),
-                      ),
-                      Expanded(
-                        child: Text(': ${current.nama}',
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                AFwidget.barisInfo(
+                  label: 'Nama Karyawan',
+                  nilai: current.nama,
+                  paddingTop: 70,
                 ),
-                barisText(
+                AFwidget.barisText(
                   label: 'Nama',
                   controller: txtKeluargaNama,
                 ),
-                barisText(
+                AFwidget.barisText(
                   label: 'Nomor KTP',
                   controller: txtKeluargaNomorKtp,
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -1304,7 +1099,7 @@ class KaryawanControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -1340,27 +1135,26 @@ class KaryawanControl extends GetxController {
                     ],
                   ),
                 ),
-                barisText(
+                AFwidget.barisText(
                   label: 'No. Telepon',
                   controller: txtKeluargaTelepon,
                 ),
-                barisText(
+                AFwidget.barisText(
                   label: 'Email Pribadi',
                   controller: txtKeluargaEmail,
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 50, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      AFwidget.tombol(
+                      id != '' ? AFwidget.tombol(
                         label: 'Hapus',
                         color: Colors.red,
                         onPressed: () {
                           hapusKeluargaForm(item);
                         },
                         minimumSize: const Size(120, 40),
-                      ),
+                      ) : Container(),
                       const Spacer(),
                       AFwidget.tombol(
                         label: 'Batal',
@@ -1372,7 +1166,7 @@ class KaryawanControl extends GetxController {
                       AFwidget.tombol(
                         label: 'Simpan',
                         color: Colors.blue,
-                        onPressed: ubahKeluargaData,
+                        onPressed: simpanKeluargaData,
                         minimumSize: const Size(120, 40),
                       ),
                     ],
@@ -1380,23 +1174,7 @@ class KaryawanControl extends GetxController {
                 ),
               ],
             ),
-            Container(
-              height: 55,
-              width: double.infinity,
-              padding: const EdgeInsets.all(15),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(15),
-                ),
-              ),
-              child: const Text('Form Ubah Anggota Keluarga',
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+            AFwidget.formHeader('Form ${id == '' ? 'Tambah' : 'Ubah'} Anggota Keluarga'),
           ],
         ),
       ),
@@ -1416,114 +1194,16 @@ class KaryawanControl extends GetxController {
     );
   }
 
-  void tambahKontakForm(BuildContext context) {
-    txtKontakId.text = '';
-    txtKontakNama.text = '';
-    txtKontakTelepon.text = '';
-    txtKontakEmail.text = '';
-    AFwidget.dialog(
-      Container(
-        padding: const EdgeInsets.fromLTRB(15, 0, 0, 15),
-        width: 700,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-        ),
-        child: Stack(
-          children: [
-            ListView(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 60, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Nama Karyawan'),
-                      ),
-                      Expanded(
-                        child: Text(': ${current.nama}',
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                barisText(
-                  label: 'No. Telepon',
-                  controller: txtKontakTelepon,
-                ),
-                barisText(
-                  label: 'Keterangan',
-                  controller: txtKontakNama,
-                ),
-                barisText(
-                  label: 'Email Pribadi',
-                  controller: txtKontakEmail,
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 50, 20, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      AFwidget.tombol(
-                        label: 'Batal',
-                        color: Colors.orange,
-                        onPressed: Get.back,
-                        minimumSize: const Size(120, 40),
-                      ),
-                      const SizedBox(width: 40),
-                      AFwidget.tombol(
-                        label: 'Simpan',
-                        color: Colors.blue,
-                        onPressed: tambahKontakData,
-                        minimumSize: const Size(120, 40),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Container(
-              height: 55,
-              width: double.infinity,
-              padding: const EdgeInsets.all(15),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(15),
-                ),
-              ),
-              child: const Text('Form Tambah Kontak Keluarga',
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-      barrierDismissible: false,
-      scrollable: false,
-      backgroundColor: Colors.white,
-      contentPadding: const EdgeInsets.all(0),
-    );
-  }
-
-  void ubahKontakForm(String id, BuildContext context) {
-    var item = listKontak.where((element) => element.id == id).first;
+  void kontakForm(String id, BuildContext context) {
+    KeluargaKontak item = KeluargaKontak();
+    if (id != '') item = listKontak.where((element) => element.id == id).first;
     txtKontakId.text = item.id;
     txtKontakNama.text = item.nama;
     txtKontakTelepon.text = item.telepon;
     txtKontakEmail.text = item.email;
     AFwidget.dialog(
       Container(
-        padding: const EdgeInsets.fromLTRB(15, 0, 0, 15),
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
         width: 700,
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -1533,51 +1213,35 @@ class KaryawanControl extends GetxController {
           children: [
             ListView(
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 60, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Nama Karyawan'),
-                      ),
-                      Expanded(
-                        child: Text(': ${current.nama}',
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                AFwidget.barisInfo(
+                  label: 'Nama Karyawan',
+                  nilai: current.nama,
+                  paddingTop: 70,
                 ),
-                barisText(
+                AFwidget.barisText(
                   label: 'No. Telepon',
                   controller: txtKontakTelepon,
                 ),
-                barisText(
+                AFwidget.barisText(
                   label: 'Keterangan',
                   controller: txtKontakNama,
                 ),
-                barisText(
+                AFwidget.barisText(
                   label: 'Email Pribadi',
                   controller: txtKontakEmail,
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 50, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      AFwidget.tombol(
+                      id != '' ? AFwidget.tombol(
                         label: 'Hapus',
                         color: Colors.red,
                         onPressed: () {
                           hapusKontakForm(item);
                         },
                         minimumSize: const Size(120, 40),
-                      ),
+                      ) : Container(),
                       const Spacer(),
                       AFwidget.tombol(
                         label: 'Batal',
@@ -1589,7 +1253,7 @@ class KaryawanControl extends GetxController {
                       AFwidget.tombol(
                         label: 'Simpan',
                         color: Colors.blue,
-                        onPressed: ubahKontakData,
+                        onPressed: simpanKontakData,
                         minimumSize: const Size(120, 40),
                       ),
                     ],
@@ -1597,23 +1261,7 @@ class KaryawanControl extends GetxController {
                 ),
               ],
             ),
-            Container(
-              height: 55,
-              width: double.infinity,
-              padding: const EdgeInsets.all(15),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(15),
-                ),
-              ),
-              child: const Text('Form Ubah Kontak Keluarga',
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+            AFwidget.formHeader('Form ${id == '' ? 'Tambah' : 'Ubah'} Kontak Keluarga'),
           ],
         ),
       ),
@@ -1633,213 +1281,17 @@ class KaryawanControl extends GetxController {
     );
   }
 
-  void tambahPerjanjianForm(BuildContext context) {
-    txtPerjanjianId.text = '';
-    txtPerjanjianNomor.text = '';
-    txtPerjanjianTglAwal.text = AFconvert.matYMD(_now);
-    txtPerjanjianTglAkhir.text = '';
-    statusKerjaPerjanjian = StatusKerja();
-    AFwidget.dialog(
-      Container(
-        padding: const EdgeInsets.fromLTRB(15, 0, 0, 15),
-        width: 700,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-        ),
-        child: Stack(
-          children: [
-            ListView(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 60, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Nama Karyawan'),
-                      ),
-                      Expanded(
-                        child: Text(': ${current.nama}',
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                barisText(
-                  label: 'Nomor',
-                  controller: txtPerjanjianNomor,
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Tanggal Awal'),
-                      ),
-                      Expanded(
-                        child: AFwidget.textField(
-                          marginTop: 0,
-                          controller: txtPerjanjianTglAwal,
-                          readOnly: true,
-                          prefixIcon: const Icon(Icons.calendar_month),
-                          ontap: () async {
-                            var a = await AFwidget.pickDate(
-                              context: context,
-                              initialDate: AFconvert.keTanggal(txtPerjanjianTglAwal.text),
-                            );
-                            if(a != null) {
-                              txtPerjanjianTglAwal.text = AFconvert.matYMD(a);
-                            }
-                          },
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Tanggal Akhir'),
-                      ),
-                      Expanded(
-                        child: AFwidget.textField(
-                          marginTop: 0,
-                          controller: txtPerjanjianTglAkhir,
-                          readOnly: true,
-                          prefixIcon: const Icon(Icons.calendar_month),
-                          ontap: () async {
-                            var a = await AFwidget.pickDate(
-                              context: context,
-                              initialDate: AFconvert.keTanggal(txtPerjanjianTglAkhir.text),
-                            );
-                            if(a != null) {
-                              txtPerjanjianTglAkhir.text = AFconvert.matYMD(a);
-                              update();
-                            }
-                          },
-                        ),
-                      ),
-                      GetBuilder<KaryawanControl>(
-                        builder: (_) {
-                          if(txtPerjanjianTglAkhir.text.isNotEmpty) {
-                            return Padding(
-                              padding: const EdgeInsets.only(left: 10),
-                              child: IconButton(
-                                onPressed: () {
-                                  txtPerjanjianTglAkhir.text = '';
-                                  update();
-                                },
-                                icon: const Icon(Icons.highlight_off),
-                              ),
-                            );
-                          }
-                          return Container();
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Status Karyawan'),
-                      ),
-                      Expanded(
-                        child: GetBuilder<KaryawanControl>(
-                          builder: (_) {
-                            return AFwidget.comboField(
-                              value: statusKerjaPerjanjian.nama,
-                              label: '',
-                              onTap: () async {
-                                var a = await pilihStatusKerja(value: statusKerjaPerjanjian.id);
-                                if(a != null && a.value != statusKerjaPerjanjian.id) {
-                                  statusKerjaPerjanjian = StatusKerja.fromMap(a.data!);
-                                  update();
-                                }
-                              },
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 50, 20, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      AFwidget.tombol(
-                        label: 'Batal',
-                        color: Colors.orange,
-                        onPressed: Get.back,
-                        minimumSize: const Size(120, 40),
-                      ),
-                      const SizedBox(width: 40),
-                      AFwidget.tombol(
-                        label: 'Simpan',
-                        color: Colors.blue,
-                        onPressed: tambahPerjanjianData,
-                        minimumSize: const Size(120, 40),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Container(
-              height: 55,
-              width: double.infinity,
-              padding: const EdgeInsets.all(15),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(15),
-                ),
-              ),
-              child: const Text('Form Tambah Perjanjian Kerja',
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-      barrierDismissible: false,
-      scrollable: false,
-      backgroundColor: Colors.white,
-      contentPadding: const EdgeInsets.all(0),
-    );
-  }
-
-  void ubahPerjanjianForm(String id, BuildContext context) {
-    var item = listPerjanjianKerja.where((element) => element.id == id).first;
+  void perjanjianForm(String id, BuildContext context) {
+    PerjanjianKerja item = PerjanjianKerja();
+    if(id != '') item = listPerjanjianKerja.where((element) => element.id == id).first;
     txtPerjanjianId.text = item.id;
     txtPerjanjianNomor.text = item.nomor;
-    txtPerjanjianTglAwal.text = AFconvert.matYMD(item.tanggalAwal);
+    txtPerjanjianTglAwal.text = AFconvert.matYMD(item.tanggalAwal ?? _now);
     txtPerjanjianTglAkhir.text = AFconvert.matYMD(item.tanggalAKhir);
     statusKerjaPerjanjian = item.statusKerja;
     AFwidget.dialog(
       Container(
-        padding: const EdgeInsets.fromLTRB(15, 0, 0, 15),
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
         width: 700,
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -1849,32 +1301,17 @@ class KaryawanControl extends GetxController {
           children: [
             ListView(
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 60, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Nama Karyawan'),
-                      ),
-                      Expanded(
-                        child: Text(': ${current.nama}',
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                AFwidget.barisInfo(
+                  label: 'Nama Karyawan',
+                  nilai: current.nama,
+                  paddingTop: 70,
                 ),
-                barisText(
+                AFwidget.barisText(
                   label: 'Nomor',
                   controller: txtPerjanjianNomor,
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -1903,7 +1340,7 @@ class KaryawanControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -1950,7 +1387,7 @@ class KaryawanControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -1979,18 +1416,17 @@ class KaryawanControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 50, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      AFwidget.tombol(
+                      id != '' ? AFwidget.tombol(
                         label: 'Hapus',
                         color: Colors.red,
                         onPressed: () {
                           hapusPerjanjianForm(item);
                         },
                         minimumSize: const Size(120, 40),
-                      ),
+                      ) : Container(),
                       const Spacer(),
                       AFwidget.tombol(
                         label: 'Batal',
@@ -2002,7 +1438,7 @@ class KaryawanControl extends GetxController {
                       AFwidget.tombol(
                         label: 'Simpan',
                         color: Colors.blue,
-                        onPressed: ubahPerjanjianData,
+                        onPressed: simpanPerjanjianData,
                         minimumSize: const Size(120, 40),
                       ),
                     ],
@@ -2010,23 +1446,7 @@ class KaryawanControl extends GetxController {
                 ),
               ],
             ),
-            Container(
-              height: 55,
-              width: double.infinity,
-              padding: const EdgeInsets.all(15),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(15),
-                ),
-              ),
-              child: const Text('Form Ubah Perjanjian Kerja',
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+            AFwidget.formHeader('Form ${id == '' ? 'Tambah' : 'Ubah'} Perjanjian Kerja'),
           ],
         ),
       ),
@@ -2046,14 +1466,14 @@ class KaryawanControl extends GetxController {
     );
   }
 
-  void tambahPhkForm(BuildContext context) {
-    txtPhkId.text = '';
-    txtPhkKeterangan.text = '';
-    txtTanggalKeluar.text = AFconvert.matYMD(_now);
-    statusPhk = StatusPhk();
+  void phkForm(BuildContext context) {
+    txtPhkKeterangan.text = current.phk.keterangan;
+    txtTanggalMasuk.text = AFconvert.matYMD(current.phk.tanggalAwal ?? current.tanggalMasuk);
+    txtTanggalKeluar.text = AFconvert.matYMD(current.phk.tanggalAKhir ?? _now);
+    statusPhk = current.phk.statusPhk;
     AFwidget.dialog(
       Container(
-        padding: const EdgeInsets.fromLTRB(15, 0, 0, 15),
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
         width: 700,
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -2063,47 +1483,17 @@ class KaryawanControl extends GetxController {
           children: [
             ListView(
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 60, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Nama Karyawan'),
-                      ),
-                      Expanded(
-                        child: Text(': ${current.nama}',
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                AFwidget.barisInfo(
+                  label: 'Nama Karyawan',
+                  nilai: current.nama,
+                  paddingTop: 70,
+                ),
+                AFwidget.barisInfo(
+                  label: 'Status Karyawan',
+                  nilai: current.statusKerja.nama,
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 30, 20, 5),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Status Karyawan'),
-                      ),
-                      Expanded(
-                        child: Text(': ${statusKerja.nama}',
-                          style: const TextStyle(
-                            fontSize: 15,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -2150,7 +1540,7 @@ class KaryawanControl extends GetxController {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -2178,13 +1568,13 @@ class KaryawanControl extends GetxController {
                     ],
                   ),
                 ),
-                barisText(
+                AFwidget.barisText(
                   label: 'Keterangan',
                   controller: txtPhkKeterangan,
                   isTextArea: true,
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 50, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
@@ -2198,7 +1588,7 @@ class KaryawanControl extends GetxController {
                       AFwidget.tombol(
                         label: 'Simpan',
                         color: Colors.blue,
-                        onPressed: tambahPhkData,
+                        onPressed: simpanPhkData,
                         minimumSize: const Size(120, 40),
                       ),
                     ],
@@ -2206,23 +1596,7 @@ class KaryawanControl extends GetxController {
                 ),
               ],
             ),
-            Container(
-              height: 55,
-              width: double.infinity,
-              padding: const EdgeInsets.all(15),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(15),
-                ),
-              ),
-              child: const Text('Form PHK Karyawan',
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+            AFwidget.formHeader('Form PHK Karyawan'),
           ],
         ),
       ),
@@ -2430,52 +1804,10 @@ class KaryawanControl extends GetxController {
     }
   }
 
-  Future<void> tambahKeluargaData() async {
+  Future<void> simpanKeluargaData() async {
     try {
       if(current.id.isEmpty) {
         throw 'ID Karyawan tidak ditemukan';
-      }
-      if(txtKeluargaNama.text.isEmpty) {
-        throw 'Nama harus diisi';
-      }
-      if(keluargaHubungan == '') {
-        throw 'Silakan pilih hubungan keluarga dengan karyawan';
-      }
-      if(txtTempatLahir.text.isEmpty || txtTanggalLahir.text.isEmpty) {
-        throw 'Tempat & tanggal lahir harus diisi';
-      }
-      var a = KeluargaKaryawan(
-        nama: txtKeluargaNama.text,
-        nomorKtp: txtKeluargaNomorKtp.text,
-        tempatLahir: txtKeluargaTempatLahir.text,
-        tanggalLahir: AFconvert.keTanggal('${txtKeluargaTanggalLahir.text} 08:00:00'),
-        telepon: txtKeluargaTelepon.text,
-        email: txtKeluargaEmail.text,
-        hubungan: keluargaHubungan,
-      );
-      a.karyawan = current;
-
-      AFwidget.loading();
-      var hasil = await _repo.keluargaCreate(a.karyawan.id, a.toMap());
-      Get.back();
-      if(hasil.success) {
-        loadKeluargas();
-        loadKaryawans();
-        Get.back();
-      }
-      AFwidget.snackbar(hasil.message);
-    } catch (er) {
-      AFwidget.snackbar('$er');
-    }
-  }
-
-  Future<void> ubahKeluargaData() async {
-    try {
-      if(current.id.isEmpty) {
-        throw 'ID Karyawan tidak ditemukan';
-      }
-      if(txtKeluargaId.text.isEmpty) {
-        throw 'ID anggota keluarga tidak ditemukan';
       }
       if(txtKeluargaNama.text.isEmpty) {
         throw 'Nama harus diisi';
@@ -2499,7 +1831,9 @@ class KaryawanControl extends GetxController {
       a.karyawan = current;
 
       AFwidget.loading();
-      var hasil = await _repo.keluargaUpdate(a.karyawan.id, a.toMap());
+      var hasil = txtKeluargaId.text == ''
+          ? await _repo.keluargaCreate(a.karyawan.id, a.toMap())
+          : await _repo.keluargaUpdate(a.karyawan.id, a.toMap());
       Get.back();
       if(hasil.success) {
         loadKeluargas();
@@ -2535,44 +1869,10 @@ class KaryawanControl extends GetxController {
     }
   }
 
-  Future<void> tambahKontakData() async {
+  Future<void> simpanKontakData() async {
     try {
       if(current.id.isEmpty) {
         throw 'ID Karyawan tidak ditemukan';
-      }
-      if(txtKontakTelepon.text.isEmpty) {
-        throw 'Nomor Telepon harus diisi';
-      }
-      if(txtKontakNama.text.isEmpty) {
-        throw 'Keterangan harus diisi';
-      }
-      var a = KeluargaKontak(
-        nama: txtKontakNama.text,
-        telepon: txtKontakTelepon.text,
-        email: txtKontakEmail.text,
-      );
-      a.karyawan = current;
-
-      AFwidget.loading();
-      var hasil = await _repo.kontakKeluargaCreate(a.karyawan.id, a.toMap());
-      Get.back();
-      if(hasil.success) {
-        loadKontaks();
-        Get.back();
-      }
-      AFwidget.snackbar(hasil.message);
-    } catch (er) {
-      AFwidget.snackbar('$er');
-    }
-  }
-
-  Future<void> ubahKontakData() async {
-    try {
-      if(current.id.isEmpty) {
-        throw 'ID Karyawan tidak ditemukan';
-      }
-      if(txtKontakId.text.isEmpty) {
-        throw 'ID kontak keluarga tidak ditemukan';
       }
       if(txtKontakTelepon.text.isEmpty) {
         throw 'Nomor Telepon harus diisi';
@@ -2583,13 +1883,15 @@ class KaryawanControl extends GetxController {
       var a = KeluargaKontak(
         id: txtKontakId.text,
         nama: txtKontakNama.text,
-        telepon: txtKeluargaTelepon.text,
-        email: txtKeluargaEmail.text,
+        telepon: txtKontakTelepon.text,
+        email: txtKontakEmail.text,
       );
       a.karyawan = current;
 
       AFwidget.loading();
-      var hasil = await _repo.kontakKeluargaUpdate(a.karyawan.id, a.toMap());
+      var hasil = txtKontakId.text == ''
+          ? await _repo.kontakKeluargaCreate(a.karyawan.id, a.toMap())
+          : await _repo.kontakKeluargaUpdate(a.karyawan.id, a.toMap());
       Get.back();
       if(hasil.success) {
         loadKontaks();
@@ -2623,52 +1925,10 @@ class KaryawanControl extends GetxController {
     }
   }
 
-  Future<void> tambahPerjanjianData() async {
+  Future<void> simpanPerjanjianData() async {
     try {
       if(current.id.isEmpty) {
         throw 'ID Karyawan tidak ditemukan';
-      }
-      if(txtPerjanjianNomor.text.isEmpty) {
-        throw 'Nomor perjanjian kerja harus diisi';
-      }
-      if(txtPerjanjianTglAwal.text.isEmpty) {
-        throw 'Tanggal awal harus diisi';
-      }
-      if(statusKerjaPerjanjian.id == '') {
-        throw 'Silakan pilih status';
-      }
-
-      var a = PerjanjianKerja(
-        nomor: txtPerjanjianNomor.text,
-        tanggalAwal: AFconvert.keTanggal('${txtPerjanjianTglAwal.text} 08:00:00'),
-        tanggalAKhir: txtPerjanjianTglAkhir.text.isNotEmpty ? AFconvert.keTanggal('${txtPerjanjianTglAkhir.text} 08:00:00') : null,
-      );
-      a.karyawan = current;
-      a.statusKerja = statusKerjaPerjanjian;
-
-      AFwidget.loading();
-      var hasil = await _repo.perjanjianKerjaCreate(a.karyawan.id, a.toMap());
-      Get.back();
-      if(hasil.success) {
-        statusKerja = a.statusKerja;
-        loadPerjanjianKerjas();
-        loadTimelineMasakerja();
-        loadKaryawans();
-        Get.back();
-      }
-      AFwidget.snackbar(hasil.message);
-    } catch (er) {
-      AFwidget.snackbar('$er');
-    }
-  }
-
-  Future<void> ubahPerjanjianData() async {
-    try {
-      if(current.id.isEmpty) {
-        throw 'ID Karyawan tidak ditemukan';
-      }
-      if(txtPerjanjianId.text.isEmpty) {
-        throw 'ID perjanjian kerja tidak ditemukan';
       }
       if(txtPerjanjianNomor.text.isEmpty) {
         throw 'Nomor perjanjian kerja harus diisi';
@@ -2690,11 +1950,15 @@ class KaryawanControl extends GetxController {
       a.statusKerja = statusKerjaPerjanjian;
 
       AFwidget.loading();
-      var hasil = await _repo.perjanjianKerjaUpdate(a.karyawan.id, a.toMap());
+      var hasil = txtPerjanjianId.text == ''
+          ? await _repo.perjanjianKerjaCreate(a.karyawan.id, a.toMap())
+          : await _repo.perjanjianKerjaUpdate(a.karyawan.id, a.toMap());
       Get.back();
       if(hasil.success) {
+        statusKerja = a.statusKerja;
         loadPerjanjianKerjas();
         loadTimelineMasakerja();
+        loadKaryawans();
         Get.back();
       }
       AFwidget.snackbar(hasil.message);
@@ -2726,7 +1990,7 @@ class KaryawanControl extends GetxController {
     }
   }
 
-  Future<void> tambahPhkData() async {
+  Future<void> simpanPhkData() async {
     try {
       if(current.id.isEmpty) {
         throw 'ID Karyawan tidak ditemukan';
@@ -2742,16 +2006,19 @@ class KaryawanControl extends GetxController {
       }
 
       var a = Phk(
+        id: current.phk.id,
+        karyawanId: current.id,
         tanggalAwal: AFconvert.keTanggal('${txtTanggalMasuk.text} 08:00:00'),
         tanggalAKhir: AFconvert.keTanggal('${txtTanggalKeluar.text} 08:00:00'),
         keterangan: txtPhkKeterangan.text,
-        karyawanId: current.id,
       );
       a.statusKerja = statusKerja;
       a.statusPhk = statusPhk;
 
       AFwidget.loading();
-      var hasil = await _repo.phkCreate(a.karyawanId, a.toMap());
+      var hasil = current.phk.id == ''
+          ? await _repo.phkCreate(a.karyawanId, a.toMap())
+          : await _repo.phkUpdate(a.karyawanId, a.toMap());
       Get.back();
       if(hasil.success) {
         loadKaryawans();
@@ -3001,36 +2268,6 @@ class KaryawanControl extends GetxController {
     return a;
   }
 
-  Widget barisText({
-    String label = '',
-    TextEditingController? controller,
-    double paddingTop = 11,
-    bool isTextArea = false
-  }) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0, paddingTop, 20, 0),
-      child: Row(
-        crossAxisAlignment: isTextArea ? CrossAxisAlignment.start : CrossAxisAlignment.center,
-        children: [
-          Container(
-            width: 150,
-            padding: EdgeInsets.only(right: 15, top: isTextArea ? 15 : 0),
-            child: Text(label),
-          ),
-          Expanded(
-            child: AFwidget.textField(
-              marginTop: 0,
-              controller: controller,
-              maxLines: isTextArea ? 4 : 1,
-              minLines: isTextArea ? 2 : 1,
-              keyboard: isTextArea ? TextInputType.multiline : TextInputType.text,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget radioKeluargaHubungan({
     required String label,
     required String value,
@@ -3138,7 +2375,6 @@ class KaryawanControl extends GetxController {
     txtPerjanjianNomor = TextEditingController();
     txtPerjanjianTglAwal = TextEditingController();
     txtPerjanjianTglAkhir = TextEditingController();
-    txtPhkId = TextEditingController();
     txtPhkKeterangan = TextEditingController();
     loadKaryawans();
     loadAllData();
@@ -3179,7 +2415,6 @@ class KaryawanControl extends GetxController {
     txtPerjanjianNomor.dispose();
     txtPerjanjianTglAwal.dispose();
     txtPerjanjianTglAkhir.dispose();
-    txtPhkId.dispose();
     txtPhkKeterangan.dispose();
     super.onClose();
   }
