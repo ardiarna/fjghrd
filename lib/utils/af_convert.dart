@@ -122,6 +122,11 @@ abstract class AFconvert {
     return '${tanggal[2]} ${mapBulan[int.parse(tanggal[1])]} ${tanggal[0]}';
   }
 
+  static String matMonthYear(DateTime? nilai) {
+    final mat = DateFormat('yyyy');
+    return nilai != null ? '${mapBulan[nilai.month]} ${mat.format(nilai)}' : '';
+  }
+
   static String matNumber(dynamic nilai) {
     final mat = NumberFormat('#,###');
     return nilai != null ? mat.format(nilai) : '0';

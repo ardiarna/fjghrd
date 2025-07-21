@@ -29,11 +29,11 @@ class MedicalControl extends GetxController {
   List<Opsi> listBulan = mapBulan.entries.map((e) => Opsi(value: e.key.toString(), label: e.value)).toList();
   late List<Opsi> listTahun;
 
-  Opsi filterJenis = Opsi(value: 'R', label: 'Rawat Jalan');
+  Opsi filterJenis = Opsi(value: '', label: 'SEMUA');
   late Opsi filterTahun;
   late Opsi filterBulan;
 
-  late TextEditingController txtId, txtTanggal, txtJumlah, txtKeterangan;
+  late TextEditingController txtId, txtJumlah, txtKeterangan;
   Karyawan karyawan = Karyawan();
   Opsi jenis = Opsi(value: 'R', label: 'Rawat Jalan');
   late Opsi tahun;
@@ -108,11 +108,14 @@ class MedicalControl extends GetxController {
     txtId.text = '';
     tahun = Opsi(value: filterTahun.value, label: filterTahun.label);
     bulan = Opsi(value: filterBulan.value, label: filterBulan.label);
-    txtTanggal.text = AFconvert.matDate(DateTime(AFconvert.keInt(filterTahun.value), AFconvert.keInt(filterBulan.value)));
     txtKeterangan.text = '';
     txtJumlah.text = '';
     karyawan = Karyawan();
-    jenis = Opsi(value: filterJenis.value, label: filterJenis.label);
+    if(filterJenis.value == '') {
+      jenis =  Opsi(value: 'R', label: 'Rawat Jalan');
+    } else {
+      jenis = Opsi(value: filterJenis.value, label: filterJenis.label);
+    }
     medicalRekap = MedicalRekap();
     medicalHistory = [];
     AFwidget.dialog(
@@ -321,7 +324,7 @@ class MedicalControl extends GetxController {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(AFconvert.matDate(medicalHistory[i].tanggal)),
+                                    Text(AFconvert.matMonthYear(medicalHistory[i].tanggal)),
                                     Text('Rp. ${AFconvert.matNumber(medicalHistory[i].jumlah)}'),
                                     Text(medicalHistory[i].keterangan),
                                   ],
@@ -351,7 +354,6 @@ class MedicalControl extends GetxController {
     txtId.text = item.id;
     tahun = Opsi(value: '${item.tahun}', label: '${item.tahun}');
     bulan = Opsi(value: '${item.bulan}', label: mapBulan[item.bulan]!);
-    txtTanggal.text = AFconvert.matDate(item.tanggal);
     txtKeterangan.text = item.keterangan;
     txtJumlah.text = AFconvert.matNumber(item.jumlah);
     karyawan = item.karyawan;
@@ -462,38 +464,6 @@ class MedicalControl extends GetxController {
                               ),
                             ),
                           ],
-                        ),
-                      ),
-                      Visibility(
-                        visible: false,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
-                          child: Row(
-                            children: [
-                              Container(
-                                width: 150,
-                                padding: const EdgeInsets.only(right: 15),
-                                child: const Text('Tanggal'),
-                              ),
-                              Expanded(
-                                child: AFwidget.textField(
-                                  marginTop: 0,
-                                  controller: txtTanggal,
-                                  readOnly: true,
-                                  prefixIcon: const Icon(Icons.calendar_month),
-                                  ontap: () async {
-                                    var a = await AFwidget.pickDate(
-                                      context: context,
-                                      initialDate: AFconvert.keTanggal(AFconvert.matDMYtoYMD(txtTanggal.text)),
-                                    );
-                                    if(a != null) {
-                                      txtTanggal.text = AFconvert.matDate(a);
-                                    }
-                                  },
-                                ),
-                              )
-                            ],
-                          ),
                         ),
                       ),
                       AFwidget.barisText(
@@ -629,7 +599,7 @@ class MedicalControl extends GetxController {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(AFconvert.matDate(medicalHistory[i].tanggal)),
+                                    Text(AFconvert.matMonthYear(medicalHistory[i].tanggal)),
                                     Text('Rp. ${AFconvert.matNumber(medicalHistory[i].jumlah)}'),
                                     Text(medicalHistory[i].keterangan),
                                   ],
@@ -656,7 +626,7 @@ class MedicalControl extends GetxController {
 
   void hapusForm(Medical item) {
     AFwidget.formHapus(
-      label: 'medical ${item.karyawan.nama} pada tanggal ${AFconvert.matDate(item.tanggal)} sebesar Rp. ${AFconvert.matNumber(item.jumlah)} ',
+      label: 'medical ${item.karyawan.nama} pada ${AFconvert.matMonthYear(item.tanggal)} sebesar Rp. ${AFconvert.matNumber(item.jumlah)} ',
       aksi: () {
         hapusData(item.id);
       },
@@ -671,21 +641,19 @@ class MedicalControl extends GetxController {
       if(bulan.value.isEmpty || tahun.value.isEmpty) {
         throw 'Periode harus diisi';
       }
-      if(txtTanggal.text.isEmpty) {
-        throw 'Tanggal harus diisi';
-      }
       if(karyawan.id.isEmpty) {
         throw 'Silakan pilih karyawan';
       }
       if(txtJumlah.text.isEmpty) {
         throw 'Jumlah harus diisi';
       }
-
+      int year = AFconvert.keInt(tahun.value);
+      int month = AFconvert.keInt(bulan.value);
       var a = Medical(
         jenis: jenis.value,
-        tanggal: AFconvert.keTanggal('${AFconvert.matDMYtoYMD(txtTanggal.text)} 08:00:00'),
-        bulan: AFconvert.keInt(bulan.value),
-        tahun: AFconvert.keInt(tahun.value),
+        tanggal: DateTime(year, month, 1, 8),
+        bulan: month,
+        tahun: year,
         jumlah: AFconvert.keInt(txtJumlah.text),
         keterangan: txtKeterangan.text,
       );
@@ -718,17 +686,16 @@ class MedicalControl extends GetxController {
       if(bulan.value.isEmpty || tahun.value.isEmpty) {
         throw 'Periode harus diisi';
       }
-      if(txtTanggal.text.isEmpty) {
-        throw 'Tanggal harus diisi';
-      }
       if(txtJumlah.text.isEmpty) {
         throw 'Jumlah harus diisi';
       }
+      int year = AFconvert.keInt(tahun.value);
+      int month = AFconvert.keInt(bulan.value);
       var a = Medical(
         jenis: jenis.value,
-        tanggal: AFconvert.keTanggal('${AFconvert.matDMYtoYMD(txtTanggal.text)} 08:00:00'),
-        bulan: AFconvert.keInt(bulan.value),
-        tahun: AFconvert.keInt(tahun.value),
+        tanggal: DateTime(year, month, 1, 8),
+        bulan: month,
+        tahun: year,
         jumlah: AFconvert.keInt(txtJumlah.text),
         keterangan: txtKeterangan.text,
       );
@@ -775,9 +742,13 @@ class MedicalControl extends GetxController {
     return a;
   }
 
-  Future<Opsi?> pilihJenis({String value = ''}) async {
+  Future<Opsi?> pilihJenis({String value = '', bool withSemua = false}) async {
+    List<Opsi> list = [...listJenis];
+    if(withSemua) {
+      list.insert(0, Opsi(value: '', label: 'SEMUA'));
+    }
     var a = await AFcombobox.bottomSheet(
-      listOpsi: listJenis,
+      listOpsi: list,
       valueSelected: value,
       judul: 'Pilih Jenis Medical',
     );
@@ -812,7 +783,6 @@ class MedicalControl extends GetxController {
     bulan = Opsi(value: '${_now.month}', label: mapBulan[_now.month]!);
     listTahun = List.generate(_now.year-2019, (index) => Opsi(value: '${_now.year-index}', label: '${_now.year-index}'));
     txtId = TextEditingController();
-    txtTanggal = TextEditingController();
     txtJumlah = TextEditingController();
     txtKeterangan = TextEditingController();
     super.onInit();
@@ -821,7 +791,6 @@ class MedicalControl extends GetxController {
   @override
   void onClose() {
     txtId.dispose();
-    txtTanggal.dispose();
     txtJumlah.dispose();
     txtKeterangan.dispose();
     super.onClose();

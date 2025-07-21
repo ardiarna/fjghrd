@@ -323,13 +323,12 @@ class CalonKaryawanView extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                 decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(7)),
-                    color: Colors.green
                 ),
                 child: const Text('DATA CALON KARYAWAN',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Colors.green,
                   ),
                 ),
               ),
@@ -341,6 +340,7 @@ class CalonKaryawanView extends StatelessWidget {
                     return AFwidget.comboField(
                       value: controller.filterStaf.label,
                       label: '',
+                      warnaBackground: Colors.white,
                       onTap: () async {
                         var a = await controller.pilihStaf(value: controller.filterStaf.value);
                         if(a != null && a.value != controller.filterStaf.value) {
@@ -365,6 +365,7 @@ class CalonKaryawanView extends StatelessWidget {
                     return AFwidget.comboField(
                       value: controller.filterArea.label,
                       label: '',
+                      warnaBackground: Colors.white,
                       onTap: () async {
                         var a = await controller.pilihArea(value: controller.filterArea.value, withSemua: true);
                         if(a != null && a.value != controller.filterArea.value) {

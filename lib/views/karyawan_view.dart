@@ -329,13 +329,13 @@ class KaryawanView extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                 decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(7)),
-                    color: Colors.brown
+                    // color: Colors.brown
                 ),
                 child: const Text('DATA KARYAWAN',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Colors.black,
                   ),
                 ),
               ),
@@ -359,6 +359,7 @@ class KaryawanView extends StatelessWidget {
                     return AFwidget.comboField(
                       value: controller.filterStaf.label,
                       label: '',
+                      warnaBackground: Colors.white,
                       onTap: () async {
                         var a = await controller.pilihStaf(value: controller.filterStaf.value);
                         if(a != null && a.value != controller.filterStaf.value) {
@@ -383,6 +384,7 @@ class KaryawanView extends StatelessWidget {
                     return AFwidget.comboField(
                       value: controller.filterArea.label,
                       label: '',
+                      warnaBackground: Colors.white,
                       onTap: () async {
                         var a = await controller.pilihArea(value: controller.filterArea.value, withSemua: true);
                         if(a != null && a.value != controller.filterArea.value) {
@@ -407,6 +409,7 @@ class KaryawanView extends StatelessWidget {
                     return AFwidget.comboField(
                       value: controller.filterStatusKerja.label,
                       label: '',
+                      warnaBackground: Colors.white,
                       onTap: () async {
                         var a = await controller.pilihStatusKerja(value: controller.filterStatusKerja.value, withSemua: true);
                         if(a != null && a.value != controller.filterStatusKerja.value) {
@@ -423,6 +426,7 @@ class KaryawanView extends StatelessWidget {
                 style: ButtonStyle(
                   side: WidgetStateProperty.all<BorderSide>(const BorderSide(color: Colors.green)),
                   foregroundColor: WidgetStateProperty.all<Color>(Colors.green),
+                  backgroundColor: WidgetStateProperty.all<Color>(Colors.white),
                 ),
                 onPressed: () {
                   homeControl.kontener = CalonKaryawanView();
@@ -435,6 +439,7 @@ class KaryawanView extends StatelessWidget {
                 style: ButtonStyle(
                   side: WidgetStateProperty.all<BorderSide>(const BorderSide(color: Colors.red)),
                   foregroundColor: WidgetStateProperty.all<Color>(Colors.red),
+                  backgroundColor: WidgetStateProperty.all<Color>(Colors.white),
                 ),
                 onPressed: () {
                   homeControl.kontener = MantanKaryawanView();

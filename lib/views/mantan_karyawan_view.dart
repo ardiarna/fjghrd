@@ -285,13 +285,12 @@ class MantanKaryawanView extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                 decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(7)),
-                    color: Colors.red
                 ),
                 child: const Text('DATA EX KARYAWAN',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Colors.red,
                   ),
                 ),
               ),
@@ -303,6 +302,7 @@ class MantanKaryawanView extends StatelessWidget {
                     return AFwidget.comboField(
                       value: controller.filterStaf.label,
                       label: '',
+                      warnaBackground: Colors.white,
                       onTap: () async {
                         var a = await controller.pilihStaf(value: controller.filterStaf.value);
                         if(a != null && a.value != controller.filterStaf.value) {

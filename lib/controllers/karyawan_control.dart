@@ -999,6 +999,7 @@ class KaryawanControl extends GetxController {
     txtNama.text = current.nama;
     txtNik.text = current.nik;
     txtTanggalMasuk.text = AFconvert.matYMD(current.tanggalMasuk);
+    txtTanggalKeluar.text = AFconvert.matYMD(current.tanggalKeluar);
     txtNomorKk.text = current.nomorKk;
     txtNomorKtp.text = current.nomorKtp;
     txtNomorPaspor.text = current.nomorPaspor;

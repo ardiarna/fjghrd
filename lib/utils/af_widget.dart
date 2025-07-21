@@ -513,7 +513,14 @@ abstract class AFwidget {
     );
   }
 
-  static Widget comboField({required String value, required String label, void Function()? onTap, IconData? prefixIcon, Color? warna}) {
+  static Widget comboField({
+    required String value,
+    required String label,
+    void Function()? onTap,
+    IconData? prefixIcon,
+    Color? warna,
+    Color? warnaBackground,
+  }) {
     if(value == '') {
       return Container(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
@@ -521,6 +528,7 @@ abstract class AFwidget {
         decoration: BoxDecoration(
           border: Border.all(color: warna ?? const Color(0xFFd1d1d1)),
           borderRadius: const BorderRadius.all(Radius.circular(5)),
+          color: warnaBackground,
         ),
         child: GestureDetector(
           onTap: onTap,
@@ -541,6 +549,7 @@ abstract class AFwidget {
           decoration: BoxDecoration(
             border: Border.all(color: warna ?? const Color(0xFFd1d1d1)),
             borderRadius: const BorderRadius.all(Radius.circular(5)),
+            color: warnaBackground,
           ),
           child: GestureDetector(
             onTap: onTap,
@@ -890,7 +899,9 @@ abstract class AFwidget {
     bool isTextArea = false,
     bool isNumber = false,
     int decimalDigits = 0,
-    Function(String)? onchanged
+    Function(String)? onchanged,
+    TextStyle? labelStyle,
+    bool readOnly = false,
   }) {
     return Padding(
       padding: EdgeInsets.fromLTRB(20, paddingTop, paddingRight, 0),
@@ -900,11 +911,12 @@ abstract class AFwidget {
           Container(
             width: labelWidth,
             padding: EdgeInsets.only(right: 15, top: isTextArea ? 15 : 0),
-            child: Text(label),
+            child: Text(label, style: labelStyle),
           ),
           Expanded(
             child: AFwidget.textField(
               marginTop: 0,
+              readOnly: readOnly,
               controller: controller,
               maxLines: isTextArea ? 4 : 1,
               minLines: isTextArea ? 2 : 1,
@@ -929,6 +941,8 @@ abstract class AFwidget {
     String nilai = '',
     double paddingTop = 20,
     double labelWidth = 150,
+    TextStyle? labelSyle,
+    TextStyle nilaiStyle = const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
   }) {
     return Padding(
       padding: EdgeInsets.fromLTRB(20, paddingTop, 20, 0),
@@ -937,15 +951,10 @@ abstract class AFwidget {
           Container(
             width: labelWidth,
             padding: const EdgeInsets.only(right: 15),
-            child: Text(label),
+            child: Text(label, style: labelSyle),
           ),
           Expanded(
-            child: Text(': $nilai',
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
+            child: Text(nilai != '' ? ': $nilai' : '', style: nilaiStyle),
           ),
         ],
       ),

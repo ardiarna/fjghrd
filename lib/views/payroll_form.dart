@@ -1170,13 +1170,11 @@ class PayrollForm extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                     decoration: const BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(7)),
-                      color: Colors.brown,
                     ),
                     child: Text('PAYROLL ${mapBulan[controller.currentPayroll.bulan]} ${controller.currentPayroll.tahun}'.toUpperCase(),
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
                       ),
                     ),
                   );

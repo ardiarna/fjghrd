@@ -40,13 +40,11 @@ class PayrollView extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(7)),
-                  color: Colors.brown
                 ),
                 child: const Text('PAYROLL',
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
                   ),
                 ),
               ),
@@ -108,6 +106,7 @@ class PayrollView extends StatelessWidget {
                       value: controller.filterTahun.label,
                       label: '',
                       warna: Colors.brown.shade400,
+                      warnaBackground: Colors.white,
                       onTap: () async {
                         var a = await controller.pilihTahun(value: controller.filterTahun.value);
                         if(a != null && a.value != controller.filterTahun.value) {

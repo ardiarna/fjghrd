@@ -2,6 +2,7 @@ import 'package:fjghrd/controllers/karyawan_control.dart';
 import 'package:fjghrd/models/agama.dart';
 import 'package:fjghrd/models/area.dart';
 import 'package:fjghrd/models/divisi.dart';
+import 'package:fjghrd/models/durasi_tanggal.dart';
 import 'package:fjghrd/models/jabatan.dart';
 import 'package:fjghrd/models/keluarga_karyawan.dart';
 import 'package:fjghrd/models/keluarga_kontak.dart';
@@ -24,6 +25,8 @@ class KaryawanForm extends StatelessWidget {
 
   final ScrollController _scrollControllerLeft = ScrollController();
   final ScrollController _scrollControllerRight = ScrollController();
+
+  final DateTime _now = DateTime.now();
 
   List<PlutoRow> _buildRowsKeluarga(List<KeluargaKaryawan> rowData) {
     return List.generate(
@@ -300,22 +303,25 @@ class KaryawanForm extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                   decoration: const BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(7)),
-                      color: Colors.brown
                   ),
-                  child: const Text('DETAIL DATA KARYAWAN',
+                  child: Text(controller.current.aktif == 'P'
+                    ? 'DETAIL DATA CALON KARYAWAN' : controller.current.aktif == 'N'
+                    ? 'DETAIL DATA EX KARYAWAN' : 'DETAIL DATA KARYAWAN',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: controller.current.aktif == 'P'
+                        ? Colors.green : controller.current.aktif == 'N'
+                        ? Colors.red : Colors.black,
                     ),
                   ),
                 ),
                 const Spacer(),
                 GetBuilder<KaryawanControl>(
                   builder: (_) {
-                    if(controller.aktif == 'Y' || controller.aktif == 'N') {
+                    if(controller.current.aktif == 'Y' || controller.current.aktif == 'N') {
                       return AFwidget.tombol(
-                        label: 'PHK',
+                        label: controller.current.aktif == 'Y' ? 'PHK' : 'Ubah Data PHK',
                         color: Colors.orange,
                         onPressed: () {
                           controller.phkForm(context);
@@ -391,7 +397,27 @@ class KaryawanForm extends StatelessWidget {
                                               }
                                             },
                                           ),
-                                        )
+                                        ),
+                                        controller.txtTanggalKeluar.text != '' ?
+                                        const Text('   s/d   ') : Container(),
+                                        controller.txtTanggalKeluar.text != '' ?
+                                        Expanded(
+                                          child: AFwidget.textField(
+                                            marginTop: 0,
+                                            controller: controller.txtTanggalKeluar,
+                                            readOnly: true,
+                                            prefixIcon: const Icon(Icons.calendar_month),
+                                            ontap: () async {
+                                              var a = await AFwidget.pickDate(
+                                                context: context,
+                                                initialDate: AFconvert.keTanggal(controller.txtTanggalKeluar.text),
+                                              );
+                                              if(a != null) {
+                                                controller.txtTanggalKeluar.text = AFconvert.matYMD(a);
+                                              }
+                                            },
+                                          ),
+                                        ) : Container(),
                                       ],
                                     ),
                                   ),
@@ -981,12 +1007,13 @@ class KaryawanForm extends StatelessWidget {
                                 ),
                                 padding: const EdgeInsets.all(0),
                               ),
+                              controller.current.aktif != 'N' ?
                               AFwidget.tombol(
                                 label: 'Simpan Perubahan',
                                 color: Colors.blue,
                                 onPressed: controller.ubahData,
                                 minimumSize: const Size(120, 40),
-                              ),
+                              ) : Container(),
                             ],
                           ),
                         ),
@@ -1003,15 +1030,11 @@ class KaryawanForm extends StatelessWidget {
                           children: [
                             GetBuilder<KaryawanControl>(
                               builder: (_) {
-                                if(controller.listTimelineMasakerja.isEmpty) {
-                                  return Container();
-                                }
-                                var a = controller.listTimelineMasakerja[0].tanggalAwal;
-                                // var b = controller.listTimelineMasakerja[controller.listTimelineMasakerja.length-1].tanggalAKhir ?? DateTime.now();
-                                var b = DateTime.now();
-                                Duration d = b.difference(a ?? b);
-                                int tahun = d.inDays ~/ 365;
-                                int bulan = (d.inDays % 365) ~/ 30;
+                                // var a = controller.listTimelineMasakerja[0].tanggalAwal;
+                                // var b = controller.listTimelineMasakerja[controller.listTimelineMasakerja.length-1].tanggalAKhir ?? _now;
+                                var a = AFconvert.keTanggal(controller.txtTanggalMasuk.text);
+                                var b = AFconvert.keTanggal(controller.txtTanggalKeluar.text) ?? _now;
+                                DurasiTanggal durasi = DurasiTanggal.diff(a ?? b, b);
                                 return Padding(
                                   padding: const EdgeInsets.fromLTRB(10, 0, 15, 10),
                                   child: Column(
@@ -1020,7 +1043,7 @@ class KaryawanForm extends StatelessWidget {
                                       Padding(
                                         padding: const EdgeInsets.fromLTRB(10, 0, 0, 5),
                                         child: Text(
-                                          'Masa Kerja : ${tahun>0 ? '$tahun tahun' : ''} ${bulan>0 ? '$bulan bulan' : ''} ',
+                                          'Masa Kerja : ${durasi.cetak()}',
                                           textAlign: TextAlign.center,
                                           style: const TextStyle(
                                             color: Colors.black45,
@@ -1028,9 +1051,19 @@ class KaryawanForm extends StatelessWidget {
                                           ),
                                         ),
                                       ),
+                                      controller.listTimelineMasakerja.isNotEmpty ?
                                       Row(
                                         crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: controller.listTimelineMasakerja.map((e) {
+                                        children: controller.listTimelineMasakerja.asMap().entries.map((toElement) {
+                                          final idx = toElement.key;
+                                          final tlmk = toElement.value;
+                                          final isLast = idx == controller.listTimelineMasakerja.length - 1;
+                                          DateTime? a = tlmk.tanggalAwal;
+                                          DateTime b = tlmk.tanggalAKhir ?? _now;
+                                          if(isLast && controller.txtTanggalKeluar.text != '') {
+                                            b = AFconvert.keTanggal(controller.txtTanggalKeluar.text) ?? _now;
+                                          }
+                                          DurasiTanggal durasi = DurasiTanggal.diff(a ?? b, b);
                                           return Expanded(
                                             child: Column(
                                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -1043,10 +1076,10 @@ class KaryawanForm extends StatelessWidget {
                                                       margin: const EdgeInsets.fromLTRB(0, 3, 0, 3),
                                                       padding: const EdgeInsets.all(1),
                                                       decoration: BoxDecoration(
-                                                        color: e.warna,
+                                                        color: tlmk.warna,
                                                       ),
                                                       child: Text(
-                                                        '${e.tahun>0 ? '${e.tahun} tahun' : ''} ${e.bulan>0 ? '${e.bulan} bulan' : ''} ',
+                                                        durasi.cetak(),
                                                         textAlign: TextAlign.center,
                                                         style: const TextStyle(
                                                           color: Colors.white,
@@ -1062,7 +1095,7 @@ class KaryawanForm extends StatelessWidget {
                                                         height: 30,
                                                         decoration: BoxDecoration(
                                                           shape: BoxShape.circle,
-                                                          color: e.warna,
+                                                          color: tlmk.warna,
                                                           border: Border.all(
                                                             color: Colors.white,
                                                             width: 3,
@@ -1086,10 +1119,10 @@ class KaryawanForm extends StatelessWidget {
                                                 Padding(
                                                   padding: const EdgeInsets.only(left: 30),
                                                   child: Text(
-                                                    '${AFconvert.matDate(e.tanggalAwal)} : ${e.nama}',
+                                                    '${AFconvert.matDate(tlmk.tanggalAwal)} : ${tlmk.nama}',
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
-                                                      color: e.warna,
+                                                      color: tlmk.warna,
                                                       fontSize: 11,
                                                     ),
                                                   ),
@@ -1098,7 +1131,7 @@ class KaryawanForm extends StatelessWidget {
                                             ),
                                           );
                                         }).toList(),
-                                      ),
+                                      ) : Container(),
                                     ],
                                   ),
                                 );
