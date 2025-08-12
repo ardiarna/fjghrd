@@ -428,7 +428,6 @@ class KaryawanPayrollView extends StatelessWidget {
       Container(
         width: 500,
         height: 370,
-        padding: const EdgeInsets.fromLTRB(15, 0, 0, 15),
         decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -437,26 +436,29 @@ class KaryawanPayrollView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              height: 65,
-              width: double.infinity,
-              padding: const EdgeInsets.all(15),
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(15),
-                ),
+            AFwidget.formHeader('Excel Slip Gaji ${controller.filterTahun.label}'),
+            Padding(
+              padding: EdgeInsets.fromLTRB(20, 15, 42, 20),
+              child: Row(
+                children: [
+                  Text('Silakan pilih bulan :'),
+                  const Spacer(),
+                  GetBuilder<KaryawanControl>(
+                    builder: (_) {
+                      return Checkbox(
+                        value: controller.bulanTerpilih.values.every((v) => v),
+                        onChanged: (value) {
+                          if (value != null) {
+                            controller.bulanTerpilih.updateAll((key, val) => value);
+                            controller.update();
+                          }
+                        },
+                      );
+                    },
+                  ),
+                  const Text("pilih semua"),
+                ],
               ),
-              child: Text('Excel Slip Gaji ${controller.filterTahun.label}',
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            const Padding(
-              padding: EdgeInsets.fromLTRB(15, 0, 15, 20),
-              child: Text('Silakan pilih bulan'),
             ),
             GetBuilder<KaryawanControl>(
               builder: (_) {
@@ -490,7 +492,7 @@ class KaryawanPayrollView extends StatelessWidget {
               }
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
+              padding: const EdgeInsets.fromLTRB(10, 25, 30, 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
