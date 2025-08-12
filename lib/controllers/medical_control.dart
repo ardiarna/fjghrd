@@ -29,7 +29,7 @@ class MedicalControl extends GetxController {
   List<Opsi> listBulan = mapBulan.entries.map((e) => Opsi(value: e.key.toString(), label: e.value)).toList();
   late List<Opsi> listTahun;
 
-  Opsi filterJenis = Opsi(value: '', label: 'SEMUA');
+  Opsi filterJenis = Opsi(value: '', label: 'Semua');
   late Opsi filterTahun;
   late Opsi filterBulan;
 
@@ -633,6 +633,13 @@ class MedicalControl extends GetxController {
     );
   }
 
+  void hapusBanyakForm() {
+    AFwidget.formHapus(
+      label: '${filterJenis.label} medical pada bulan ${filterBulan.label} ${filterTahun.label} ',
+      aksi: hapusBanyakData,
+    );
+  }
+
   Future<void> tambahData() async {
     try {
       if(jenis.value.isEmpty) {
@@ -733,6 +740,25 @@ class MedicalControl extends GetxController {
     }
   }
 
+  Future<void> hapusBanyakData() async {
+    try {
+      AFwidget.loading();
+      var hasil = await _repo.deleteAll(
+        tahun: filterTahun.value,
+        bulan: filterBulan.value,
+        jenis: filterJenis.value,
+      );
+      Get.back();
+      if(hasil.success) {
+        loadMedicals();
+        Get.back();
+      }
+      AFwidget.snackbar(hasil.message);
+    } catch (er) {
+      AFwidget.snackbar('$er');
+    }
+  }
+
   Future<Opsi?> pilihKaryawan({String value = ''}) async {
     var a = await AFcombobox.bottomSheet(
       listOpsi: listKaryawan,
@@ -745,7 +771,7 @@ class MedicalControl extends GetxController {
   Future<Opsi?> pilihJenis({String value = '', bool withSemua = false}) async {
     List<Opsi> list = [...listJenis];
     if(withSemua) {
-      list.insert(0, Opsi(value: '', label: 'SEMUA'));
+      list.insert(0, Opsi(value: '', label: 'Semua'));
     }
     var a = await AFcombobox.bottomSheet(
       listOpsi: list,

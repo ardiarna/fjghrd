@@ -37,4 +37,15 @@ class MedicalRepository {
     );
   }
 
+  Future<Hasil> deleteAll({
+    required String tahun,
+    required String bulan,
+    String jenis = '',
+  }) async {
+    return await AFdatabase.send(
+      url: 'medical/all?tahun=$tahun&bulan=$bulan&jenis=$jenis',
+      methodeRequest: MethodeRequest.delete,
+    );
+  }
+
 }

@@ -489,6 +489,13 @@ class PenghasilanControl extends GetxController {
     );
   }
 
+  void hapusBanyakForm() {
+    AFwidget.formHapus(
+      label: 'penghasilan ${filterJenis.label} pada bulan ${filterBulan.label} ${filterTahun.label} ',
+      aksi: hapusBanyakData,
+    );
+  }
+
   void gajiForm(BuildContext context) {
     TextEditingController txtGaji = TextEditingController(text: AFconvert.matNumber(upah.gaji));
     TextEditingController txtUangMakan = TextEditingController(text: AFconvert.matNumber(upah.uangMakan));
@@ -729,6 +736,25 @@ class PenghasilanControl extends GetxController {
       if(hasil.success) {
         loadPenghasilans();
         Get.back();
+        Get.back();
+      }
+      AFwidget.snackbar(hasil.message);
+    } catch (er) {
+      AFwidget.snackbar('$er');
+    }
+  }
+
+  Future<void> hapusBanyakData() async {
+    try {
+      AFwidget.loading();
+      var hasil = await _repo.deleteAll(
+        tahun: filterTahun.value,
+        bulan: filterBulan.value,
+        jenis: filterJenis.value,
+      );
+      Get.back();
+      if(hasil.success) {
+        loadPenghasilans();
         Get.back();
       }
       AFwidget.snackbar(hasil.message);

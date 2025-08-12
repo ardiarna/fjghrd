@@ -409,6 +409,13 @@ class OncallCustomerControl extends GetxController {
     );
   }
 
+  void hapusBanyakForm() {
+    AFwidget.formHapus(
+      label: 'overtime & oncall customer pada bulan ${filterBulan.label} ${filterTahun.label} ',
+      aksi: hapusBanyakData,
+    );
+  }
+
   Future<void> tambahData() async {
     try {
       if(bulan.value.isEmpty || tahun.value.isEmpty) {
@@ -496,6 +503,24 @@ class OncallCustomerControl extends GetxController {
       if(hasil.success) {
         loadOncallCustomers();
         Get.back();
+        Get.back();
+      }
+      AFwidget.snackbar(hasil.message);
+    } catch (er) {
+      AFwidget.snackbar('$er');
+    }
+  }
+
+  Future<void> hapusBanyakData() async {
+    try {
+      AFwidget.loading();
+      var hasil = await _repo.deleteAll(
+        tahun: filterTahun.value,
+        bulan: filterBulan.value,
+      );
+      Get.back();
+      if(hasil.success) {
+        loadOncallCustomers();
         Get.back();
       }
       AFwidget.snackbar(hasil.message);

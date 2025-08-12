@@ -478,6 +478,13 @@ class OvertimeControl extends GetxController {
     );
   }
 
+  void hapusBanyakForm() {
+    AFwidget.formHapus(
+      label: '${filterJenis.label} overtime pada bulan ${filterBulan.label} ${filterTahun.label} ',
+      aksi: hapusBanyakData,
+    );
+  }
+
   Future<void> tambahData() async {
     try {
       if(bulan.value.isEmpty || tahun.value.isEmpty) {
@@ -595,6 +602,25 @@ class OvertimeControl extends GetxController {
       if(hasil.success) {
         loadOvertimes();
         Get.back();
+        Get.back();
+      }
+      AFwidget.snackbar(hasil.message);
+    } catch (er) {
+      AFwidget.snackbar('$er');
+    }
+  }
+
+  Future<void> hapusBanyakData() async {
+    try {
+      AFwidget.loading();
+      var hasil = await _repo.deleteAll(
+        tahun: filterTahun.value,
+        bulan: filterBulan.value,
+        jenis: filterJenis.value,
+      );
+      Get.back();
+      if(hasil.success) {
+        loadOvertimes();
         Get.back();
       }
       AFwidget.snackbar(hasil.message);

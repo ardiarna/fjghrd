@@ -36,4 +36,14 @@ class OncallCustomerRepository {
     );
   }
 
+  Future<Hasil> deleteAll({
+    required String tahun,
+    required String bulan,
+  }) async {
+    return await AFdatabase.send(
+      url: 'oncall_customer/all?tahun=$tahun&bulan=$bulan',
+      methodeRequest: MethodeRequest.delete,
+    );
+  }
+
 }
