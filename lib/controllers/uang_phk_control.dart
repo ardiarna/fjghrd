@@ -34,8 +34,6 @@ class UangPhkControl extends GetxController {
         listUangPhk.add(UangPhk.fromMap(data));
       }
       update();
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
   }
 
@@ -50,8 +48,6 @@ class UangPhkControl extends GetxController {
         );
       }
       update();
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
   }
 
@@ -341,10 +337,12 @@ class UangPhkControl extends GetxController {
       if(hasil.success) {
         loadUangPhks();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -378,10 +376,12 @@ class UangPhkControl extends GetxController {
       if(hasil.success) {
         loadUangPhks();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -397,10 +397,12 @@ class UangPhkControl extends GetxController {
         loadUangPhks();
         Get.back();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 

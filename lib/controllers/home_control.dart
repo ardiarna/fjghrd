@@ -69,10 +69,12 @@ class HomeControl extends GetxController {
       if(hasil.success) {
         await authControl.updateEmail(txtEmail.text);
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     }  catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -97,10 +99,12 @@ class HomeControl extends GetxController {
       if(hasil.success) {
         await authControl.updatePassword(txtPassword.text);
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     }  catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 

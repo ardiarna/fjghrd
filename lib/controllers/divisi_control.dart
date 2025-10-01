@@ -22,8 +22,6 @@ class DivisiControl extends GetxController {
         listDivisi.add(Divisi.fromMap(data));
       }
       update();
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
   }
 
@@ -129,10 +127,12 @@ class DivisiControl extends GetxController {
       if(hasil.success) {
         loadDivisis();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -164,10 +164,12 @@ class DivisiControl extends GetxController {
       if(hasil.success) {
         loadDivisis();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -183,10 +185,12 @@ class DivisiControl extends GetxController {
         loadDivisis();
         Get.back();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 

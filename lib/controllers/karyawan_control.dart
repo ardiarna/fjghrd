@@ -224,8 +224,6 @@ class KaryawanControl extends GetxController {
         totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]!['TOTAL KARYAWAN'] = totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]!['TOTAL KARYAWAN']! + 1;
       }
       update();
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
   }
 
@@ -251,8 +249,6 @@ class KaryawanControl extends GetxController {
         }
       }
       update();
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
   }
 
@@ -264,8 +260,6 @@ class KaryawanControl extends GetxController {
         listMantanKaryawan.add(Karyawan.fromMap(data));
       }
       update();
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
   }
 
@@ -276,8 +270,6 @@ class KaryawanControl extends GetxController {
       for (var data in hasil.daftar) {
         listKeluarga.add(KeluargaKaryawan.fromMap(data));
       }
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
     update();
   }
@@ -289,8 +281,6 @@ class KaryawanControl extends GetxController {
       for (var data in hasil.daftar) {
         listKontak.add(KeluargaKontak.fromMap(data));
       }
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
     update();
   }
@@ -302,8 +292,6 @@ class KaryawanControl extends GetxController {
       for (var data in hasil.daftar) {
         listPerjanjianKerja.add(PerjanjianKerja.fromMap(data));
       }
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
     update();
   }
@@ -315,8 +303,6 @@ class KaryawanControl extends GetxController {
       for (var data in hasil.daftar) {
         listTimelineMasakerja.add(TimelineMasakerja.fromMap(data));
       }
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
     update();
   }
@@ -328,8 +314,6 @@ class KaryawanControl extends GetxController {
       for (var data in hasil.daftar) {
         listPayroll.add(Payroll.fromMap(data));
       }
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
     update();
   }
@@ -1687,10 +1671,12 @@ class KaryawanControl extends GetxController {
       if(hasil.success) {
         loadKaryawans();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -1779,10 +1765,12 @@ class KaryawanControl extends GetxController {
         loadCalonKaryawans();
         loadMantanKaryawans();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -1798,10 +1786,12 @@ class KaryawanControl extends GetxController {
         loadKaryawans();
         Get.back();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -1840,10 +1830,12 @@ class KaryawanControl extends GetxController {
         loadKeluargas();
         loadKaryawans();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -1863,10 +1855,12 @@ class KaryawanControl extends GetxController {
         loadKaryawans();
         Get.back();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -1897,10 +1891,12 @@ class KaryawanControl extends GetxController {
       if(hasil.success) {
         loadKontaks();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -1919,10 +1915,12 @@ class KaryawanControl extends GetxController {
         loadKontaks();
         Get.back();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -1961,10 +1959,12 @@ class KaryawanControl extends GetxController {
         loadTimelineMasakerja();
         loadKaryawans();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -1984,10 +1984,12 @@ class KaryawanControl extends GetxController {
         loadTimelineMasakerja();
         Get.back();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -2026,10 +2028,12 @@ class KaryawanControl extends GetxController {
         loadMantanKaryawans();
         Get.back();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -2043,8 +2047,6 @@ class KaryawanControl extends GetxController {
           Opsi(value: AFconvert.keString(data['id']), label: data['nama'], data: data),
         );
       }
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
   }
 
@@ -2058,8 +2060,6 @@ class KaryawanControl extends GetxController {
           Opsi(value: AFconvert.keString(data['id']), label: data['nama'], data: data),
         );
       }
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
   }
 
@@ -2073,8 +2073,6 @@ class KaryawanControl extends GetxController {
           Opsi(value: AFconvert.keString(data['id']), label: '${data['nama']} (${data['kode']})', data: data),
         );
       }
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
   }
 
@@ -2088,8 +2086,6 @@ class KaryawanControl extends GetxController {
           Opsi(value: AFconvert.keString(data['id']), label: data['nama'], data: data),
         );
       }
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
   }
 
@@ -2103,8 +2099,6 @@ class KaryawanControl extends GetxController {
           Opsi(value: AFconvert.keString(data['id']), label: data['nama'], data: data),
         );
       }
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
   }
 
@@ -2118,8 +2112,6 @@ class KaryawanControl extends GetxController {
           Opsi(value: AFconvert.keString(data['id']), label: data['nama'], data: data),
         );
       }
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
   }
 
@@ -2133,8 +2125,6 @@ class KaryawanControl extends GetxController {
           Opsi(value: AFconvert.keString(data['id']), label: data['nama'], data: data),
         );
       }
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
   }
 
@@ -2148,8 +2138,6 @@ class KaryawanControl extends GetxController {
           Opsi(value: AFconvert.keString(data['id']), label: data['kode'], data: data),
         );
       }
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
   }
 
@@ -2296,9 +2284,13 @@ class KaryawanControl extends GetxController {
     var hasil = await _repo.excelPayroll(id: current.id, tahun: filterTahun.label);
     Get.back();
     if(hasil.success) {
-      AFwidget.snackbar('laporan excel payroll ${current.nama} berhasil dibuat. silakan periksa directory Download anda (${hasil.message})');
+      AFwidget.formWarning(
+        label: 'laporan excel payroll ${current.nama} berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna:  Colors.green,
+        ikon: Icons.info,
+      );
     } else {
-      AFwidget.snackbar('Gagal membuat excel. [${hasil.message}]');
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
     }
   }
 
@@ -2312,9 +2304,13 @@ class KaryawanControl extends GetxController {
     var hasil = await _repo.excelSlipGaji(id: current.id, tahun: filterTahun.value, bulans: bulans);
     Get.back();
     if(hasil.success) {
-      AFwidget.snackbar('slip gaji ${current.nama} berhasil dibuat. silakan periksa directory Download anda (${hasil.message})');
+      AFwidget.formWarning(
+        label: 'slip gaji ${current.nama} berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna:  Colors.green,
+        ikon: Icons.info,
+      );
     } else {
-      AFwidget.snackbar('Gagal membuat excel. [${hasil.message}]');
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
     }
   }
 

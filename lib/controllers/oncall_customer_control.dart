@@ -42,8 +42,6 @@ class OncallCustomerControl extends GetxController {
         listOncallCustomer.add(OncallCustomer.fromMap(data));
       }
       update();
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
   }
 
@@ -58,8 +56,6 @@ class OncallCustomerControl extends GetxController {
         );
       }
       update();
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
   }
 
@@ -446,10 +442,12 @@ class OncallCustomerControl extends GetxController {
       if(hasil.success) {
         loadOncallCustomers();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -485,10 +483,12 @@ class OncallCustomerControl extends GetxController {
       if(hasil.success) {
         loadOncallCustomers();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -504,10 +504,12 @@ class OncallCustomerControl extends GetxController {
         loadOncallCustomers();
         Get.back();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -522,10 +524,12 @@ class OncallCustomerControl extends GetxController {
       if(hasil.success) {
         loadOncallCustomers();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 

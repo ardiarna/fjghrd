@@ -23,8 +23,6 @@ class PtkpControl extends GetxController {
         listPtkp.add(Ptkp.fromMap(data));
       }
       update();
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
   }
 
@@ -189,10 +187,12 @@ class PtkpControl extends GetxController {
       if(hasil.success) {
         loadPtkps();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -224,10 +224,12 @@ class PtkpControl extends GetxController {
       if(hasil.success) {
         loadPtkps();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -243,10 +245,12 @@ class PtkpControl extends GetxController {
         loadPtkps();
         Get.back();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 

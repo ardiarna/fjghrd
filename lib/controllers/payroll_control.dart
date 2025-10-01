@@ -62,8 +62,6 @@ class PayrollControl extends GetxController {
         listPayroll.add(Payroll.fromMap(data));
       }
       update();
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
   }
 
@@ -85,8 +83,6 @@ class PayrollControl extends GetxController {
         listDetilPayroll.add(Payroll.fromMap(data));
       }
       update();
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
   }
 
@@ -116,8 +112,6 @@ class PayrollControl extends GetxController {
         }
       }
       update();
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
   }
 
@@ -236,10 +230,14 @@ class PayrollControl extends GetxController {
         keterangan: keterangan,
       );
       Get.back();
-      AFwidget.snackbar(hasil.message);
+      if(hasil.success) {
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
+      }
       return hasil.success;
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
       return false;
     }
   }
@@ -248,9 +246,11 @@ class PayrollControl extends GetxController {
     required String id,
     required String periode,
   }) {
-    AFwidget.formKonfirmasi(
+    AFwidget.formWarning(
       label: 'Apakah anda ingin mengunci payroll periode $periode ?',
       ikon: Icons.lock_outline,
+      warna: Colors.red,
+      isKonfirmasi: true,
       aksi: () {
         _kunciPayroll(id);
       },
@@ -265,11 +265,12 @@ class PayrollControl extends GetxController {
       if(hasil.success) {
         loadPayrolls();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
-
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -1018,10 +1019,12 @@ class PayrollControl extends GetxController {
         await loadPayrolls();
         currentPayroll = listPayroll.where((element) => element.id == id).first;
         update();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -1039,10 +1042,12 @@ class PayrollControl extends GetxController {
         Get.back();
         homeControl.kontener = PayrollView();
         homeControl.update();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -1093,10 +1098,12 @@ class PayrollControl extends GetxController {
       if(hasil.success) {
         loadDetilPayrolls();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 

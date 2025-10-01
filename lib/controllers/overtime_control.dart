@@ -51,8 +51,6 @@ class OvertimeControl extends GetxController {
         listOvertime.add(Overtime.fromMap(data));
       }
       update();
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
   }
 
@@ -67,8 +65,6 @@ class OvertimeControl extends GetxController {
         );
       }
       update();
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
   }
 
@@ -535,16 +531,18 @@ class OvertimeControl extends GetxController {
       }
 
       Get.back();
-      if(hasil.success && hasil2.success) {
-        loadOvertimes();
-        Get.back();
-      }
       List<String> vMessages = [];
       if(hasil.message != '') vMessages.add(hasil.message);
       if(hasil2.message != '') vMessages.add(hasil2.message);
-      AFwidget.snackbar(vMessages.join(', '));
+      if(hasil.success && hasil2.success) {
+        loadOvertimes();
+        Get.back();
+        AFwidget.snackbar(vMessages.join(', '));
+      } else {
+        AFwidget.formWarning(label: vMessages.join(', '));
+      }
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -584,10 +582,12 @@ class OvertimeControl extends GetxController {
       if(hasil.success) {
         loadOvertimes();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -603,10 +603,12 @@ class OvertimeControl extends GetxController {
         loadOvertimes();
         Get.back();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -622,10 +624,12 @@ class OvertimeControl extends GetxController {
       if(hasil.success) {
         loadOvertimes();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 

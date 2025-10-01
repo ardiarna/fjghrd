@@ -5,6 +5,7 @@ import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_database.dart';
 import 'package:fjghrd/utils/af_widget.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ReportControl extends GetxController {
@@ -35,8 +36,6 @@ class ReportControl extends GetxController {
         filterArea = listArea[0];
       }
       update();
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
   }
 
@@ -45,9 +44,13 @@ class ReportControl extends GetxController {
     var hasil = await AFdatabase.download(url: 'excel/list-payroll/${filterTahun.value}');
     Get.back();
     if(hasil.success) {
-      AFwidget.snackbar('laporan excel list payroll telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})');
+      AFwidget.formWarning(
+        label: 'laporan excel list payroll telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
     } else {
-      AFwidget.snackbar('Gagal membuat excel. [${hasil.message}]');
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
     }
   }
 
@@ -56,9 +59,13 @@ class ReportControl extends GetxController {
     var hasil = await AFdatabase.download(url: 'excel/rekap-gaji/${filterTahun.value}');
     Get.back();
     if(hasil.success) {
-      AFwidget.snackbar('laporan excel rekap gaji telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})');
+      AFwidget.formWarning(
+        label: 'laporan excel rekap gaji telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
     } else {
-      AFwidget.snackbar('Gagal membuat excel. [${hasil.message}]');
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
     }
   }
 
@@ -67,9 +74,13 @@ class ReportControl extends GetxController {
     var hasil = await AFdatabase.download(url: 'excel/rekap-medical/${filterTahun.value}');
     Get.back();
     if(hasil.success) {
-      AFwidget.snackbar('laporan excel rekap medikal telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})');
+      AFwidget.formWarning(
+        label: 'laporan excel rekap medikal telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
     } else {
-      AFwidget.snackbar('Gagal membuat excel. [${hasil.message}]');
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
     }
   }
 
@@ -78,19 +89,23 @@ class ReportControl extends GetxController {
     var hasil = await AFdatabase.download(url: 'excel/rekap-overtime/${filterTahun.value}');
     Get.back();
     if(hasil.success) {
-      AFwidget.snackbar('laporan excel rekap overtime telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})');
+      AFwidget.formWarning(
+        label: 'laporan excel rekap overtime telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
     } else {
-      AFwidget.snackbar('Gagal membuat excel. [${hasil.message}]');
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
     }
   }
 
   Future<void> dowloadRekapPayrollPerKaryawan() async {
     if(filterJenis == '') {
-      AFwidget.snackbar('Silakan pilih divisi terlebih dahulu');
+      AFwidget.formWarning(label: 'Silakan pilih divisi terlebih dahulu');
       return;
     }
     if(filterArea.value == '') {
-      AFwidget.snackbar('Silakan pilih area terlebih dahulu');
+      AFwidget.formWarning(label: 'Silakan pilih area terlebih dahulu');
       return;
     }
     Get.back();
@@ -98,23 +113,27 @@ class ReportControl extends GetxController {
     var hasil = await AFdatabase.download(url: 'excel/rekap-payroll-perkaryawan/$filterJenis/${filterTahun.value}/${filterArea.value}');
     Get.back();
     if(hasil.success) {
-      AFwidget.snackbar('laporan excel rekap payroll per karyawan telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})');
+      AFwidget.formWarning(
+        label: 'laporan excel rekap payroll per karyawan telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
     } else {
-      AFwidget.snackbar('Gagal membuat excel. [${hasil.message}]');
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
     }
   }
 
   Future<void> downloadSlipGaji() async {
     if(filterBulan.value == '') {
-      AFwidget.snackbar('Silakan pilih bulan terlebih dahulu');
+      AFwidget.formWarning(label: 'Silakan pilih bulan terlebih dahulu');
       return;
     }
     if(filterJenis == '') {
-      AFwidget.snackbar('Silakan pilih divisi terlebih dahulu');
+      AFwidget.formWarning(label: 'Silakan pilih divisi terlebih dahulu');
       return;
     }
     if(filterArea.value == '') {
-      AFwidget.snackbar('Silakan pilih area terlebih dahulu');
+      AFwidget.formWarning(label: 'Silakan pilih area terlebih dahulu');
       return;
     }
     Get.back();
@@ -122,19 +141,23 @@ class ReportControl extends GetxController {
     var hasil = await AFdatabase.download(url: 'excel/slip-gaji/${filterTahun.value}/${filterBulan.value}/$filterJenis/${filterArea.value}');
     Get.back();
     if(hasil.success) {
-      AFwidget.snackbar('excel slip gaji telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})');
+      AFwidget.formWarning(
+        label: 'excel slip gaji telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
     } else {
-      AFwidget.snackbar('Gagal membuat excel. [${hasil.message}]');
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
     }
   }
 
   Future<void> dowloadRekapPPh21() async {
     if(filterJenis == '') {
-      AFwidget.snackbar('Silakan pilih divisi terlebih dahulu');
+      AFwidget.formWarning(label: 'Silakan pilih divisi terlebih dahulu');
       return;
     }
     if(filterArea.value == '') {
-      AFwidget.snackbar('Silakan pilih area terlebih dahulu');
+      AFwidget.formWarning(label: 'Silakan pilih area terlebih dahulu');
       return;
     }
     Get.back();
@@ -142,9 +165,13 @@ class ReportControl extends GetxController {
     var hasil = await AFdatabase.download(url: 'excel/rekap-pph21/$filterJenis/${filterTahun.value}/${filterArea.value}');
     Get.back();
     if(hasil.success) {
-      AFwidget.snackbar('laporan excel rekap pph 21 telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})');
+      AFwidget.formWarning(
+        label: 'laporan excel rekap pph 21 telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
     } else {
-      AFwidget.snackbar('Gagal membuat excel. [${hasil.message}]');
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
     }
   }
 

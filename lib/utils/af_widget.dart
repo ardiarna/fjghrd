@@ -703,11 +703,12 @@ abstract class AFwidget {
     );
   }
 
-  static Future<void> formKonfirmasi({
+  static Future<void> formWarning({
     required String label,
-    required Function()? aksi,
-    IconData ikon = Icons.question_mark,
-    Color warna = Colors.red,
+    Function()? aksi,
+    IconData ikon = Icons.warning_outlined,
+    Color warna = Colors.orange,
+    bool isKonfirmasi = false,
   }) {
     return Get.dialog(
       AlertDialog(
@@ -723,7 +724,7 @@ abstract class AFwidget {
                 maxWidth: 400,
               ),
               margin: const EdgeInsets.only(top: 15),
-              padding: const EdgeInsets.fromLTRB(15, 30, 15, 10),
+              padding: const EdgeInsets.fromLTRB(15, 40, 15, 10),
               decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.all(Radius.circular(7)),
@@ -733,6 +734,7 @@ abstract class AFwidget {
                 children: [
                   Text(label),
                   const SizedBox(height: 20),
+                  isKonfirmasi ?
                   Row(
                     children: [
                       Expanded(
@@ -751,6 +753,18 @@ abstract class AFwidget {
                           color: warna,
                           onPressed: aksi,
                         ),
+                      ),
+                    ],
+                  ) :
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      tombol(
+                        label: 'OK',
+                        color: warna,
+                        onPressed: () {
+                          Get.back();
+                        },
                       ),
                     ],
                   ),
@@ -772,7 +786,7 @@ abstract class AFwidget {
               ),
             ),
             Container(
-              padding: const EdgeInsets.all(5),
+              padding: const EdgeInsets.all(7),
               decoration: BoxDecoration(
                 color: warna,
                 borderRadius: const BorderRadius.all(Radius.circular(50)),

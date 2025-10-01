@@ -45,8 +45,6 @@ class UpahControl extends GetxController {
         }
       }
       update();
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
   }
 
@@ -256,10 +254,12 @@ class UpahControl extends GetxController {
       if(hasil.success) {
         loadKaryawans();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 

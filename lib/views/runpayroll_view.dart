@@ -1368,7 +1368,7 @@ class RunpayrollView extends StatelessWidget {
                         onPressed: () async {
                           var isExist = await controller.payrollPeriodeIsExist(controller.tahun.value, controller.bulan.value);
                           if(isExist) {
-                            AFwidget.snackbar('Payroll untuk periode ${controller.bulan.label} ${controller.tahun.label} sudah ada di database, jika ada perubahan data silakan edit payroll tersebut (lihat di menu utama Payroll).');
+                            AFwidget.formWarning(label: 'Payroll untuk periode ${controller.bulan.label} ${controller.tahun.label} sudah ada di database, jika ada perubahan data silakan edit payroll tersebut (lihat di menu utama Payroll).');
                             return;
                           }
                           controller.loadOvertimes();

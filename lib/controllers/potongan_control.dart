@@ -57,8 +57,6 @@ class PotonganControl extends GetxController {
         listPotongan.add(Potongan.fromMap(data));
       }
       update();
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
   }
 
@@ -73,8 +71,6 @@ class PotonganControl extends GetxController {
         );
       }
       update();
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
   }
 
@@ -617,11 +613,11 @@ class PotonganControl extends GetxController {
                     color: Colors.blue,
                     onPressed: () async {
                       if(txtGaji.text.isEmpty) {
-                        AFwidget.snackbar('Gaji harus diisi');
+                        AFwidget.formWarning(label: 'Gaji harus diisi');
                         return;
                       }
                       if(txtUangMakan.text.isEmpty) {
-                        AFwidget.snackbar('Uang Makan harus diisi');
+                        AFwidget.formWarning(label: 'Uang Makan harus diisi');
                         return;
                       }
                       var a = Upah(
@@ -644,7 +640,7 @@ class PotonganControl extends GetxController {
                         txtUangMakan.dispose();
                         update();
                       } else {
-                        AFwidget.snackbar(hasil.message);
+                        AFwidget.formWarning(label: hasil.message);
                       }
                     },
                     minimumSize: const Size(120, 40),
@@ -699,10 +695,12 @@ class PotonganControl extends GetxController {
       if(hasil.success) {
         loadPotongans();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -746,10 +744,12 @@ class PotonganControl extends GetxController {
       if(hasil.success) {
         loadPotongans();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -765,10 +765,12 @@ class PotonganControl extends GetxController {
         loadPotongans();
         Get.back();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -784,10 +786,12 @@ class PotonganControl extends GetxController {
       if(hasil.success) {
         loadPotongans();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 

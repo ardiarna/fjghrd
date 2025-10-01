@@ -55,8 +55,6 @@ class PenghasilanControl extends GetxController {
         listPenghasilan.add(Penghasilan.fromMap(data));
       }
       update();
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
   }
 
@@ -71,8 +69,6 @@ class PenghasilanControl extends GetxController {
         );
       }
       update();
-    } else {
-      AFwidget.snackbar(hasil.message);
     }
   }
 
@@ -589,11 +585,11 @@ class PenghasilanControl extends GetxController {
                     color: Colors.blue,
                     onPressed: () async {
                       if(txtGaji.text.isEmpty) {
-                        AFwidget.snackbar('Gaji harus diisi');
+                        AFwidget.formWarning(label: 'Gaji harus diisi');
                         return;
                       }
                       if(txtUangMakan.text.isEmpty) {
-                        AFwidget.snackbar('Uang Makan harus diisi');
+                        AFwidget.formWarning(label: 'Uang Makan harus diisi');
                         return;
                       }
                       var a = Upah(
@@ -616,7 +612,7 @@ class PenghasilanControl extends GetxController {
                         txtUangMakan.dispose();
                         update();
                       } else {
-                        AFwidget.snackbar(hasil.message);
+                        AFwidget.formWarning(label: hasil.message);
                       }
                     },
                     minimumSize: const Size(120, 40),
@@ -671,10 +667,12 @@ class PenghasilanControl extends GetxController {
       if(hasil.success) {
         loadPenghasilans();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -718,10 +716,12 @@ class PenghasilanControl extends GetxController {
       if(hasil.success) {
         loadPenghasilans();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -737,10 +737,12 @@ class PenghasilanControl extends GetxController {
         loadPenghasilans();
         Get.back();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -756,10 +758,12 @@ class PenghasilanControl extends GetxController {
       if(hasil.success) {
         loadPenghasilans();
         Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
       }
-      AFwidget.snackbar(hasil.message);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 

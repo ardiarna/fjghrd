@@ -41,7 +41,7 @@ class LoginControl extends GetxController {
       await pref.setString('password', txtPassword.text);
       Get.offAllNamed(Rute.home);
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -72,7 +72,7 @@ class LoginControl extends GetxController {
       }
       await signIn();
     } catch (er) {
-      AFwidget.snackbar('$er');
+      AFwidget.formWarning(label: '$er');
     }
 
   }
