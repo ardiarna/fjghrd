@@ -6,6 +6,7 @@ import 'package:fjghrd/models/pendidikan.dart';
 import 'package:fjghrd/models/phk.dart';
 import 'package:fjghrd/models/ptkp.dart';
 import 'package:fjghrd/models/status_kerja.dart';
+import 'package:fjghrd/models/uang_phk_2.dart';
 import 'package:fjghrd/models/upah.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 
@@ -39,6 +40,7 @@ class Karyawan {
   String nomorPaspor;
   String nomorPwp;
   Phk phk = Phk();
+  UangPhk2 uangPhk = UangPhk2();
   Upah upah = Upah();
   DateTime? createdAt;
   DateTime? updatedAt;
@@ -123,6 +125,9 @@ class Karyawan {
     }
     if(data['phk'] != null) {
       a.phk = Phk.fromMap(data['phk']);
+    }
+    if(data['uang_phk'] != null) {
+      a.uangPhk = UangPhk2.fromMap(data['uang_phk']);
     }
     a.upah = Upah(
       id: AFconvert.keString(data['upah_id']),

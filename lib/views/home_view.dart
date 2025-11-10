@@ -12,8 +12,6 @@ import 'package:fjghrd/views/ptkp_view.dart';
 import 'package:fjghrd/views/status_kerja_view.dart';
 import 'package:fjghrd/views/status_phk_view.dart';
 import 'package:fjghrd/views/tarif_efektif_view.dart';
-import 'package:fjghrd/views/uang_phk_view.dart';
-// import 'package:fjghrd/views/upah_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -219,17 +217,17 @@ class HomeView extends StatelessWidget {
                   //     controller.update();
                   //   },
                   // ),
-                  drawItem(
-                    label: 'Uang PHK',
-                    icon: Icons.money_off,
-                    color: Colors.brown,
-                    onTap: () {
-                      controller.tabId = 4;
-                      controller.kontener = UangPhkView();
-                      Get.back();
-                      controller.update();
-                    },
-                  ),
+                  // drawItem(
+                  //   label: 'Uang PHK',
+                  //   icon: Icons.money_off,
+                  //   color: Colors.brown,
+                  //   onTap: () {
+                  //     controller.tabId = 4;
+                  //     controller.kontener = UangPhkView();
+                  //     Get.back();
+                  //     controller.update();
+                  //   },
+                  // ),
                   drawItem(
                     label: 'Ubah Email',
                     icon: Icons.email_outlined,

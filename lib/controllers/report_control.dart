@@ -54,6 +54,21 @@ class ReportControl extends GetxController {
     }
   }
 
+  Future<void> dowloadListPHK() async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/list-phk/${filterTahun.value}');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'laporan excel list phk telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
   Future<void> dowloadRekapPayroll() async {
     AFwidget.loading();
     var hasil = await AFdatabase.download(url: 'excel/rekap-gaji/${filterTahun.value}');

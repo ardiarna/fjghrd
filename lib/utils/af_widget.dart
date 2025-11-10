@@ -907,6 +907,7 @@ abstract class AFwidget {
   static Widget barisText({
     String label = '',
     TextEditingController? controller,
+    double paddingLeft = 20,
     double paddingTop = 11,
     double paddingRight = 20,
     double labelWidth = 150,
@@ -918,7 +919,7 @@ abstract class AFwidget {
     bool readOnly = false,
   }) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(20, paddingTop, paddingRight, 0),
+      padding: EdgeInsets.fromLTRB(paddingLeft, paddingTop, paddingRight, 0),
       child: Row(
         crossAxisAlignment: isTextArea ? CrossAxisAlignment.start : CrossAxisAlignment.center,
         children: [

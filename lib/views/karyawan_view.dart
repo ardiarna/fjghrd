@@ -480,6 +480,8 @@ class KaryawanView extends StatelessWidget {
                       return Colors.orange.shade200;
                     case '4':
                       return Colors.purpleAccent.shade100;
+                    case '5':
+                      return Colors.greenAccent.shade100;
                     default:
                       return Colors.white;
                   }

@@ -1,3 +1,4 @@
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:fjghrd/controllers/auth_control.dart';
 import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/models/karyawan.dart';
@@ -22,7 +23,7 @@ class UangPhkControl extends GetxController {
   late List<Opsi> listTahun;
   late Opsi filterTahun;
 
-  late TextEditingController txtId, txtKompensasi, txtUangPisah, txtPesangon, txtMasaKerja, txtPenggantianHak;
+  late TextEditingController txtId, txtKompensasi, txtUangPisah, txtPesangon, txtMasaKerja, txtSisaCutiHari, txtSisaCutiJumlah, txtLain, txtPotKas, txtPotCutiHari, txtPotCutiJumlah, txtPotLain, txtKeterangan;
   Karyawan karyawan = Karyawan();
   late Opsi tahun;
 
@@ -58,7 +59,14 @@ class UangPhkControl extends GetxController {
     txtUangPisah.text = '';
     txtPesangon.text = '';
     txtMasaKerja.text = '';
-    txtPenggantianHak.text = '';
+    txtSisaCutiHari.text = '';
+    txtSisaCutiJumlah.text = '';
+    txtLain.text = '';
+    txtPotKas.text = '';
+    txtPotCutiHari.text = '';
+    txtPotCutiJumlah.text = '';
+    txtPotLain.text = '';
+    txtKeterangan.text = '';
     karyawan = Karyawan();
     AFwidget.dialog(
       Container(
@@ -72,13 +80,15 @@ class UangPhkControl extends GetxController {
             ListView(
               children: [
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 70, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 70, 20, 20),
                   child: Row(
                     children: [
                       Container(
                         width: 200,
                         padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Karyawan'),
+                        child: const Text('Karyawan',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ),
                       Expanded(
                         child: GetBuilder<UangPhkControl>(
@@ -100,35 +110,207 @@ class UangPhkControl extends GetxController {
                     ],
                   ),
                 ),
-                AFwidget.barisText(
-                  label: 'Uang Kompensasi',
-                  controller: txtKompensasi,
-                  isNumber: true,
-                  labelWidth: 200,
-                ),
-                AFwidget.barisText(
-                  label: 'Uang Pisah',
-                  controller: txtUangPisah,
-                  isNumber: true,
-                  labelWidth: 200,
-                ),
-                AFwidget.barisText(
-                  label: 'Uang Pesangon',
-                  controller: txtPesangon,
-                  isNumber: true,
-                  labelWidth: 200,
-                ),
-                AFwidget.barisText(
-                  label: 'Uang Masa Kerja',
-                  controller: txtMasaKerja,
-                  isNumber: true,
-                  labelWidth: 200,
-                ),
-                AFwidget.barisText(
-                  label: 'Uang Penggantian Hak',
-                  controller: txtPenggantianHak,
-                  isNumber: true,
-                  labelWidth: 200,
+                IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          padding: EdgeInsets.only(bottom: 20),
+                          margin: EdgeInsets.fromLTRB(10, 0, 5, 0),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.blue.shade100),
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                          ),
+                          child: Column(
+                            children: [
+                              AFwidget.barisInfo(
+                                label: 'KALKULASI',
+                                labelWidth: 130,
+                                labelSyle: TextStyle(color: Colors.blue, fontWeight: FontWeight.w600),
+                              ),
+                              AFwidget.barisText(
+                                label: 'Kompensasi',
+                                controller: txtKompensasi,
+                                isNumber: true,
+                                labelWidth: 130,
+                                paddingLeft: 40,
+                              ),
+                              AFwidget.barisText(
+                                label: 'Pesangon',
+                                controller: txtPesangon,
+                                isNumber: true,
+                                labelWidth: 130,
+                                paddingLeft: 40,
+                              ),
+                              AFwidget.barisText(
+                                label: 'Masa Kerja',
+                                controller: txtMasaKerja,
+                                isNumber: true,
+                                labelWidth: 130,
+                                paddingLeft: 40,
+                              ),
+                              AFwidget.barisText(
+                                label: 'Uang Pisah',
+                                controller: txtUangPisah,
+                                isNumber: true,
+                                labelWidth: 130,
+                                paddingLeft: 40,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(40, 21, 20, 0),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: 130,
+                                      child: const Text('Sisa Cuti'),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text('Hari :'),
+                                          AFwidget.textField(
+                                            marginTop: 0,
+                                            controller: txtSisaCutiHari,
+                                            inputformatters: [
+                                              CurrencyTextInputFormatter.currency(
+                                                symbol: '',
+                                                decimalDigits: 0,
+                                              ),
+                                            ],
+                                            textAlign: TextAlign.end,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 15),
+                                    Expanded(
+                                      flex: 3,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text('Jumlah IDR :'),
+                                          AFwidget.textField(
+                                            readOnly: true,
+                                            marginTop: 0,
+                                            controller: txtSisaCutiJumlah,
+                                            inputformatters: [
+                                              CurrencyTextInputFormatter.currency(
+                                                symbol: '',
+                                                decimalDigits: 0,
+                                              ),
+                                            ],
+                                            textAlign: TextAlign.end,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              AFwidget.barisText(
+                                label: 'Lain-lain',
+                                controller: txtLain,
+                                isNumber: true,
+                                labelWidth: 130,
+                                paddingLeft: 40,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          padding: EdgeInsets.only(bottom: 20),
+                          margin: EdgeInsets.fromLTRB(5, 0, 10, 0),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.red.shade100),
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                          ),
+                          child: Column(
+                            children: [
+                              AFwidget.barisInfo(
+                                label: 'POTONGAN',
+                                labelWidth: 130,
+                                labelSyle: TextStyle(color: Colors.red, fontWeight: FontWeight.w600),
+                              ),
+                              AFwidget.barisText(
+                                label: 'Kas / Cicilan',
+                                controller: txtPotKas,
+                                isNumber: true,
+                                labelWidth: 130,
+                                paddingLeft: 40,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(40, 21, 20, 0),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: 130,
+                                      child: const Text('Unpaid Leave'),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text('Hari :'),
+                                          AFwidget.textField(
+                                            marginTop: 0,
+                                            controller: txtPotCutiHari,
+                                            inputformatters: [
+                                              CurrencyTextInputFormatter.currency(
+                                                symbol: '',
+                                                decimalDigits: 0,
+                                              ),
+                                            ],
+                                            textAlign: TextAlign.end,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 15),
+                                    Expanded(
+                                      flex: 3,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text('Jumlah IDR :'),
+                                          AFwidget.textField(
+                                            readOnly: true,
+                                            marginTop: 0,
+                                            controller: txtPotCutiJumlah,
+                                            inputformatters: [
+                                              CurrencyTextInputFormatter.currency(
+                                                symbol: '',
+                                                decimalDigits: 0,
+                                              ),
+                                            ],
+                                            textAlign: TextAlign.end,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              AFwidget.barisText(
+                                label: 'Lain-lain',
+                                controller: txtPotLain,
+                                isNumber: true,
+                                labelWidth: 130,
+                                paddingLeft: 40,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
@@ -172,7 +354,7 @@ class UangPhkControl extends GetxController {
     txtUangPisah.text = AFconvert.matNumber(item.uangPisah);
     txtPesangon.text = AFconvert.matNumber(item.pesangon);
     txtMasaKerja.text = AFconvert.matNumber(item.masaKerja);
-    txtPenggantianHak.text = AFconvert.matNumber(item.penggantianHak);
+    txtLain.text = AFconvert.matNumber(item.lain);
     karyawan = item.karyawan;
     AFwidget.dialog(
       Container(
@@ -255,8 +437,8 @@ class UangPhkControl extends GetxController {
                   labelWidth: 200,
                 ),
                 AFwidget.barisText(
-                  label: 'Uang Penggantian Hak',
-                  controller: txtPenggantianHak,
+                  label: 'Uang Lain-lain',
+                  controller: txtLain,
                   isNumber: true,
                   labelWidth: 200,
                 ),
@@ -317,7 +499,7 @@ class UangPhkControl extends GetxController {
       if(karyawan.id.isEmpty) {
         throw 'Silakan pilih karyawan';
       }
-      if(txtKompensasi.text.isEmpty && txtUangPisah.text.isEmpty && txtPesangon.text.isEmpty && txtMasaKerja.text.isEmpty && txtPenggantianHak.text.isEmpty) {
+      if(txtKompensasi.text.isEmpty && txtUangPisah.text.isEmpty && txtPesangon.text.isEmpty && txtMasaKerja.text.isEmpty && txtLain.text.isEmpty) {
         throw 'silakan isi minimal satu jenis uang PHK';
       }
 
@@ -327,7 +509,7 @@ class UangPhkControl extends GetxController {
         uangPisah: AFconvert.keInt(txtUangPisah.text),
         pesangon: AFconvert.keInt(txtPesangon.text),
         masaKerja: AFconvert.keInt(txtMasaKerja.text),
-        penggantianHak: AFconvert.keInt(txtPenggantianHak.text),
+        lain: AFconvert.keInt(txtLain.text),
       );
       a.karyawan = karyawan;
 
@@ -357,7 +539,7 @@ class UangPhkControl extends GetxController {
       if(tahun.value.isEmpty) {
         throw 'Periode harus diisi';
       }
-      if(txtKompensasi.text.isEmpty && txtUangPisah.text.isEmpty && txtPesangon.text.isEmpty && txtMasaKerja.text.isEmpty && txtPenggantianHak.text.isEmpty) {
+      if(txtKompensasi.text.isEmpty && txtUangPisah.text.isEmpty && txtPesangon.text.isEmpty && txtMasaKerja.text.isEmpty && txtLain.text.isEmpty) {
         throw 'silakan isi minimal satu jenis uang PHK';
       }
       var a = UangPhk(
@@ -366,7 +548,7 @@ class UangPhkControl extends GetxController {
         uangPisah: AFconvert.keInt(txtUangPisah.text),
         pesangon: AFconvert.keInt(txtPesangon.text),
         masaKerja: AFconvert.keInt(txtMasaKerja.text),
-        penggantianHak: AFconvert.keInt(txtPenggantianHak.text),
+        lain: AFconvert.keInt(txtLain.text),
       );
       a.karyawan = karyawan;
 
@@ -436,7 +618,14 @@ class UangPhkControl extends GetxController {
     txtUangPisah = TextEditingController();
     txtPesangon = TextEditingController();
     txtMasaKerja = TextEditingController();
-    txtPenggantianHak = TextEditingController();
+    txtSisaCutiHari = TextEditingController();
+    txtSisaCutiJumlah = TextEditingController();
+    txtLain = TextEditingController();
+    txtPotKas = TextEditingController();
+    txtPotCutiHari = TextEditingController();
+    txtPotCutiJumlah = TextEditingController();
+    txtPotLain = TextEditingController();
+    txtKeterangan = TextEditingController();
     super.onInit();
   }
 
@@ -447,7 +636,14 @@ class UangPhkControl extends GetxController {
     txtUangPisah.dispose();
     txtPesangon.dispose();
     txtMasaKerja.dispose();
-    txtPenggantianHak.dispose();
+    txtSisaCutiHari.dispose();
+    txtSisaCutiJumlah.dispose();
+    txtLain.dispose();
+    txtPotKas.dispose();
+    txtPotCutiHari.dispose();
+    txtPotCutiJumlah.dispose();
+    txtPotLain.dispose();
+    txtKeterangan.dispose();
     super.onClose();
   }
 }

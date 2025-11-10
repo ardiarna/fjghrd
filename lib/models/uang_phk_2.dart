@@ -1,9 +1,8 @@
-import 'package:fjghrd/models/karyawan.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 
-class UangPhk {
+class UangPhk2 {
   String id;
-  Karyawan karyawan = Karyawan();
+  String karyawanId;
   int tahun;
   int kompensasi;
   int uangPisah;
@@ -21,8 +20,9 @@ class UangPhk {
   DateTime? createdAt;
   DateTime? updatedAt;
 
-  UangPhk({
+  UangPhk2({
     this.id = '',
+    this.karyawanId = '',
     this.tahun = 0,
     this.kompensasi = 0,
     this.uangPisah = 0,
@@ -41,9 +41,10 @@ class UangPhk {
     this.updatedAt,
   }) ;
 
-  factory UangPhk.fromMap(Map<String, dynamic> data) {
-    var a = UangPhk(
+  factory UangPhk2.fromMap(Map<String, dynamic> data) {
+    return UangPhk2(
       id: AFconvert.keString(data['id']),
+      karyawanId: AFconvert.keString(data['karyawan_id']),
       tahun: AFconvert.keInt(data['tahun']),
       kompensasi: AFconvert.keInt(data['kompensasi']),
       uangPisah: AFconvert.keInt(data['uang_pisah']),
@@ -61,16 +62,12 @@ class UangPhk {
       createdAt: AFconvert.keTanggal(data['created_at']),
       updatedAt: AFconvert.keTanggal(data['updated_at']),
     );
-    if(data['karyawan'] != null) {
-      a.karyawan = Karyawan.fromMap(data['karyawan']);
-    }
-    return a;
   }
 
   Map<String, String> toMap() {
     Map<String, String> data = {
       'id': id,
-      'karyawan_id': karyawan.id,
+      'karyawan_id': karyawanId,
       'tahun': AFconvert.keString(tahun),
       'kompensasi': AFconvert.keString(kompensasi),
       'uang_pisah': AFconvert.keString(uangPisah),
