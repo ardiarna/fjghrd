@@ -247,7 +247,7 @@ class PayrollControl extends GetxController {
     required String periode,
   }) {
     AFwidget.formWarning(
-      label: 'Apakah anda ingin mengunci payroll periode $periode ?',
+      label: 'Anda akan mengunci data payroll untuk periode $periode, pastikan Anda telah memeriksa dan memvalidasi keakuratan data. Lanjutkan untuk mengunci data?',
       ikon: Icons.lock_outline,
       warna: Colors.red,
       isKonfirmasi: true,

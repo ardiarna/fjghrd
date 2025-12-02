@@ -333,6 +333,20 @@ class KaryawanForm extends StatelessWidget {
                   }
                 ),
                 const SizedBox(width: 25),
+                GetBuilder<KaryawanControl>(
+                    builder: (_) {
+                      if(controller.current.aktif == 'N') {
+                        return AFwidget.tombol(
+                          label: 'Batal PHK',
+                          color: Colors.purple,
+                          onPressed: controller.hapusPhkForm,
+                          minimumSize: const Size(120, 40),
+                        );
+                      }
+                      return Container();
+                    }
+                ),
+                const SizedBox(width: 25),
                 AFwidget.tombol(
                   label: 'Hapus Data Karyawan',
                   color: Colors.red,

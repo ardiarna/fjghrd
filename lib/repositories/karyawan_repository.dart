@@ -153,6 +153,13 @@ class KaryawanRepository {
     );
   }
 
+  Future<Hasil> phkDelete(String id, String phkId) async {
+    return await AFdatabase.send(
+      url: 'karyawan/$id/phk/$phkId',
+      methodeRequest: MethodeRequest.delete,
+    );
+  }
+
   Future<Hasil> timelineMasakerja(String id) async {
     return await AFdatabase.send(
       url: 'karyawan/$id/timeline-masakerja',

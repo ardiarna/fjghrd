@@ -1807,6 +1807,18 @@ class KaryawanControl extends GetxController {
     );
   }
 
+  void hapusPhkForm() {
+    AFwidget.formWarning(
+      label: 'Anda akan membatalkan PHK ${current.nama}, data PHK akan terhapus dan karyawan akan aktif kembali. Lanjutkan pembatalan PHK?',
+      labelBatal: 'Kembali',
+      labelYa: 'Ya, Lanjutkan',
+      ikon: Icons.autorenew,
+      warna: Colors.purple,
+      isKonfirmasi: true,
+      aksi: hapusPhkData,
+    );
+  }
+
   void payrollView(String id) {
     current = listKaryawan.where((element) => element.id == id).first;
     loadPayrolls();
@@ -2273,6 +2285,30 @@ class KaryawanControl extends GetxController {
       AFwidget.formWarning(label: '$er');
     }
   }
+
+  Future<void> hapusPhkData() async {
+    try {
+      if(current.id.isEmpty) {
+        throw 'ID Karyawan tidak ditemukan';
+      }
+      if(current.phk.id.isEmpty) {
+        throw 'ID PHK tidak ditemukan';
+      }
+      var hasil = await _repo.phkDelete(current.id, current.phk.id);
+      if(hasil.success) {
+        loadKaryawans();
+        loadMantanKaryawans();
+        Get.back();
+        Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
+      }
+    } catch (er) {
+      AFwidget.formWarning(label: '$er');
+    }
+  }
+
 
   Future<void> loadAgamas() async {
     AgamaRepository repo = AgamaRepository();

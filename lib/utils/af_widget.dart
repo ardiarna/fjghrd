@@ -641,18 +641,22 @@ abstract class AFwidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Apakah Kamu Yakin?',
+                  const Text('Apakah Anda Yakin?',
                       style: TextStyle(fontWeight: FontWeight.w500)),
                   Padding(
-                    padding: const EdgeInsets.only(top: 15, bottom: 20),
+                    padding: const EdgeInsets.only(top: 15, bottom: 5),
                     child: Text(
-                        'Ingin menghapus $label? Data yang telah terhapus tidak dapat dikembalikan lagi.'),
+                        'Anda akan menghapus $label.'),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: const Text('Data yang telah dihapus tidak dapat dikembalikan lagi, lanjutkan penghapusan?'),
                   ),
                   Row(
                     children: [
                       Expanded(
                         child: tombol(
-                          label: 'BATAL',
+                          label: 'Batal',
                           color: Colors.orangeAccent,
                           onPressed: () {
                             Get.back();
@@ -662,7 +666,7 @@ abstract class AFwidget {
                       const Padding(padding: EdgeInsets.only(right: 10)),
                       Expanded(
                         child: tombol(
-                          label: 'YA',
+                          label: 'Ya, Hapus Data',
                           color: Colors.red,
                           onPressed: aksi,
                         ),
@@ -709,6 +713,8 @@ abstract class AFwidget {
     IconData ikon = Icons.warning_outlined,
     Color warna = Colors.orange,
     bool isKonfirmasi = false,
+    String labelBatal = 'Batal',
+    String labelYa = 'Ya',
   }) {
     return Get.dialog(
       AlertDialog(
@@ -739,7 +745,7 @@ abstract class AFwidget {
                     children: [
                       Expanded(
                         child: tombol(
-                          label: 'BATAL',
+                          label: labelBatal,
                           color: Colors.orangeAccent,
                           onPressed: () {
                             Get.back();
@@ -749,7 +755,7 @@ abstract class AFwidget {
                       const Padding(padding: EdgeInsets.only(right: 10)),
                       Expanded(
                         child: tombol(
-                          label: 'YA',
+                          label: labelYa,
                           color: warna,
                           onPressed: aksi,
                         ),
