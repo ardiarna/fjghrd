@@ -132,92 +132,7 @@ class ReportView extends StatelessWidget {
         child: Column(
           children: [
             AFwidget.formHeader('Excel Rekap Payroll Per Karyawan ${controller.filterTahun.label}'),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-              child: Row(
-                children: [
-                  Container(
-                    width: 100,
-                    padding: const EdgeInsets.only(right: 15),
-                    child: const Text('Divisi'),
-                  ),
-                  Expanded(
-                    child: GetBuilder<ReportControl>(
-                      builder: (_) {
-                        return Column(
-                          children: [
-                            Row(
-                              children: [
-                                Radio<String>(
-                                  value: '1',
-                                  groupValue: controller.filterJenis,
-                                  onChanged: (a) {
-                                    if(a != null && a != controller.filterJenis) {
-                                      controller.filterJenis = a;
-                                      controller.update();
-                                    }
-                                  },
-                                ),
-                                const SizedBox(
-                                  width: 130,
-                                  child: Text('Engineering'),
-                                ),
-                                Radio<String>(
-                                  value: '3',
-                                  groupValue: controller.filterJenis,
-                                  onChanged: (a) {
-                                    if(a != null && a != controller.filterJenis) {
-                                      controller.filterJenis = a;
-                                      controller.update();
-                                    }
-                                  },
-                                ),
-                                const SizedBox(
-                                  width: 130,
-                                  child: Text('Non Staf'),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Radio<String>(
-                                  value: '2',
-                                  groupValue: controller.filterJenis,
-                                  onChanged: (a) {
-                                    if(a != null && a != controller.filterJenis) {
-                                      controller.filterJenis = a;
-                                      controller.update();
-                                    }
-                                  },
-                                ),
-                                const SizedBox(
-                                  width: 130,
-                                  child: Text('Staf'),
-                                ),
-                                Radio<String>(
-                                  value: '4',
-                                  groupValue: controller.filterJenis,
-                                  onChanged: (a) {
-                                    if(a != null && a != controller.filterJenis) {
-                                      controller.filterJenis = a;
-                                      controller.update();
-                                    }
-                                  },
-                                ),
-                                const SizedBox(
-                                  width: 130,
-                                  child: Text('Semua'),
-                                ),
-                              ],
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            pilihDivisi(),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Row(
@@ -290,92 +205,7 @@ class ReportView extends StatelessWidget {
         child: Column(
           children: [
             AFwidget.formHeader('Excel Rekap PPh21 Tahun ${controller.filterTahun.label}'),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-              child: Row(
-                children: [
-                  Container(
-                    width: 100,
-                    padding: const EdgeInsets.only(right: 15),
-                    child: const Text('Divisi'),
-                  ),
-                  Expanded(
-                    child: GetBuilder<ReportControl>(
-                      builder: (_) {
-                        return Column(
-                          children: [
-                            Row(
-                              children: [
-                                Radio<String>(
-                                  value: '1',
-                                  groupValue: controller.filterJenis,
-                                  onChanged: (a) {
-                                    if(a != null && a != controller.filterJenis) {
-                                      controller.filterJenis = a;
-                                      controller.update();
-                                    }
-                                  },
-                                ),
-                                const SizedBox(
-                                  width: 130,
-                                  child: Text('Engineering'),
-                                ),
-                                Radio<String>(
-                                  value: '3',
-                                  groupValue: controller.filterJenis,
-                                  onChanged: (a) {
-                                    if(a != null && a != controller.filterJenis) {
-                                      controller.filterJenis = a;
-                                      controller.update();
-                                    }
-                                  },
-                                ),
-                                const SizedBox(
-                                  width: 130,
-                                  child: Text('Non Staf'),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Radio<String>(
-                                  value: '2',
-                                  groupValue: controller.filterJenis,
-                                  onChanged: (a) {
-                                    if(a != null && a != controller.filterJenis) {
-                                      controller.filterJenis = a;
-                                      controller.update();
-                                    }
-                                  },
-                                ),
-                                const SizedBox(
-                                  width: 130,
-                                  child: Text('Staf'),
-                                ),
-                                Radio<String>(
-                                  value: '4',
-                                  groupValue: controller.filterJenis,
-                                  onChanged: (a) {
-                                    if(a != null && a != controller.filterJenis) {
-                                      controller.filterJenis = a;
-                                      controller.update();
-                                    }
-                                  },
-                                ),
-                                const SizedBox(
-                                  width: 130,
-                                  child: Text('Semua'),
-                                ),
-                              ],
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            pilihDivisi(),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Row(
@@ -477,92 +307,7 @@ class ReportView extends StatelessWidget {
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-              child: Row(
-                children: [
-                  Container(
-                    width: 100,
-                    padding: const EdgeInsets.only(right: 15),
-                    child: const Text('Divisi'),
-                  ),
-                  Expanded(
-                    child: GetBuilder<ReportControl>(
-                      builder: (_) {
-                        return Column(
-                          children: [
-                            Row(
-                              children: [
-                                Radio<String>(
-                                  value: '1',
-                                  groupValue: controller.filterJenis,
-                                  onChanged: (a) {
-                                    if(a != null && a != controller.filterJenis) {
-                                      controller.filterJenis = a;
-                                      controller.update();
-                                    }
-                                  },
-                                ),
-                                const SizedBox(
-                                  width: 130,
-                                  child: Text('Engineering'),
-                                ),
-                                Radio<String>(
-                                  value: '3',
-                                  groupValue: controller.filterJenis,
-                                  onChanged: (a) {
-                                    if(a != null && a != controller.filterJenis) {
-                                      controller.filterJenis = a;
-                                      controller.update();
-                                    }
-                                  },
-                                ),
-                                const SizedBox(
-                                  width: 130,
-                                  child: Text('Non Staf'),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Radio<String>(
-                                  value: '2',
-                                  groupValue: controller.filterJenis,
-                                  onChanged: (a) {
-                                    if(a != null && a != controller.filterJenis) {
-                                      controller.filterJenis = a;
-                                      controller.update();
-                                    }
-                                  },
-                                ),
-                                const SizedBox(
-                                  width: 130,
-                                  child: Text('Staf'),
-                                ),
-                                Radio<String>(
-                                  value: '4',
-                                  groupValue: controller.filterJenis,
-                                  onChanged: (a) {
-                                    if(a != null && a != controller.filterJenis) {
-                                      controller.filterJenis = a;
-                                      controller.update();
-                                    }
-                                  },
-                                ),
-                                const SizedBox(
-                                  width: 130,
-                                  child: Text('Semua'),
-                                ),
-                              ],
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            pilihDivisi(),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Row(
@@ -647,6 +392,68 @@ class ReportView extends StatelessWidget {
           child: Text(label,
             style: const TextStyle(fontWeight: FontWeight.bold),
           ),
+      ),
+    );
+  }
+
+  Widget pilihDivisi() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+      child: Row(
+        children: [
+          Container(
+            width: 100,
+            padding: const EdgeInsets.only(right: 15),
+            child: const Text('Divisi'),
+          ),
+          Expanded(
+            child: GetBuilder<ReportControl>(
+              builder: (_) {
+                return RadioGroup<String>(
+                  groupValue: controller.filterJenis,
+                  onChanged: (a) {
+                    if(a != null && a != controller.filterJenis) {
+                      controller.filterJenis = a;
+                      controller.update();
+                    }
+                  },
+                  child: Column(
+                    children: const [
+                      Row(
+                        children: [
+                          Radio<String>(value: '1'),
+                          SizedBox(
+                            width: 130,
+                            child: Text('Engineering'),
+                          ),
+                          Radio<String>(value: '3'),
+                          SizedBox(
+                            width: 130,
+                            child: Text('Non Staf'),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Radio<String>(value: '2'),
+                          SizedBox(
+                            width: 130,
+                            child: Text('Staf'),
+                          ),
+                          Radio<String>(value: '4'),
+                          SizedBox(
+                            width: 130,
+                            child: Text('Semua'),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

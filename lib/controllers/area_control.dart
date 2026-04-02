@@ -1,4 +1,3 @@
-import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:fjghrd/controllers/auth_control.dart';
 import 'package:fjghrd/models/area.dart';
 import 'package:fjghrd/repositories/area_repository.dart';
@@ -41,7 +40,7 @@ class AreaControl extends GetxController {
         ),
         child: Column(
           children: [
-            AFwidget.formHeader('Form ${id == '' ? 'Tambah' : 'Ubah'} Area'),
+            AFwidget.formHeader('Form ${item.id == '' ? 'Tambah' : 'Ubah'} Area'),
             AFwidget.barisText(
               label: 'Kode',
               controller: txtKode,
@@ -60,7 +59,7 @@ class AreaControl extends GetxController {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  id == '' ? Container() :
+                  item.id == '' ? Container() :
                   AFwidget.tombol(
                     label: 'Hapus Data',
                     color: Colors.red,
@@ -80,7 +79,7 @@ class AreaControl extends GetxController {
                   AFwidget.tombol(
                     label: 'Simpan',
                     color: Colors.blue,
-                    onPressed: id == '' ? tambahData : ubahData,
+                    onPressed: simpanData,
                     minimumSize: const Size(120, 40),
                   ),
                 ],
@@ -104,44 +103,8 @@ class AreaControl extends GetxController {
     );
   }
 
-  Future<void> tambahData() async {
+  Future<void> simpanData() async {
     try {
-      if(txtKode.text.isEmpty) {
-        throw 'Kode harus diisi';
-      }
-      if(txtNama.text.isEmpty) {
-        throw 'Nama harus diisi';
-      }
-      if(txtUrutan.text.isEmpty) {
-        throw 'Urutan harus diisi';
-      }
-
-      var a = Area(
-        kode: txtKode.text,
-        nama: txtNama.text,
-        urutan: AFconvert.keInt(txtUrutan.text),
-      );
-
-      AFwidget.loading();
-      var hasil = await _repo.create(a.toMap());
-      Get.back();
-      if(hasil.success) {
-        loadAreas();
-        Get.back();
-        AFwidget.snackbar(hasil.message);
-      } else {
-        AFwidget.formWarning(label: hasil.message);
-      }
-    } catch (er) {
-      AFwidget.formWarning(label: '$er');
-    }
-  }
-
-  Future<void> ubahData() async {
-    try {
-      if(txtId.text.isEmpty) {
-        throw 'ID harus diisi';
-      }
       if(txtKode.text.isEmpty) {
         throw 'Kode harus diisi';
       }
@@ -160,7 +123,9 @@ class AreaControl extends GetxController {
       );
 
       AFwidget.loading();
-      var hasil = await _repo.update(a.id, a.toMap());
+      var hasil = a.id == ''
+          ? await _repo.create(a.toMap())
+          : await _repo.update(a.id, a.toMap());
       Get.back();
       if(hasil.success) {
         loadAreas();
@@ -193,44 +158,6 @@ class AreaControl extends GetxController {
     } catch (er) {
       AFwidget.formWarning(label: '$er');
     }
-  }
-
-  Widget barisText({
-    String label = '',
-    TextEditingController? controller,
-    double paddingTop = 11,
-    bool isTextArea = false,
-    bool isNumber = false,
-  }) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(20, paddingTop, 20, 0),
-      child: Row(
-        crossAxisAlignment: isTextArea ? CrossAxisAlignment.start : CrossAxisAlignment.center,
-        children: [
-          Container(
-            width: 150,
-            padding: EdgeInsets.only(right: 15, top: isTextArea ? 15 : 0),
-            child: Text(label),
-          ),
-          Expanded(
-            child: AFwidget.textField(
-              marginTop: 0,
-              controller: controller,
-              maxLines: isTextArea ? 4 : 1,
-              minLines: isTextArea ? 2 : 1,
-              keyboard: isTextArea ? TextInputType.multiline : TextInputType.text,
-              inputformatters: !isNumber ? null : [
-                CurrencyTextInputFormatter.currency(
-                  symbol: '',
-                  decimalDigits: 0,
-                ),
-              ],
-              textAlign: isNumber ? TextAlign.end : TextAlign.start,
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
   @override

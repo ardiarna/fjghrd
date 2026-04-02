@@ -295,37 +295,28 @@ class OvertimeControl extends GetxController {
                       Expanded(
                         child: GetBuilder<OvertimeControl>(
                           builder: (_) {
-                            return Row(
-                              children: [
-                                Radio<String>(
-                                  value: 'F',
-                                  groupValue: jenis,
-                                  onChanged: (a) {
-                                    if(a != null && a != jenis) {
-                                      jenis = a;
-                                      update();
-                                    }
-                                  },
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
-                                  child: Text('Fratekindo'),
-                                ),
-                                Radio<String>(
-                                  value: 'C',
-                                  groupValue: jenis,
-                                  onChanged: (a) {
-                                    if(a != null && a != jenis) {
-                                      jenis = a;
-                                      update();
-                                    }
-                                  },
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                  child: Text('Customer'),
-                                ),
-                              ],
+                            return RadioGroup<String>(
+                              groupValue: jenis,
+                              onChanged: (a) {
+                                if(a != null && a != jenis) {
+                                  jenis = a;
+                                  update();
+                                }
+                              },
+                              child: Row(
+                                children: const [
+                                  Radio<String>(value: 'F'),
+                                  Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                                    child: Text('Fratekindo'),
+                                  ),
+                                  Radio<String>(value: 'C'),
+                                  Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                    child: Text('Customer'),
+                                  ),
+                                ],
+                              ),
                             );
                           },
                         ),

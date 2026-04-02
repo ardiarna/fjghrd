@@ -41,7 +41,7 @@ class TarifEfektifControl extends GetxController {
         ),
         child: Column(
           children: [
-            AFwidget.formHeader('Form ${id == '' ? 'Tambah' : 'Ubah'} TER'),
+            AFwidget.formHeader('Form ${item.id == '' ? 'Tambah' : 'Ubah'} TER'),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
               child: Row(
@@ -53,51 +53,33 @@ class TarifEfektifControl extends GetxController {
                   Expanded(
                     child: GetBuilder<TarifEfektifControl>(
                       builder: (_) {
-                        return Row(
-                          children: [
-                            Radio<String>(
-                              value: 'A',
-                              groupValue: kategoriTER,
-                              onChanged: (a) {
-                                if(a != null && a != kategoriTER) {
-                                  kategoriTER = a;
-                                  update();
-                                }
-                              },
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
-                              child: Text('TER A'),
-                            ),
-                            Radio<String>(
-                              value: 'B',
-                              groupValue: kategoriTER,
-                              onChanged: (a) {
-                                if(a != null && a != kategoriTER) {
-                                  kategoriTER = a;
-                                  update();
-                                }
-                              },
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
-                              child: Text('TER B'),
-                            ),
-                            Radio<String>(
-                              value: 'C',
-                              groupValue: kategoriTER,
-                              onChanged: (a) {
-                                if(a != null && a != kategoriTER) {
-                                  kategoriTER = a;
-                                  update();
-                                }
-                              },
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                              child: Text('TER C'),
-                            ),
-                          ],
+                        return RadioGroup<String>(
+                          groupValue: kategoriTER,
+                          onChanged: (a) {
+                            if(a != null && a != kategoriTER) {
+                              kategoriTER = a;
+                              update();
+                            }
+                          },
+                          child: Row(
+                            children: const [
+                              Radio<String>(value: 'A'),
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                                child: Text('TER A'),
+                              ),
+                              Radio<String>(value: 'B'),
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                                child: Text('TER B'),
+                              ),
+                              Radio<String>(value: 'C'),
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                child: Text('TER C'),
+                              ),
+                            ],
+                          ),
                         );
                       },
                     ),
@@ -121,7 +103,7 @@ class TarifEfektifControl extends GetxController {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  id == '' ? Container() :
+                  item.id == '' ? Container() :
                   AFwidget.tombol(
                     label: 'Hapus Data',
                     color: Colors.red,
@@ -141,7 +123,7 @@ class TarifEfektifControl extends GetxController {
                   AFwidget.tombol(
                     label: 'Simpan',
                     color: Colors.blue,
-                    onPressed: id == '' ? tambahData : ubahData,
+                    onPressed: simpanData,
                     minimumSize: const Size(120, 40),
                   ),
                 ],
@@ -165,44 +147,8 @@ class TarifEfektifControl extends GetxController {
     );
   }
 
-  Future<void> tambahData() async {
+  Future<void> simpanData() async {
     try {
-      if(kategoriTER.isEmpty) {
-        throw 'Kategori TER harus diisi';
-      }
-      if(txtPenghasilan.text.isEmpty) {
-        throw 'Penghasilan harus diisi';
-      }
-      if(txtPersen.text.isEmpty) {
-        throw 'Persen harus diisi';
-      }
-      var a = TarifEfektif(
-        ter: kategoriTER,
-        penghasilan: AFconvert.keInt(txtPenghasilan.text),
-        persen: AFconvert.keDouble(txtPersen.text),
-
-      );
-
-      AFwidget.loading();
-      var hasil = await _repo.create(a.toMap());
-      Get.back();
-      if(hasil.success) {
-        loadTarifEfektifs();
-        Get.back();
-        AFwidget.snackbar(hasil.message);
-      } else {
-        AFwidget.formWarning(label: hasil.message);
-      }
-    } catch (er) {
-      AFwidget.formWarning(label: '$er');
-    }
-  }
-
-  Future<void> ubahData() async {
-    try {
-      if(txtId.text.isEmpty) {
-        throw 'ID harus diisi';
-      }
       if(kategoriTER.isEmpty) {
         throw 'Kategori TER harus diisi';
       }
@@ -220,7 +166,9 @@ class TarifEfektifControl extends GetxController {
       );
 
       AFwidget.loading();
-      var hasil = await _repo.update(a.id, a.toMap());
+      var hasil = a.id == ''
+          ? await _repo.create(a.toMap())
+          : await _repo.update(a.id, a.toMap());
       Get.back();
       if(hasil.success) {
         loadTarifEfektifs();

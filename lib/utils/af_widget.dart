@@ -204,9 +204,14 @@ abstract class AFwidget {
     );
   }
 
-  static dynamic snackbar(String message, {String title = ''}) {
-    return Get.snackbar(title, message,
-        backgroundColor: Colors.brown, colorText: Colors.white);
+  static dynamic snackbar(String message, {String title = '', int duration = 1}) {
+    return Get.snackbar(
+      title,
+      message,
+      backgroundColor: Colors.blue,
+      colorText: Colors.white,
+      duration: Duration(seconds: duration),
+    );
   }
 
   static Future<String?> bottomSheet(Widget konten, {bool fullHeight = false}) {
@@ -851,12 +856,13 @@ abstract class AFwidget {
   static Widget photoBox({required Widget child}) {
     return InteractiveViewer(
       child: DottedBorder(
-        padding: const EdgeInsets.all(5),
-        color: const Color(0xFFd1d1d1),
-        strokeWidth: 1.3,
-        dashPattern: const [10,7],
-        borderType: BorderType.RRect,
-        radius: const Radius.circular(10),
+        options: RoundedRectDottedBorderOptions(
+          radius: const Radius.circular(10),
+          padding: const EdgeInsets.all(5),
+          dashPattern: const [10,7],
+          color: const Color(0xFFd1d1d1),
+          strokeWidth: 1.3,
+        ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: child,

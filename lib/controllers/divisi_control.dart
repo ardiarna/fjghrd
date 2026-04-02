@@ -40,7 +40,7 @@ class DivisiControl extends GetxController {
         ),
         child: Column(
           children: [
-            AFwidget.formHeader('Form ${id == '' ? 'Tambah' : 'Ubah'} Divisi'),
+            AFwidget.formHeader('Form ${item.id == '' ? 'Tambah' : 'Ubah'} Divisi'),
             AFwidget.barisText(
               label: 'Kode',
               controller: txtKode,
@@ -59,7 +59,7 @@ class DivisiControl extends GetxController {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  id == '' ? Container() :
+                  item.id == '' ? Container() :
                   AFwidget.tombol(
                     label: 'Hapus Data',
                     color: Colors.red,
@@ -79,7 +79,7 @@ class DivisiControl extends GetxController {
                   AFwidget.tombol(
                     label: 'Simpan',
                     color: Colors.blue,
-                    onPressed: id == '' ? tambahData : ubahData,
+                    onPressed: simpanData,
                     minimumSize: const Size(120, 40),
                   ),
                 ],
@@ -103,44 +103,8 @@ class DivisiControl extends GetxController {
     );
   }
 
-  Future<void> tambahData() async {
+  Future<void> simpanData() async {
     try {
-      if(txtKode.text.isEmpty) {
-        throw 'Kode harus diisi';
-      }
-      if(txtNama.text.isEmpty) {
-        throw 'Nama harus diisi';
-      }
-      if(txtUrutan.text.isEmpty) {
-        throw 'Urutan harus diisi';
-      }
-
-      var a = Divisi(
-        kode: txtKode.text,
-        nama: txtNama.text,
-        urutan: AFconvert.keInt(txtUrutan.text),
-      );
-
-      AFwidget.loading();
-      var hasil = await _repo.create(a.toMap());
-      Get.back();
-      if(hasil.success) {
-        loadDivisis();
-        Get.back();
-        AFwidget.snackbar(hasil.message);
-      } else {
-        AFwidget.formWarning(label: hasil.message);
-      }
-    } catch (er) {
-      AFwidget.formWarning(label: '$er');
-    }
-  }
-
-  Future<void> ubahData() async {
-    try {
-      if(txtId.text.isEmpty) {
-        throw 'ID harus diisi';
-      }
       if(txtKode.text.isEmpty) {
         throw 'Kode harus diisi';
       }
@@ -159,7 +123,9 @@ class DivisiControl extends GetxController {
       );
 
       AFwidget.loading();
-      var hasil = await _repo.update(a.id, a.toMap());
+      var hasil = a.id == ''
+          ? await _repo.create(a.toMap())
+          : await _repo.update(a.id, a.toMap());
       Get.back();
       if(hasil.success) {
         loadDivisis();

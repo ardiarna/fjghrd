@@ -505,37 +505,28 @@ class KaryawanForm extends StatelessWidget {
                                         Expanded(
                                           child: GetBuilder<KaryawanControl>(
                                             builder: (_) {
-                                              return Row(
-                                                children: [
-                                                  Radio<bool>(
-                                                    value: true,
-                                                    groupValue: controller.staf,
-                                                    onChanged: (a) {
-                                                      if(a != null && a != controller.staf) {
-                                                        controller.staf = a;
-                                                        controller.update();
-                                                      }
-                                                    },
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 90,
-                                                    child: Text('Staf'),
-                                                  ),
-                                                  Radio<bool>(
-                                                    value: false,
-                                                    groupValue: controller.staf,
-                                                    onChanged: (a) {
-                                                      if(a != null && a != controller.staf) {
-                                                        controller.staf = a;
-                                                        controller.update();
-                                                      }
-                                                    },
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 110,
-                                                    child: Text('Non Staf'),
-                                                  ),
-                                                ],
+                                              return RadioGroup<bool>(
+                                                groupValue: controller.staf,
+                                                onChanged: (a) {
+                                                  if(a != null && a != controller.staf) {
+                                                    controller.staf = a;
+                                                    controller.update();
+                                                  }
+                                                },
+                                                child: Row(
+                                                  children: const [
+                                                    Radio<bool>(value: true),
+                                                    SizedBox(
+                                                      width: 90,
+                                                      child: Text('Staf'),
+                                                    ),
+                                                    Radio<bool>(value: false),
+                                                    SizedBox(
+                                                      width: 110,
+                                                      child: Text('Non Staf'),
+                                                    ),
+                                                  ],
+                                                ),
                                               );
                                             },
                                           ),
@@ -555,37 +546,28 @@ class KaryawanForm extends StatelessWidget {
                                         Expanded(
                                           child: GetBuilder<KaryawanControl>(
                                             builder: (_) {
-                                              return Row(
-                                                children: [
-                                                  Radio<String>(
-                                                    value: 'Y',
-                                                    groupValue: controller.aktif,
-                                                    onChanged: (a) {
-                                                      if(a != null && a != controller.aktif) {
-                                                        controller.aktif = a;
-                                                        controller.update();
-                                                      }
-                                                    },
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 90,
-                                                    child: Text('Sudah'),
-                                                  ),
-                                                  Radio<String>(
-                                                    value: 'P',
-                                                    groupValue: controller.aktif,
-                                                    onChanged: (a) {
-                                                      if(a != null && a != controller.aktif) {
-                                                        controller.aktif = a;
-                                                        controller.update();
-                                                      }
-                                                    },
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 110,
-                                                    child: Text('Belum'),
-                                                  ),
-                                                ],
+                                              return RadioGroup<String>(
+                                                groupValue: controller.aktif,
+                                                onChanged: (a) {
+                                                  if(a != null && a != controller.aktif) {
+                                                    controller.aktif = a;
+                                                    controller.update();
+                                                  }
+                                                },
+                                                child: Row(
+                                                  children: const [
+                                                    Radio<String>(value: 'Y'),
+                                                    SizedBox(
+                                                      width: 90,
+                                                      child: Text('Sudah'),
+                                                    ),
+                                                    Radio<String>(value: 'P'),
+                                                    SizedBox(
+                                                      width: 110,
+                                                      child: Text('Belum'),
+                                                    ),
+                                                  ],
+                                                ),
                                               );
                                             },
                                           ),
@@ -761,37 +743,28 @@ class KaryawanForm extends StatelessWidget {
                                         Expanded(
                                           child: GetBuilder<KaryawanControl>(
                                             builder: (_) {
-                                              return Row(
-                                                children: [
-                                                  Radio<String>(
-                                                    value: 'L',
-                                                    groupValue: controller.kelamin,
-                                                    onChanged: (a) {
-                                                      if(a != null && a != controller.kelamin) {
-                                                        controller.kelamin = a;
-                                                        controller.update();
-                                                      }
-                                                    },
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 90,
-                                                    child: Text('Laki-laki'),
-                                                  ),
-                                                  Radio<String>(
-                                                    value: 'P',
-                                                    groupValue: controller.kelamin,
-                                                    onChanged: (a) {
-                                                      if(a != null && a != controller.kelamin) {
-                                                        controller.kelamin = a;
-                                                        controller.update();
-                                                      }
-                                                    },
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 110,
-                                                    child: Text('Perempuan'),
-                                                  ),
-                                                ],
+                                              return RadioGroup<String>(
+                                                groupValue: controller.kelamin,
+                                                onChanged: (a) {
+                                                  if(a != null && a != controller.kelamin) {
+                                                    controller.kelamin = a;
+                                                    controller.update();
+                                                  }
+                                                },
+                                                child: Row(
+                                                  children: const [
+                                                    Radio<String>(value: 'L'),
+                                                    SizedBox(
+                                                      width: 90,
+                                                      child: Text('Laki-laki'),
+                                                    ),
+                                                    Radio<String>(value: 'P'),
+                                                    SizedBox(
+                                                      width: 110,
+                                                      child: Text('Perempuan'),
+                                                    ),
+                                                  ],
+                                                ),
                                               );
                                             },
                                           ),
@@ -811,51 +784,33 @@ class KaryawanForm extends StatelessWidget {
                                         Expanded(
                                           child: GetBuilder<KaryawanControl>(
                                             builder: (_) {
-                                              return Row(
-                                                children: [
-                                                  Radio<String>(
-                                                    value: 'Y',
-                                                    groupValue: controller.kawin,
-                                                    onChanged: (a) {
-                                                      if(a != null && a != controller.kawin) {
-                                                        controller.kawin = a;
-                                                        controller.update();
-                                                      }
-                                                    },
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 90,
-                                                    child: Text('Kawin'),
-                                                  ),
-                                                  Radio<String>(
-                                                    value: 'N',
-                                                    groupValue: controller.kawin,
-                                                    onChanged: (a) {
-                                                      if(a != null && a != controller.kawin) {
-                                                        controller.kawin = a;
-                                                        controller.update();
-                                                      }
-                                                    },
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 110,
-                                                    child: Text('Single'),
-                                                  ),
-                                                  Radio<String>(
-                                                    value: 'P',
-                                                    groupValue: controller.kawin,
-                                                    onChanged: (a) {
-                                                      if(a != null && a != controller.kawin) {
-                                                        controller.kawin = a;
-                                                        controller.update();
-                                                      }
-                                                    },
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 110,
-                                                    child: Text('Single Parent'),
-                                                  ),
-                                                ],
+                                              return RadioGroup<String>(
+                                                groupValue: controller.kawin,
+                                                onChanged: (a) {
+                                                  if(a != null && a != controller.kawin) {
+                                                    controller.kawin = a;
+                                                    controller.update();
+                                                  }
+                                                },
+                                                child: Row(
+                                                  children: const [
+                                                    Radio<String>(value: 'Y'),
+                                                    SizedBox(
+                                                      width: 90,
+                                                      child: Text('Kawin'),
+                                                    ),
+                                                    Radio<String>(value: 'N'),
+                                                    SizedBox(
+                                                      width: 110,
+                                                      child: Text('Single'),
+                                                    ),
+                                                    Radio<String>(value: 'P'),
+                                                    SizedBox(
+                                                      width: 110,
+                                                      child: Text('Single Parent'),
+                                                    ),
+                                                  ],
+                                                ),
                                               );
                                             },
                                           ),

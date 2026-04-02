@@ -41,7 +41,7 @@ class PtkpControl extends GetxController {
         ),
         child: Column(
           children: [
-            AFwidget.formHeader('Form ${id == '' ? 'Tambah' : 'Ubah'} PTKP'),
+            AFwidget.formHeader('Form ${item.id == '' ? 'Tambah' : 'Ubah'} PTKP'),
             AFwidget.barisText(
               label: 'Kode',
               controller: txtKode,
@@ -62,51 +62,33 @@ class PtkpControl extends GetxController {
                   Expanded(
                     child: GetBuilder<PtkpControl>(
                       builder: (_) {
-                        return Row(
-                          children: [
-                            Radio<String>(
-                              value: 'A',
-                              groupValue: kategoriTER,
-                              onChanged: (a) {
-                                if(a != null && a != kategoriTER) {
-                                  kategoriTER = a;
-                                  update();
-                                }
-                              },
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
-                              child: Text('TER A'),
-                            ),
-                            Radio<String>(
-                              value: 'B',
-                              groupValue: kategoriTER,
-                              onChanged: (a) {
-                                if(a != null && a != kategoriTER) {
-                                  kategoriTER = a;
-                                  update();
-                                }
-                              },
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
-                              child: Text('TER B'),
-                            ),
-                            Radio<String>(
-                              value: 'C',
-                              groupValue: kategoriTER,
-                              onChanged: (a) {
-                                if(a != null && a != kategoriTER) {
-                                  kategoriTER = a;
-                                  update();
-                                }
-                              },
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                              child: Text('TER C'),
-                            ),
-                          ],
+                        return RadioGroup<String>(
+                          groupValue: kategoriTER,
+                          onChanged: (a) {
+                            if (a != null && a != kategoriTER) {
+                              kategoriTER = a;
+                              update();
+                            }
+                          },
+                          child: Row(
+                            children: const [
+                              Radio<String>(value: 'A'),
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                                child: Text('TER A'),
+                              ),
+                              Radio<String>(value: 'B'),
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                                child: Text('TER B'),
+                              ),
+                              Radio<String>(value: 'C'),
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                child: Text('TER C'),
+                              ),
+                            ],
+                          ),
                         );
                       },
                     ),
@@ -119,7 +101,7 @@ class PtkpControl extends GetxController {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  id == '' ? Container() :
+                  item.id == '' ? Container() :
                   AFwidget.tombol(
                     label: 'Hapus Data',
                     color: Colors.red,
@@ -139,7 +121,7 @@ class PtkpControl extends GetxController {
                   AFwidget.tombol(
                     label: 'Simpan',
                     color: Colors.blue,
-                    onPressed: id == '' ? tambahData : ubahData,
+                    onPressed: simpanData,
                     minimumSize: const Size(120, 40),
                   ),
                 ],
@@ -163,44 +145,8 @@ class PtkpControl extends GetxController {
     );
   }
 
-  Future<void> tambahData() async {
+  Future<void> simpanData() async {
     try {
-      if(txtKode.text.isEmpty) {
-        throw 'Kode harus diisi';
-      }
-      if(txtJumlah.text.isEmpty) {
-        throw 'Jumlah harus diisi';
-      }
-      if(kategoriTER.isEmpty) {
-        throw 'Kategori TER harus diisi';
-      }
-
-      var a = Ptkp(
-        kode: txtKode.text,
-        ter: kategoriTER,
-        jumlah: AFconvert.keInt(txtJumlah.text),
-      );
-
-      AFwidget.loading();
-      var hasil = await _repo.create(a.toMap());
-      Get.back();
-      if(hasil.success) {
-        loadPtkps();
-        Get.back();
-        AFwidget.snackbar(hasil.message);
-      } else {
-        AFwidget.formWarning(label: hasil.message);
-      }
-    } catch (er) {
-      AFwidget.formWarning(label: '$er');
-    }
-  }
-
-  Future<void> ubahData() async {
-    try {
-      if(txtId.text.isEmpty) {
-        throw 'ID harus diisi';
-      }
       if(txtKode.text.isEmpty) {
         throw 'Kode harus diisi';
       }
@@ -219,7 +165,9 @@ class PtkpControl extends GetxController {
       );
 
       AFwidget.loading();
-      var hasil = await _repo.update(a.id, a.toMap());
+      var hasil = a.id == ''
+          ? await _repo.create(a.toMap())
+          : await _repo.update(a.id, a.toMap());
       Get.back();
       if(hasil.success) {
         loadPtkps();

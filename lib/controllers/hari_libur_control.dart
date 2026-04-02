@@ -41,7 +41,7 @@ class HariLiburControl extends GetxController {
         ),
         child: Column(
           children: [
-            AFwidget.formHeader('Form ${id == '' ? 'Tambah' : 'Ubah'} Hari Libur'),
+            AFwidget.formHeader('Form ${item.id == '' ? 'Tambah' : 'Ubah'} Hari Libur'),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
               child: Row(
@@ -80,7 +80,7 @@ class HariLiburControl extends GetxController {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  id == '' ? Container() :
+                  item.id == '' ? Container() :
                   AFwidget.tombol(
                     label: 'Hapus Data',
                     color: Colors.red,
@@ -100,7 +100,7 @@ class HariLiburControl extends GetxController {
                   AFwidget.tombol(
                     label: 'Simpan',
                     color: Colors.blue,
-                    onPressed: id == '' ? tambahData : ubahData,
+                    onPressed: simpanData,
                     minimumSize: const Size(120, 40),
                   ),
                 ],
@@ -123,39 +123,8 @@ class HariLiburControl extends GetxController {
     );
   }
 
-  Future<void> tambahData() async {
+  Future<void> simpanData() async {
     try {
-      if(txtTanggal.text.isEmpty) {
-        throw 'Tanggal harus diisi';
-      }
-      if(txtNama.text.isEmpty) {
-        throw 'Nama harus diisi';
-      }
-      var a = HariLibur(
-        nama: txtNama.text,
-        tanggal: AFconvert.keTanggal('${txtTanggal.text} 08:00:00'),
-      );
-
-      AFwidget.loading();
-      var hasil = await _repo.create(a.toMap());
-      Get.back();
-      if(hasil.success) {
-        loadHariLiburs();
-        Get.back();
-        AFwidget.snackbar(hasil.message);
-      } else {
-        AFwidget.formWarning(label: hasil.message);
-      }
-    } catch (er) {
-      AFwidget.formWarning(label: '$er');
-    }
-  }
-
-  Future<void> ubahData() async {
-    try {
-      if(txtId.text.isEmpty) {
-        throw 'ID tidak ditemukan';
-      }
       if(txtTanggal.text.isEmpty) {
         throw 'Tanggal harus diisi';
       }
@@ -169,7 +138,9 @@ class HariLiburControl extends GetxController {
       );
 
       AFwidget.loading();
-      var hasil = await _repo.update(a.id, a.toMap());
+      var hasil = a.id == ''
+          ? await _repo.create(a.toMap())
+          : await _repo.update(a.id, a.toMap());
       Get.back();
       if(hasil.success) {
         loadHariLiburs();
@@ -213,36 +184,6 @@ class HariLiburControl extends GetxController {
       withCari: false,
     );
     return a;
-  }
-
-  Widget barisText({
-    String label = '',
-    TextEditingController? controller,
-    double paddingTop = 11,
-    bool isTextArea = false
-  }) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0, paddingTop, 20, 0),
-      child: Row(
-        crossAxisAlignment: isTextArea ? CrossAxisAlignment.start : CrossAxisAlignment.center,
-        children: [
-          Container(
-            width: 150,
-            padding: EdgeInsets.only(right: 15, top: isTextArea ? 15 : 0),
-            child: Text(label),
-          ),
-          Expanded(
-            child: AFwidget.textField(
-              marginTop: 0,
-              controller: controller,
-              maxLines: isTextArea ? 4 : 1,
-              minLines: isTextArea ? 2 : 1,
-              keyboard: isTextArea ? TextInputType.multiline : TextInputType.text,
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
   @override

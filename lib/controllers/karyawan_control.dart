@@ -402,37 +402,28 @@ class KaryawanControl extends GetxController {
                       Expanded(
                         child: GetBuilder<KaryawanControl>(
                           builder: (_) {
-                            return Row(
-                              children: [
-                                Radio<bool>(
-                                  value: true,
-                                  groupValue: staf,
-                                  onChanged: (a) {
-                                    if(a != null && a != staf) {
-                                      staf = a;
-                                      update();
-                                    }
-                                  },
-                                ),
-                                const SizedBox(
-                                  width: 90,
-                                  child: Text('Staf'),
-                                ),
-                                Radio<bool>(
-                                  value: false,
-                                  groupValue: staf,
-                                  onChanged: (a) {
-                                    if(a != null && a != staf) {
-                                      staf = a;
-                                      update();
-                                    }
-                                  },
-                                ),
-                                const SizedBox(
-                                  width: 110,
-                                  child: Text('Non Staf'),
-                                ),
-                              ],
+                            return RadioGroup<bool>(
+                              groupValue: staf,
+                              onChanged: (a) {
+                                if(a != null && a != staf) {
+                                  staf = a;
+                                  update();
+                                }
+                              },
+                              child: Row(
+                                children: const [
+                                  Radio<bool>(value: true),
+                                  SizedBox(
+                                    width: 90,
+                                    child: Text('Staf'),
+                                  ),
+                                  Radio<bool>(value: false),
+                                  SizedBox(
+                                    width: 110,
+                                    child: Text('Non Staf'),
+                                  ),
+                                ],
+                              ),
                             );
                           },
                         ),
@@ -452,37 +443,28 @@ class KaryawanControl extends GetxController {
                       Expanded(
                         child: GetBuilder<KaryawanControl>(
                           builder: (_) {
-                            return Row(
-                              children: [
-                                Radio<String>(
-                                  value: 'Y',
-                                  groupValue: aktif,
-                                  onChanged: (a) {
-                                    if(a != null && a != aktif) {
-                                      aktif = a;
-                                      update();
-                                    }
-                                  },
-                                ),
-                                const SizedBox(
-                                  width: 90,
-                                  child: Text('Sudah'),
-                                ),
-                                Radio<String>(
-                                  value: 'P',
-                                  groupValue: aktif,
-                                  onChanged: (a) {
-                                    if(a != null && a != aktif) {
-                                      aktif = a;
-                                      update();
-                                    }
-                                  },
-                                ),
-                                const SizedBox(
-                                  width: 110,
-                                  child: Text('Belum'),
-                                ),
-                              ],
+                            return RadioGroup<String>(
+                              groupValue: aktif,
+                              onChanged: (a) {
+                                if(a != null && a != aktif) {
+                                  aktif = a;
+                                  update();
+                                }
+                              },
+                              child: Row(
+                                children: const [
+                                  Radio<String>(value: 'Y'),
+                                  SizedBox(
+                                    width: 90,
+                                    child: Text('Sudah'),
+                                  ),
+                                  Radio<String>(value: 'P'),
+                                  SizedBox(
+                                    width: 110,
+                                    child: Text('Belum'),
+                                  ),
+                                ],
+                              ),
                             );
                           },
                         ),
@@ -689,37 +671,28 @@ class KaryawanControl extends GetxController {
                       Expanded(
                         child: GetBuilder<KaryawanControl>(
                           builder: (_) {
-                            return Row(
-                              children: [
-                                Radio<String>(
-                                  value: 'L',
-                                  groupValue: kelamin,
-                                  onChanged: (a) {
-                                    if(a != null && a != kelamin) {
-                                      kelamin = a;
-                                      update();
-                                    }
-                                  },
-                                ),
-                                const SizedBox(
-                                  width: 90,
-                                  child: Text('Laki-Laki'),
-                                ),
-                                Radio<String>(
-                                  value: 'P',
-                                  groupValue: kelamin,
-                                  onChanged: (a) {
-                                    if(a != null && a != kelamin) {
-                                      kelamin = a;
-                                      update();
-                                    }
-                                  },
-                                ),
-                                const SizedBox(
-                                  width: 110,
-                                  child: Text('Perempuan'),
-                                ),
-                              ],
+                            return RadioGroup(
+                              groupValue: kelamin,
+                              onChanged: (a) {
+                                if(a != null && a != kelamin) {
+                                  kelamin = a;
+                                  update();
+                                }
+                              },
+                              child: Row(
+                                children: const [
+                                  Radio<String>(value: 'L'),
+                                  SizedBox(
+                                    width: 90,
+                                    child: Text('Laki-Laki'),
+                                  ),
+                                  Radio<String>(value: 'P'),
+                                  SizedBox(
+                                    width: 110,
+                                    child: Text('Perempuan'),
+                                  ),
+                                ],
+                              ),
                             );
                           },
                         ),
@@ -739,51 +712,34 @@ class KaryawanControl extends GetxController {
                       Expanded(
                         child: GetBuilder<KaryawanControl>(
                           builder: (_) {
-                            return Row(
-                              children: [
-                                Radio<String>(
-                                  value: 'Y',
-                                  groupValue: kawin,
-                                  onChanged: (a) {
-                                    if(a != null && a != kawin) {
-                                      kawin = a;
-                                      update();
-                                    }
-                                  },
-                                ),
-                                const SizedBox(
-                                  width: 90,
-                                  child: Text('Kawin'),
-                                ),
-                                Radio<String>(
-                                  value: 'N',
-                                  groupValue: kawin,
-                                  onChanged: (a) {
-                                    if(a != null && a != kawin) {
-                                      kawin = a;
-                                      update();
-                                    }
-                                  },
-                                ),
-                                const SizedBox(
-                                  width: 110,
-                                  child: Text('Single'),
-                                ),
-                                Radio<String>(
-                                  value: 'P',
-                                  groupValue: kawin,
-                                  onChanged: (a) {
-                                    if(a != null && a != kawin) {
-                                      kawin = a;
-                                      update();
-                                    }
-                                  },
-                                ),
-                                const SizedBox(
-                                  width: 110,
-                                  child: Text('Single Parent'),
-                                ),
-                              ],
+                            return RadioGroup<String>(
+                              groupValue: kawin,
+                              onChanged: (a) {
+                                if(a != null && a != kawin) {
+                                  kawin = a;
+                                  update();
+                                }
+                              },
+                              child: Row(
+                                children: const [
+                                  Radio<String>(value: 'Y'),
+                                  SizedBox(
+                                    width: 90,
+                                    child: Text('Kawin'),
+                                  ),
+                                  Radio<String>(value: 'N'),
+                                  SizedBox(
+                                    width: 110,
+                                    child: Text('Single'),
+                                  ),
+                                  Radio<String>(value: 'P',
+                                  ),
+                                  SizedBox(
+                                    width: 110,
+                                    child: Text('Single Parent'),
+                                  ),
+                                ],
+                              ),
                             );
                           },
                         ),
@@ -1074,11 +1030,26 @@ class KaryawanControl extends GetxController {
                       Expanded(
                         child: GetBuilder<KaryawanControl>(
                           builder: (_) {
-                            return Wrap(
-                              spacing: 35,
-                              children: mapKeluargaHubungan.entries.map((entry) {
-                                return radioKeluargaHubungan(label: entry.value, value: entry.key);
-                              }).toList(),
+                            return RadioGroup<String>(
+                              groupValue: keluargaHubungan,
+                              onChanged: (a) {
+                                if(a != null && a != keluargaHubungan) {
+                                  keluargaHubungan = a;
+                                  update();
+                                }
+                              },
+                              child: Wrap(
+                                spacing: 35,
+                                children: mapKeluargaHubungan.entries.map((entry) {
+                                  return Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Radio<String>(value: entry.key),
+                                      Text(entry.value),
+                                    ],
+                                  );
+                                }).toList(),
+                              ),
                             );
                           },
                         ),
@@ -2528,28 +2499,6 @@ class KaryawanControl extends GetxController {
       withCari: false,
     );
     return a;
-  }
-
-  Widget radioKeluargaHubungan({
-    required String label,
-    required String value,
-  }) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Radio<String>(
-          value: value,
-          groupValue: keluargaHubungan,
-          onChanged: (a) {
-            if(a != null && a != keluargaHubungan) {
-              keluargaHubungan = a;
-              update();
-            }
-          },
-        ),
-        Text(label),
-      ],
-    );
   }
 
   Future<void> dowloadPayroll() async {

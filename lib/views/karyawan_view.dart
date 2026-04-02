@@ -133,6 +133,7 @@ class KaryawanView extends StatelessWidget {
         backgroundColor: Colors.brown.shade100,
         textAlign: PlutoColumnTextAlign.center,
         frozen: PlutoColumnFrozen.start,
+        enableFilterMenuItem: false,
       ),
       PlutoColumn(
         title: 'NAMA',

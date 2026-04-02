@@ -558,37 +558,28 @@ class PotonganControl extends GetxController {
                   Expanded(
                     child: GetBuilder<PotonganControl>(
                       builder: (_) {
-                        return Row(
-                          children: [
-                            Radio<bool>(
-                              value: true,
-                              groupValue: makanHarian,
-                              onChanged: (a) {
-                                if(a != null && a != makanHarian) {
-                                  makanHarian = a;
-                                  update();
-                                }
-                              },
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
-                              child: Text('Harian'),
-                            ),
-                            Radio<bool>(
-                              value: false,
-                              groupValue: makanHarian,
-                              onChanged: (a) {
-                                if(a != null && a != makanHarian) {
-                                  makanHarian = a;
-                                  update();
-                                }
-                              },
-                            ),
-                            const Padding(
-                              padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
-                              child: Text('Tetap'),
-                            ),
-                          ],
+                        return RadioGroup<bool>(
+                          groupValue: makanHarian,
+                          onChanged: (a) {
+                            if(a != null && a != makanHarian) {
+                              makanHarian = a;
+                              update();
+                            }
+                          },
+                          child: Row(
+                            children: const [
+                              Radio<bool>(value: true),
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                                child: Text('Harian'),
+                              ),
+                              Radio<bool>(value: false),
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                                child: Text('Tetap'),
+                              ),
+                            ],
+                          ),
                         );
                       },
                     ),

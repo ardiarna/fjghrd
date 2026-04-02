@@ -51,40 +51,37 @@ class _DaftarOpsiState extends State<DaftarOpsi> {
             padding: const EdgeInsets.only(bottom: 20),
             itemCount: _listFilter.length,
             itemBuilder: (_, i) {
-              return GestureDetector(
-                child: Container(
-                  padding: const EdgeInsets.fromLTRB(10, 0, 20, 0),
-                  decoration: BoxDecoration(
-                    color: _listFilter[i].value == widget.valueSelected ? Get.theme.primaryColor.withValues(alpha: 0.25) : Colors.white,
-                    // border: Border(
-                    //   bottom: BorderSide(color: Colors.grey.shade300),
-                    // ),
-                  ),
-                  child: Row(
-                    children: [
-                      _listFilter[i].icon != null ?
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(12, 10, 13, 10),
-                        child: Icon(_listFilter[i].icon),
-                      ) :
-                      Radio(
-                        value: _listFilter[i].value,
-                        groupValue: widget.valueSelected,
-                        onChanged: (val) {
-                          Get.back<Opsi>(result: _listFilter[i]);
-                        },
-                      ),
-                      Expanded(
-                        child: Text(_listFilter[i].label, overflow: TextOverflow.ellipsis),
-                      ),
-                      const Padding(padding: EdgeInsets.only(right: 15)),
-                      Text(_listFilter[i].label2)
-                    ],
-                  ),
-                ),
-                onTap: () {
+              return RadioGroup<String>(
+                groupValue: widget.valueSelected,
+                onChanged: (val) {
                   Get.back<Opsi>(result: _listFilter[i]);
                 },
+                child: GestureDetector(
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(10, 0, 20, 0),
+                    decoration: BoxDecoration(
+                      color: _listFilter[i].value == widget.valueSelected ? Get.theme.primaryColor.withValues(alpha: 0.25) : Colors.white,
+                    ),
+                    child: Row(
+                      children: [
+                        _listFilter[i].icon != null ?
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(12, 10, 13, 10),
+                          child: Icon(_listFilter[i].icon),
+                        ) :
+                        Radio(value: _listFilter[i].value),
+                        Expanded(
+                          child: Text(_listFilter[i].label, overflow: TextOverflow.ellipsis),
+                        ),
+                        const Padding(padding: EdgeInsets.only(right: 15)),
+                        Text(_listFilter[i].label2)
+                      ],
+                    ),
+                  ),
+                  onTap: () {
+                    Get.back<Opsi>(result: _listFilter[i]);
+                  },
+                ),
               );
             },
             separatorBuilder: (_, i) {
@@ -226,41 +223,6 @@ abstract class AFcombobox {
         ],
       ),
       isScrollControlled: true,
-    );
-  }
-
-  static Widget radio({
-    required List<Opsi> listOpsi,
-    required void Function(Opsi?)? onTap,
-    String value = "",
-  }) {
-    return Column(
-      children: [
-        Wrap(
-          children: listOpsi.map((e) {
-            return Stack(
-              alignment: AlignmentDirectional.centerStart,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 50, right: 30),
-                  child: Text(e.label),
-                ),
-                Radio<String>(
-                  value: e.value,
-                  groupValue: value,
-                  onChanged: onTap == null ? null : (a) {
-                    if(a == null) {
-                      onTap(null);
-                    } else {
-                      onTap(e);
-                    }
-                  },
-                ),
-              ],
-            );
-          }).toList(),
-        ),
-      ],
     );
   }
 
