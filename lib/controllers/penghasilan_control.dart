@@ -21,6 +21,7 @@ class PenghasilanControl extends GetxController {
   List<Penghasilan> listPenghasilan = [];
   List<Opsi> listKaryawan = [];
   List<Opsi> listJenis = [
+    Opsi(value: 'GP', label: 'Gaji Pokok'),
     Opsi(value: 'AB', label: 'Kehadiran'),
     Opsi(value: 'HR', label: 'THR'),
     Opsi(value: 'BN', label: 'Bonus'),
@@ -175,11 +176,6 @@ class PenghasilanControl extends GetxController {
                         padding: const EdgeInsets.fromLTRB(170, 15, 25, 10),
                         child: Row(
                           children: [
-                            const Text('Gaji: '),
-                            Text(AFconvert.matNumber(upah.gaji),
-                              style: const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(width: 50),
                             const Text('Uang Makan: '),
                             Text('${AFconvert.matNumber(upah.uangMakan)}   ${upah.makanHarian ? 'Harian' : 'Tetap'}',
                               style: const TextStyle(fontWeight: FontWeight.bold),
@@ -187,9 +183,21 @@ class PenghasilanControl extends GetxController {
                             const SizedBox(width: 50),
                             IconButton(
                               onPressed: () {
-                                gajiForm(context);
+                                uangMakanForm(context);
                               },
                               icon: const Icon(Icons.edit, color: Colors.green),
+                            ),
+                          ],
+                        ),
+                      );
+                    } else if(karyawan.id != '' && (jenis.value == 'GP')) {
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(170, 15, 25, 10),
+                        child: Row(
+                          children: [
+                            const Text('Gaji Pokok Sebelumnya: '),
+                            Text(AFconvert.matNumber(upah.gaji),
+                              style: const TextStyle(fontWeight: FontWeight.bold),
                             ),
                           ],
                         ),
@@ -298,35 +306,9 @@ class PenghasilanControl extends GetxController {
                   label: 'Masa Kerja',
                   nilai: AFconvert.matDate(karyawan.tanggalMasuk),
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Jenis Penghasilan'),
-                      ),
-                      Expanded(
-                        child: GetBuilder<PenghasilanControl>(
-                          builder: (_) {
-                            return AFwidget.comboField(
-                              value: jenis.label,
-                              label: '',
-                              onTap: () async {
-                                var a = await pilihJenis(value: jenis.value);
-                                if(a != null && a.value != jenis.value) {
-                                  jenis = a;
-                                  hitungJumlahIdr(txtHari.text);
-                                  update();
-                                }
-                              },
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
+                AFwidget.barisInfo(
+                  label: 'Jenis Penghasilan',
+                  nilai: jenis.label,
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
@@ -382,11 +364,6 @@ class PenghasilanControl extends GetxController {
                         padding: const EdgeInsets.fromLTRB(170, 15, 25, 10),
                         child: Row(
                           children: [
-                            const Text('Gaji: '),
-                            Text(AFconvert.matNumber(upah.gaji),
-                              style: const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(width: 50),
                             const Text('Uang Makan: '),
                             Text('${AFconvert.matNumber(upah.uangMakan)}   ${upah.makanHarian ? 'Harian' : 'Tetap'}',
                               style: const TextStyle(fontWeight: FontWeight.bold),
@@ -394,7 +371,7 @@ class PenghasilanControl extends GetxController {
                             const SizedBox(width: 50),
                             IconButton(
                               onPressed: () {
-                                gajiForm(context);
+                                uangMakanForm(context);
                               },
                               icon: const Icon(Icons.edit, color: Colors.green),
                             ),
@@ -492,8 +469,7 @@ class PenghasilanControl extends GetxController {
     );
   }
 
-  void gajiForm(BuildContext context) {
-    TextEditingController txtGaji = TextEditingController(text: AFconvert.matNumber(upah.gaji));
+  void uangMakanForm(BuildContext context) {
     TextEditingController txtUangMakan = TextEditingController(text: AFconvert.matNumber(upah.uangMakan));
     bool makanHarian = upah.makanHarian;
     UpahRepository repo = UpahRepository();
@@ -507,12 +483,6 @@ class PenghasilanControl extends GetxController {
         padding: EdgeInsets.only(top: 20),
         child: Column(
           children: [
-            AFwidget.barisText(
-              label: 'Jumlah Gaji',
-              controller: txtGaji,
-              isNumber: true,
-              labelWidth: 200,
-            ),
             AFwidget.barisText(
               label: 'Jumlah Uang Makan',
               controller: txtUangMakan,
@@ -575,31 +545,29 @@ class PenghasilanControl extends GetxController {
                     label: 'Simpan',
                     color: Colors.blue,
                     onPressed: () async {
-                      if(txtGaji.text.isEmpty) {
-                        AFwidget.formWarning(label: 'Gaji harus diisi');
-                        return;
-                      }
                       if(txtUangMakan.text.isEmpty) {
                         AFwidget.formWarning(label: 'Uang Makan harus diisi');
                         return;
                       }
                       var a = Upah(
                         karyawanId: karyawan.id,
-                        gaji: AFconvert.keInt(txtGaji.text),
                         uangMakan: AFconvert.keInt(txtUangMakan.text),
                         makanHarian: makanHarian,
                       );
                       AFwidget.loading();
-                      var hasil = await repo.create(a.karyawanId, a.toMap());
+                      var hasil = await repo.create(a.karyawanId, {
+                        'id': a.id,
+                        'karyawan_id': a.karyawanId,
+                        'uang_makan': AFconvert.keString(a.uangMakan),
+                        'makan_harian': a.makanHarian ? 'Y' : 'N',
+                      });
                       Get.back();
                       if(hasil.success) {
                         Get.back();
                         AFwidget.snackbar(hasil.message);
-                        upah.gaji = a.gaji;
                         upah.uangMakan = a.uangMakan;
                         upah.makanHarian = a.makanHarian;
                         hitungJumlahIdr(txtHari.text);
-                        txtGaji.dispose();
                         txtUangMakan.dispose();
                         update();
                       } else {
@@ -656,6 +624,16 @@ class PenghasilanControl extends GetxController {
       var hasil = await _repo.create(a.toMap());
       Get.back();
       if(hasil.success) {
+        if(a.jenis == 'GP') {
+          UpahRepository repo = UpahRepository();
+          AFwidget.loading();
+          await repo.create(a.karyawan.id, {
+            'id': '',
+            'karyawan_id': a.karyawan.id,
+            'gaji': AFconvert.keString(a.jumlah),
+          });
+          Get.back();
+        }
         loadPenghasilans();
         Get.back();
         AFwidget.snackbar(hasil.message);
@@ -705,6 +683,16 @@ class PenghasilanControl extends GetxController {
       var hasil = await _repo.update(txtId.text, a.toMap());
       Get.back();
       if(hasil.success) {
+        if(a.jenis == 'GP') {
+          UpahRepository repo = UpahRepository();
+          AFwidget.loading();
+          await repo.create(a.karyawan.id, {
+            'id': '',
+            'karyawan_id': a.karyawan.id,
+            'gaji': AFconvert.keString(a.jumlah),
+          });
+          Get.back();
+        }
         loadPenghasilans();
         Get.back();
         AFwidget.snackbar(hasil.message);

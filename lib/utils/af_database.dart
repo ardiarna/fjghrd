@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:background_downloader/background_downloader.dart';
 import 'package:fjghrd/controllers/auth_control.dart';
 import 'package:fjghrd/utils/hasil.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 enum MethodeRequest {
@@ -152,30 +152,44 @@ abstract class AFdatabase {
     required String url,
     bool defaultAPI = true,
   }) async {
-    String rute = defaultAPI ? "$_api$url" : url;
-    final task = await DownloadTask(
-      url: rute,
-      filename: DownloadTask.suggestedFilename,
-      headers: {
-        "Authorization" : "Bearer ${_authControl.user.tokenJWT}",
-      },
-    ).withSuggestedFilename(unique: true);
-    final result = await FileDownloader().download(task);
-    if(result.status == TaskStatus.complete) {
-      final a = await FileDownloader().moveToSharedStorage(task, SharedStorage.downloads);
-      if( a!= null) {
-        final Uri uri = Uri.file(a);
-        if(File(uri.toFilePath()).existsSync()){
+    try {
+      String rute = defaultAPI ? "$_api$url" : url;
+      final response = await http.get(Uri.parse(rute),
+        headers: {
+          "Authorization" : "Bearer ${_authControl.user.tokenJWT}",
+        },
+      );
+      if (response.statusCode == 200) {
+        final downloadsDir = await getDownloadsDirectory();
+        if (downloadsDir == null) {
+          return Hasil(message: 'Tidak bisa akses folder Downloads');
+        }
+        String filename = "file_download.xlsx";
+        final disposition = response.headers['content-disposition'];
+        if (disposition != null && disposition.contains('filename=')) {
+          filename = disposition.split('filename=').last.replaceAll('"', '');
+        }
+        final file = File('${downloadsDir.path}/$filename');
+        if (await file.exists()) { // OVERWRITE (hapus dulu kalau ada)
+          await file.delete();
+        }
+        await file.writeAsBytes(response.bodyBytes);
+        final Uri uri = Uri.file(file.path);
+        if (await file.exists()) {
           await launchUrl(uri);
         }
+        return Hasil(
+          success: true,
+          message: file.path,
+        );
+      } else {
+        return Hasil(
+          message: 'HTTP ${response.statusCode}',
+        );
       }
+    } catch (e) {
       return Hasil(
-        success: true,
-        message: result.task.filename,
-      );
-    } else {
-      return Hasil(
-        message: '${result.status}',
+        message: e.toString(),
       );
     }
   }

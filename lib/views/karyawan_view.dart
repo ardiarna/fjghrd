@@ -1,5 +1,6 @@
 import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/controllers/karyawan_control.dart';
+import 'package:fjghrd/models/durasi_tanggal.dart';
 import 'package:fjghrd/models/karyawan.dart';
 import 'package:fjghrd/models/opsi.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
@@ -22,9 +23,9 @@ class KaryawanView extends StatelessWidget {
     return List.generate(
       rowData.length,
       (index) {
-        Duration d = now.difference(rowData[index].tanggalMasuk ?? now); // dalama hari
-        int tahun = d.inDays ~/ 365; // Membagi dengan 365 untuk tahun
-        int bulan = (d.inDays % 365) ~/ 30; // Menggunakan modulo 365, lalu dibagi dengan 30 untuk bulan
+        var a = rowData[index].tanggalMasuk ?? now;
+        var b = rowData[index].tanggalKeluar ?? now;
+        DurasiTanggal durasi = DurasiTanggal.diff(a, b);
         return PlutoRow(
           cells: {
             'urutan': PlutoCell(value: index+1),
@@ -33,7 +34,7 @@ class KaryawanView extends StatelessWidget {
             'nama': PlutoCell(value: rowData[index].nama),
             'nik': PlutoCell(value: rowData[index].nik),
             'tanggal_masuk': PlutoCell(value: AFconvert.matDate(rowData[index].tanggalMasuk)),
-            'masa_kerja': PlutoCell(value: '${tahun>0 ? '$tahun tahun' : ''} ${bulan>0 ? '$bulan bulan' : ''}'),
+            'masa_kerja': PlutoCell(value: durasi.cetakSingkat()),
             'agama': PlutoCell(value: rowData[index].agama.nama),
             'divisi': PlutoCell(value: rowData[index].divisi.nama),
             'jabatan': PlutoCell(value: rowData[index].jabatan.nama),

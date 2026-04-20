@@ -11,7 +11,6 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.9
-  background_downloader: ^9.5.4
   currency_text_input_formatter: ^2.3.0
   dotted_border: ^3.1.0
   fl_chart: ^1.2.0

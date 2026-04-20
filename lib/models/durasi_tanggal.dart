@@ -38,4 +38,12 @@ class DurasiTanggal {
     return parts.isEmpty ? '0 hari' : parts.join(' ');
   }
 
+  String cetakSingkat() {
+    List<String> parts = [];
+    if (tahun > 0) parts.add('$tahun th');
+    if (bulan > 0) parts.add('$bulan bln');
+    if (hari > 0) parts.add('$hari hr');
+    return parts.isEmpty ? '0 hari' : parts.join(' ');
+  }
+
 }

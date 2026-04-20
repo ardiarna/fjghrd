@@ -1032,6 +1032,9 @@ class KaryawanForm extends StatelessWidget {
                                           if(isLast && controller.txtTanggalKeluar.text != '') {
                                             b = AFconvert.keTanggal(controller.txtTanggalKeluar.text) ?? _now;
                                           }
+                                          if(isLast && b.isAfter(_now)) {
+                                            b = _now;
+                                          }
                                           DurasiTanggal durasi = DurasiTanggal.diff(a ?? b, b);
                                           return Expanded(
                                             child: Column(
