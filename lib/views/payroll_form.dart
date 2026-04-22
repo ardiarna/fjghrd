@@ -3,7 +3,6 @@ import 'package:fjghrd/models/payroll.dart';
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
-import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/views/payroll_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -1241,33 +1240,4 @@ class PayrollForm extends StatelessWidget {
     );
   }
 
-  Widget barisText({
-    String label = '',
-    TextEditingController? controller,
-    double paddingTop = 11,
-    bool isTextArea = false
-  }) {
-    return Padding(
-      padding: EdgeInsets.fromLTRB(0, paddingTop, 20, 0),
-      child: Row(
-        crossAxisAlignment: isTextArea ? CrossAxisAlignment.start : CrossAxisAlignment.center,
-        children: [
-          Container(
-            width: 150,
-            padding: EdgeInsets.only(right: 15, top: isTextArea ? 15 : 0),
-            child: Text(label),
-          ),
-          Expanded(
-            child: AFwidget.textField(
-              marginTop: 0,
-              controller: controller,
-              maxLines: isTextArea ? 4 : 1,
-              minLines: isTextArea ? 2 : 1,
-              keyboard: isTextArea ? TextInputType.multiline : TextInputType.text,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }

@@ -208,5 +208,18 @@ class KaryawanRepository {
     );
   }
 
+  Future<Hasil> payrollPhkFind(String id) async {
+    return await AFdatabase.send(
+      url: 'karyawan/$id/payroll-phk',
+    );
+  }
 
+  Future<Hasil> payrollPhkUpdateOrCreate(
+      String id, Map<String, String> body) async {
+    return await AFdatabase.send(
+      url: 'karyawan/$id/payroll-phk',
+      methodeRequest: MethodeRequest.post,
+      body: body,
+    );
+  }
 }

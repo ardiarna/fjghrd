@@ -11,6 +11,7 @@ import 'package:fjghrd/models/payroll.dart';
 import 'package:fjghrd/models/pendidikan.dart';
 import 'package:fjghrd/models/perjanjian_kerja.dart';
 import 'package:fjghrd/models/phk.dart';
+import 'package:fjghrd/models/payroll_phk.dart';
 import 'package:fjghrd/models/ptkp.dart';
 import 'package:fjghrd/models/status_kerja.dart';
 import 'package:fjghrd/models/status_phk.dart';
@@ -57,7 +58,7 @@ class KaryawanControl extends GetxController {
   List<PerjanjianKerja> listPerjanjianKerja = [];
   List<TimelineMasakerja> listTimelineMasakerja = [];
   List<Payroll> listPayroll = [];
-
+  PayrollPhk payrollPhk = PayrollPhk();
   Opsi filterStaf = Opsi(value: 'Y', label: 'STAF');
   Opsi filterArea = Opsi(value: '', label: 'SEMUA');
   Opsi filterStatusKerja = Opsi(value: '', label: 'SEMUA');
@@ -79,6 +80,12 @@ class KaryawanControl extends GetxController {
   late TextEditingController txtPerjanjianId, txtPerjanjianNomor, txtPerjanjianTglAwal, txtPerjanjianTglAkhir, txtPhkKeterangan;
   late TextEditingController txtKompensasi, txtPesangon, txtMasaKerja, txtUangPisah, txtSisaCutiHari, txtSisaCutiJumlah, txtLain,
       txtPotKas, txtPotCutiHari, txtPotCutiJumlah, txtPotLain;
+  late TextEditingController txtPayrollPhkTglAwal, txtPayrollPhkTglAkhir, txtPayrollPhkGaji, txtPayrollPhkKenaikanGaji, txtPayrollPhkHariMakan, txtPayrollPhkUangMakanHarian,
+      txtPayrollPhkUangMakanJumlah, txtPayrollPhkOvertimeFjg, txtPayrollPhkOvertimeCus, txtPayrollPhkMedical, txtPayrollPhkThr,
+      txtPayrollPhkBonus, txtPayrollPhkInsentif, txtPayrollPhkTelkomsel, txtPayrollPhkLain, txtPayrollPhkPot25hari,
+      txtPayrollPhkPot25jumlah, txtPayrollPhkPotTelepon, txtPayrollPhkPotBensin, txtPayrollPhkPotKas, txtPayrollPhkPotCicilan,
+      txtPayrollPhkPotBpjs, txtPayrollPhkPotCutiHari, txtPayrollPhkPotCutiJumlah, txtPayrollPhkPotLain, txtPayrollPhkPotKompensasiJam,
+      txtPayrollPhkPotKompensasiJumlah, txtPayrollPhkTotalDiterima, txtPayrollPhkKeterangan;
   Agama agama = Agama();
   Area area = Area();
   Divisi divisi = Divisi();
@@ -96,7 +103,10 @@ class KaryawanControl extends GetxController {
   String keluargaHubungan = '';
 
   late Opsi filterTahun;
+  late Opsi tahunPhk;
+  late Opsi bulanPhk;
   late List<Opsi> listTahun;
+  List<Opsi> listBulan = mapBulan.entries.map((e) => Opsi(value: e.key.toString(), label: e.value)).toList();
 
   Map<int, bool> bulanTerpilih = {
     1: false,
@@ -123,6 +133,8 @@ class KaryawanControl extends GetxController {
     'T' : 'Mertua',
     'F' : 'Famili Lain',
   };
+
+  bool payrollPhkMakanHarian = true;
 
   Future<void> loadKaryawans() async {
     var hasil = await _repo.findAll(
@@ -1426,6 +1438,7 @@ class KaryawanControl extends GetxController {
   }
 
   void phkForm(BuildContext context) {
+    loadPayrollPhkData();
     txtPhkKeterangan.text = current.phk.keterangan;
     txtTanggalMasuk.text = AFconvert.matYMD(current.phk.tanggalAwal ?? current.tanggalMasuk);
     txtTanggalKeluar.text = AFconvert.matYMD(current.phk.tanggalAKhir ?? _now);
@@ -1542,6 +1555,27 @@ class KaryawanControl extends GetxController {
                   label: 'Keterangan',
                   controller: txtPhkKeterangan,
                   isTextArea: true,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
+                  child: Row(
+                    children: [
+                      const SizedBox(width: 150),
+                      GetBuilder<KaryawanControl>(
+                        id: 'payroll_phk_button',
+                        builder: (_) {
+                          String label = 'Payroll PHK';
+                          if (payrollPhk.id.isNotEmpty) {
+                            label = 'Payroll PHK : Rp. ${AFconvert.matNumber(payrollPhk.totalDiterima)}';
+                          }
+                          return AFwidget.tombol(
+                            label: label,
+                            onPressed: () => payrollPhkForm(context),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 20),
                 IntrinsicHeight(
@@ -2280,6 +2314,759 @@ class KaryawanControl extends GetxController {
     }
   }
 
+  Future<void> loadPayrollPhkData() async {
+    payrollPhk = PayrollPhk();
+    var hasil = await _repo.payrollPhkFind(current.id);
+    if (hasil.success) {
+      payrollPhk = PayrollPhk.fromMap(hasil.data);
+    }
+    update(['payroll_phk_button']);
+  }
+
+  void hitungPayrollPhkPenerimaanBersih (String nilai) {
+    var a = AFconvert.keInt(txtPayrollPhkGaji.text) + AFconvert.keInt(txtPayrollPhkKenaikanGaji.text) + AFconvert.keInt(txtPayrollPhkUangMakanJumlah.text) +
+        AFconvert.keInt(txtPayrollPhkOvertimeFjg.text) + AFconvert.keInt(txtPayrollPhkOvertimeCus.text) +
+        AFconvert.keInt(txtPayrollPhkMedical.text) + AFconvert.keInt(txtPayrollPhkThr.text) +
+        AFconvert.keInt(txtPayrollPhkBonus.text) + AFconvert.keInt(txtPayrollPhkInsentif.text) +
+        AFconvert.keInt(txtPayrollPhkTelkomsel.text) + AFconvert.keInt(txtPayrollPhkLain.text);
+    var b = AFconvert.keInt(txtPayrollPhkPot25jumlah.text) + AFconvert.keInt(txtPayrollPhkPotTelepon.text) +
+        AFconvert.keInt(txtPayrollPhkPotBensin.text) + AFconvert.keInt(txtPayrollPhkPotKas.text) +
+        AFconvert.keInt(txtPayrollPhkPotCicilan.text) + AFconvert.keInt(txtPayrollPhkPotBpjs.text) +
+        AFconvert.keInt(txtPayrollPhkPotCutiJumlah.text) + AFconvert.keInt(txtPayrollPhkPotKompensasiJumlah.text) + AFconvert.keInt(txtPayrollPhkPotLain.text);
+    var c = a - b;
+    txtPayrollPhkTotalDiterima.text = AFconvert.matNumber(c);
+  }
+
+  Future<void> simpanPayrollPhkData() async {
+    try {
+      if(current.id.isEmpty) {
+        throw 'ID Karyawan tidak ditemukan';
+      }
+      if(tahunPhk.value.isEmpty || bulanPhk.value.isEmpty) {
+        throw 'Periode penggajian harus diisi';
+      }
+      if(txtPayrollPhkTglAwal.text.isEmpty || txtPayrollPhkTglAkhir.text.isEmpty) {
+        throw 'Periode batas (cut-off) harus diisi';
+      }
+      if(txtPayrollPhkGaji.text.isEmpty) {
+        throw 'Gaji harus diisi';
+      }
+      var a = PayrollPhk(
+        id: payrollPhk.id,
+        tahun: AFconvert.keInt(tahunPhk.value),
+        bulan: AFconvert.keInt(bulanPhk.value),
+        tanggalAwal: AFconvert.keTanggal('${txtPayrollPhkTglAwal.text} 08:00:00'),
+        tanggalAkhir: AFconvert.keTanggal('${txtPayrollPhkTglAkhir.text} 08:00:00'),
+        makanHarian: payrollPhkMakanHarian,
+        gaji: AFconvert.keInt(txtPayrollPhkGaji.text),
+        kenaikanGaji: AFconvert.keInt(txtPayrollPhkKenaikanGaji.text),
+        hariMakan: AFconvert.keInt(txtPayrollPhkHariMakan.text),
+        uangMakanHarian: AFconvert.keInt(txtPayrollPhkUangMakanHarian.text),
+        uangMakanJumlah: AFconvert.keInt(txtPayrollPhkUangMakanJumlah.text),
+        overtimeFjg: AFconvert.keInt(txtPayrollPhkOvertimeFjg.text),
+        overtimeCus: AFconvert.keInt(txtPayrollPhkOvertimeCus.text),
+        medical: AFconvert.keInt(txtPayrollPhkMedical.text),
+        thr: AFconvert.keInt(txtPayrollPhkThr.text),
+        bonus: AFconvert.keInt(txtPayrollPhkBonus.text),
+        insentif: AFconvert.keInt(txtPayrollPhkInsentif.text),
+        telkomsel: AFconvert.keInt(txtPayrollPhkTelkomsel.text),
+        lain: AFconvert.keInt(txtPayrollPhkLain.text),
+        pot25hari: AFconvert.keInt(txtPayrollPhkPot25hari.text),
+        pot25jumlah: AFconvert.keInt(txtPayrollPhkPot25jumlah.text),
+        potTelepon: AFconvert.keInt(txtPayrollPhkPotTelepon.text),
+        potBensin: AFconvert.keInt(txtPayrollPhkPotBensin.text),
+        potKas: AFconvert.keInt(txtPayrollPhkPotKas.text),
+        potCicilan: AFconvert.keInt(txtPayrollPhkPotCicilan.text),
+        potBpjs: AFconvert.keInt(txtPayrollPhkPotBpjs.text),
+        potCutiHari: AFconvert.keInt(txtPayrollPhkPotCutiHari.text),
+        potCutiJumlah: AFconvert.keInt(txtPayrollPhkPotCutiJumlah.text),
+        potKompensasiJam: AFconvert.keDouble(txtPayrollPhkPotKompensasiJam.text),
+        potKompensasiJumlah: AFconvert.keInt(txtPayrollPhkPotKompensasiJumlah.text),
+        potLain: AFconvert.keInt(txtPayrollPhkPotLain.text),
+        totalDiterima: AFconvert.keInt(txtPayrollPhkTotalDiterima.text),
+        keterangan: txtPayrollPhkKeterangan.text,
+      );
+      a.karyawan = current;
+      AFwidget.loading();
+      var hasil = await _repo.payrollPhkUpdateOrCreate(a.karyawan.id, a.toMap());
+      Get.back();
+      if(hasil.success) {
+        loadPayrollPhkData();
+        Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
+      }
+    } catch (er) {
+      AFwidget.formWarning(label: '$er');
+    }
+  }
+
+  void payrollPhkForm(BuildContext context) {
+    txtPayrollPhkGaji.text = AFconvert.matNumber(payrollPhk.gaji);
+    txtPayrollPhkKenaikanGaji.text = AFconvert.matNumber(payrollPhk.kenaikanGaji);
+    txtPayrollPhkHariMakan.text = AFconvert.matNumber(payrollPhk.hariMakan);
+    txtPayrollPhkUangMakanHarian.text = AFconvert.matNumber(payrollPhk.uangMakanHarian);
+    txtPayrollPhkUangMakanJumlah.text = AFconvert.matNumber(payrollPhk.uangMakanJumlah);
+    txtPayrollPhkOvertimeFjg.text = AFconvert.matNumber(payrollPhk.overtimeFjg);
+    txtPayrollPhkOvertimeCus.text = AFconvert.matNumber(payrollPhk.overtimeCus);
+    txtPayrollPhkMedical.text = AFconvert.matNumber(payrollPhk.medical);
+    txtPayrollPhkThr.text = AFconvert.matNumber(payrollPhk.thr);
+    txtPayrollPhkBonus.text = AFconvert.matNumber(payrollPhk.bonus);
+    txtPayrollPhkInsentif.text = AFconvert.matNumber(payrollPhk.insentif);
+    txtPayrollPhkTelkomsel.text = AFconvert.matNumber(payrollPhk.telkomsel);
+    txtPayrollPhkLain.text = AFconvert.matNumber(payrollPhk.lain);
+    txtPayrollPhkPot25hari.text = AFconvert.matNumber(payrollPhk.pot25hari);
+    txtPayrollPhkPot25jumlah.text = AFconvert.matNumber(payrollPhk.pot25jumlah);
+    txtPayrollPhkPotTelepon.text = AFconvert.matNumber(payrollPhk.potTelepon);
+    txtPayrollPhkPotBensin.text = AFconvert.matNumber(payrollPhk.potBensin);
+    txtPayrollPhkPotKas.text = AFconvert.matNumber(payrollPhk.potKas);
+    txtPayrollPhkPotCicilan.text = AFconvert.matNumber(payrollPhk.potCicilan);
+    txtPayrollPhkPotBpjs.text = AFconvert.matNumber(payrollPhk.potBpjs);
+    txtPayrollPhkPotCutiHari.text = AFconvert.matNumber(payrollPhk.potCutiHari);
+    txtPayrollPhkPotCutiJumlah.text = AFconvert.matNumber(payrollPhk.potCutiJumlah);
+    txtPayrollPhkPotKompensasiJam.text = AFconvert.matNumberWithDecimal(payrollPhk.potKompensasiJam, decimal: 1);
+    txtPayrollPhkPotKompensasiJumlah.text = AFconvert.matNumber(payrollPhk.potKompensasiJumlah);
+    txtPayrollPhkPotLain.text = AFconvert.matNumber(payrollPhk.potLain);
+    txtPayrollPhkTotalDiterima.text = AFconvert.matNumber(payrollPhk.totalDiterima);
+    txtPayrollPhkKeterangan.text = payrollPhk.keterangan;
+    txtPayrollPhkTglAwal.text = payrollPhk.tanggalAwal == null ? AFconvert.matYMD(DateTime(_now.month == 1 ? (_now.year-1) : _now.year, _now.month == 1 ? 12 : _now.month-1, 19)) : AFconvert.matYMD(payrollPhk.tanggalAwal);
+    txtPayrollPhkTglAkhir.text = payrollPhk.tanggalAkhir == null ? AFconvert.matYMD(DateTime(_now.year, _now.month, 18)) : AFconvert.matYMD(payrollPhk.tanggalAkhir);
+    tahunPhk = payrollPhk.tahun == 0 ? Opsi(value: '${_now.year}', label: '${_now.year}') : Opsi(value: '${payrollPhk.tahun}', label: '${payrollPhk.tahun}');
+    bulanPhk = payrollPhk.bulan == 0 ? Opsi(value: '${_now.month}', label: mapBulan[_now.month]!) : Opsi(value: '${payrollPhk.bulan}', label: mapBulan[payrollPhk.bulan]!);
+    payrollPhkMakanHarian = payrollPhk.makanHarian;
+    AFwidget.dialog(
+      Container(
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+        width: 700,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        child: Stack(
+          children: [
+            ListView(
+              children: [
+                AFwidget.barisInfo(
+                  label: 'Nama Karyawan',
+                  nilai: current.nama,
+                  labelWidth: 230,
+                  paddingTop: 70,
+                ),
+                AFwidget.barisInfo(
+                  label: 'Jabatan',
+                  nilai: current.jabatan.nama,
+                  labelWidth: 230,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 230,
+                        padding: const EdgeInsets.only(right: 15),
+                        child: const Text('Periode Payroll / Penggajian'),
+                      ),
+                      Expanded(
+                        child: GetBuilder<KaryawanControl>(
+                          builder: (_) {
+                            return AFwidget.comboField(
+                              value: bulanPhk.label,
+                              label: '',
+                              onTap: () async {
+                                var a = await pilihBulan(value: bulanPhk.value);
+                                if(a != null && a.value != bulanPhk.value) {
+                                  bulanPhk = a;
+                                  int vTahun = AFconvert.keInt(tahunPhk.value);
+                                  int vBulan = AFconvert.keInt(a.value);
+                                  txtPayrollPhkTglAwal.text = AFconvert.matYMD(DateTime(vBulan == 1 ? vTahun-1 : vTahun, vBulan == 1 ? 12 : vBulan-1, 19));
+                                  txtPayrollPhkTglAkhir.text = AFconvert.matYMD(DateTime(vTahun, vBulan, 18));
+                                  update();
+                                }
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 40),
+                      Expanded(
+                        child: GetBuilder<KaryawanControl>(
+                          builder: (_) {
+                            return AFwidget.comboField(
+                              value: tahunPhk.label,
+                              label: '',
+                              onTap: () async {
+                                var a = await pilihTahun(value: tahunPhk.value);
+                                if(a != null && a.value != tahunPhk.value) {
+                                  tahunPhk = a;
+                                  int vTahun = AFconvert.keInt(a.value);
+                                  int vBulan = AFconvert.keInt(bulanPhk.value);
+                                  txtPayrollPhkTglAwal.text = AFconvert.matYMD(DateTime(vBulan == 1 ? vTahun-1 : vTahun, vBulan == 1 ? 12 : vBulan-1, 19));
+                                  txtPayrollPhkTglAkhir.text = AFconvert.matYMD(DateTime(vTahun, vBulan, 18));
+                                  update();
+                                }
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 230,
+                        padding: const EdgeInsets.only(right: 15),
+                        child: const Text('Periode Batas (Cut-Off)'),
+                      ),
+                      Expanded(
+                        child: AFwidget.textField(
+                          marginTop: 0,
+                          controller: txtPayrollPhkTglAwal,
+                          readOnly: true,
+                          prefixIcon: const Icon(Icons.calendar_month),
+                          ontap: () async {
+                            var a = await AFwidget.pickDate(
+                              context: context,
+                              initialDate: AFconvert.keTanggal(txtPayrollPhkTglAwal.text),
+                            );
+                            if(a != null) {
+                              txtPayrollPhkTglAwal.text = AFconvert.matYMD(a);
+                            }
+                          },
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 40,
+                        child: Text('s/d', textAlign: TextAlign.center),
+                      ),
+                      Expanded(
+                        child: AFwidget.textField(
+                          marginTop: 0,
+                          controller: txtPayrollPhkTglAkhir,
+                          readOnly: true,
+                          prefixIcon: const Icon(Icons.calendar_month),
+                          ontap: () async {
+                            var a = await AFwidget.pickDate(
+                              context: context,
+                              initialDate: AFconvert.keTanggal(txtPayrollPhkTglAkhir.text),
+                            );
+                            if(a != null) {
+                              txtPayrollPhkTglAkhir.text = AFconvert.matYMD(a);
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                AFwidget.barisText(
+                  label: 'Kehadiran (Hari)',
+                  controller: txtPayrollPhkHariMakan,
+                  isNumber: true,
+                  onchanged: (nilai) {
+                    if(payrollPhkMakanHarian) {
+                      var jumlah = AFconvert.keInt(nilai) * AFconvert.keInt(txtPayrollPhkUangMakanHarian.text);
+                      txtPayrollPhkUangMakanJumlah.text = AFconvert.matNumber(jumlah);
+                      hitungPayrollPhkPenerimaanBersih(nilai);
+                    }
+                  },
+                  labelWidth: 230,
+                ),
+                AFwidget.barisInfo(
+                  label: 'A. PENGHASILAN',
+                  labelWidth: 230,
+                  labelSyle: const TextStyle(color: Colors.blue, fontWeight: FontWeight.w600),
+                ),
+                AFwidget.barisText(
+                  label: 'Gaji Pokok',
+                  controller: txtPayrollPhkGaji,
+                  isNumber: true,
+                  onchanged: hitungPayrollPhkPenerimaanBersih,
+                  labelWidth: 230,
+                ),
+                AFwidget.barisText(
+                  label: 'Kenaikan Gaji',
+                  controller: txtPayrollPhkKenaikanGaji,
+                  isNumber: true,
+                  onchanged: hitungPayrollPhkPenerimaanBersih,
+                  labelWidth: 230,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 21, 20, 0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 230,
+                        padding: const EdgeInsets.only(right: 15),
+                        child: const Text('Jenis Uang Makan'),
+                      ),
+                      Expanded(
+                        child: GetBuilder<KaryawanControl>(
+                          builder: (_) {
+                            return RadioGroup<bool>(
+                              groupValue: payrollPhkMakanHarian,
+                              onChanged: (a) {
+                                if(a != null && a != payrollPhkMakanHarian) {
+                                  payrollPhkMakanHarian = a;
+                                  update();
+                                }
+                              },
+                              child: Row(
+                                children: const [
+                                  Radio<bool>(value: true),
+                                  Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                                    child: Text('Harian'),
+                                  ),
+                                  Radio<bool>(value: false),
+                                  Padding(
+                                    padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                                    child: Text('Tetap'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                GetBuilder<KaryawanControl>(
+                  builder: (_) {
+                    if(payrollPhkMakanHarian) {
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 21, 20, 0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 230,
+                              padding: const EdgeInsets.only(right: 15),
+                              child: const Text('U/makan & Transport'),
+                            ),
+                            Expanded(
+                              flex: 2,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text('@Hari IDR :'),
+                                  AFwidget.textField(
+                                    marginTop: 0,
+                                    controller: txtPayrollPhkUangMakanHarian,
+                                    inputformatters: [
+                                      CurrencyTextInputFormatter.currency(
+                                        symbol: '',
+                                        decimalDigits: 0,
+                                      ),
+                                    ],
+                                    textAlign: TextAlign.end,
+                                    onchanged: (nilai) {
+                                      var jumlah = AFconvert.keInt(nilai) * AFconvert.keInt(txtPayrollPhkHariMakan.text);
+                                      txtPayrollPhkUangMakanJumlah.text = AFconvert.matNumber(jumlah);
+                                      hitungPayrollPhkPenerimaanBersih(nilai);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 15),
+                            Expanded(
+                              flex: 3,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text('Jumlah IDR :'),
+                                  AFwidget.textField(
+                                    readOnly: true,
+                                    marginTop: 0,
+                                    controller: txtPayrollPhkUangMakanJumlah,
+                                    inputformatters: [
+                                      CurrencyTextInputFormatter.currency(
+                                        symbol: '',
+                                        decimalDigits: 0,
+                                      ),
+                                    ],
+                                    textAlign: TextAlign.end,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    } else {
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 21, 20, 0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 230,
+                              padding: const EdgeInsets.only(right: 15),
+                              child: const Text('U/makan & Transport'),
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text('Jumlah IDR :'),
+                                  AFwidget.textField(
+                                    marginTop: 0,
+                                    controller: txtPayrollPhkUangMakanJumlah,
+                                    inputformatters: [
+                                      CurrencyTextInputFormatter.currency(
+                                        symbol: '',
+                                        decimalDigits: 0,
+                                      ),
+                                    ],
+                                    textAlign: TextAlign.end,
+                                    onchanged: hitungPayrollPhkPenerimaanBersih,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                  },
+                ),
+                AFwidget.barisText(
+                  label: 'Overtime Fratekindo',
+                  controller: txtPayrollPhkOvertimeFjg,
+                  isNumber: true,
+                  onchanged: hitungPayrollPhkPenerimaanBersih,
+                  labelWidth: 230,
+                ),
+                AFwidget.barisText(
+                  label: 'Overtime Customer',
+                  controller: txtPayrollPhkOvertimeCus,
+                  isNumber: true,
+                  onchanged: hitungPayrollPhkPenerimaanBersih,
+                  labelWidth: 230,
+                ),
+                AFwidget.barisText(
+                  label: 'Reimbursement Medical',
+                  controller: txtPayrollPhkMedical,
+                  isNumber: true,
+                  onchanged: hitungPayrollPhkPenerimaanBersih,
+                  labelWidth: 230,
+                ),
+                AFwidget.barisText(
+                  label: 'Tunjangan Hari Raya',
+                  controller: txtPayrollPhkThr,
+                  isNumber: true,
+                  onchanged: hitungPayrollPhkPenerimaanBersih,
+                  labelWidth: 230,
+                ),
+                AFwidget.barisText(
+                  label: 'Bonus',
+                  controller: txtPayrollPhkBonus,
+                  isNumber: true,
+                  onchanged: hitungPayrollPhkPenerimaanBersih,
+                  labelWidth: 230,
+                ),
+                AFwidget.barisText(
+                  label: 'Insentif',
+                  controller: txtPayrollPhkInsentif,
+                  isNumber: true,
+                  onchanged: hitungPayrollPhkPenerimaanBersih,
+                  labelWidth: 230,
+                ),
+                AFwidget.barisText(
+                  label: 'Telkomsel',
+                  controller: txtPayrollPhkTelkomsel,
+                  isNumber: true,
+                  onchanged: hitungPayrollPhkPenerimaanBersih,
+                  labelWidth: 230,
+                ),
+                AFwidget.barisText(
+                  label: 'Lain-Lain',
+                  controller: txtPayrollPhkLain,
+                  isNumber: true,
+                  onchanged: hitungPayrollPhkPenerimaanBersih,
+                  labelWidth: 230,
+                ),
+                AFwidget.barisInfo(
+                  label: 'B. POTONGAN',
+                  labelWidth: 230,
+                  labelSyle: const TextStyle(color: Colors.blue, fontWeight: FontWeight.w600),
+                ),
+                payrollPhk.makanHarian ?
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 21, 20, 0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 230,
+                        padding: const EdgeInsets.only(right: 15),
+                        child: const Text('Keterlambatan Kehadiran 25%'),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Hari :'),
+                            AFwidget.textField(
+                              marginTop: 0,
+                              controller: txtPayrollPhkPot25hari,
+                              inputformatters: [
+                                CurrencyTextInputFormatter.currency(
+                                  symbol: '',
+                                  decimalDigits: 0,
+                                ),
+                              ],
+                              textAlign: TextAlign.end,
+                              onchanged: (nilai) {
+                                var jumlah = (AFconvert.keInt(txtPayrollPhkUangMakanHarian.text)/4) * AFconvert.keInt(nilai) ;
+                                txtPayrollPhkPot25jumlah.text = AFconvert.matNumber(jumlah);
+                                hitungPayrollPhkPenerimaanBersih(nilai);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 15),
+                      Expanded(
+                        flex: 3,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Jumlah IDR :'),
+                            AFwidget.textField(
+                              readOnly: true,
+                              marginTop: 0,
+                              controller: txtPayrollPhkPot25jumlah,
+                              inputformatters: [
+                                CurrencyTextInputFormatter.currency(
+                                  symbol: '',
+                                  decimalDigits: 0,
+                                ),
+                              ],
+                              textAlign: TextAlign.end,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ) :
+                Container(),
+                AFwidget.barisText(
+                  label: 'Pemakaian Telepon',
+                  controller: txtPayrollPhkPotTelepon,
+                  isNumber: true,
+                  onchanged: hitungPayrollPhkPenerimaanBersih,
+                  labelWidth: 230,
+                ),
+                AFwidget.barisText(
+                  label: 'Pemakaian Bensin',
+                  controller: txtPayrollPhkPotBensin,
+                  isNumber: true,
+                  onchanged: hitungPayrollPhkPenerimaanBersih,
+                  labelWidth: 230,
+                ),
+                AFwidget.barisText(
+                  label: 'Pinjaman Kas',
+                  controller: txtPayrollPhkPotKas,
+                  isNumber: true,
+                  onchanged: hitungPayrollPhkPenerimaanBersih,
+                  labelWidth: 230,
+                ),
+                AFwidget.barisText(
+                  label: 'Pinjaman Cicilan',
+                  controller: txtPayrollPhkPotCicilan,
+                  isNumber: true,
+                  onchanged: hitungPayrollPhkPenerimaanBersih,
+                  labelWidth: 230,
+                ),
+                AFwidget.barisText(
+                  label: 'BPJS Kesehatan',
+                  controller: txtPayrollPhkPotBpjs,
+                  isNumber: true,
+                  onchanged: hitungPayrollPhkPenerimaanBersih,
+                  labelWidth: 230,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 21, 20, 0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 230,
+                        padding: const EdgeInsets.only(right: 15),
+                        child: const Text('Unpaid Leave'),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Hari :'),
+                            AFwidget.textField(
+                              marginTop: 0,
+                              controller: txtPayrollPhkPotCutiHari,
+                              inputformatters: [
+                                CurrencyTextInputFormatter.currency(
+                                  symbol: '',
+                                  decimalDigits: 0,
+                                ),
+                              ],
+                              textAlign: TextAlign.end,
+                              onchanged: (nilai) {
+                                var jumlah = (AFconvert.keInt(txtPayrollPhkGaji.text)/21) * AFconvert.keInt(nilai);
+                                txtPayrollPhkPotCutiJumlah.text = AFconvert.matNumber(jumlah);
+                                hitungPayrollPhkPenerimaanBersih(nilai);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 15),
+                      Expanded(
+                        flex: 3,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Jumlah IDR :'),
+                            AFwidget.textField(
+                              readOnly: true,
+                              marginTop: 0,
+                              controller: txtPayrollPhkPotCutiJumlah,
+                              inputformatters: [
+                                CurrencyTextInputFormatter.currency(
+                                  symbol: '',
+                                  decimalDigits: 0,
+                                ),
+                              ],
+                              textAlign: TextAlign.end,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 21, 20, 0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 230,
+                        padding: const EdgeInsets.only(right: 15),
+                        child: const Text('Kompensasi Hadir (Jam)'),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Jam :'),
+                            AFwidget.textField(
+                              marginTop: 0,
+                              controller: txtPayrollPhkPotKompensasiJam,
+                              textAlign: TextAlign.end,
+                              onchanged: (nilai) {
+                                var jumlah = (AFconvert.keInt(txtPayrollPhkGaji.text)/168) * AFconvert.keDouble(nilai);
+                                txtPayrollPhkPotKompensasiJumlah.text = AFconvert.matNumber(jumlah);
+                                hitungPayrollPhkPenerimaanBersih(nilai);
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 15),
+                      Expanded(
+                        flex: 3,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Jumlah IDR :'),
+                            AFwidget.textField(
+                              readOnly: true,
+                              marginTop: 0,
+                              controller: txtPayrollPhkPotKompensasiJumlah,
+                              inputformatters: [
+                                CurrencyTextInputFormatter.currency(
+                                  symbol: '',
+                                  decimalDigits: 0,
+                                ),
+                              ],
+                              textAlign: TextAlign.end,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                AFwidget.barisText(
+                  label: 'Lain-Lain',
+                  controller: txtPayrollPhkPotLain,
+                  isNumber: true,
+                  onchanged: hitungPayrollPhkPenerimaanBersih,
+                  labelWidth: 230,
+                ),
+                AFwidget.barisText(
+                  label: 'Peneriman Bersih (A-B)',
+                  labelStyle: const TextStyle(
+                    color: Colors.blue,
+                  ),
+                  controller: txtPayrollPhkTotalDiterima,
+                  isNumber: true,
+                  readOnly: true,
+                  paddingTop: 31,
+                  labelWidth: 230,
+                ),
+                AFwidget.barisText(
+                  label: 'Keterangan',
+                  controller: txtPayrollPhkKeterangan,
+                  isTextArea: true,
+                  labelWidth: 230,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      AFwidget.tombol(
+                        label: 'Batal',
+                        color: Colors.orange,
+                        onPressed: Get.back,
+                        minimumSize: const Size(120, 40),
+                      ),
+                      const SizedBox(width: 40),
+                      AFwidget.tombol(
+                        label: 'Simpan',
+                        color: Colors.blue,
+                        onPressed: simpanPayrollPhkData,
+                        minimumSize: const Size(120, 40),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            AFwidget.formHeader('Form Payroll PHK'),
+          ],
+        ),
+      ),
+      barrierDismissible: false,
+      scrollable: false,
+      backgroundColor: Colors.white,
+      contentPadding: const EdgeInsets.all(0),
+    );
+  }
+
 
   Future<void> loadAgamas() async {
     AgamaRepository repo = AgamaRepository();
@@ -2501,6 +3288,16 @@ class KaryawanControl extends GetxController {
     return a;
   }
 
+  Future<Opsi?> pilihBulan({String value = ''}) async {
+    var a = await AFcombobox.bottomSheet(
+      listOpsi: listBulan,
+      valueSelected: value,
+      judul: 'Pilih Bulan',
+      withCari: false,
+    );
+    return a;
+  }
+
   Future<void> dowloadPayroll() async {
     AFwidget.loading();
     var hasil = await _repo.excelPayroll(id: current.id, tahun: filterTahun.label);
@@ -2606,6 +3403,37 @@ class KaryawanControl extends GetxController {
     txtPotCutiHari = TextEditingController();
     txtPotCutiJumlah = TextEditingController();
     txtPotLain = TextEditingController();
+    txtPayrollPhkGaji = TextEditingController();
+    txtPayrollPhkKenaikanGaji = TextEditingController();
+    txtPayrollPhkHariMakan = TextEditingController();
+    txtPayrollPhkUangMakanHarian = TextEditingController();
+    txtPayrollPhkUangMakanJumlah = TextEditingController();
+    txtPayrollPhkOvertimeFjg = TextEditingController();
+    txtPayrollPhkOvertimeCus = TextEditingController();
+    txtPayrollPhkMedical = TextEditingController();
+    txtPayrollPhkThr = TextEditingController();
+    txtPayrollPhkBonus = TextEditingController();
+    txtPayrollPhkInsentif = TextEditingController();
+    txtPayrollPhkTelkomsel = TextEditingController();
+    txtPayrollPhkLain = TextEditingController();
+    txtPayrollPhkPot25hari = TextEditingController();
+    txtPayrollPhkPot25jumlah = TextEditingController();
+    txtPayrollPhkPotTelepon = TextEditingController();
+    txtPayrollPhkPotBensin = TextEditingController();
+    txtPayrollPhkPotKas = TextEditingController();
+    txtPayrollPhkPotCicilan = TextEditingController();
+    txtPayrollPhkPotBpjs = TextEditingController();
+    txtPayrollPhkPotCutiHari = TextEditingController();
+    txtPayrollPhkPotCutiJumlah = TextEditingController();
+    txtPayrollPhkPotLain = TextEditingController();
+    txtPayrollPhkPotKompensasiJam = TextEditingController();
+    txtPayrollPhkPotKompensasiJumlah = TextEditingController();
+    txtPayrollPhkTotalDiterima = TextEditingController();
+    txtPayrollPhkKeterangan = TextEditingController();
+    txtPayrollPhkTglAwal = TextEditingController();
+    txtPayrollPhkTglAkhir = TextEditingController();
+    tahunPhk = Opsi(value: '${_now.year}', label: '${_now.year}');
+    bulanPhk = Opsi(value: '${_now.month}', label: mapBulan[_now.month]!);
     loadKaryawans();
     loadAllData();
     super.onInit();
@@ -2657,6 +3485,35 @@ class KaryawanControl extends GetxController {
     txtPotCutiHari.dispose();
     txtPotCutiJumlah.dispose();
     txtPotLain.dispose();
+    txtPayrollPhkGaji.dispose();
+    txtPayrollPhkKenaikanGaji.dispose();
+    txtPayrollPhkHariMakan.dispose();
+    txtPayrollPhkUangMakanHarian.dispose();
+    txtPayrollPhkUangMakanJumlah.dispose();
+    txtPayrollPhkOvertimeFjg.dispose();
+    txtPayrollPhkOvertimeCus.dispose();
+    txtPayrollPhkMedical.dispose();
+    txtPayrollPhkThr.dispose();
+    txtPayrollPhkBonus.dispose();
+    txtPayrollPhkInsentif.dispose();
+    txtPayrollPhkTelkomsel.dispose();
+    txtPayrollPhkLain.dispose();
+    txtPayrollPhkPot25hari.dispose();
+    txtPayrollPhkPot25jumlah.dispose();
+    txtPayrollPhkPotTelepon.dispose();
+    txtPayrollPhkPotBensin.dispose();
+    txtPayrollPhkPotKas.dispose();
+    txtPayrollPhkPotCicilan.dispose();
+    txtPayrollPhkPotBpjs.dispose();
+    txtPayrollPhkPotCutiHari.dispose();
+    txtPayrollPhkPotCutiJumlah.dispose();
+    txtPayrollPhkPotLain.dispose();
+    txtPayrollPhkPotKompensasiJam.dispose();
+    txtPayrollPhkPotKompensasiJumlah.dispose();
+    txtPayrollPhkTotalDiterima.dispose();
+    txtPayrollPhkKeterangan.dispose();
+    txtPayrollPhkTglAwal.dispose();
+    txtPayrollPhkTglAkhir.dispose();
     super.onClose();
   }
 }

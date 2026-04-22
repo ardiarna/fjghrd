@@ -655,6 +655,7 @@ class PayrollControl extends GetxController {
                                 ),
                               ],
                               textAlign: TextAlign.end,
+                              onchanged: hitungPenerimaanBersih,
                             ),
                           ],
                         ),
