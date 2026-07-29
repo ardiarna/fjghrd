@@ -70,6 +70,12 @@ class KaryawanPayrollView extends StatelessWidget {
                 ),
                 const Spacer(),
                 tombol(
+                  label: 'PDF Slip Gaji',
+                  icon: Icons.picture_as_pdf,
+                  color: Colors.red,
+                  onPressed: dialogPdfSlipGaji,
+                ),
+                tombol(
                   label: 'Excel Slip Gaji',
                   icon: Icons.receipt_long,
                   color: Colors.green,
@@ -511,6 +517,107 @@ class KaryawanPayrollView extends StatelessWidget {
                       controller.downloadSlipGaji();
                     },
                     minimumSize: const Size(120, 40),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      scrollable: false,
+      backgroundColor: Colors.white,
+      contentPadding: const EdgeInsets.all(0),
+    );
+  }
+
+  void dialogPdfSlipGaji() {
+    AFwidget.dialog(
+      Container(
+        width: 500,
+        height: 370,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AFwidget.formHeader('PDF Slip Gaji ${controller.filterTahun.label}'),
+            Padding(
+              padding: EdgeInsets.fromLTRB(20, 15, 42, 20),
+              child: Row(
+                children: [
+                  Text('Silakan pilih bulan :'),
+                  const Spacer(),
+                  GetBuilder<KaryawanControl>(
+                    builder: (_) {
+                      return Checkbox(
+                        value: controller.bulanTerpilih.values.every((v) => v),
+                        onChanged: (value) {
+                          if (value != null) {
+                            controller.bulanTerpilih.updateAll((key, val) => value);
+                            controller.update();
+                          }
+                        },
+                      );
+                    },
+                  ),
+                  const Text("pilih semua"),
+                ],
+              ),
+            ),
+            GetBuilder<KaryawanControl>(
+              builder: (_) {
+                return SizedBox(
+                  height: 150,
+                  width: 500,
+                  child: GridView.count(
+                    crossAxisCount: 3,
+                    childAspectRatio: 5,
+                    mainAxisSpacing: 5,
+                    crossAxisSpacing: 5,
+                    padding: const EdgeInsets.only(left: 10),
+                    children: controller.bulanTerpilih.entries.map((el) {
+                      return Row(
+                        children: [
+                          Checkbox(
+                            value: el.value,
+                            onChanged: (value) {
+                              if(value != null) {
+                                controller.bulanTerpilih[el.key] = value;
+                                controller.update();
+                              }
+                            },
+                          ),
+                          Text(mapBulan[el.key]!),
+                        ],
+                      );
+                    }).toList(),
+                  ),
+                );
+              }
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(10, 25, 30, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  AFwidget.tombol(
+                    label: 'Batal',
+                    color: Colors.orange,
+                    onPressed: Get.back,
+                    minimumSize: const Size(120, 40),
+                  ),
+                  const SizedBox(width: 40),
+                  AFwidget.tombol(
+                    label: 'Download PDF',
+                    color: Colors.red,
+                    onPressed: () {
+                      Get.back();
+                      controller.downloadPdfSlipGaji();
+                    },
+                    minimumSize: const Size(140, 40),
                   ),
                 ],
               ),

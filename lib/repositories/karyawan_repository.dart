@@ -202,6 +202,14 @@ class KaryawanRepository {
     return await AFdatabase.download(url: 'excel/slip-karyawan/$id/$tahun/$bulans');
   }
 
+  Future<Hasil> pdfSlipGaji({
+    required String id,
+    required String tahun,
+    required String bulans,
+  }) async {
+    return await AFdatabase.download(url: 'excel/pdf-slip-karyawan/$id/$tahun/$bulans');
+  }
+
   Future<Hasil> rekapAreaKelamin() async {
     return await AFdatabase.send(
       url: 'karyawan/rekap/area-kelamin',

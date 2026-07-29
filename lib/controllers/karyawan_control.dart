@@ -3333,6 +3333,26 @@ class KaryawanControl extends GetxController {
     }
   }
 
+  Future<void> downloadPdfSlipGaji() async {
+    AFwidget.loading();
+    List<int> selected = bulanTerpilih.entries
+    .where((entry) => entry.value)
+    .map((entry) => entry.key)
+    .toList();
+    var bulans = selected.join('-');
+    var hasil = await _repo.pdfSlipGaji(id: current.id, tahun: filterTahun.value, bulans: bulans);
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'PDF slip gaji ${current.nama} berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna:  Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat PDF. [${hasil.message}]');
+    }
+  }
+
   String getKelompokUsia(DateTime? birthDate) {
     if (birthDate == null) return "0";
 
