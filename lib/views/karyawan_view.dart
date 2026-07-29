@@ -475,18 +475,7 @@ class KaryawanView extends StatelessWidget {
                   // );
                 },
                 rowColorCallback: (rtx) {
-                  switch(rtx.row.cells['status_kerja_id']!.value) {
-                    case '2':
-                      return Colors.blue.shade100;
-                    case '3':
-                      return Colors.orange.shade200;
-                    case '4':
-                      return Colors.purpleAccent.shade100;
-                    case '5':
-                      return Colors.greenAccent.shade100;
-                    default:
-                      return Colors.white;
-                  }
+                  return _getStatusColor(rtx.row.cells['status_kerja_id']!.value);
                 },
                 configuration: AFplutogridConfig.configSatu(),
               );
@@ -563,7 +552,7 @@ class KaryawanView extends StatelessWidget {
           if(nilaiTotal > 0) {
             areaWidgets.add(
               textButton(
-                label: '🟥${opStatus.label}',
+                label: opStatus.label,
                 area: Opsi(value: '', label: 'SEMUA'),
                 statusKerja: opStatus,
               ),
@@ -575,7 +564,7 @@ class KaryawanView extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 5),
               child: textButton(
-                label: '🟥TOTAL KARYAWAN',
+                label: 'TOTAL KARYAWAN',
                 area: Opsi(value: '', label: 'SEMUA'),
                 statusKerja: Opsi(value: '', label: 'SEMUA'),
               ),
@@ -595,11 +584,13 @@ class KaryawanView extends StatelessWidget {
         for(var opStatus in controller.listStatusKerja) {
           int nilaiTotal = listTotalPerStatusKerja[opStatus.label] ?? 0;
           if (nilaiTotal > 0) {
+            Color bgColor = _getStatusColor(opStatus.value);
+            Color textColor = bgColor == Colors.transparent ? Colors.black : bgColor;
             areaWidgets.add(
               Text('= $nilaiTotal',
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
-                  color: Colors.red,
+                  color: textColor,
                 ),
               ),
             );
@@ -680,11 +671,30 @@ class KaryawanView extends StatelessWidget {
     );
   }
 
+  Color _getStatusColor(String id) {
+    switch (id) {
+      case '1':
+        return Colors.transparent;
+      case '2':
+        return Colors.blue.shade100;
+      case '3':
+        return Colors.orange.shade200;
+      case '4':
+        return Colors.purpleAccent.shade100;
+      case '5':
+        return Colors.greenAccent.shade100;
+      default:
+        return Colors.red;
+    }
+  }
+
   Widget textButton({
     required String label,
     required Opsi area,
     required Opsi statusKerja,
   }) {
+    Color bgColor = _getStatusColor(statusKerja.value);
+    Color textColor = bgColor == Colors.transparent ? Colors.black : bgColor;
     return TextButton(
       style: TextButton.styleFrom(
         padding: EdgeInsets.zero,
@@ -700,9 +710,9 @@ class KaryawanView extends StatelessWidget {
         controller.loadKaryawans();
       },
       child: Text(label,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 13,
-          color: Colors.red,
+          color: textColor,
         ),
       ),
     );
