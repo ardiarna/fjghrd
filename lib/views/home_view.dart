@@ -14,6 +14,7 @@ import 'package:fjghrd/views/status_phk_view.dart';
 import 'package:fjghrd/views/tarif_efektif_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 class HomeView extends StatelessWidget {
   HomeView({super.key});
@@ -31,50 +32,57 @@ class HomeView extends StatelessWidget {
         width: double.infinity,
         child: GetBuilder<HomeControl>(
             builder: (_) {
-              return controller.kontener;
-            }
-        ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.white,
-        surfaceTintColor: Colors.white,
-        shadowColor: Colors.white,
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 5,
-        child: GetBuilder<HomeControl>(
-            builder: (_) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  barItem(
-                    label: 'Beranda',
-                    icon: Icons.home_outlined,
-                    idx: 0,
-                  ),
-                  barItem(
-                    label: 'Karyawan',
-                    icon: Icons.supervisor_account,
-                    idx: 1,
-                  ),
-                  barItem(
-                    label: 'Payroll',
-                    icon: Icons.assignment_outlined,
-                    idx: 2,
-                  ),
-                  barItem(
-                    label: 'Laporan',
-                    icon: Icons.analytics_outlined,
-                    idx: 3,
-                  ),
-                  barItem(
-                    label: 'Menu',
-                    icon: Icons.dehaze,
-                    idx: 4,
-                  ),
-                ],
+              return AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                switchInCurve: Curves.easeOutQuad,
+                switchOutCurve: Curves.easeInQuad,
+                child: KeyedSubtree(
+                  key: ValueKey(controller.tabId),
+                  child: controller.kontener,
+                ),
               );
             }
         ),
+      ),
+      bottomNavigationBar: GetBuilder<HomeControl>(
+        builder: (_) {
+          return NavigationBar(
+            selectedIndex: controller.tabId > 4 ? 0 : controller.tabId,
+            onDestinationSelected: (idx) {
+              if (idx == 4) {
+                 controller.scaffoldKey.currentState?.openEndDrawer();
+              } else {
+                 controller.pindahTab(idx);
+              }
+            },
+            destinations: const [
+              NavigationDestination(
+                icon: Icon(Icons.home_outlined),
+                selectedIcon: Icon(Icons.home),
+                label: 'Beranda',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.supervisor_account_outlined),
+                selectedIcon: Icon(Icons.supervisor_account),
+                label: 'Karyawan',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.assignment_outlined),
+                selectedIcon: Icon(Icons.assignment),
+                label: 'Payroll',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.analytics_outlined),
+                selectedIcon: Icon(Icons.analytics),
+                label: 'Laporan',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.dehaze),
+                label: 'Menu',
+              ),
+            ],
+          );
+        }
       ),
       endDrawer: Drawer(
         width: 250,
@@ -88,7 +96,7 @@ class HomeView extends StatelessWidget {
                   drawItem(
                     label: 'Area',
                     icon: Icons.maps_home_work_outlined,
-                    color: Colors.brown,
+                    color: Colors.blueGrey,
                     onTap: () {
                       controller.tabId = 4;
                       controller.kontener = AreaView();
@@ -99,7 +107,7 @@ class HomeView extends StatelessWidget {
                   drawItem(
                     label: 'Divisi',
                     icon: Icons.dataset_linked_outlined,
-                    color: Colors.brown,
+                    color: Colors.blueGrey,
                     onTap: () {
                       controller.tabId = 4;
                       controller.kontener = DivisiView();
@@ -110,7 +118,7 @@ class HomeView extends StatelessWidget {
                   drawItem(
                     label: 'Jabatan',
                     icon: Icons.chair_alt_outlined,
-                    color: Colors.brown,
+                    color: Colors.blueGrey,
                     onTap: () {
                       controller.tabId = 4;
                       controller.kontener = JabatanView();
@@ -121,7 +129,7 @@ class HomeView extends StatelessWidget {
                   drawItem(
                     label: 'Agama',
                     icon: Icons.mosque_outlined,
-                    color: Colors.brown,
+                    color: Colors.blueGrey,
                     onTap: () {
                       controller.tabId = 4;
                       controller.kontener = AgamaView();
@@ -132,7 +140,7 @@ class HomeView extends StatelessWidget {
                   drawItem(
                     label: 'Pendidikan',
                     icon: Icons.school_outlined,
-                    color: Colors.brown,
+                    color: Colors.blueGrey,
                     onTap: () {
                       controller.tabId = 4;
                       controller.kontener = PendidikanView();
@@ -143,7 +151,7 @@ class HomeView extends StatelessWidget {
                   drawItem(
                     label: 'Status Karyawan',
                     icon: Icons.arrow_drop_down_circle_outlined,
-                    color: Colors.brown,
+                    color: Colors.blueGrey,
                     onTap: () {
                       controller.tabId = 4;
                       controller.kontener = StatusKerjaView();
@@ -154,7 +162,7 @@ class HomeView extends StatelessWidget {
                   drawItem(
                     label: 'Status PHK',
                     icon: Icons.arrow_drop_down_circle_outlined,
-                    color: Colors.brown,
+                    color: Colors.blueGrey,
                     onTap: () {
                       controller.tabId = 4;
                       controller.kontener = StatusPhkView();
@@ -165,7 +173,7 @@ class HomeView extends StatelessWidget {
                   drawItem(
                     label: 'PTKP',
                     icon: Icons.arrow_drop_down_circle_outlined,
-                    color: Colors.brown,
+                    color: Colors.blueGrey,
                     onTap: () {
                       controller.tabId = 4;
                       controller.kontener = PtkpView();
@@ -176,7 +184,7 @@ class HomeView extends StatelessWidget {
                   drawItem(
                     label: 'Tarif EFektif (TER)',
                     icon: Icons.money,
-                    color: Colors.brown,
+                    color: Colors.blueGrey,
                     onTap: () {
                       controller.tabId = 4;
                       controller.kontener = TarifEfektifView();
@@ -187,7 +195,7 @@ class HomeView extends StatelessWidget {
                   drawItem(
                     label: 'Customer',
                     icon: Icons.emoji_people,
-                    color: Colors.brown,
+                    color: Colors.blueGrey,
                     onTap: () {
                       controller.tabId = 4;
                       controller.kontener = CustomerView();
@@ -198,7 +206,7 @@ class HomeView extends StatelessWidget {
                   drawItem(
                     label: 'Hari Libur',
                     icon: Icons.calendar_month,
-                    color: Colors.brown,
+                    color: Colors.blueGrey,
                     onTap: () {
                       controller.tabId = 4;
                       controller.kontener = HariLiburView();
@@ -206,28 +214,7 @@ class HomeView extends StatelessWidget {
                       controller.update();
                     },
                   ),
-                  // drawItem(
-                  //   label: 'Salary',
-                  //   icon: Icons.attach_money,
-                  //   color: Colors.brown,
-                  //   onTap: () {
-                  //     controller.tabId = 4;
-                  //     controller.kontener = UpahView();
-                  //     Get.back();
-                  //     controller.update();
-                  //   },
-                  // ),
-                  // drawItem(
-                  //   label: 'Uang PHK',
-                  //   icon: Icons.money_off,
-                  //   color: Colors.brown,
-                  //   onTap: () {
-                  //     controller.tabId = 4;
-                  //     controller.kontener = UangPhkView();
-                  //     Get.back();
-                  //     controller.update();
-                  //   },
-                  // ),
+                  const Divider(color: Color(0xFFE2E8F0)),
                   drawItem(
                     label: 'Ubah Email',
                     icon: Icons.email_outlined,
@@ -370,17 +357,18 @@ class HomeView extends StatelessWidget {
     void Function()? onTap,
   }) {
     return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(color: Colors.grey.shade200),
-        ),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: ListTile(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         dense: true,
         leading: Icon(icon, size: 21, color: color),
-        title: Text(label, style: TextStyle(color: color)),
-        trailing: Icon(Icons.keyboard_arrow_right, color: color),
+        title: Text(label, style: TextStyle(color: color, fontWeight: FontWeight.w500)),
+        trailing: Icon(Icons.keyboard_arrow_right, color: color?.withValues(alpha: 0.5)),
         onTap: onTap,
+        hoverColor: color?.withValues(alpha: 0.1),
       ),
     );
   }

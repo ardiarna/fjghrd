@@ -318,27 +318,30 @@ class KaryawanView extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
           decoration: BoxDecoration(
-            color: const Color(0xFFf2fbfe),
-            border: Border.all(
-              color: Colors.brown.shade100, width: 1.5,
+            gradient: const LinearGradient(
+              colors: [Color(0xFF334155), Color(0xFF475569)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
           child: Row(
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(7)),
-                    // color: Colors.brown
-                ),
-                child: const Text('DATA KARYAWAN',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
+              const Icon(Icons.people_alt_outlined, color: Colors.white, size: 28),
+              const SizedBox(width: 12),
+              const Text('Karyawan',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
               const SizedBox(width: 20),
@@ -350,7 +353,7 @@ class KaryawanView extends StatelessWidget {
                   Icons.add_circle,
                 ),
                 iconSize: 30,
-                color: Colors.blue,
+                color: Colors.lightBlueAccent,
                 padding: const EdgeInsets.all(0),
               ),
               const SizedBox(width: 20),
@@ -361,7 +364,8 @@ class KaryawanView extends StatelessWidget {
                     return AFwidget.comboField(
                       value: controller.filterStaf.label,
                       label: '',
-                      warnaBackground: Colors.white,
+                      warna: Colors.white,
+                      warnaBackground: Colors.white.withValues(alpha: 0.1),
                       onTap: () async {
                         var a = await controller.pilihStaf(value: controller.filterStaf.value);
                         if(a != null && a.value != controller.filterStaf.value) {
@@ -376,7 +380,7 @@ class KaryawanView extends StatelessWidget {
               const Padding(
                 padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                 child: Text('Area: ',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                 ),
               ),
               SizedBox(
@@ -386,7 +390,8 @@ class KaryawanView extends StatelessWidget {
                     return AFwidget.comboField(
                       value: controller.filterArea.label,
                       label: '',
-                      warnaBackground: Colors.white,
+                      warna: Colors.white,
+                      warnaBackground: Colors.white.withValues(alpha: 0.1),
                       onTap: () async {
                         var a = await controller.pilihArea(value: controller.filterArea.value, withSemua: true);
                         if(a != null && a.value != controller.filterArea.value) {
@@ -401,7 +406,7 @@ class KaryawanView extends StatelessWidget {
               const Padding(
                 padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                 child: Text('Status: ',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                 ),
               ),
               SizedBox(
@@ -411,7 +416,8 @@ class KaryawanView extends StatelessWidget {
                     return AFwidget.comboField(
                       value: controller.filterStatusKerja.label,
                       label: '',
-                      warnaBackground: Colors.white,
+                      warna: Colors.white,
+                      warnaBackground: Colors.white.withValues(alpha: 0.1),
                       onTap: () async {
                         var a = await controller.pilihStatusKerja(value: controller.filterStatusKerja.value, withSemua: true);
                         if(a != null && a.value != controller.filterStatusKerja.value) {
@@ -426,9 +432,9 @@ class KaryawanView extends StatelessWidget {
               const Spacer(),
               OutlinedButton(
                 style: ButtonStyle(
-                  side: WidgetStateProperty.all<BorderSide>(const BorderSide(color: Colors.green)),
-                  foregroundColor: WidgetStateProperty.all<Color>(Colors.green),
-                  backgroundColor: WidgetStateProperty.all<Color>(Colors.white),
+                  side: WidgetStateProperty.all<BorderSide>(BorderSide(color: Colors.greenAccent.shade200)),
+                  foregroundColor: WidgetStateProperty.all<Color>(Colors.greenAccent.shade200),
+                  backgroundColor: WidgetStateProperty.all<Color>(Colors.transparent),
                 ),
                 onPressed: () {
                   homeControl.kontener = CalonKaryawanView();
@@ -439,9 +445,9 @@ class KaryawanView extends StatelessWidget {
               const SizedBox(width: 20),
               OutlinedButton(
                 style: ButtonStyle(
-                  side: WidgetStateProperty.all<BorderSide>(const BorderSide(color: Colors.red)),
-                  foregroundColor: WidgetStateProperty.all<Color>(Colors.red),
-                  backgroundColor: WidgetStateProperty.all<Color>(Colors.white),
+                  side: WidgetStateProperty.all<BorderSide>(BorderSide(color: Colors.redAccent.shade200)),
+                  foregroundColor: WidgetStateProperty.all<Color>(Colors.redAccent.shade200),
+                  backgroundColor: WidgetStateProperty.all<Color>(Colors.transparent),
                 ),
                 onPressed: () {
                   homeControl.kontener = MantanKaryawanView();

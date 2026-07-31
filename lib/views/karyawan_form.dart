@@ -279,84 +279,53 @@ class KaryawanForm extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
-            decoration: BoxDecoration(
-              color: const Color(0xFFf2fbfe),
-              border: Border.all(
-                color: Colors.brown.shade100, width: 1.5,
+          AFwidget.pageHeader(
+          onBack: Get.back,
+            title: controller.current.aktif == 'P'
+                ? 'DETAIL DATA CALON KARYAWAN' : controller.current.aktif == 'N'
+                ? 'DETAIL DATA EX KARYAWAN' : 'DETAIL DATA KARYAWAN',
+            icon: Icons.person_outline,
+            children: [
+              const Spacer(),
+              GetBuilder<KaryawanControl>(
+                builder: (_) {
+                  if(controller.current.aktif == 'Y' || controller.current.aktif == 'N') {
+                    return AFwidget.tombol(
+                      label: controller.current.aktif == 'Y' ? 'PHK' : 'Ubah Data PHK',
+                      color: Colors.orange,
+                      onPressed: () {
+                        controller.phkForm(context);
+                      },
+                      minimumSize: const Size(120, 40),
+                    );
+                  }
+                  return Container();
+                }
               ),
-            ),
-            child: Row(
-              children: [
-                IconButton(
-                  onPressed: Get.back,
-                  icon: const Icon(
-                    Icons.arrow_back_ios,
-                  ),
-                  iconSize: 25,
-                  color: Colors.orange,
-                  padding: const EdgeInsets.all(0),
-                ),
-                const SizedBox(width: 50),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(7)),
-                  ),
-                  child: Text(controller.current.aktif == 'P'
-                    ? 'DETAIL DATA CALON KARYAWAN' : controller.current.aktif == 'N'
-                    ? 'DETAIL DATA EX KARYAWAN' : 'DETAIL DATA KARYAWAN',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: controller.current.aktif == 'P'
-                        ? Colors.green : controller.current.aktif == 'N'
-                        ? Colors.red : Colors.black,
-                    ),
-                  ),
-                ),
-                const Spacer(),
-                GetBuilder<KaryawanControl>(
+              const SizedBox(width: 25),
+              GetBuilder<KaryawanControl>(
                   builder: (_) {
-                    if(controller.current.aktif == 'Y' || controller.current.aktif == 'N') {
+                    if(controller.current.aktif == 'N') {
                       return AFwidget.tombol(
-                        label: controller.current.aktif == 'Y' ? 'PHK' : 'Ubah Data PHK',
-                        color: Colors.orange,
-                        onPressed: () {
-                          controller.phkForm(context);
-                        },
+                        label: 'Batal PHK',
+                        color: Colors.purple,
+                        onPressed: controller.hapusPhkForm,
                         minimumSize: const Size(120, 40),
                       );
                     }
                     return Container();
                   }
-                ),
-                const SizedBox(width: 25),
-                GetBuilder<KaryawanControl>(
-                    builder: (_) {
-                      if(controller.current.aktif == 'N') {
-                        return AFwidget.tombol(
-                          label: 'Batal PHK',
-                          color: Colors.purple,
-                          onPressed: controller.hapusPhkForm,
-                          minimumSize: const Size(120, 40),
-                        );
-                      }
-                      return Container();
-                    }
-                ),
-                const SizedBox(width: 25),
-                AFwidget.tombol(
-                  label: 'Hapus Data Karyawan',
-                  color: Colors.red,
-                  onPressed: () {
-                    controller.hapusForm();
-                  },
-                  minimumSize: const Size(120, 40),
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(width: 25),
+              AFwidget.tombol(
+                label: 'Hapus Data Karyawan',
+                color: Colors.red,
+                onPressed: () {
+                  controller.hapusForm();
+                },
+                minimumSize: const Size(120, 40),
+              ),
+            ],
           ),
           Expanded(
             child: Container(

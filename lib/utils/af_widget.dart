@@ -469,8 +469,7 @@ abstract class AFwidget {
     return Container(
       decoration: BoxDecoration(
         color: backgroudColor,
-        borderRadius:
-        const BorderRadius.all(Radius.circular(7)),
+        borderRadius: const BorderRadius.all(Radius.circular(12)),
         // border: Border.all(color: Colors.black.withOpacity(0.2)),
         // boxShadow: [
         //   BoxShadow(
@@ -495,11 +494,19 @@ abstract class AFwidget {
           suffixIcon: suffixIcon,
           alignLabelWithHint: true,
           // border: InputBorder.none,
-          border: const OutlineInputBorder(),
-          enabledBorder: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(7)),
-            borderSide: BorderSide(color: Color(0xFFd1d1d1)),
+          border: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
           ),
+          enabledBorder: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+            borderSide: BorderSide(color: Color(0xFFE0E0E0)),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: const BorderRadius.all(Radius.circular(12)),
+            borderSide: BorderSide(color: Get.theme.primaryColor, width: 2),
+          ),
+          filled: true,
+          fillColor: backgroudColor ?? Colors.grey.shade50,
           contentPadding: contentPadding,
           isDense: true,
         ),
@@ -531,9 +538,9 @@ abstract class AFwidget {
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
         // margin: const EdgeInsets.only(top: 11),
         decoration: BoxDecoration(
-          border: Border.all(color: warna ?? const Color(0xFFd1d1d1)),
-          borderRadius: const BorderRadius.all(Radius.circular(5)),
-          color: warnaBackground,
+          border: Border.all(color: warna ?? const Color(0xFFE0E0E0)),
+          borderRadius: const BorderRadius.all(Radius.circular(12)),
+          color: warnaBackground ?? Colors.grey.shade50,
         ),
         child: GestureDetector(
           onTap: onTap,
@@ -552,9 +559,9 @@ abstract class AFwidget {
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
           // margin: const EdgeInsets.only(top: 11),
           decoration: BoxDecoration(
-            border: Border.all(color: warna ?? const Color(0xFFd1d1d1)),
-            borderRadius: const BorderRadius.all(Radius.circular(5)),
-            color: warnaBackground,
+            border: Border.all(color: warna ?? const Color(0xFFE0E0E0)),
+            borderRadius: const BorderRadius.all(Radius.circular(12)),
+            color: warnaBackground ?? Colors.grey.shade50,
           ),
           child: GestureDetector(
             onTap: onTap,
@@ -592,11 +599,13 @@ abstract class AFwidget {
     var a = FilledButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: color,
-        minimumSize: minimumSize,
+        backgroundColor: color ?? Get.theme.primaryColor,
+        foregroundColor: Colors.white,
+        minimumSize: minimumSize ?? const Size(88, 48),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(12),
         ),
+        elevation: 0,
       ),
       child: Text(label),
     );
@@ -880,6 +889,58 @@ abstract class AFwidget {
     );
   }
 
+  static Widget pageHeader({
+    required String title,
+    required IconData icon,
+    List<Widget>? children,
+    void Function()? onBack,
+  }) {
+    List<Widget> rowChildren = [];
+    if (onBack != null) {
+      rowChildren.add(IconButton(
+        onPressed: onBack,
+        icon: const Icon(Icons.arrow_back, color: Colors.white, size: 24),
+        padding: const EdgeInsets.only(right: 16),
+        constraints: const BoxConstraints(),
+      ));
+    }
+    rowChildren.addAll([
+      Icon(icon, color: Colors.white, size: 28),
+      const SizedBox(width: 12),
+      Text(title,
+        style: const TextStyle(
+          fontSize: 22,
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
+      ),
+    ]);
+    if (children != null) {
+      rowChildren.add(const SizedBox(width: 20));
+      rowChildren.addAll(children);
+    }
+    return Container(
+      padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFF334155), Color(0xFF475569)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        children: rowChildren,
+      ),
+    );
+  }
+
   static Widget formHeader(String label, {
     bool radiusLeft = true,
     bool radiusRight = true,
@@ -892,9 +953,10 @@ abstract class AFwidget {
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
       alignment: Alignment.centerLeft,
       decoration: BoxDecoration(
-        color: const Color(0xFFf2fbfe),
-        border: Border(
-          bottom: BorderSide(color: Colors.brown.shade100),
+        gradient: const LinearGradient(
+          colors: [Color(0xFF334155), Color(0xFF475569)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
         ),
         borderRadius: BorderRadius.only(
           topLeft: radiusLeft ? const Radius.circular(15) : Radius.zero,
@@ -908,6 +970,7 @@ abstract class AFwidget {
             style: const TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
           if (actions != null && actions.isNotEmpty) Row(children: actions),

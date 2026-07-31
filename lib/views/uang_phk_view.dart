@@ -217,32 +217,12 @@ class UangPhkView extends StatelessWidget {
     controller.loadUangPhks();
     return Column(
       children: [
-        Container(
-          padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
-          decoration: BoxDecoration(
-            color: const Color(0xFFf2fbfe),
-            border: Border.all(
-              color: Colors.brown.shade100, width: 1.5,
-            ),
-          ),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                margin: const EdgeInsets.only(right: 40),
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(7)),
-                    color: Colors.brown
-                ),
-                child: const Text('UANG PHK',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              IconButton(
+        AFwidget.pageHeader(
+          title: 'UANG PHK',
+          icon: Icons.list_alt_outlined,
+          children: [
+            const Spacer(),
+            IconButton(
                 onPressed: () {
                   controller.tambahForm(context);
                 },
@@ -250,7 +230,7 @@ class UangPhkView extends StatelessWidget {
                   Icons.add_circle,
                 ),
                 iconSize: 30,
-                color: Colors.blue,
+                color: Colors.lightBlueAccent,
                 padding: const EdgeInsets.all(0),
               ),
               const Spacer(),
@@ -273,8 +253,7 @@ class UangPhkView extends StatelessWidget {
                   },
                 ),
               ),
-            ],
-          ),
+          ],
         ),
         Expanded(
           child: Container(

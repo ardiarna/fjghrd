@@ -6,6 +6,7 @@ import 'package:fjghrd/views/karyawan_payroll_view.dart';
 import 'package:fjghrd/views/login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
   final AuthControl authControl = Get.put(AuthControl(), permanent: true);
@@ -16,7 +17,8 @@ void main() async {
       debugShowCheckedModeBanner: false,
       title: 'HRD Fratekindo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.brown),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey),
+        textTheme: GoogleFonts.interTextTheme(),
         useMaterial3: true,
       ),
       initialRoute: authControl.user.email == "" ? Rute.login : Rute.home,

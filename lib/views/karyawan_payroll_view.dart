@@ -1,3 +1,5 @@
+import 'package:fjghrd/controllers/home_control.dart';
+import 'package:fjghrd/views/karyawan_view.dart';
 import 'package:fjghrd/controllers/karyawan_control.dart';
 import 'package:fjghrd/models/payroll.dart';
 import 'package:fjghrd/utils/af_constant.dart';
@@ -17,53 +19,25 @@ class KaryawanPayrollView extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-            decoration: BoxDecoration(
-              color: const Color(0xFFf2fbfe),
-              border: Border.all(
-                color: Colors.brown.shade100, width: 1.5,
-              ),
-            ),
-            child: Row(
-              children: [
-                IconButton(
-                  onPressed: Get.back,
-                  icon: const Icon(
-                    Icons.arrow_back_ios,
-                  ),
-                  iconSize: 25,
-                  color: Colors.orange,
-                  padding: const EdgeInsets.all(0),
-                ),
-                const SizedBox(width: 50),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(7)),
-                    color: Colors.brown,
-                  ),
-                  child: const Text('PAYROLL',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 50),
+          AFwidget.pageHeader(
+          onBack: Get.back,
+          title: 'PAYROLL',
+          icon: Icons.list_alt_outlined,
+          children: [
+            const Spacer(),
+            const SizedBox(width: 50),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(controller.current.nama,
                       style: const TextStyle(
-                        color: Colors.black54,
+                        color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text('Jabatan : ${controller.current.jabatan.nama}',
                       style: const TextStyle(
-                        color: Colors.black45,
+                        color: Colors.white70,
                       ),
                     ),
                   ],
@@ -78,13 +52,13 @@ class KaryawanPayrollView extends StatelessWidget {
                 tombol(
                   label: 'Excel Slip Gaji',
                   icon: Icons.receipt_long,
-                  color: Colors.green,
+                  color: Colors.greenAccent,
                   onPressed: dialogSlipGaji,
                 ),
                 tombol(
                   label: 'Excel Payroll',
                   icon: Icons.file_open,
-                  color: Colors.green,
+                  color: Colors.greenAccent,
                   onPressed: controller.dowloadPayroll,
                 ),
                 const SizedBox(width: 20),
@@ -107,9 +81,8 @@ class KaryawanPayrollView extends StatelessWidget {
                     },
                   ),
                 ),
-              ],
-            ),
-          ),
+          ],
+        ),
           Expanded(
             child: Scrollbar(
               thumbVisibility: true,
@@ -183,7 +156,7 @@ class KaryawanPayrollView extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 17,
                           fontWeight: FontWeight.w600,
-                          color: Colors.black45,
+                          color: Colors.white70,
                         ),
                       ),
                     ),
@@ -317,7 +290,7 @@ class KaryawanPayrollView extends StatelessWidget {
                     const Padding(
                       padding: EdgeInsets.fromLTRB(20, 10, 10, 0),
                       child: Text('BENEFIT LAINNYA',
-                        style: TextStyle(color: Colors.black54, fontWeight: FontWeight.w600),
+                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
                       ),
                     ),
                     const SizedBox(height: 7),
@@ -647,7 +620,7 @@ class KaryawanPayrollView extends StatelessWidget {
           borderRadius: BorderRadius.circular(0),
         ),
         foregroundColor: color,
-        backgroundColor: color != null ? (color as MaterialColor).shade50 : null,
+        backgroundColor: color?.withValues(alpha: 0.1),
       ),
     );
   }

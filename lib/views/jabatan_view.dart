@@ -1,3 +1,4 @@
+import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/controllers/jabatan_control.dart';
 import 'package:fjghrd/models/jabatan.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
@@ -70,32 +71,12 @@ class JabatanView extends StatelessWidget {
     controller.loadJabatans();
     return Column(
       children: [
-        Container(
-          padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
-          decoration: BoxDecoration(
-            color: const Color(0xFFf2fbfe),
-            border: Border.all(
-              color: Colors.brown.shade100, width: 1.5,
-            ),
-          ),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                margin: const EdgeInsets.only(right: 40),
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(7)),
-                    color: Colors.brown
-                ),
-                child: const Text('JABATAN',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              IconButton(
+        AFwidget.pageHeader(
+          title: 'JABATAN',
+          icon: Icons.list_alt_outlined,
+          children: [
+            const Spacer(),
+            IconButton(
                 onPressed: () {
                   controller.inputForm('');
                 },
@@ -103,11 +84,10 @@ class JabatanView extends StatelessWidget {
                   Icons.add_circle,
                 ),
                 iconSize: 30,
-                color: Colors.blue,
+                color: Colors.lightBlueAccent,
                 padding: const EdgeInsets.all(0),
               ),
-            ],
-          ),
+          ],
         ),
         Expanded(
           child: Container(

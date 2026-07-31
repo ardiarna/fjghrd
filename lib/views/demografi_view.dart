@@ -1,3 +1,5 @@
+import 'package:fjghrd/controllers/home_control.dart';
+import 'package:fjghrd/views/beranda_view.dart';
 import 'package:fjghrd/controllers/karyawan_control.dart';
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_convert.dart';
@@ -31,44 +33,35 @@ class DemografiView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/images/line-blue.png'),
-          alignment: Alignment.topRight,
-          repeat: ImageRepeat.repeatY,
-          fit: BoxFit.fitWidth,
-          opacity: 0.1,
+    return Column(
+      children: [
+        AFwidget.pageHeader(
+          onBack: () {
+            final hc = Get.find<HomeControl>();
+            hc.kontener = BerandaView();
+            hc.update();
+          },
+          title: 'DEMOGRAFI KARYAWAN',
+          icon: Icons.list_alt_outlined,
         ),
-      ),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(15),
-            child: const Text(
-              'DEMOGRAFI KARYAWAN',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            ),
+        Expanded(
+          child: Row(
+            children: [
+              Expanded(child: kelaminChart()),
+              Expanded(child: agamaChart()),
+              Expanded(child: kawinChart()),
+            ],
           ),
-          Expanded(
-            child: Row(
-              children: [
-                Expanded(child: kelaminChart()),
-                Expanded(child: agamaChart()),
-                Expanded(child: kawinChart()),
-              ],
-            ),
+        ),
+        Expanded(
+          child: Row(
+            children: [
+              Expanded(child: pendidikanChart()),
+              Expanded(child: usiaChart()),
+            ],
           ),
-          Expanded(
-            child: Row(
-              children: [
-                Expanded(child: pendidikanChart()),
-                Expanded(child: usiaChart()),
-              ],
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

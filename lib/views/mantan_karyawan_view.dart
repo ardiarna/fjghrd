@@ -258,43 +258,17 @@ class MantanKaryawanView extends StatelessWidget {
     controller.loadMantanKaryawans();
     return Column(
       children: [
-        Container(
-          padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
-          decoration: BoxDecoration(
-            color: const Color(0xFFf2fbfe),
-            border: Border.all(
-              color: Colors.brown.shade100, width: 1.5,
-            ),
-          ),
-          child: Row(
-            children: [
-              IconButton(
-                onPressed: () {
-                  homeControl.kontener = KaryawanView();
-                  homeControl.update();
-                },
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                ),
-                iconSize: 25,
-                color: Colors.orange,
-                padding: const EdgeInsets.all(0),
-              ),
-              const SizedBox(width: 50),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(7)),
-                ),
-                child: const Text('DATA EX KARYAWAN',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.red,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 20),
+        AFwidget.pageHeader(
+          onBack: () {
+            final hc = Get.find<HomeControl>();
+            hc.kontener = KaryawanView();
+            hc.update();
+          },
+          title: 'DATA EX KARYAWAN',
+          icon: Icons.list_alt_outlined,
+          children: [
+            const Spacer(),
+            const SizedBox(width: 20),
               SizedBox(
                 width: 200,
                 child: GetBuilder<KaryawanControl>(
@@ -314,8 +288,7 @@ class MantanKaryawanView extends StatelessWidget {
                   },
                 ),
               ),
-            ],
-          ),
+          ],
         ),
         Expanded(
           child: GetBuilder<KaryawanControl>(

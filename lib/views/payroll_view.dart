@@ -27,25 +27,30 @@ class PayrollView extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
           decoration: BoxDecoration(
-            color: const Color(0xFFf2fbfe),
-            border: Border.all(
-              color: Colors.brown.shade100, width: 1.5,
+            gradient: const LinearGradient(
+              colors: [Color(0xFF334155), Color(0xFF475569)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
             ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.1),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
           ),
           child: Row(
             children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(7)),
-                ),
-                child: const Text('PAYROLL',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+              const Icon(Icons.assignment_outlined, color: Colors.white, size: 28),
+              const SizedBox(width: 12),
+              const Text('Payroll',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
               const SizedBox(width: 20),
@@ -105,8 +110,8 @@ class PayrollView extends StatelessWidget {
                     return AFwidget.comboField(
                       value: controller.filterTahun.label,
                       label: '',
-                      warna: Colors.brown.shade400,
-                      warnaBackground: Colors.white,
+                      warna: Colors.white,
+                      warnaBackground: Colors.white.withValues(alpha: 0.1),
                       onTap: () async {
                         var a = await controller.pilihTahun(value: controller.filterTahun.value);
                         if(a != null && a.value != controller.filterTahun.value) {
@@ -376,18 +381,24 @@ class PayrollView extends StatelessWidget {
     required IconData? icon,
     required void Function()? onPressed,
   }) {
-    return ElevatedButton.icon(
-      onPressed: onPressed,
-      icon: Icon(icon),
-      label: Text(label,
-        style: const TextStyle(fontWeight: FontWeight.bold),
-      ),
-      style: ElevatedButton.styleFrom(
-        minimumSize: const Size(100, 70),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(0),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 4),
+      child: ElevatedButton.icon(
+        onPressed: onPressed,
+        icon: Icon(icon, size: 18),
+        label: Text(label,
+          style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
         ),
-        backgroundColor: const Color(0xFFf2fbfe),
+        style: ElevatedButton.styleFrom(
+          minimumSize: const Size(0, 45),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          foregroundColor: Colors.white,
+          backgroundColor: Colors.white.withValues(alpha: 0.1),
+          elevation: 0,
+        ),
       ),
     );
   }
