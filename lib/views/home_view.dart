@@ -14,7 +14,6 @@ import 'package:fjghrd/views/status_phk_view.dart';
 import 'package:fjghrd/views/tarif_efektif_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 
 class HomeView extends StatelessWidget {
   HomeView({super.key});

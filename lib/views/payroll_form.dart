@@ -3,6 +3,7 @@ import 'package:fjghrd/models/payroll.dart';
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
+import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/views/payroll_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -1140,85 +1141,57 @@ class PayrollForm extends StatelessWidget {
     controller.loadDetilPayrolls();
     return Column(
       children: [
-        Container(
-          padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
-          decoration: BoxDecoration(
-            color: const Color(0xFFf2fbfe),
-            border: Border.all(
-              color: Colors.brown.shade100, width: 1.5,
-            ),
-          ),
-          child: Row(
-            children: [
-              IconButton(
-                onPressed: () {
-                  controller.homeControl.kontener = PayrollView();
-                  controller.homeControl.update();
-                },
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                ),
-                iconSize: 25,
-                color: Colors.orange,
-                padding: const EdgeInsets.all(0),
-              ),
-              const SizedBox(width: 50),
-              GetBuilder<PayrollControl>(
-                builder: (_) {
-                  return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                    decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(7)),
-                    ),
-                    child: Text('PAYROLL ${mapBulan[controller.currentPayroll.bulan]} ${controller.currentPayroll.tahun}'.toUpperCase(),
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(width: 40),
-              Visibility(
-                visible: isEdit,
-                child: IconButton(
-                  onPressed: () {
-                    controller.ubahForm(context);
-                  },
-                  icon: const Icon(
-                    Icons.edit,
+        GetBuilder<PayrollControl>(
+          builder: (_) {
+            return AFwidget.pageHeader(
+              onBack: () {
+                controller.homeControl.kontener = PayrollView();
+                controller.homeControl.update();
+              },
+              title: 'DETAIL PAYROLL',
+              icon: Icons.assignment_outlined,
+              children: [
+                const SizedBox(width: 40),
+                Text('PAYROLL ${mapBulan[controller.currentPayroll.bulan]} ${controller.currentPayroll.tahun}'.toUpperCase(),
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
-                  color: Colors.green,
-                  padding: const EdgeInsets.all(0),
                 ),
-              ),
-              const SizedBox(width: 50),
-              Flexible(
-                child: GetBuilder<PayrollControl>(
-                    builder: (_) {
-                    return Text('Periode : ${mapBulan[controller.currentPayroll.bulan]} ${controller.currentPayroll.tahun}',
-                      style: const TextStyle(
-                        color: Colors.black45,
-                      ),
-                    );
-                  },
+                const SizedBox(width: 40),
+                Visibility(
+                  visible: isEdit,
+                  child: IconButton(
+                    onPressed: () {
+                      controller.ubahForm(context);
+                    },
+                    icon: const Icon(
+                      Icons.edit,
+                    ),
+                    color: Colors.greenAccent,
+                    padding: const EdgeInsets.all(0),
+                  ),
                 ),
-              ),
-              const SizedBox(width: 50),
-              Flexible(
-                child: GetBuilder<PayrollControl>(
-                    builder: (_) {
-                    return Text('Periode Batas (Cut-off) : ${AFconvert.matDate(controller.currentPayroll.tanggalAwal)} s/d ${AFconvert.matDate(controller.currentPayroll.tanggalAkhir)}',
-                      style: const TextStyle(
-                        color: Colors.black45,
-                      ),
-                    );
-                  },
+                const SizedBox(width: 50),
+                Flexible(
+                  child: Text('Periode : ${mapBulan[controller.currentPayroll.bulan]} ${controller.currentPayroll.tahun}',
+                    style: const TextStyle(
+                      color: Colors.white70,
+                    ),
+                  ),
                 ),
-              ),
-            ],
-          ),
+                const SizedBox(width: 50),
+                Flexible(
+                  child: Text('Periode Batas (Cut-off) : ${AFconvert.matDate(controller.currentPayroll.tanggalAwal)} s/d ${AFconvert.matDate(controller.currentPayroll.tanggalAkhir)}',
+                    style: const TextStyle(
+                      color: Colors.white70,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }
         ),
         Expanded(
           child: GetBuilder<PayrollControl>(

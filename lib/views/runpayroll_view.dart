@@ -1210,32 +1210,37 @@ class RunpayrollView extends StatelessWidget {
   }
 
   Widget wgPeriode() {
-    return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/images/line-blue.png'),
-          alignment: Alignment.topRight,
-          repeat: ImageRepeat.repeatY,
-          fit: BoxFit.fitWidth,
-          opacity: 0.1,
+    return Column(
+      children: [
+        AFwidget.pageHeader(
+          onBack: () {
+            controller.homeControl.kontener = PayrollView();
+            controller.homeControl.update();
+          },
+          title: 'RUN PAYROLL',
+          icon: Icons.data_exploration_outlined,
         ),
-      ),
-      child: Row(
-        children: [
-          const Spacer(),
-          Container(
-            padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
+        Expanded(
+          child: Container(
             decoration: const BoxDecoration(
-              color: Colors.white,
+              image: DecorationImage(
+                image: AssetImage('assets/images/line-blue.png'),
+                alignment: Alignment.topLeft,
+                repeat: ImageRepeat.repeatY,
+                fit: BoxFit.fitWidth,
+                opacity: 0.1,
+              ),
             ),
-            child: Column(
+            child: Row(
               children: [
-                const Text('RUN PAYROLL',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                const Spacer(),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
                   ),
-                ),
+                  child: Column(
+                    children: [
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
                   child: Row(
@@ -1391,37 +1396,45 @@ class RunpayrollView extends StatelessWidget {
           const Spacer(),
         ],
       ),
+          ),
+        ),
+      ],
     );
   }
   
   Widget wgKaryawans() {
-    return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/images/line-blue.png'),
-          alignment: Alignment.topRight,
-          repeat: ImageRepeat.repeatY,
-          fit: BoxFit.fitWidth,
-          opacity: 0.1,
+    return Column(
+      children: [
+        AFwidget.pageHeader(
+          title: 'RUN PAYROLL',
+          icon: Icons.data_exploration_outlined,
+          onBack: () {
+            controller.homeControl.kontener = wgPeriode();
+            controller.homeControl.update();
+          },
         ),
-      ),
-      child: Row(
-        children: [
-          const Spacer(),
-          Container(
-            padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
+        Expanded(
+          child: Container(
             decoration: const BoxDecoration(
-              color: Colors.white,
+              image: DecorationImage(
+                image: AssetImage('assets/images/line-blue.png'),
+                alignment: Alignment.topLeft,
+                repeat: ImageRepeat.repeatY,
+                fit: BoxFit.fitWidth,
+                opacity: 0.1,
+              ),
             ),
-            child: Column(
+            child: Row(
               children: [
-                const Text('RUN PAYROLL',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                const Spacer(),
+                Container(
+                  padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
                   ),
-                ),
-                const SizedBox(height: 20),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 20),
                 const Text('PILIH KARYAWAN',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
@@ -1553,45 +1566,40 @@ class RunpayrollView extends StatelessWidget {
           const Spacer(),
         ],
       ),
+          ),
+        ),
+      ],
     );
   }
 
   Widget wgGaji() {
     return Column(
       children: [
-        Container(
-          padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
-          decoration: BoxDecoration(
-            color: const Color(0xFFf2fbfe),
-            border: Border.all(
-              color: Colors.brown.shade100, width: 1.5,
+        AFwidget.pageHeader(
+          onBack: () {
+            controller.homeControl.kontener = wgKaryawans();
+            controller.homeControl.update();
+          },
+          title: 'RUN PAYROLL',
+          icon: Icons.data_exploration_outlined,
+          children: [
+            const SizedBox(width: 50),
+            Flexible(
+              child: Text('Periode : ${controller.bulan.label} ${controller.tahun.label}',
+                style: const TextStyle(
+                  color: Colors.white70,
+                ),
+              ),
             ),
-          ),
-          child: Row(
-            children: [
-              const Text('RUN PAYROLL',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+            const SizedBox(width: 50),
+            Flexible(
+              child: Text('Periode Batas (Cut-Off) : ${controller.txtTanggalAwal.text} s/d ${controller.txtTanggalAkhir.text}',
+                style: const TextStyle(
+                  color: Colors.white70,
                 ),
               ),
-              const SizedBox(width: 50),
-              Flexible(
-                child: Text('Periode : ${controller.bulan.label} ${controller.tahun.label}',
-                  style: const TextStyle(
-                    color: Colors.black45,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 50),
-              Flexible(
-                child: Text('Periode Batas (Cut-Off) : ${controller.txtTanggalAwal.text} s/d ${controller.txtTanggalAkhir.text}',
-                  style: const TextStyle(
-                    color: Colors.black45,
-                  ),),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
         Expanded(
           child: GetBuilder<PayrollControl>(

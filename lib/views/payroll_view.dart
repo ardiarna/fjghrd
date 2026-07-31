@@ -127,38 +127,41 @@ class PayrollView extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: Scrollbar(
-            thumbVisibility: true,
-            controller: _scrollController,
-            child: SingleChildScrollView(
+          child: Container(
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/line-blue.png'),
+                alignment: Alignment.topLeft,
+                repeat: ImageRepeat.repeatY,
+                fit: BoxFit.fitWidth,
+                opacity: 0.1,
+              ),
+            ),
+            child: Scrollbar(
+              thumbVisibility: true,
               controller: _scrollController,
-              child: Column(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(10),
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/images/line-blue.png'),
-                        alignment: Alignment.topLeft,
-                        repeat: ImageRepeat.repeatY,
-                        fit: BoxFit.fitWidth,
-                        opacity: 0.1,
+              child: SingleChildScrollView(
+                controller: _scrollController,
+                child: Column(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(10),
+                      child: GetBuilder<PayrollControl>(
+                        builder: (_) {
+                          return Wrap(
+                            spacing: 10,
+                            runSpacing: 10,
+                            children: controller.listPayroll.map((e) {
+                              return boxKonten(e);
+                            }).toList(),
+                          );
+                        }
                       ),
                     ),
-                    child: GetBuilder<PayrollControl>(
-                      builder: (_) {
-                        return Wrap(
-                          spacing: 10,
-                          runSpacing: 10,
-                          children: controller.listPayroll.map((e) {
-                            return boxKonten(e);
-                          }).toList(),
-                        );
-                      }
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

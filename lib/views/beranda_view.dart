@@ -59,17 +59,8 @@ class BerandaView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage('assets/images/line-blue.png'),
-          alignment: Alignment.topRight,
-          repeat: ImageRepeat.repeatY,
-          fit: BoxFit.fitWidth,
-          opacity: 0.1,
-        ),
-      ),
-      child: Column(
+    return Column(
+
         children: [
           Container(
             padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
@@ -102,8 +93,20 @@ class BerandaView extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Row(
-              children: [
+            child: Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/line-blue.png'),
+                  alignment: Alignment.topLeft,
+                  fit: BoxFit.cover,
+                  opacity: 0.1,
+                ),
+              ),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: Row(
+                      children: [
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.all(20),
@@ -349,7 +352,7 @@ class BerandaView extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Row(
+                    child: Row(
               children: [
                 Expanded(
                   child: Container(
@@ -581,12 +584,15 @@ class BerandaView extends StatelessWidget {
                     ),
                   ),
                 ),
-              ],
-            ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
-    );
+    ],
+  );
   }
 
   Widget summaryInfo() {

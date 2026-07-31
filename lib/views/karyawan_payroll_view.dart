@@ -1,5 +1,3 @@
-import 'package:fjghrd/controllers/home_control.dart';
-import 'package:fjghrd/views/karyawan_view.dart';
 import 'package:fjghrd/controllers/karyawan_control.dart';
 import 'package:fjghrd/models/payroll.dart';
 import 'package:fjghrd/utils/af_constant.dart';
