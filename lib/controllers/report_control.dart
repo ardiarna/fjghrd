@@ -166,6 +166,34 @@ class ReportControl extends GetxController {
     }
   }
 
+  Future<void> downloadSlipGajiPdf() async {
+    if(filterBulan.value == '') {
+      AFwidget.formWarning(label: 'Silakan pilih bulan terlebih dahulu');
+      return;
+    }
+    if(filterJenis == '') {
+      AFwidget.formWarning(label: 'Silakan pilih divisi terlebih dahulu');
+      return;
+    }
+    if(filterArea.value == '') {
+      AFwidget.formWarning(label: 'Silakan pilih area terlebih dahulu');
+      return;
+    }
+    Get.back();
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/pdf-slip-gaji/${filterTahun.value}/${filterBulan.value}/$filterJenis/${filterArea.value}');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'pdf slip gaji telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat pdf. [${hasil.message}]');
+    }
+  }
+
   Future<void> dowloadRekapPPh21() async {
     if(filterJenis == '') {
       AFwidget.formWarning(label: 'Silakan pilih divisi terlebih dahulu');

@@ -274,7 +274,7 @@ class ReportView extends StatelessWidget {
         ),
         child: Column(
           children: [
-            AFwidget.formHeader('Excel Slip Gaji ${controller.filterTahun.label}'),
+            AFwidget.formHeader('Slip Gaji ${controller.filterTahun.label}'),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Row(
@@ -345,9 +345,18 @@ class ReportView extends StatelessWidget {
                     onPressed: Get.back,
                     minimumSize: const Size(120, 40),
                   ),
-                  const SizedBox(width: 40),
+                  const Spacer(),
                   AFwidget.tombol(
-                    label: 'Download',
+                    label: 'Download PDF',
+                    color: Colors.red,
+                    onPressed: () {
+                      controller.downloadSlipGajiPdf();
+                    },
+                    minimumSize: const Size(120, 40),
+                  ),
+                  const SizedBox(width: 10),
+                  AFwidget.tombol(
+                    label: 'Download Excel',
                     color: Colors.blueGrey,
                     onPressed: () {
                       controller.downloadSlipGaji();
