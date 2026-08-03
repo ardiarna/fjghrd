@@ -20,10 +20,11 @@ class LoginView extends StatelessWidget {
           height: MediaQuery.sizeOf(context).height,
           width: MediaQuery.of(context).size.width,
           decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFFF8FAFC), Color(0xFFE2E8F0)],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
+            color: Color(0xFFF1F5F9), // Warna dasar terang
+            image: DecorationImage(
+              image: AssetImage('assets/images/hrd_bg.png'),
+              fit: BoxFit.cover,
+              opacity: 0.25, // Membuat gambar transparan (25% opacity)
             ),
           ),
           child: Center(
