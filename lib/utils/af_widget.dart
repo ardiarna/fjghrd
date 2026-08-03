@@ -557,7 +557,7 @@ abstract class AFwidget {
       children: [
         Container(
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          // margin: const EdgeInsets.only(top: 11),
+          margin: label != '' ? const EdgeInsets.only(top: 11) : null,
           decoration: BoxDecoration(
             border: Border.all(color: warna ?? const Color(0xFFE0E0E0)),
             borderRadius: const BorderRadius.all(Radius.circular(12)),
@@ -580,7 +580,7 @@ abstract class AFwidget {
         ),
         label != '' ?
         Container(
-          margin: const EdgeInsets.only(top: 5, left: 7),
+          margin: const EdgeInsets.only(top: 2, left: 7),
           padding: const EdgeInsets.symmetric(horizontal: 4),
           color: Colors.white,
           child: Text(label, style: TextStyle(fontSize: 12, color: warna)),

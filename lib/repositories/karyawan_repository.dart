@@ -193,6 +193,16 @@ class KaryawanRepository {
   }) async {
     return await AFdatabase.download(url: 'excel/payroll/$id/$tahun');
   }
+
+  Future<Hasil> excelPayrollPeriode({
+    required String id,
+    required String tahunAwal,
+    required String bulanAwal,
+    required String tahunAkhir,
+    required String bulanAkhir,
+  }) async {
+    return await AFdatabase.download(url: 'excel/payroll-periode/$id/$tahunAwal/$bulanAwal/$tahunAkhir/$bulanAkhir');
+  }
   
   Future<Hasil> excelSlipGaji({
     required String id,

@@ -108,6 +108,13 @@ class KaryawanControl extends GetxController {
   late List<Opsi> listTahun;
   List<Opsi> listBulan = mapBulan.entries.map((e) => Opsi(value: e.key.toString(), label: e.value)).toList();
 
+  // Field untuk dialog download Excel Payroll per periode
+  Opsi payrollBulanAwal = Opsi(value: '1', label: 'JANUARI');
+  Opsi payrollBulanAkhir = Opsi(value: '12', label: 'DESEMBER');
+  late Opsi payrollTahunAwal;
+  late Opsi payrollTahunAkhir;
+
+
   Map<int, bool> bulanTerpilih = {
     1: false,
     2: false,
@@ -3313,6 +3320,28 @@ class KaryawanControl extends GetxController {
     }
   }
 
+  Future<void> dowloadPayrollPeriode() async {
+    AFwidget.loading();
+    var hasil = await _repo.excelPayrollPeriode(
+      id: current.id,
+      tahunAwal: payrollTahunAwal.value,
+      bulanAwal: payrollBulanAwal.value,
+      tahunAkhir: payrollTahunAkhir.value,
+      bulanAkhir: payrollBulanAkhir.value,
+    );
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'laporan excel payroll ${current.nama} berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna:  Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+
   Future<void> downloadSlipGaji() async {
     AFwidget.loading();
     List<int> selected = bulanTerpilih.entries
@@ -3379,6 +3408,8 @@ class KaryawanControl extends GetxController {
   void onInit() {
     filterTahun = Opsi(value: '${_now.year}', label: '${_now.year}');
     listTahun = List.generate(_now.year-2019, (index) => Opsi(value: '${_now.year-index}', label: '${_now.year-index}'));
+    payrollTahunAwal = Opsi(value: '${_now.year}', label: '${_now.year}');
+    payrollTahunAkhir = Opsi(value: '${_now.year}', label: '${_now.year}');
     txtId = TextEditingController();
     txtNama = TextEditingController();
     txtNik = TextEditingController();

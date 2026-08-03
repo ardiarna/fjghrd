@@ -57,7 +57,7 @@ class KaryawanPayrollView extends StatelessWidget {
                   label: 'Excel Payroll',
                   icon: Icons.file_open,
                   color: Colors.greenAccent,
-                  onPressed: controller.dowloadPayroll,
+                  onPressed: dialogExcelPayroll,
                 ),
                 const SizedBox(width: 20),
                 SizedBox(
@@ -397,6 +397,215 @@ class KaryawanPayrollView extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void dialogExcelPayroll() {
+    // Default ke pertahun
+    String modePilihan = 'tahun'; // 'tahun' atau 'periode'
+
+    AFwidget.dialog(
+      StatefulBuilder(
+        builder: (ctx, setStateDialog) {
+          return Container(
+            width: 520,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(15)),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AFwidget.formHeader('Excel Payroll ${controller.current.nama}'),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Pilihan mode
+                      RadioGroup<String>(
+                        groupValue: modePilihan,
+                        onChanged: (val) {
+                          if (val != null) {
+                            setStateDialog(() { modePilihan = val; });
+                          }
+                        },
+                        child: Row(
+                          children: const [
+                            Radio<String>(
+                              value: 'tahun',
+                            ),
+                            Text('Per Tahun', style: TextStyle(fontWeight: FontWeight.w600)),
+                            SizedBox(width: 30),
+                            Radio<String>(
+                              value: 'periode',
+                            ),
+                            Text('Per Periode', style: TextStyle(fontWeight: FontWeight.w600)),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+
+                      // Konten berdasarkan pilihan
+                      if(modePilihan == 'tahun') ...[
+                        Row(
+                          children: [
+                            const Text('Tahun : ', style: TextStyle(fontWeight: FontWeight.w500)),
+                            const SizedBox(width: 10),
+                            GetBuilder<KaryawanControl>(
+                              builder: (_) {
+                                return SizedBox(
+                                  width: 150,
+                                  child: AFwidget.comboField(
+                                    value: controller.filterTahun.label,
+                                    label: '',
+                                    warna: Colors.brown.shade400,
+                                    onTap: () async {
+                                      var a = await controller.pilihTahun(value: controller.filterTahun.value);
+                                      if(a != null && a.value != controller.filterTahun.value) {
+                                        controller.filterTahun = a;
+                                        controller.loadPayrolls();
+                                      }
+                                    },
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ] else ...[
+                        // Mode Per Periode - 2 baris: Awal dan Akhir
+                        GetBuilder<KaryawanControl>(
+                          builder: (_) {
+                            return Column(
+                              children: [
+                                // Baris Awal
+                                Row(
+                                  children: [
+                                    const SizedBox(
+                                      width: 60,
+                                      child: Text('Dari :', style: TextStyle(fontWeight: FontWeight.w500)),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    SizedBox(
+                                      width: 160,
+                                      child: AFwidget.comboField(
+                                        value: controller.payrollBulanAwal.label,
+                                        label: 'Bulan',
+                                        warna: Colors.indigo.shade300,
+                                        onTap: () async {
+                                          var a = await controller.pilihBulan(value: controller.payrollBulanAwal.value);
+                                          if(a != null) {
+                                            controller.payrollBulanAwal = a;
+                                            controller.update();
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    SizedBox(
+                                      width: 110,
+                                      child: AFwidget.comboField(
+                                        value: controller.payrollTahunAwal.label,
+                                        label: 'Tahun',
+                                        warna: Colors.brown.shade400,
+                                        onTap: () async {
+                                          var a = await controller.pilihTahun(value: controller.payrollTahunAwal.value);
+                                          if(a != null) {
+                                            controller.payrollTahunAwal = a;
+                                            controller.update();
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 10),
+                                // Baris Akhir
+                                Row(
+                                  children: [
+                                    const SizedBox(
+                                      width: 60,
+                                      child: Text('S/D :', style: TextStyle(fontWeight: FontWeight.w500)),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    SizedBox(
+                                      width: 160,
+                                      child: AFwidget.comboField(
+                                        value: controller.payrollBulanAkhir.label,
+                                        label: 'Bulan',
+                                        warna: Colors.indigo.shade300,
+                                        onTap: () async {
+                                          var a = await controller.pilihBulan(value: controller.payrollBulanAkhir.value);
+                                          if(a != null) {
+                                            controller.payrollBulanAkhir = a;
+                                            controller.update();
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    SizedBox(
+                                      width: 110,
+                                      child: AFwidget.comboField(
+                                        value: controller.payrollTahunAkhir.label,
+                                        label: 'Tahun',
+                                        warna: Colors.brown.shade400,
+                                        onTap: () async {
+                                          var a = await controller.pilihTahun(value: controller.payrollTahunAkhir.value);
+                                          if(a != null) {
+                                            controller.payrollTahunAkhir = a;
+                                            controller.update();
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ],
+
+                      const SizedBox(height: 25),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          AFwidget.tombol(
+                            label: 'Batal',
+                            color: Colors.orange,
+                            onPressed: Get.back,
+                            minimumSize: const Size(120, 40),
+                          ),
+                          const SizedBox(width: 30),
+                          AFwidget.tombol(
+                            label: 'Download',
+                            color: Colors.green,
+                            onPressed: () {
+                              Get.back();
+                              if(modePilihan == 'tahun') {
+                                controller.dowloadPayroll();
+                              } else {
+                                controller.dowloadPayrollPeriode();
+                              }
+                            },
+                            minimumSize: const Size(120, 40),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+      scrollable: false,
+      backgroundColor: Colors.white,
+      contentPadding: const EdgeInsets.all(0),
     );
   }
 
