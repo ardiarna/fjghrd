@@ -68,7 +68,16 @@ class ReportView extends StatelessWidget {
         Expanded(
           child: Container(
             width: double.infinity,
-            color: const Color(0xFFF8FAFC),
+            decoration: const BoxDecoration(
+              color: Color(0xFFF8FAFC),
+              image: DecorationImage(
+                image: AssetImage('assets/images/line-blue.png'),
+                alignment: Alignment.topRight,
+                repeat: ImageRepeat.repeatY,
+                fit: BoxFit.fitWidth,
+                opacity: 0.1,
+              ),
+            ),
             child: SingleChildScrollView(
               child: Builder(
                 builder: (context) {
