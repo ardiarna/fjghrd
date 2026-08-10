@@ -74,16 +74,20 @@ class ReportView extends StatelessWidget {
                 builder: (context) {
                   List<Widget> items = [
                     barisBox(
+                      label: 'List Data Karyawan',
+                      onPressed: controller.dowloadListDataKaryawan,
+                    ),
+                    barisBox(
+                      label: 'List Data Ex Karyawan',
+                      onPressed: dialogListExKaryawan,
+                    ),
+                    barisBox(
                       label: 'List Payroll',
                       onPressed: controller.dowloadListpayroll,
                     ),
                     barisBox(
                       label: 'List PHK',
                       onPressed: dialogListPHK,
-                    ),
-                    barisBox(
-                      label: 'List Data Karyawan',
-                      onPressed: controller.dowloadListDataKaryawan,
                     ),
                     barisBox(
                       label: 'Rekap Gaji',
@@ -157,6 +161,105 @@ class ReportView extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  void dialogListExKaryawan() {
+    AFwidget.dialog(
+      contentPadding: EdgeInsets.zero,
+      backgroundColor: Colors.transparent,
+      Container(
+        width: 500,
+        height: 300,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        child: Column(
+          children: [
+            AFwidget.formHeader('Excel List Data Ex Karyawan'),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 100,
+                    padding: const EdgeInsets.only(right: 15),
+                    child: const Text('Tahun Awal'),
+                  ),
+                  Expanded(
+                    child: GetBuilder<ReportControl>(
+                      builder: (_) {
+                        return AFwidget.comboField(
+                          value: controller.filterTahunAwal.label,
+                          label: '',
+                          onTap: () async {
+                            var a = await controller.pilihTahun(value: controller.filterTahunAwal.value);
+                            if(a != null && a.value != controller.filterTahunAwal.value) {
+                              controller.filterTahunAwal = a;
+                              controller.update();
+                            }
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 100,
+                    padding: const EdgeInsets.only(right: 15),
+                    child: const Text('Tahun Akhir'),
+                  ),
+                  Expanded(
+                    child: GetBuilder<ReportControl>(
+                      builder: (_) {
+                        return AFwidget.comboField(
+                          value: controller.filterTahunAkhir.label,
+                          label: '',
+                          onTap: () async {
+                            var a = await controller.pilihTahun(value: controller.filterTahunAkhir.value);
+                            if(a != null && a.value != controller.filterTahunAkhir.value) {
+                              controller.filterTahunAkhir = a;
+                              controller.update();
+                            }
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  AFwidget.tombol(
+                    label: 'Batal',
+                    color: Colors.orange,
+                    onPressed: Get.back,
+                    minimumSize: const Size(120, 40),
+                  ),
+                  const SizedBox(width: 40),
+                  AFwidget.tombol(
+                    label: 'Download',
+                    color: Colors.blueGrey,
+                    onPressed: controller.dowloadListExKaryawan,
+                    minimumSize: const Size(120, 40),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

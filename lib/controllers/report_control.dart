@@ -71,6 +71,22 @@ class ReportControl extends GetxController {
     }
   }
 
+  Future<void> dowloadListExKaryawan() async {
+    Get.back();
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/list-ex-karyawan/${filterTahunAwal.value}/${filterTahunAkhir.value}');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'laporan excel list ex karyawan telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
   Future<void> dowloadListPHK() async {
     Get.back();
     AFwidget.loading();
