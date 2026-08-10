@@ -307,7 +307,7 @@ class KaryawanForm extends StatelessWidget {
                   builder: (_) {
                     if(controller.current.aktif == 'N') {
                       return AFwidget.tombol(
-                        label: 'Batal PHK',
+                        label: 'Masuk / Aktif Kembali',
                         color: Colors.purple,
                         onPressed: controller.hapusPhkForm,
                         minimumSize: const Size(120, 40),

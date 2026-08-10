@@ -1821,7 +1821,7 @@ class KaryawanControl extends GetxController {
 
   void hapusPhkForm() {
     AFwidget.formWarning(
-      label: 'Anda akan membatalkan PHK ${current.nama}, data PHK akan terhapus dan karyawan akan aktif kembali. Lanjutkan pembatalan PHK?',
+      label: 'Anda akan mengaktifkan kembali ${current.nama}. Data PHK sebelumnya tidak akan terhapus dan karyawan akan kembali aktif. Lanjutkan?',
       labelBatal: 'Kembali',
       labelYa: 'Ya, Lanjutkan',
       ikon: Icons.autorenew,
