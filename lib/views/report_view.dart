@@ -1,3 +1,4 @@
+import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/controllers/report_control.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
@@ -70,13 +71,7 @@ class ReportView extends StatelessWidget {
             width: double.infinity,
             decoration: const BoxDecoration(
               color: Color(0xFFF8FAFC),
-              image: DecorationImage(
-                image: AssetImage('assets/images/line-blue.png'),
-                alignment: Alignment.topRight,
-                repeat: ImageRepeat.repeatY,
-                fit: BoxFit.fitWidth,
-                opacity: 0.1,
-              ),
+              image: bgLineBlue,
             ),
             child: SingleChildScrollView(
               child: Builder(

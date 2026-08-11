@@ -99,3 +99,11 @@ final List<Color> listColor = [
   Colors.indigo,
   Colors.amber,
 ];
+
+const bgLineBlue = DecorationImage(
+  image: AssetImage('assets/images/line-blue.png'),
+  alignment: Alignment.topRight,
+  repeat: ImageRepeat.repeatY,
+  fit: BoxFit.fitWidth,
+  opacity: 0.1,
+);

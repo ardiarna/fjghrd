@@ -93,13 +93,7 @@ class KaryawanPayrollView extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(10),
                       decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/line-blue.png'),
-                          alignment: Alignment.topLeft,
-                          repeat: ImageRepeat.repeatY,
-                          fit: BoxFit.fitWidth,
-                          opacity: 0.1,
-                        ),
+                        image: bgLineBlue,
                       ),
                       child: GetBuilder<KaryawanControl>(
                         builder: (_) {

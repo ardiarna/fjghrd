@@ -130,13 +130,7 @@ class PayrollView extends StatelessWidget {
           child: Container(
             width: double.infinity,
             decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/line-blue.png'),
-                alignment: Alignment.topLeft,
-                repeat: ImageRepeat.repeatY,
-                fit: BoxFit.fitWidth,
-                opacity: 0.1,
-              ),
+              image: bgLineBlue,
             ),
             child: Scrollbar(
               thumbVisibility: true,

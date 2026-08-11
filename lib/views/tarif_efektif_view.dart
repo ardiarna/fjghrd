@@ -1,3 +1,4 @@
+import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/controllers/tarif_efektif_control.dart';
 import 'package:fjghrd/models/tarif_efektif.dart';
@@ -106,13 +107,7 @@ class TarifEfektifView extends StatelessWidget {
         Expanded(
           child: Container(
             decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/line-blue.png'),
-                alignment: Alignment.topRight,
-                repeat: ImageRepeat.repeatY,
-                fit: BoxFit.fitWidth,
-                opacity: 0.1,
-              ),
+              image: bgLineBlue,
             ),
             child: GetBuilder<TarifEfektifControl>(
               builder: (_) {

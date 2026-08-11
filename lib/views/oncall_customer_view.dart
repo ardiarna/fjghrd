@@ -1,3 +1,4 @@
+import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/views/payroll_view.dart';
 import 'package:fjghrd/controllers/oncall_customer_control.dart';
@@ -213,13 +214,7 @@ class OncallCustomerView extends StatelessWidget {
         Expanded(
           child: Container(
             decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/line-blue.png'),
-                alignment: Alignment.topRight,
-                repeat: ImageRepeat.repeatY,
-                fit: BoxFit.fitWidth,
-                opacity: 0.1,
-              ),
+              image: bgLineBlue,
             ),
             child: GetBuilder<OncallCustomerControl>(
               builder: (_) {

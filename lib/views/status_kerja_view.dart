@@ -1,3 +1,4 @@
+import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/controllers/status_kerja_control.dart';
 import 'package:fjghrd/models/status_kerja.dart';
@@ -92,13 +93,7 @@ class StatusKerjaView extends StatelessWidget {
         Expanded(
           child: Container(
             decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/line-blue.png'),
-                alignment: Alignment.topRight,
-                repeat: ImageRepeat.repeatY,
-                fit: BoxFit.fitWidth,
-                opacity: 0.1,
-              ),
+              image: bgLineBlue,
             ),
             child: GetBuilder<StatusKerjaControl>(
               builder: (_) {
