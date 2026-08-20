@@ -1,0 +1,711 @@
+import 'package:intl/intl.dart';
+import 'package:fjghrd/utils/af_database.dart';
+import 'package:fjghrd/models/cuti.dart';
+import 'package:fjghrd/models/karyawan.dart';
+import 'package:fjghrd/models/jatah_cuti_tahunan.dart';
+import 'package:fjghrd/repositories/cuti_repository.dart';
+import 'package:fjghrd/utils/af_convert.dart';
+import 'package:fjghrd/utils/af_widget.dart';
+import 'package:fjghrd/utils/af_combobox.dart';
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+class CutiControl extends GetxController {
+  final CutiRepository repo = CutiRepository();
+  List<Cuti> listCuti = [];
+
+  List<JatahCutiTahunan> listJatah = [];
+  Opsi? selectedKaryawanJatah;
+  Opsi? selectedTahunFormJatah;
+
+  late TextEditingController txtJatahId, txtJatahJumlahCuti, txtPlusTahunLalu, txtMinTahunLalu;
+  int get totalCutiJatah => AFconvert.keInt(txtJatahJumlahCuti.text) + AFconvert.keInt(txtPlusTahunLalu.text) - AFconvert.keInt(txtMinTahunLalu.text);
+
+
+  String formType = 'CUTI';
+  String currentId = '';
+  Opsi filterTahun = Opsi(value: DateTime.now().year.toString(), label: DateTime.now().year.toString());
+
+  
+  List<Opsi> listKaryawan = [];
+  Karyawan? selectedKaryawan;
+
+  TextEditingController txtKeperluan = TextEditingController();
+  TextEditingController txtTanggalKembali = TextEditingController();
+
+  // Cuti Tahunan
+  bool cekTahunan = false;
+  int hakCuti = 12;
+  int sisaCutiTahunLalu = 0;
+  int totalHakCuti = 12;
+  int sudahDiambil = 0;
+  int cutiMasal = 5;
+  int belumDiambil = 0;
+  TextEditingController txtAkanDiambil = TextEditingController();
+  int sisaHakCuti = 0;
+  List<DateTime> tglTahunan = [];
+  TextEditingController txtKetTahunan = TextEditingController();
+
+  // Khusus
+  bool cekKhusus = false;
+  Opsi? jenisKhusus;
+  List<Opsi> listJenisKhusus = [];
+  TextEditingController txtLamaKhusus = TextEditingController();
+  List<DateTime> tglKhusus = [];
+  TextEditingController txtKetKhusus = TextEditingController();
+  TextEditingController txtTglAwalKhusus = TextEditingController();
+  TextEditingController txtTglAkhirKhusus = TextEditingController();
+  String satuanKhusus = 'hari';
+
+  // Unpaid
+  bool cekUnpaid = false;
+  Opsi? jenisUnpaid;
+  List<Opsi> listJenisUnpaid = [
+    Opsi(value: 'Sebelum Timbul', label: 'Hak Cuti Sebelum Timbul (Potong Upah)'),
+    Opsi(value: 'Sudah Habis', label: 'Hak Cuti Sudah Habis (Potong Upah)'),
+  ];
+  List<DateTime> tglUnpaid = [];
+  TextEditingController txtLamaUnpaid = TextEditingController();
+  TextEditingController txtKetUnpaid = TextEditingController();
+
+  // Ganti Hari Libur
+  bool cekGantiLibur = false;
+  List<DateTime> tglGantiLibur = [];
+  TextEditingController txtLamaGantiLibur = TextEditingController();
+  TextEditingController txtKetGantiLibur = TextEditingController();
+
+
+  @override
+  void onInit() {
+    super.onInit();
+    txtJatahId = TextEditingController();
+    txtJatahJumlahCuti = TextEditingController();
+    txtPlusTahunLalu = TextEditingController();
+    txtMinTahunLalu = TextEditingController();
+    txtJatahJumlahCuti.addListener(update);
+    txtPlusTahunLalu.addListener(update);
+    txtMinTahunLalu.addListener(update);
+    txtLamaUnpaid = TextEditingController();
+    txtLamaGantiLibur = TextEditingController();
+    txtTglAwalKhusus = TextEditingController();
+    txtTglAkhirKhusus = TextEditingController();
+    loadCutis();
+    loadKaryawan();
+    loadJenisKhusus();
+  }
+
+  
+  Future<void> loadJatah() async {
+    var hasil = await AFdatabase.send(url: 'jatah-cuti?tahun=${filterTahun.value}');
+    if (hasil.success) {
+      listJatah.clear();
+      for (var data in hasil.daftar) {
+        listJatah.add(JatahCutiTahunan.fromMap(data));
+      }
+      update();
+    }
+  }
+
+  Future<void> loadCutis() async {
+    var hasil = await repo.findAll(tahun: filterTahun.value);
+    if(hasil.success) {
+      listCuti.clear();
+      for (var data in hasil.daftar) {
+        listCuti.add(Cuti.fromMap(data));
+      }
+      update();
+    }
+    loadJatah();
+  }
+
+
+
+  Future<void> loadKaryawan() async {
+    var hasil = await AFdatabase.send(
+      url: 'karyawan?aktif=Y&staf=&area=&status_kerja=&sort_by=nama&sort_order=asc',
+    );
+    if (hasil.success) {
+      listKaryawan.clear();
+      for (var data in hasil.daftar) {
+        listKaryawan.add(
+          Opsi(value: AFconvert.keString(data['id']), label: data['nama'], data: data),
+        );
+      }
+      update();
+    }
+  }
+
+  Future<void> loadJenisKhusus() async {
+    var hasil = await AFdatabase.send(url: 'jenis-cuti-khusus');
+    if (hasil.success) {
+      listJenisKhusus.clear();
+      for (var d in hasil.daftar) {
+        listJenisKhusus.add(Opsi(
+          value: AFconvert.keString(d['id']),
+          label: d['nama'],
+          data: d,
+        ));
+      }
+      update();
+    }
+  }
+
+
+  Future<Opsi?> pilihJenisKhusus({String value = ''}) async {
+    return await AFcombobox.bottomSheet(
+      listOpsi: listJenisKhusus,
+      valueSelected: value,
+      judul: 'Pilih Jenis Cuti Khusus',
+    );
+  }
+
+  Future<Opsi?> pilihJenisUnpaid({String value = ''}) async {
+    return await AFcombobox.bottomSheet(
+      listOpsi: listJenisUnpaid,
+      valueSelected: value,
+      judul: 'Pilih Jenis Unpaid Leave',
+    );
+  }
+
+Future<Opsi?> pilihTahun({String value = ''}) async {
+    List<Opsi> listTahun = [];
+    int startTahun = 2024;
+    for (int i = 0; i < 10; i++) {
+      listTahun.add(Opsi(value: (startTahun + i).toString(), label: (startTahun + i).toString()));
+    }
+    var a = await AFcombobox.bottomSheet(
+      listOpsi: listTahun,
+      valueSelected: value,
+      judul: 'Pilih Tahun',
+    );
+    return a;
+  }
+
+  Future<Opsi?> pilihKaryawan({String value = ''}) async {
+    var a = await AFcombobox.bottomSheet(
+      listOpsi: listKaryawan,
+      valueSelected: value,
+      judul: 'Pilih Karyawan',
+    );
+    return a;
+  }
+
+  void setKaryawan(Karyawan k) {
+    selectedKaryawan = k;
+    fetchInfoCuti();
+    if (formType == 'CUTI' || formType == 'IJIN') {
+      var jatahExists = listJatah.any((e) => e.karyawanId == k.id);
+      if (!jatahExists) {
+        AFwidget.formWarning(
+          label: 'Jatah cuti tahunan periode ${filterTahun.label} belum diinput untuk karyawan ini.',
+          isKonfirmasi: true,
+          labelYa: 'Input Sekarang',
+          labelBatal: 'Tutup',
+          warnaBatal: Colors.grey,
+          warnaYa: Colors.blue,
+          aksiBatal: () {
+            Get.back();
+            selectedKaryawan = null;
+            update();
+          },
+          aksi: () {
+            Get.back(); // close warning dialog
+            inputJatahForm(''); // open form
+          },
+        );
+      }
+    }
+  }
+
+  Future<void> fetchInfoCuti() async {
+    if(selectedKaryawan == null) return;
+    var hasil = await repo.fetchInfo(karyawanId: selectedKaryawan!.id, tahun: filterTahun.value);
+    if(hasil.success) {
+        var data = hasil.data;
+        if(data['kuota'] != null) {
+            hakCuti = data['kuota']['hak_cuti'] ?? 12;
+            sisaCutiTahunLalu = data['kuota']['sisa_cuti_tahun_lalu'] ?? 0;
+            totalHakCuti = data['kuota']['total_hak_cuti'] ?? 12;
+            sudahDiambil = data['kuota']['sudah_diambil'] ?? 0;
+            cutiMasal = data['kuota']['cuti_masal'] ?? 5;
+            belumDiambil = data['kuota']['belum_diambil'] ?? 0;
+            hitungSisa();
+        }
+    }
+  }
+
+  void hitungSisa() {
+    int akanDiambil = AFconvert.keInt(txtAkanDiambil.text);
+    sisaHakCuti = belumDiambil - akanDiambil;
+    update();
+  }
+
+void inputJatahForm(String id) {
+    JatahCutiTahunan item = id == ''
+        ? JatahCutiTahunan()
+        : listJatah.where((e) => e.id == id).first;
+
+    txtJatahId.text = item.id;
+    txtJatahJumlahCuti.text = item.jumlahCuti == 0 ? '' : item.jumlahCuti.toString();
+    txtPlusTahunLalu.text = (item.id == '' || item.plusTahunLalu == 0) ? '' : item.plusTahunLalu.toString();
+    txtMinTahunLalu.text = (item.id == '' || item.minTahunLalu == 0) ? '' : item.minTahunLalu.toString();
+
+    if (id != '' && item.karyawan != null) {
+      selectedKaryawanJatah = Opsi(
+        value: item.karyawanId,
+        label: item.karyawan!.nama,
+      );
+    } else {
+      if (selectedKaryawan != null) {
+        selectedKaryawanJatah = Opsi(
+          value: selectedKaryawan!.id,
+          label: selectedKaryawan!.nama,
+        );
+      } else {
+        selectedKaryawanJatah = null;
+      }
+    }
+
+    if (id != '' && item.tahun.isNotEmpty) {
+      selectedTahunFormJatah = Opsi(value: item.tahun, label: item.tahun);
+    } else {
+      selectedTahunFormJatah = filterTahun;
+    }
+
+    if (id == '' && selectedKaryawanJatah != null && selectedTahunFormJatah != null) {
+        hitungSisaJatah();
+    }
+
+    update();
+
+    AFwidget.dialog(
+      GetBuilder<CutiControl>(
+        builder: (ctrl) {
+          return Container(
+            width: 700,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(15)),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AFwidget.formHeader('Form Jatah Cuti Tahunan'),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
+                  child: Row(
+                    children: [
+                      SizedBox(width: 150, child: const Text('Karyawan')),
+                      Expanded(
+                        child: AFwidget.comboField(
+                          value: ctrl.selectedKaryawanJatah?.label ?? '',
+                          label: '',
+                          onTap: () async {
+                            var a = await ctrl.pilihKaryawan(value: ctrl.selectedKaryawanJatah?.value ?? '');
+                            if (a != null) {
+                              ctrl.selectedKaryawanJatah = a;
+                              ctrl.update();
+                              await ctrl.hitungSisaJatah();
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
+                  child: Row(
+                    children: [
+                      SizedBox(width: 150, child: const Text('Tahun')),
+                      Expanded(
+                        child: AFwidget.comboField(
+                          value: ctrl.selectedTahunFormJatah?.label ?? '',
+                          label: '',
+                          onTap: () async {
+                            var a = await ctrl.pilihTahun(value: ctrl.selectedTahunFormJatah?.value ?? '');
+                            if (a != null) {
+                              ctrl.selectedTahunFormJatah = a;
+                              ctrl.update();
+                              await ctrl.hitungSisaJatah();
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                AFwidget.barisText(label: 'Jumlah Cuti', controller: txtJatahJumlahCuti, isNumber: true),
+                AFwidget.barisText(label: '+ Tahun Lalu', controller: txtPlusTahunLalu, isNumber: true),
+                AFwidget.barisText(label: '- Tahun Lalu', controller: txtMinTahunLalu, isNumber: true),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
+                  child: Row(
+                    children: [
+                      SizedBox(width: 150, child: Text('Total Cuti', style: TextStyle(fontWeight: FontWeight.bold))),
+                      Expanded(child: Text('${ctrl.totalCutiJatah}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16))),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      item.id == '' ? Container() : AFwidget.tombol(
+                        label: 'Hapus Data', color: Colors.red,
+                        onPressed: () { hapusJatah(item.id); },
+                        minimumSize: const Size(120, 40),
+                      ),
+                      const Spacer(),
+                      AFwidget.tombol(label: 'Batal', color: Colors.orange, onPressed: Get.back, minimumSize: const Size(120, 40)),
+                      const SizedBox(width: 40),
+                      AFwidget.tombol(label: 'Simpan', color: Colors.blue, onPressed: simpanJatah, minimumSize: const Size(120, 40)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+      barrierDismissible: false,
+      backgroundColor: Colors.white,
+      contentPadding: const EdgeInsets.all(0),
+    );
+  }
+
+  Future<void> hitungSisaJatah() async {
+    if (selectedKaryawanJatah != null && selectedTahunFormJatah != null && txtJatahId.text == '') {
+        var hasil = await AFdatabase.send(url: 'jatah-cuti/hitung-sisa?karyawan_id=${selectedKaryawanJatah!.value}&tahun=${selectedTahunFormJatah!.value}');
+        if(hasil.success) {
+            var plus = hasil.data['plus_tahun_lalu'] ?? 0;
+            var min = hasil.data['min_tahun_lalu'] ?? 0;
+            String p = plus == 0 ? '' : plus.toString();
+            String m = min == 0 ? '' : min.toString();
+            txtPlusTahunLalu.value = TextEditingValue(text: p, selection: TextSelection.collapsed(offset: p.length));
+            txtMinTahunLalu.value = TextEditingValue(text: m, selection: TextSelection.collapsed(offset: m.length));
+            update();
+        }
+    }
+  }
+
+  Future<void> simpanJatah() async {
+    try {
+      if (selectedKaryawanJatah == null) throw 'Karyawan harus dipilih';
+      if (selectedTahunFormJatah == null) throw 'Tahun harus dipilih';
+      if (txtJatahJumlahCuti.text.isEmpty) throw 'Jumlah cuti harus diisi';
+
+      var body = {
+        'karyawan_id': selectedKaryawanJatah!.value,
+        'tahun': selectedTahunFormJatah!.value,
+        'jumlah_cuti': AFconvert.keInt(txtJatahJumlahCuti.text),
+        'plus_tahun_lalu': AFconvert.keInt(txtPlusTahunLalu.text),
+        'min_tahun_lalu': AFconvert.keInt(txtMinTahunLalu.text),
+      };
+
+      AFwidget.loading();
+      var hasil = await AFdatabase.send(
+        url: txtJatahId.text == '' ? 'jatah-cuti' : 'jatah-cuti/${txtJatahId.text}',
+        methodeRequest: txtJatahId.text == '' ? MethodeRequest.post : MethodeRequest.put,
+        body: body,
+        contentIsJson: true,
+      );
+      Get.back();
+      if (hasil.success) {
+        loadJatah();
+        Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
+      }
+    } catch (er) {
+      AFwidget.formWarning(label: '$er');
+    }
+  }
+
+  Future<void> hapusJatah(String id) async {
+    AFwidget.formHapus(
+      label: 'Jatah Cuti Tahunan',
+      aksi: () async {
+        try {
+          AFwidget.loading();
+          var hasil = await AFdatabase.send(url: 'jatah-cuti/$id', methodeRequest: MethodeRequest.delete);
+          Get.back();
+          if (hasil.success) {
+            loadJatah();
+            Get.back();
+            Get.back();
+            AFwidget.snackbar(hasil.message);
+          } else {
+            AFwidget.formWarning(label: hasil.message);
+          }
+        } catch (er) {
+          AFwidget.formWarning(label: '$er');
+        }
+      },
+    );
+  }
+
+  void editForm(String id) {
+    clearForm();
+    Cuti? cuti = listCuti.firstWhereOrNull((element) => element.id == id);
+    if(cuti != null) {
+      currentId = cuti.id;
+      formType = cuti.jenisForm;
+      selectedKaryawan = cuti.karyawan;
+      txtKeperluan.text = cuti.keperluan;
+      if(cuti.tanggalKembali != null) {
+          txtTanggalKembali.text = AFconvert.matDate(cuti.tanggalKembali);
+      }
+      
+      for(var det in cuti.details) {
+          String kat = det['kategori'] ?? '';
+          if(kat == 'TAHUNAN') {
+              cekTahunan = true;
+              hakCuti = det['hak_cuti'] ?? 12;
+              sisaCutiTahunLalu = det['sisa_cuti_tahun_lalu'] ?? 0;
+              totalHakCuti = det['total_hak_cuti'] ?? 12;
+              sudahDiambil = det['sudah_diambil'] ?? 0;
+              cutiMasal = det['cuti_masal'] ?? 5;
+              belumDiambil = det['belum_diambil'] ?? 0;
+              txtAkanDiambil.text = det['lama_hari']?.toString() ?? '';
+              txtKetTahunan.text = det['keterangan'] ?? '';
+              if(det['dates'] != null) {
+                  for(var dt in det['dates']) {
+                      DateTime? t = AFconvert.keTanggal(dt['tanggal']);
+                      if(t != null) tglTahunan.add(t);
+                  }
+              }
+              hitungSisa();
+          } else if(kat == 'KHUSUS') {
+              cekKhusus = true;
+              var dJenis = det['jenis_khusus'];
+              if(dJenis != null) {
+                  jenisKhusus = listJenisKhusus.firstWhereOrNull((e) => e.value == dJenis);
+              }
+              txtLamaKhusus.text = det['lama_hari']?.toString() ?? '';
+              txtKetKhusus.text = det['keterangan'] ?? '';
+              if(det['dates'] != null) {
+                  for(var dt in det['dates']) {
+                      DateTime? t = AFconvert.keTanggal(dt['tanggal']);
+                      if(t != null) tglKhusus.add(t);
+                  }
+              }
+          } else if(kat == 'UNPAID') {
+              cekUnpaid = true;
+              var dJenis = det['jenis_unpaid'];
+              if(dJenis != null) {
+                  jenisUnpaid = listJenisUnpaid.firstWhereOrNull((e) => e.value == dJenis);
+              }
+              txtKetUnpaid.text = det['keterangan'] ?? '';
+              if(det['dates'] != null) {
+                  for(var dt in det['dates']) {
+                      DateTime? t = AFconvert.keTanggal(dt['tanggal']);
+                      if(t != null) tglUnpaid.add(t);
+                  }
+              }
+          } else if(kat == 'GANTI_HARI_LIBUR') {
+              cekGantiLibur = true;
+              txtKetGantiLibur.text = det['keterangan'] ?? '';
+              if(det['dates'] != null) {
+                  for(var dt in det['dates']) {
+                      DateTime? t = AFconvert.keTanggal(dt['tanggal']);
+                      if(t != null) tglGantiLibur.add(t);
+                  }
+              }
+          } else if(kat == 'IJIN') {
+              // Ijin form uses TAHUNAN variables under the hood in CutiFormView (it checks formType == 'IJIN' and displays Tahunan checklist)
+              cekTahunan = true;
+              hakCuti = det['hak_cuti'] ?? 12;
+              sisaCutiTahunLalu = det['sisa_cuti_tahun_lalu'] ?? 0;
+              totalHakCuti = det['total_hak_cuti'] ?? 12;
+              sudahDiambil = det['sudah_diambil'] ?? 0;
+              cutiMasal = det['cuti_masal'] ?? 5;
+              belumDiambil = det['belum_diambil'] ?? 0;
+              txtAkanDiambil.text = det['lama_hari']?.toString() ?? '';
+              txtKetTahunan.text = det['keterangan'] ?? '';
+              if(det['dates'] != null) {
+                  for(var dt in det['dates']) {
+                      DateTime? t = AFconvert.keTanggal(dt['tanggal']);
+                      if(t != null) tglTahunan.add(t);
+                  }
+              }
+              hitungSisa();
+          }
+      }
+      
+      var detKhusus = cuti.details.firstWhereOrNull((d) => d['kategori'] == 'KHUSUS');
+      if(detKhusus != null) {
+          if(tglKhusus.length > 5 || satuanKhusus == 'bulan') {
+              tglKhusus.sort();
+              if(tglKhusus.isNotEmpty) {
+                  txtTglAwalKhusus.text = AFconvert.matDate(tglKhusus.first);
+                  txtTglAkhirKhusus.text = AFconvert.matDate(tglKhusus.last);
+              }
+          }
+      }
+
+      var detUnpaid = cuti.details.firstWhereOrNull((d) => d['kategori'] == 'UNPAID');
+      if(detUnpaid != null) {
+          txtLamaUnpaid.text = detUnpaid['lama_hari']?.toString() ?? '';
+      }
+      
+      var detLibur = cuti.details.firstWhereOrNull((d) => d['kategori'] == 'GANTI_HARI_LIBUR');
+      if(detLibur != null) {
+          txtLamaGantiLibur.text = detLibur['lama_hari']?.toString() ?? '';
+      }
+      
+      update();
+    }
+  }
+
+  bool isTanggalDuplicate(DateTime date, {String skipKategori = ''}) {
+    String strDate = AFconvert.matYMD(date);
+    if (skipKategori != 'TAHUNAN' && tglTahunan.any((d) => AFconvert.matYMD(d) == strDate)) return true;
+    if (skipKategori != 'UNPAID' && tglUnpaid.any((d) => AFconvert.matYMD(d) == strDate)) return true;
+    if (skipKategori != 'GANTI_LIBUR' && tglGantiLibur.any((d) => AFconvert.matYMD(d) == strDate)) return true;
+    
+    if (skipKategori != 'KHUSUS') {
+        int lm = AFconvert.keInt(txtLamaKhusus.text);
+        if (lm > 5 || satuanKhusus == 'bulan') {
+            if (txtTglAwalKhusus.text.isNotEmpty && txtTglAkhirKhusus.text.isNotEmpty) {
+                DateTime start = DateFormat('dd-MM-yyyy').parse(txtTglAwalKhusus.text);
+                DateTime end = DateFormat('dd-MM-yyyy').parse(txtTglAkhirKhusus.text);
+                if (date.compareTo(start) >= 0 && date.compareTo(end) <= 0) return true;
+            }
+        } else {
+            if (tglKhusus.any((d) => AFconvert.matYMD(d) == strDate)) return true;
+        }
+    }
+    return false;
+  }
+
+  void clearForm() {
+    currentId = '';
+    selectedKaryawan = null;
+    txtKeperluan.clear();
+    txtTanggalKembali.clear();
+    cekTahunan = false; cekKhusus = false; cekUnpaid = false; cekGantiLibur = false;
+    tglTahunan.clear(); tglKhusus.clear(); tglUnpaid.clear(); tglGantiLibur.clear();
+    txtKetTahunan.clear(); txtKetKhusus.clear(); txtKetUnpaid.clear(); txtKetGantiLibur.clear();
+    txtAkanDiambil.clear();
+    txtLamaKhusus.clear();
+    txtLamaUnpaid.clear();
+    txtLamaGantiLibur.clear();
+    txtTglAwalKhusus.clear();
+    txtTglAkhirKhusus.clear();
+    satuanKhusus = 'hari';
+    jenisKhusus = null;
+    jenisUnpaid = null;
+    update();
+  }
+
+  Future<void> submitForm() async {
+    if(selectedKaryawan == null) {
+        AFwidget.snackbar('Pilih karyawan terlebih dahulu');
+        return;
+    }
+    
+    List<Map<String, dynamic>> details = [];
+    
+    if(cekTahunan) {
+        details.add({
+            'kategori': formType == 'IJIN' ? 'IJIN' : 'TAHUNAN',
+            'lama_hari': AFconvert.keInt(txtAkanDiambil.text),
+            'hak_cuti': hakCuti,
+            'sisa_cuti_tahun_lalu': sisaCutiTahunLalu,
+            'total_hak_cuti': totalHakCuti,
+            'sudah_diambil': sudahDiambil,
+            'cuti_masal': cutiMasal,
+            'belum_diambil': belumDiambil,
+            'sisa_hak_cuti': sisaHakCuti,
+            'keterangan': txtKetTahunan.text,
+            'dates': tglTahunan.map((e) => AFconvert.matYMD(e)).toList(),
+        });
+    }
+    if(cekKhusus) {
+        List<DateTime> finalTglKhusus = [...tglKhusus];
+        int lm = AFconvert.keInt(txtLamaKhusus.text);
+        if ((lm > 5 || satuanKhusus == 'bulan') && txtTglAwalKhusus.text.isNotEmpty && txtTglAkhirKhusus.text.isNotEmpty) {
+            finalTglKhusus.clear();
+            DateTime start = DateFormat('dd-MM-yyyy').parse(txtTglAwalKhusus.text);
+            DateTime end = DateFormat('dd-MM-yyyy').parse(txtTglAkhirKhusus.text);
+            for (DateTime d = start; d.compareTo(end) <= 0; d = d.add(const Duration(days: 1))) {
+                finalTglKhusus.add(d);
+            }
+        }
+        details.add({
+            'kategori': 'KHUSUS',
+            'jenis_khusus': jenisKhusus?.label,
+            'lama_hari': lm,
+            'keterangan': txtKetKhusus.text,
+            'dates': finalTglKhusus.map((e) => AFconvert.matYMD(e)).toList(),
+        });
+    }
+    if(cekUnpaid) {
+        details.add({
+            'kategori': 'UNPAID',
+            'jenis_unpaid': jenisUnpaid?.label,
+            'lama_hari': AFconvert.keInt(txtLamaUnpaid.text),
+            'keterangan': txtKetUnpaid.text,
+            'dates': tglUnpaid.map((e) => AFconvert.matYMD(e)).toList(),
+        });
+    }
+    if(cekGantiLibur) {
+        details.add({
+            'kategori': 'GANTI_HARI_LIBUR',
+            'lama_hari': AFconvert.keInt(txtLamaGantiLibur.text),
+            'keterangan': txtKetGantiLibur.text,
+            'dates': tglGantiLibur.map((e) => AFconvert.matYMD(e)).toList(),
+        });
+    }
+
+    if(details.isEmpty) {
+        AFwidget.snackbar('Pilih minimal 1 jenis cuti/ijin');
+        return;
+    }
+
+    var body = {
+        'id': currentId,
+        'karyawan_id': selectedKaryawan!.id,
+        'jenis_form': formType,
+        'keperluan': txtKeperluan.text,
+        'tanggal_kembali': txtTanggalKembali.text.isNotEmpty ? AFconvert.matYMD(DateFormat('dd-MM-yyyy').parse(txtTanggalKembali.text)) : null,
+        'tahun': AFconvert.keInt(filterTahun.value),
+        'details': details,
+    };
+
+    AFwidget.loading();
+    var hasil = await repo.submit(body);
+    Get.back();
+
+    if(hasil.success) {
+        clearForm();
+        loadCutis();
+        Get.back(); // close dialog/form
+        AFwidget.snackbar('Form berhasil disimpan');
+    } else {
+        AFwidget.formWarning(label: 'Gagal menyimpan: ${hasil.message}');
+    }
+  }
+
+  Future<void> hapusData(String id) async {
+    AFwidget.formHapus(
+      label: 'Cuti / Ijin',
+      aksi: () async {
+        AFwidget.loading();
+        var hasil = await repo.delete(id);
+        Get.back();
+        if(hasil.success) {
+          loadCutis();
+          Get.back();
+          AFwidget.snackbar('Data berhasil dihapus');
+        } else {
+          AFwidget.formWarning(label: hasil.message);
+        }
+      },
+    );
+  }
+}

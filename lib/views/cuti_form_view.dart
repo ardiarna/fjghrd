@@ -1,0 +1,628 @@
+import 'package:fjghrd/controllers/cuti_control.dart';
+import 'package:fjghrd/models/karyawan.dart';
+import 'package:fjghrd/utils/af_convert.dart';
+import 'package:fjghrd/utils/af_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+import 'package:intl/intl.dart';
+import 'package:get/get.dart';
+
+class CutiFormView extends StatelessWidget {
+  final String formType;
+  CutiFormView({super.key, required this.formType});
+
+  final CutiControl controller = Get.put(CutiControl());
+
+  @override
+  Widget build(BuildContext context) {
+    controller.formType = formType;
+    String title = 'Form Cuti';
+    if(formType == 'IJIN') title = 'Form Ijin';
+    if(formType == 'UNPAID_LEAVE') title = 'Form Unpaid Leave & Ganti Hari Libur';
+
+    return Column(
+      children: [
+        AFwidget.formHeader('$title ${controller.filterTahun.label}'),
+        Expanded(
+          child: GetBuilder<CutiControl>(
+            builder: (_) {
+              return ListView(
+                padding: const EdgeInsets.all(0),
+                children: [
+                  const SizedBox(height: 10),
+                  _buildKaryawanSelector(),
+                  if(controller.selectedKaryawan != null) ...[
+                    _buildKaryawanInfo(),
+                    AFwidget.barisText(
+                      controller: controller.txtKeperluan,
+                      label: 'Keperluan Cuti',
+                      isTextArea: true,
+                    ),
+                    const SizedBox(height: 20),
+                    if(formType == 'CUTI' || formType == 'IJIN') ...[
+                      _buildTahunanChecklist(context),
+                      if(formType == 'CUTI') ...[
+                        _buildKhususChecklist(context),
+                      ]
+                    ],
+                    if(formType == 'CUTI' || formType == 'UNPAID_LEAVE') ...[
+                        _buildUnpaidChecklist(context),
+                        _buildGantiLiburChecklist(context),
+                    ],
+                    const SizedBox(height: 20),
+                    AFwidget.barisText(
+                      controller: controller.txtTanggalKembali,
+                      label: 'Tgl Masuk Kembali',
+                      readOnly: true,
+                      ontap: () async {
+                        DateTime? picked = await AFwidget.pickDate(
+                          context: context,
+                          initialDate: controller.txtTanggalKembali.text.isNotEmpty ? DateFormat('dd-MM-yyyy').parse(controller.txtTanggalKembali.text) : DateTime.now(),
+                        );
+                        if (picked != null) {
+                          controller.txtTanggalKembali.text = AFconvert.matDate(picked);
+                          controller.update();
+                        }
+                      },
+                    ),
+                  ],
+                  const SizedBox(height: 30),
+                ],
+              );
+            }
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              AFwidget.tombol(
+                label: 'Batal',
+                color: Colors.orange,
+                onPressed: Get.back,
+                minimumSize: const Size(120, 40),
+              ),
+              const SizedBox(width: 20),
+              AFwidget.tombol(
+                label: 'Simpan',
+                color: Colors.blue,
+                onPressed: () {
+                    controller.submitForm();
+                },
+                minimumSize: const Size(120, 40),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildKaryawanSelector() {
+    return Padding(
+        padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
+        child: Row(
+            children: [
+                SizedBox(width: 150, child: Text('Pilih Karyawan')),
+                Expanded(
+                    child: AFwidget.comboField(
+                      value: controller.selectedKaryawan?.nama ?? '',
+                      label: '',
+                      onTap: () async {
+                        var a = await controller.pilihKaryawan(value: controller.selectedKaryawan?.id ?? '');
+                        if(a != null && a.value != controller.selectedKaryawan?.id) {
+                          controller.setKaryawan(Karyawan.fromMap(a.data!));
+                        }
+                      },
+                    ),
+                ),
+            ]
+        )
+    );
+  }
+
+  Widget _buildKaryawanInfo() {
+    Karyawan k = controller.selectedKaryawan!;
+    return Padding(
+        padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
+        child: Row(
+            children: [
+                SizedBox(width: 150),
+                Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.all(15),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade100,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Colors.grey.shade300),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Nama: ${k.nama}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                          Text('Bagian/Divisi: ${k.divisi.nama} / ${k.area.nama}'),
+                          Text('Jabatan: ${k.jabatan.nama}'),
+                          Text('NIK: ${k.nik}'),
+                          Text('Status: ${k.statusKerja.nama}'),
+                          Text('Tgl Masuk: ${AFconvert.matDate(k.tanggalMasuk)}'),
+                        ],
+                      ),
+                    )
+                )
+            ]
+        )
+    );
+  }
+
+  Widget _buildTahunanChecklist(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Checkbox(
+                    value: controller.cekTahunan,
+                    onChanged: (val) {
+                      controller.cekTahunan = val ?? false;
+                      controller.update();
+                    },
+                  ),
+                  const Text('1. Cuti Tahunan', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                ],
+              ),
+              if(controller.cekTahunan) ...[
+                Padding(
+                  padding: const EdgeInsets.only(left: 35),
+                  child: Column(
+                    children: [
+                      _infoRow('Hak cuti tahunan periode ${controller.filterTahun.label}', '${controller.totalHakCuti} Hari'),
+                      _infoRow('Cuti Yang Sudah Diambil', '${controller.sudahDiambil} Hari'),
+                      _infoRow('Cuti Masal; Idul Fitri/Natal/Bersama', '${controller.cutiMasal} Hari'),
+                      _infoRow('Cuti Yang Belum Diambil', '${controller.belumDiambil} Hari'),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: Row(
+                          children: [
+                            const Expanded(child: Text('Cuti Yang Akan Diambil')),
+                            SizedBox(
+                              width: 100,
+                              child: AFwidget.textField(
+                                controller: controller.txtAkanDiambil,
+                                keyboard: TextInputType.number,
+                                suffix: const Padding(padding: EdgeInsets.only(top: 15), child: Text('Hari')),
+                                inputformatters: [
+                                  CurrencyTextInputFormatter.currency(
+                                    symbol: '',
+                                    decimalDigits: 0,
+                                  ),
+                                ],
+                                onchanged: (val) {
+                                  controller.hitungSisa();
+                                },
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      _infoRow('Sisa Hak Cuti Tahunan', '${controller.sisaHakCuti} Hari'),
+                      const SizedBox(height: 10),
+                      (() {
+                        int mx = AFconvert.keInt(controller.txtAkanDiambil.text);
+                        return _buildDateSelector(context, 'Tanggal Cuti', controller.tglTahunan, max: mx);
+                      })(),
+                      const SizedBox(height: 10),
+                      Row(
+                          children: [
+                              SizedBox(width: 100, child: Text('Keterangan')),
+                              Expanded(
+                                  child: AFwidget.textField(
+                                    controller: controller.txtKetTahunan,
+                                    label: '',
+                                  ),
+                              )
+                          ]
+                      )
+                    ],
+                  ),
+                ),
+              ]
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildKhususChecklist(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Checkbox(
+                    value: controller.cekKhusus,
+                    onChanged: (val) {
+                      controller.cekKhusus = val ?? false;
+                      controller.update();
+                    },
+                  ),
+                  const Text('2. Cuti Khusus Tanggungan Perusahaan', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                ],
+              ),
+              if(controller.cekKhusus) ...[
+                Padding(
+                  padding: const EdgeInsets.only(left: 35),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                            SizedBox(width: 150, child: Text('Jenis Cuti Khusus')),
+                            Expanded(
+                                child: AFwidget.comboField(
+                                  value: controller.jenisKhusus?.label ?? '',
+                                  label: '',
+                                  onTap: () async {
+                                    var a = await controller.pilihJenisKhusus(value: controller.jenisKhusus?.value ?? '');
+                                    if(a != null && a.value != controller.jenisKhusus?.value) {
+                                      controller.jenisKhusus = a;
+                                      var dbData = a.data;
+                                      int lama = AFconvert.keInt(dbData?['lama_hari']);
+                                      controller.satuanKhusus = AFconvert.keString(dbData?['satuan']);
+                                      controller.txtLamaKhusus.text = lama == 0 ? '' : lama.toString();
+                                      controller.update();
+                                    }
+                                  },
+                                ),
+                            )
+                        ]
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                            SizedBox(width: 150, child: Text(controller.satuanKhusus == 'bulan' ? 'Lama Cuti (Bulan)' : 'Lama Cuti (Hari)')),
+                            Expanded(
+                                child: AFwidget.textField(
+                                  controller: controller.txtLamaKhusus,
+                                  label: '',
+                                  keyboard: TextInputType.number,
+                                  inputformatters: [
+                                    CurrencyTextInputFormatter.currency(
+                                      symbol: '',
+                                      decimalDigits: 0,
+                                    ),
+                                  ],
+                                  onchanged: (val) {
+                                    controller.update();
+                                  }
+                                ),
+                            )
+                        ]
+                      ),
+                      const SizedBox(height: 10),
+                      (() {
+                          int lm = AFconvert.keInt(controller.txtLamaKhusus.text);
+                          bool isRange = lm > 5 || controller.satuanKhusus == 'bulan';
+                          if (isRange) {
+                              return Column(
+                                  children: [
+                                      Row(
+                                          children: [
+                                              SizedBox(width: 150, child: Text('Tanggal Awal')),
+                                              Expanded(
+                                                  child: AFwidget.textField(
+                                                      controller: controller.txtTglAwalKhusus,
+                                                      label: '',
+                                                      readOnly: true,
+                                                      ontap: () async {
+                                                          DateTime? picked = await AFwidget.pickDate(
+                                                              context: context,
+                                                              initialDate: controller.txtTglAwalKhusus.text.isNotEmpty ? DateFormat('dd-MM-yyyy').parse(controller.txtTglAwalKhusus.text) : DateTime.now(),
+                                                          );
+                                                          if(picked != null) {
+                                                              if(controller.isTanggalDuplicate(picked, skipKategori: 'KHUSUS')) {
+                                                                  AFwidget.snackbar('Sebagian tanggal bentrok dengan kategori lain');
+                                                              } else {
+                                                                  controller.txtTglAwalKhusus.text = AFconvert.matDate(picked);
+                                                                  controller.update();
+                                                              }
+                                                          }
+                                                      }
+                                                  )
+                                              )
+                                          ]
+                                      ),
+                                      const SizedBox(height: 10),
+                                      Row(
+                                          children: [
+                                              SizedBox(width: 150, child: Text('Tanggal Akhir')),
+                                              Expanded(
+                                                  child: AFwidget.textField(
+                                                      controller: controller.txtTglAkhirKhusus,
+                                                      label: '',
+                                                      readOnly: true,
+                                                      ontap: () async {
+                                                          DateTime? picked = await AFwidget.pickDate(
+                                                              context: context,
+                                                              initialDate: controller.txtTglAkhirKhusus.text.isNotEmpty ? DateFormat('dd-MM-yyyy').parse(controller.txtTglAkhirKhusus.text) : DateTime.now(),
+                                                          );
+                                                          if(picked != null) {
+                                                              if(controller.isTanggalDuplicate(picked, skipKategori: 'KHUSUS')) {
+                                                                  AFwidget.snackbar('Sebagian tanggal bentrok dengan kategori lain');
+                                                              } else {
+                                                                  controller.txtTglAkhirKhusus.text = AFconvert.matDate(picked);
+                                                                  controller.update();
+                                                              }
+                                                          }
+                                                      }
+                                                  )
+                                              )
+                                          ]
+                                      )
+                                  ]
+                              );
+                          } else {
+                              return _buildDateSelector(context, 'Tanggal Cuti', controller.tglKhusus, max: lm);
+                          }
+                      })(),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                            SizedBox(width: 150, child: Text('Keterangan')),
+                            Expanded(
+                                child: AFwidget.textField(
+                                  controller: controller.txtKetKhusus,
+                                  label: '',
+                                ),
+                            )
+                        ]
+                      )
+                    ],
+                  ),
+                ),
+              ]
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUnpaidChecklist(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Checkbox(
+                    value: controller.cekUnpaid,
+                    onChanged: (val) {
+                      controller.cekUnpaid = val ?? false;
+                      controller.update();
+                    },
+                  ),
+                  const Text('3. Cuti Diluar Tanggungan Perusahaan', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                ],
+              ),
+              if(controller.cekUnpaid) ...[
+                Padding(
+                  padding: const EdgeInsets.only(left: 35),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                            SizedBox(width: 150, child: Text('Jenis Unpaid Leave')),
+                            Expanded(
+                                child: AFwidget.comboField(
+                                  value: controller.jenisUnpaid?.label ?? '',
+                                  label: '',
+                                  onTap: () async {
+                                    var a = await controller.pilihJenisUnpaid(value: controller.jenisUnpaid?.value ?? '');
+                                    if(a != null && a.value != controller.jenisUnpaid?.value) {
+                                      controller.jenisUnpaid = a;
+                                      controller.update();
+                                    }
+                                  },
+                                ),
+                            )
+                        ]
+                      ),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                            SizedBox(width: 150, child: Text('Lama Cuti (Hari)')),
+                            Expanded(
+                                child: AFwidget.textField(
+                                  controller: controller.txtLamaUnpaid,
+                                  label: '',
+                                  keyboard: TextInputType.number,
+                                  inputformatters: [
+                                    CurrencyTextInputFormatter.currency(
+                                      symbol: '',
+                                      decimalDigits: 0,
+                                    ),
+                                  ],
+                                  onchanged: (val) {
+                                    controller.update();
+                                  }
+                                ),
+                            )
+                        ]
+                      ),
+                      const SizedBox(height: 10),
+                      (() {
+                          int mx = AFconvert.keInt(controller.txtLamaUnpaid.text);
+                          return _buildDateSelector(context, 'Tanggal Cuti', controller.tglUnpaid, max: mx);
+                      })(),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                            SizedBox(width: 150, child: Text('Keterangan')),
+                            Expanded(
+                                child: AFwidget.textField(
+                                  controller: controller.txtKetUnpaid,
+                                  label: '',
+                                ),
+                            )
+                        ]
+                      )
+                    ],
+                  ),
+                ),
+              ]
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildGantiLiburChecklist(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Checkbox(
+                    value: controller.cekGantiLibur,
+                    onChanged: (val) {
+                      controller.cekGantiLibur = val ?? false;
+                      controller.update();
+                    },
+                  ),
+                  const Text('4. Penggantian Hari Libur', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                ],
+              ),
+              if(controller.cekGantiLibur) ...[
+                Padding(
+                  padding: const EdgeInsets.only(left: 35),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                            SizedBox(width: 150, child: Text('Lama Cuti (Hari)')),
+                            Expanded(
+                                child: AFwidget.textField(
+                                  controller: controller.txtLamaGantiLibur,
+                                  label: '',
+                                  keyboard: TextInputType.number,
+                                  inputformatters: [
+                                    CurrencyTextInputFormatter.currency(
+                                      symbol: '',
+                                      decimalDigits: 0,
+                                    ),
+                                  ],
+                                  onchanged: (val) {
+                                    controller.update();
+                                  }
+                                ),
+                            )
+                        ]
+                      ),
+                      const SizedBox(height: 10),
+                      (() {
+                          int mx = AFconvert.keInt(controller.txtLamaGantiLibur.text);
+                          return _buildDateSelector(context, 'Tanggal Penggantian', controller.tglGantiLibur, max: mx);
+                      })(),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                            SizedBox(width: 150, child: Text('Keterangan')),
+                            Expanded(
+                                child: AFwidget.textField(
+                                  controller: controller.txtKetGantiLibur,
+                                  label: '',
+                                ),
+                            )
+                        ]
+                      )
+                    ],
+                  ),
+                ),
+              ]
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _infoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 5),
+      child: Row(
+        children: [
+          Expanded(child: Text(label)),
+          Text(value, style: const TextStyle(fontWeight: FontWeight.bold)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDateSelector(BuildContext context, String label, List<DateTime> dates, {int max = 0}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
+            max > 0 && dates.length >= max 
+            ? const SizedBox()
+            : TextButton.icon(
+              icon: const Icon(Icons.add),
+              label: const Text('Tambah Tanggal'),
+              onPressed: () async {
+                DateTime? picked = await AFwidget.pickDate(
+                  context: context,
+                  initialDate: DateTime.now(),
+                );
+                if(picked != null) {
+                  bool exists = controller.isTanggalDuplicate(picked);
+                  if(exists) {
+                    AFwidget.snackbar('Tanggal tersebut sudah dipilih (termasuk di kategori lain)');
+                  } else {
+                    dates.add(picked);
+                    controller.update();
+                  }
+                }
+              },
+            )
+          ],
+        ),
+        if(dates.isNotEmpty)
+          Wrap(
+            spacing: 10,
+            children: dates.map((d) => Chip(
+              label: Text(AFconvert.matDate(d)),
+              onDeleted: () {
+                dates.remove(d);
+                controller.update();
+              },
+            )).toList(),
+          )
+      ],
+    );
+  }
+
+}

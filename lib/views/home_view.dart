@@ -1,3 +1,4 @@
+import 'package:fjghrd/views/cuti_view.dart';
 import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/views/agama_view.dart';
@@ -198,6 +199,17 @@ class HomeView extends StatelessWidget {
                     onTap: () {
                       controller.tabId = 4;
                       controller.kontener = CustomerView();
+                      Get.back();
+                      controller.update();
+                    },
+                  ),
+                  drawItem(
+                    label: 'Cuti / Ijin',
+                    icon: Icons.beach_access_outlined,
+                    color: Colors.blueGrey,
+                    onTap: () {
+                      controller.tabId = 4;
+                      controller.kontener = CutiView();
                       Get.back();
                       controller.update();
                     },

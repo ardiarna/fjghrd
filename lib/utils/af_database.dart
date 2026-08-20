@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:fjghrd/controllers/auth_control.dart';
 import 'package:fjghrd/utils/hasil.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
@@ -95,14 +96,18 @@ abstract class AFdatabase {
           }
           resp = await http.get(Uri.parse(rute), headers: headers);
       }
-      // print({
-      //   "rute": rute,
-      //   "methode": methodeRequest,
-      //   "headers": headers,
-      //   "body": body,
-      //   "respon code": resp.statusCode,
-      //   "respon isi": jsonDecode(resp.body),
-      // });
+      debugPrint('--- API REQUEST ---');
+      debugPrint('URL: $rute');
+      debugPrint('Method: $methodeRequest');
+      if (body != null) debugPrint('Body: $body');
+      debugPrint('--- API RESPONSE ---');
+      debugPrint('Status: ${resp.statusCode}');
+      try {
+        debugPrint('Response: ${jsonDecode(resp.body)}');
+      } catch (e) {
+        debugPrint('Response (Raw): ${resp.body}');
+      }
+      debugPrint('--------------------');
       int statusCode = resp.statusCode;
       if(statusCode >= 200 && statusCode <= 206) {
         var a = jsonDecode(resp.body);
@@ -128,6 +133,7 @@ abstract class AFdatabase {
             filePaths: filePaths,
             fileBytes: fileBytes,
             defaultAPI: defaultAPI,
+            contentIsJson: contentIsJson,
           );
           return again;
         } else {
@@ -159,6 +165,12 @@ abstract class AFdatabase {
           "Authorization" : "Bearer ${_authControl.user.tokenJWT}",
         },
       );
+      debugPrint('--- API DOWNLOAD REQUEST ---');
+      debugPrint('URL: $rute');
+      debugPrint('--- API DOWNLOAD RESPONSE ---');
+      debugPrint('Status: ${response.statusCode}');
+      debugPrint('Headers: ${response.headers}');
+      debugPrint('----------------------------');
       if (response.statusCode == 200) {
         final downloadsDir = await getDownloadsDirectory();
         if (downloadsDir == null) {

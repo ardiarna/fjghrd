@@ -724,11 +724,14 @@ abstract class AFwidget {
   static Future<void> formWarning({
     required String label,
     Function()? aksi,
+    Function()? aksiBatal,
     IconData ikon = Icons.warning_outlined,
     Color warna = Colors.orange,
     bool isKonfirmasi = false,
     String labelBatal = 'Batal',
     String labelYa = 'Ya',
+    Color warnaBatal = Colors.orangeAccent,
+    Color warnaYa = Colors.blue,
   }) {
     return Get.dialog(
       AlertDialog(
@@ -760,8 +763,8 @@ abstract class AFwidget {
                       Expanded(
                         child: tombol(
                           label: labelBatal,
-                          color: Colors.orangeAccent,
-                          onPressed: () {
+                          color: warnaBatal,
+                          onPressed: aksiBatal ?? () {
                             Get.back();
                           },
                         ),
@@ -990,6 +993,7 @@ abstract class AFwidget {
     bool isNumber = false,
     int decimalDigits = 0,
     Function(String)? onchanged,
+    Function()? ontap,
     TextStyle? labelStyle,
     bool readOnly = false,
   }) {
@@ -1008,6 +1012,7 @@ abstract class AFwidget {
               marginTop: 0,
               readOnly: readOnly,
               controller: controller,
+              ontap: ontap,
               maxLines: isTextArea ? 4 : 1,
               minLines: isTextArea ? 2 : 1,
               keyboard: isTextArea ? TextInputType.multiline : TextInputType.text,
