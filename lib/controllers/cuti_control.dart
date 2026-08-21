@@ -472,12 +472,6 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
           String kat = det['kategori'] ?? '';
           if(kat == 'TAHUNAN') {
               cekTahunan = true;
-              hakCuti = det['hak_cuti'] ?? 12;
-              sisaCutiTahunLalu = det['sisa_cuti_tahun_lalu'] ?? 0;
-              totalHakCuti = det['total_hak_cuti'] ?? 12;
-              sudahDiambil = det['sudah_diambil'] ?? 0;
-              cutiMasal = det['cuti_masal'] ?? 5;
-              belumDiambil = det['belum_diambil'] ?? 0;
               txtAkanDiambil.text = det['lama_hari']?.toString() ?? '';
               txtKetTahunan.text = det['keterangan'] ?? '';
               if(det['dates'] != null) {
@@ -489,9 +483,9 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
               hitungSisa();
           } else if(kat == 'KHUSUS') {
               cekKhusus = true;
-              var dJenis = det['jenis_khusus'];
+              var dJenis = det['jenis_cuti_khusus_id'];
               if(dJenis != null) {
-                  jenisKhusus = listJenisKhusus.firstWhereOrNull((e) => e.value == dJenis);
+                  jenisKhusus = listJenisKhusus.firstWhereOrNull((e) => e.value == dJenis.toString());
               }
               txtLamaKhusus.text = det['lama_hari']?.toString() ?? '';
               txtKetKhusus.text = det['keterangan'] ?? '';
@@ -526,12 +520,6 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
           } else if(kat == 'IJIN') {
               // Ijin form uses TAHUNAN variables under the hood in CutiFormView (it checks formType == 'IJIN' and displays Tahunan checklist)
               cekTahunan = true;
-              hakCuti = det['hak_cuti'] ?? 12;
-              sisaCutiTahunLalu = det['sisa_cuti_tahun_lalu'] ?? 0;
-              totalHakCuti = det['total_hak_cuti'] ?? 12;
-              sudahDiambil = det['sudah_diambil'] ?? 0;
-              cutiMasal = det['cuti_masal'] ?? 5;
-              belumDiambil = det['belum_diambil'] ?? 0;
               txtAkanDiambil.text = det['lama_hari']?.toString() ?? '';
               txtKetTahunan.text = det['keterangan'] ?? '';
               if(det['dates'] != null) {
@@ -622,13 +610,6 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
         details.add({
             'kategori': formType == 'IJIN' ? 'IJIN' : 'TAHUNAN',
             'lama_hari': AFconvert.keInt(txtAkanDiambil.text),
-            'hak_cuti': hakCuti,
-            'sisa_cuti_tahun_lalu': sisaCutiTahunLalu,
-            'total_hak_cuti': totalHakCuti,
-            'sudah_diambil': sudahDiambil,
-            'cuti_masal': cutiMasal,
-            'belum_diambil': belumDiambil,
-            'sisa_hak_cuti': sisaHakCuti,
             'keterangan': txtKetTahunan.text,
             'dates': tglTahunan.map((e) => AFconvert.matYMD(e)).toList(),
         });
@@ -646,7 +627,7 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
         }
         details.add({
             'kategori': 'KHUSUS',
-            'jenis_khusus': jenisKhusus?.label,
+            'jenis_cuti_khusus_id': jenisKhusus?.value,
             'lama_hari': lm,
             'keterangan': txtKetKhusus.text,
             'dates': finalTglKhusus.map((e) => AFconvert.matYMD(e)).toList(),

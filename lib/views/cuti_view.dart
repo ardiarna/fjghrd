@@ -90,6 +90,7 @@ class CutiView extends StatelessWidget {
         field: 'karyawan',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 250,
         minWidth: 150,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -98,7 +99,7 @@ class CutiView extends StatelessWidget {
         field: 'jenis_form',
         type: PlutoColumnType.text(),
         readOnly: true,
-        width: 120,
+        width: 200,
         backgroundColor: Colors.brown.shade100,
       ),
       PlutoColumn(
@@ -106,6 +107,7 @@ class CutiView extends StatelessWidget {
         field: 'keperluan',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 350,
         minWidth: 200,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -128,17 +130,17 @@ class CutiView extends StatelessWidget {
             _tombol(
               label: 'Form Cuti',
               icon: Icons.flight_takeoff,
-              onPressed: () => _openForm('CUTI'),
+              onPressed: () { controller.clearForm(); _openForm('CUTI'); },
             ),
             _tombol(
               label: 'Form Ijin',
               icon: Icons.assignment_late,
-              onPressed: () => _openForm('IJIN'),
+              onPressed: () { controller.clearForm(); _openForm('IJIN'); },
             ),
             _tombol(
               label: 'Unpaid Leave',
               icon: Icons.money_off,
-              onPressed: () => _openForm('UNPAID_LEAVE'),
+              onPressed: () { controller.clearForm(); _openForm('UNPAID_LEAVE'); },
             ),
             _tombol(
               label: 'Cuti Masal',
@@ -224,7 +226,7 @@ class CutiView extends StatelessWidget {
                   onLoaded: (PlutoGridOnLoadedEvent event) {
                     event.stateManager.setShowColumnFilter(true);
                   },
-                  configuration: AFplutogridConfig.configSatu(),
+                  configuration: AFplutogridConfig.configDua(),
                 );
               },
             ),
