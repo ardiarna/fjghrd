@@ -14,14 +14,14 @@ class CutiMasalView extends StatelessWidget {
       init: CutiMasalControl(),
       builder: (controller) {
         return Scaffold(
-          appBar: AppBar(
-            title: const Text('Form Cuti Masal'),
-            leading: IconButton(icon: const Icon(Icons.arrow_back), onPressed: () => Get.back()),
-          ),
           body: Column(
             children: [
+              AFwidget.pageHeader(
+                title: 'FORM CUTI MASAL',
+                icon: Icons.groups,
+                onBack: () => Get.back(),
+              ),
               _buildTopSection(context, controller),
-              const Divider(thickness: 2),
               Expanded(
                 child: _buildTableSection(context, controller),
               ),
@@ -161,129 +161,216 @@ class CutiMasalView extends StatelessWidget {
   }
 
   Widget _buildTableSection(BuildContext context, CutiMasalControl controller) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: DataTable(
-          dataRowMinHeight: 60,
-          dataRowMaxHeight: double.infinity,
-          columnSpacing: 20,
-          headingRowColor: WidgetStateProperty.all(Colors.grey[200]),
-          columns: [
-            DataColumn(
-              label: Checkbox(
-                value: controller.checkSemua,
-                onChanged: controller.toggleCheckSemua,
-              )
-            ),
-            const DataColumn(label: Text('Nama Karyawan')),
-            const DataColumn(label: Text('Jabatan')),
-            const DataColumn(label: Text('Kuota Info')),
-            const DataColumn(label: Text('Lama Hari')),
-            const DataColumn(label: Text('Tanggal Cuti')),
-            const DataColumn(label: Text('Alokasi & Sisa')),
-          ],
-          rows: controller.listKaryawan.map((k) {
-            return DataRow(
-              color: WidgetStateProperty.resolveWith<Color?>((states) => !k.isChecked ? Colors.grey.withValues(alpha: 0.2) : null),
-              cells: [
-                DataCell(
-                  Checkbox(
-                    value: k.isChecked,
-                    onChanged: (val) => controller.checkKaryawan(k, val),
-                  )
-                ),
-                DataCell(Text(k.nama)),
-                DataCell(Text(k.jabatan)),
-                DataCell(
-                  k.hasJatah
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('Hak: ${k.totalHakCuti}, Sisa: ${k.belumDiambil}', style: const TextStyle(fontSize: 12)),
-                        Text('Diambil: ${k.sudahDiambil}, C.Masal: ${k.cutiMasalLama}', style: const TextStyle(fontSize: 12, color: Colors.grey)),
-                      ],
-                    )
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('Belum ada jatah', style: TextStyle(color: Colors.red, fontSize: 12)),
-                        InkWell(
-                          onTap: () => controller.inputJatahKaryawan(k),
-                          child: const Text('Input Jatah', style: TextStyle(color: Colors.blue, fontSize: 12, decoration: TextDecoration.underline)),
-                        )
-                      ],
-                    )
-                ),
-                DataCell(
-                  SizedBox(
-                    width: 70,
-                    child: TextFormField(
-                      controller: k.txtLamaHari,
-                      keyboardType: TextInputType.number,
-                      textAlign: TextAlign.center,
-                      decoration: const InputDecoration(isDense: true, contentPadding: EdgeInsets.all(8)),
-                      onChanged: (v) => controller.update(),
-                    ),
-                  )
-                ),
-                DataCell(
-                  SizedBox(
-                    width: 250,
-                    child: Wrap(
-                      spacing: 5,
-                      runSpacing: 5,
-                      children: [
-                        for (var tgl in k.inputDates)
-                          Chip(
-                            label: Text(DateFormat('dd-MM').format(tgl), style: const TextStyle(fontSize: 11)),
-                            padding: const EdgeInsets.all(0),
-                            onDeleted: () {
-                              k.inputDates.remove(tgl);
-                              controller.update();
-                            },
-                          ),
-                        if (k.inputDates.length < k.inputLamaHari)
-                          ActionChip(
-                            label: const Text('+', style: TextStyle(fontSize: 11)),
-                            padding: const EdgeInsets.all(0),
-                            onPressed: () async {
-                              var a = await AFwidget.pickDate(context: context, initialDate: DateTime.now());
-                              if (a != null) {
-                                if(k.inputDates.any((e) => e.year == a.year && e.month == a.month && e.day == a.day)) return;
-                                k.inputDates.add(a);
-                                controller.update();
-                              }
-                            },
-                          )
-                      ],
-                    ),
-                  )
-                ),
-                DataCell(
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
+    // Custom Table to support sticky header and auto-expanding rows
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        double minTblWidth = 1000;
+        double extraWidth = constraints.maxWidth > minTblWidth ? constraints.maxWidth - minTblWidth : 0;
+        double namaWidth = 150 + extraWidth;
+
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minWidth: constraints.maxWidth > minTblWidth ? constraints.maxWidth : minTblWidth),
+            child: Column(
+              children: [
+                // HEADER
+                Container(
+                  color: Colors.grey[200],
+                  padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 0),
+                  child: Row(
                     children: [
-                      Text(
-                        'Cuti Masal: ${k.splitCutiMasal} | Unpaid: ${k.splitUnpaid}',
-                        style: const TextStyle(fontSize: 12),
+                      SizedBox(
+                        width: 50,
+                        child: Checkbox(
+                          value: controller.checkSemua,
+                          onChanged: controller.toggleCheckSemua,
+                        ),
                       ),
-                      Text(
-                        'Sisa Akhir: ${k.sisaAkhir}',
-                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: k.sisaAkhir < 0 ? Colors.red : Colors.green),
-                      )
+                      SizedBox(width: namaWidth, child: const Text('Nama Karyawan', style: TextStyle(fontWeight: FontWeight.bold))),
+                      const SizedBox(width: 130, child: Text('Jabatan', style: TextStyle(fontWeight: FontWeight.bold))),
+                      const SizedBox(width: 150, child: Text('Kuota Info', style: TextStyle(fontWeight: FontWeight.bold))),
+                      const SizedBox(width: 80, child: Text('Lama Hari', style: TextStyle(fontWeight: FontWeight.bold))),
+                      const SizedBox(width: 280, child: Text('Tanggal Cuti', style: TextStyle(fontWeight: FontWeight.bold))),
+                      const SizedBox(width: 160, child: Text('Alokasi & Sisa', style: TextStyle(fontWeight: FontWeight.bold))),
                     ],
-                  )
+                  ),
                 ),
-              ]
-            );
-          }).toList(),
-        ),
-      ),
+                const Divider(height: 1, thickness: 1),
+                // BODY
+                Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: Column(
+                      children: controller.listKaryawan.map((k) {
+                        return Container(
+                          decoration: BoxDecoration(
+                            color: !k.isChecked ? Colors.grey.withValues(alpha: 0.1) : null,
+                            border: const Border(bottom: BorderSide(color: Colors.black12)),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 0),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              // Checkbox
+                              SizedBox(
+                                width: 50,
+                                child: Checkbox(
+                                  value: k.isChecked,
+                                  onChanged: (val) => controller.checkKaryawan(k, val),
+                                ),
+                              ),
+                              // Nama
+                              SizedBox(
+                                width: namaWidth,
+                                child: Opacity(
+                                  opacity: k.isChecked ? 1.0 : 0.4,
+                                  child: Text(k.nama),
+                                ),
+                              ),
+                              // Jabatan
+                              SizedBox(
+                                width: 130,
+                                child: Opacity(
+                                  opacity: k.isChecked ? 1.0 : 0.4,
+                                  child: Text(k.jabatan),
+                                ),
+                              ),
+                              // Kuota Info
+                              SizedBox(
+                                width: 150,
+                                child: Opacity(
+                                  opacity: k.isChecked ? 1.0 : 0.4,
+                                  child: k.hasJatah
+                                      ? Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text('Hak: ${k.totalHakCuti}, Sisa: ${k.belumDiambil}', style: const TextStyle(fontSize: 12)),
+                                            Text('Diambil: ${k.sudahDiambil}, C.Masal: ${k.cutiMasalLama}', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                                          ],
+                                        )
+                                      : Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            const Text('Belum ada jatah', style: TextStyle(color: Colors.red, fontSize: 12)),
+                                            InkWell(
+                                              onTap: k.isChecked ? () => controller.inputJatahKaryawan(k) : null,
+                                              child: const Text('Input Jatah', style: TextStyle(color: Colors.blue, fontSize: 12, decoration: TextDecoration.underline)),
+                                            )
+                                          ],
+                                        ),
+                                ),
+                              ),
+                              // Lama Hari
+                              SizedBox(
+                                width: 80,
+                                child: Opacity(
+                                  opacity: k.isChecked ? 1.0 : 0.4,
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 15),
+                                    child: TextFormField(
+                                      controller: k.txtLamaHari,
+                                      enabled: k.isChecked,
+                                      keyboardType: TextInputType.number,
+                                      textAlign: TextAlign.center,
+                                      decoration: const InputDecoration(isDense: true, contentPadding: EdgeInsets.all(8)),
+                                      onChanged: (v) => controller.update(),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              // Tanggal Cuti
+                              SizedBox(
+                                width: 280,
+                                child: Opacity(
+                                  opacity: k.isChecked ? 1.0 : 0.4,
+                                  child: Wrap(
+                                    spacing: 5,
+                                    runSpacing: 5,
+                                    children: [
+                                      for (var tgl in k.inputDates)
+                                        Chip(
+                                          label: Text(DateFormat('dd-MM').format(tgl), style: const TextStyle(fontSize: 11)),
+                                          padding: const EdgeInsets.all(0),
+                                          onDeleted: k.isChecked ? () {
+                                            k.inputDates.remove(tgl);
+                                            controller.update();
+                                          } : null,
+                                        ),
+                                      if (k.inputDates.length < k.inputLamaHari)
+                                        ActionChip(
+                                          label: const Text('+', style: TextStyle(fontSize: 11)),
+                                          padding: const EdgeInsets.all(0),
+                                          onPressed: k.isChecked ? () async {
+                                            var a = await AFwidget.pickDate(context: context, initialDate: DateTime.now());
+                                            if (a != null) {
+                                              if(k.inputDates.any((e) => e.year == a.year && e.month == a.month && e.day == a.day)) return;
+                                              k.inputDates.add(a);
+                                              controller.update();
+                                            }
+                                          } : null,
+                                        )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              // Alokasi & Sisa
+                              SizedBox(
+                                width: 160,
+                                child: Opacity(
+                                  opacity: k.isChecked ? 1.0 : 0.4,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      RichText(
+                                        text: TextSpan(
+                                          style: const TextStyle(fontSize: 12, color: Colors.black),
+                                          children: [
+                                            const TextSpan(text: 'Cuti Masal: '),
+                                            TextSpan(text: '${k.splitCutiMasal}'),
+                                            TextSpan(text: ' | Unpaid: ', style: TextStyle(color: k.splitUnpaid > 0 ? Colors.orange : Colors.black)),
+                                            TextSpan(
+                                              text: '${k.splitUnpaid}',
+                                              style: TextStyle(color: k.splitUnpaid > 0 ? Colors.orange : Colors.black, fontWeight: k.splitUnpaid > 0 ? FontWeight.bold : FontWeight.normal),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      RichText(
+                                        text: TextSpan(
+                                          style: const TextStyle(fontSize: 12, color: Colors.black),
+                                          children: [
+                                            TextSpan(text: 'Sisa Akhir: ', style: TextStyle(color: k.sisaAkhir == 0 ? Colors.black : (k.sisaAkhir > 0 ? Colors.green : Colors.red))),
+                                            TextSpan(
+                                              text: '${k.sisaAkhir}',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                color: k.sisaAkhir == 0 ? Colors.black : (k.sisaAkhir > 0 ? Colors.green : Colors.red),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 

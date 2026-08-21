@@ -228,7 +228,7 @@ class CutiMasalControl extends GetxController {
       // To prefill the Karyawan, we can temporarily set it or just let them pick
       // Wait, we need to pass Karyawan to it. 
       // It's easier to just call inputJatahForm('') and let user pick.
-      cutiCtrl.inputJatahForm('');
+      cutiCtrl.inputJatahForm('', defaultKaryawanId: k.karyawanId, defaultKaryawanNama: k.nama, defaultTahun: filterTahun.value);
     }
   }
 }

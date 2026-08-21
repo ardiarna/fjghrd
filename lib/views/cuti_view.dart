@@ -126,6 +126,21 @@ class CutiView extends StatelessWidget {
           icon: Icons.beach_access,
           children: [
             _tombol(
+              label: 'Form Cuti',
+              icon: Icons.flight_takeoff,
+              onPressed: () => _openForm('CUTI'),
+            ),
+            _tombol(
+              label: 'Form Ijin',
+              icon: Icons.assignment_late,
+              onPressed: () => _openForm('IJIN'),
+            ),
+            _tombol(
+              label: 'Unpaid Leave',
+              icon: Icons.money_off,
+              onPressed: () => _openForm('UNPAID_LEAVE'),
+            ),
+            _tombol(
               label: 'Cuti Masal',
               icon: Icons.groups,
               onPressed: () {
@@ -192,15 +207,6 @@ class CutiView extends StatelessWidget {
                 const PopupMenuItem<String>(value: 'unpaid', child: Text('Unpaid Leave & Ganti Libur')),
               ],
             ),
-            IconButton(
-              onPressed: () {
-                _showPilihForm();
-              },
-              icon: const Icon(Icons.add_circle),
-              iconSize: 30,
-              color: Colors.lightBlueAccent,
-              padding: const EdgeInsets.all(0),
-            ),
           ],
         ),
         Expanded(
@@ -226,47 +232,6 @@ class CutiView extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  void _showPilihForm() {
-    controller.clearForm();
-    Get.dialog(Dialog(
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        width: 300,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text('Pilih Jenis Form', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 20),
-            ListTile(
-              leading: const Icon(Icons.flight_takeoff),
-              title: const Text('Form Cuti'),
-              onTap: () {
-                Get.back();
-                _openForm('CUTI');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.assignment_late),
-              title: const Text('Form Ijin'),
-              onTap: () {
-                Get.back();
-                _openForm('IJIN');
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.money_off),
-              title: const Text('Unpaid Leave & Ganti Libur'),
-              onTap: () {
-                Get.back();
-                _openForm('UNPAID_LEAVE');
-              },
-            ),
-          ],
-        ),
-      ),
-    ));
   }
 
   void _openForm(String formType) {

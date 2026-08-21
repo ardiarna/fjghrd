@@ -6,6 +6,7 @@ import 'package:fjghrd/models/jatah_cuti_tahunan.dart';
 import 'package:fjghrd/repositories/cuti_repository.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
+import 'package:fjghrd/controllers/cuti_masal_control.dart' as cuti_masal;
 import 'package:fjghrd/utils/af_combobox.dart';
 
 import 'package:flutter/material.dart';
@@ -241,7 +242,7 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
     update();
   }
 
-void inputJatahForm(String id) {
+void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryawanNama, String? defaultTahun}) {
     JatahCutiTahunan item = id == ''
         ? JatahCutiTahunan()
         : listJatah.where((e) => e.id == id).first;
@@ -256,6 +257,8 @@ void inputJatahForm(String id) {
         value: item.karyawanId,
         label: item.karyawan!.nama,
       );
+    } else if (defaultKaryawanId != null && defaultKaryawanNama != null) {
+      selectedKaryawanJatah = Opsi(value: defaultKaryawanId, label: defaultKaryawanNama);
     } else {
       if (selectedKaryawan != null) {
         selectedKaryawanJatah = Opsi(
@@ -269,6 +272,8 @@ void inputJatahForm(String id) {
 
     if (id != '' && item.tahun.isNotEmpty) {
       selectedTahunFormJatah = Opsi(value: item.tahun, label: item.tahun);
+    } else if (defaultTahun != null) {
+      selectedTahunFormJatah = Opsi(value: defaultTahun, label: defaultTahun);
     } else {
       selectedTahunFormJatah = filterTahun;
     }
@@ -415,6 +420,9 @@ void inputJatahForm(String id) {
       Get.back();
       if (hasil.success) {
         loadJatah();
+        if (Get.isRegistered<cuti_masal.CutiMasalControl>()) {
+          Get.find<cuti_masal.CutiMasalControl>().loadInfoMasal();
+        }
         Get.back();
         AFwidget.snackbar(hasil.message);
       } else {
