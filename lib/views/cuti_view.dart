@@ -138,11 +138,6 @@ class CutiView extends StatelessWidget {
               onPressed: () { controller.clearForm(); _openForm('IJIN'); },
             ),
             _tombol(
-              label: 'Unpaid Leave',
-              icon: Icons.money_off,
-              onPressed: () { controller.clearForm(); _openForm('UNPAID_LEAVE'); },
-            ),
-            _tombol(
               label: 'Cuti Masal',
               icon: Icons.groups,
               onPressed: () {

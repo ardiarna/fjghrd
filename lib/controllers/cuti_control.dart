@@ -37,6 +37,7 @@ class CutiControl extends GetxController {
 
   // Cuti Tahunan
   bool cekTahunan = false;
+  bool hasJatah = false;
   int hakCuti = 12;
   int sisaCutiTahunLalu = 0;
   int totalHakCuti = 12;
@@ -103,6 +104,16 @@ class CutiControl extends GetxController {
       listJatah.clear();
       for (var data in hasil.daftar) {
         listJatah.add(JatahCutiTahunan.fromMap(data));
+      }
+      if (selectedKaryawan != null) {
+        hasJatah = listJatah.any((e) => e.karyawanId == selectedKaryawan!.id);
+        if (formType == 'IJIN' && hasJatah) {
+          cekTahunan = true;
+        }
+        if (!hasJatah) {
+          cekTahunan = false;
+        }
+        fetchInfoCuti();
       }
       update();
     }
@@ -194,29 +205,16 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
 
   void setKaryawan(Karyawan k) {
     selectedKaryawan = k;
-    fetchInfoCuti();
     if (formType == 'CUTI' || formType == 'IJIN') {
-      var jatahExists = listJatah.any((e) => e.karyawanId == k.id);
-      if (!jatahExists) {
-        AFwidget.formWarning(
-          label: 'Jatah cuti tahunan periode ${filterTahun.label} belum diinput untuk karyawan ini.',
-          isKonfirmasi: true,
-          labelYa: 'Input Sekarang',
-          labelBatal: 'Tutup',
-          warnaBatal: Colors.grey,
-          warnaYa: Colors.blue,
-          aksiBatal: () {
-            Get.back();
-            selectedKaryawan = null;
-            update();
-          },
-          aksi: () {
-            Get.back(); // close warning dialog
-            inputJatahForm(''); // open form
-          },
-        );
+      hasJatah = listJatah.any((e) => e.karyawanId == k.id);
+      if (formType == 'IJIN' && hasJatah) {
+        cekTahunan = true;
+      }
+      if (!hasJatah) {
+        cekTahunan = false;
       }
     }
+    fetchInfoCuti();
   }
 
   Future<void> fetchInfoCuti() async {
@@ -596,6 +594,45 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
     jenisKhusus = null;
     jenisUnpaid = null;
     update();
+  }
+
+
+  bool get canSubmit {
+    if (txtKeperluan.text.isEmpty) return false;
+    if (txtTanggalKembali.text.isEmpty) return false;
+    
+    bool anyChecked = cekTahunan || cekKhusus || cekUnpaid || cekGantiLibur;
+    if (!anyChecked) return false;
+    
+    if (cekTahunan) {
+      int lm = AFconvert.keInt(txtAkanDiambil.text);
+      if (lm <= 0) return false;
+      if (tglTahunan.length != lm) return false;
+    }
+    
+    if (cekKhusus) {
+      int lm = AFconvert.keInt(txtLamaKhusus.text);
+      if (lm <= 0) return false;
+      if (lm > 5 || satuanKhusus == 'bulan') {
+        if (txtTglAwalKhusus.text.isEmpty || txtTglAkhirKhusus.text.isEmpty) return false;
+      } else {
+        if (tglKhusus.length != lm) return false;
+      }
+    }
+    
+    if (cekUnpaid) {
+      int lm = AFconvert.keInt(txtLamaUnpaid.text);
+      if (lm <= 0) return false;
+      if (tglUnpaid.length != lm) return false;
+    }
+    
+    if (cekGantiLibur) {
+      int lm = AFconvert.keInt(txtLamaGantiLibur.text);
+      if (lm <= 0) return false;
+      if (tglGantiLibur.length != lm) return false;
+    }
+    
+    return true;
   }
 
   Future<void> submitForm() async {

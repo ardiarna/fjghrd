@@ -18,7 +18,7 @@ class CutiFormView extends StatelessWidget {
     controller.formType = formType;
     String title = 'Form Cuti';
     if(formType == 'IJIN') title = 'Form Ijin';
-    if(formType == 'UNPAID_LEAVE') title = 'Form Unpaid Leave & Ganti Hari Libur';
+
 
     return Column(
       children: [
@@ -37,19 +37,10 @@ class CutiFormView extends StatelessWidget {
                       controller: controller.txtKeperluan,
                       label: 'Keperluan Cuti',
                       isTextArea: true,
+                      onchanged: (val) {
+                        controller.update();
+                      },
                     ),
-                    const SizedBox(height: 20),
-                    if(formType == 'CUTI' || formType == 'IJIN') ...[
-                      _buildTahunanChecklist(context),
-                      if(formType == 'CUTI') ...[
-                        _buildKhususChecklist(context),
-                      ]
-                    ],
-                    if(formType == 'CUTI' || formType == 'UNPAID_LEAVE') ...[
-                        _buildUnpaidChecklist(context),
-                        _buildGantiLiburChecklist(context),
-                    ],
-                    const SizedBox(height: 20),
                     AFwidget.barisText(
                       controller: controller.txtTanggalKembali,
                       label: 'Tgl Masuk Kembali',
@@ -65,6 +56,17 @@ class CutiFormView extends StatelessWidget {
                         }
                       },
                     ),
+                    const SizedBox(height: 20),
+                    if(formType == 'CUTI' || formType == 'IJIN') ...[
+                      _buildTahunanChecklist(context),
+                      if(formType == 'CUTI') ...[
+                        _buildKhususChecklist(context),
+                      ]
+                    ],
+                    if(formType == 'CUTI') ...[
+                        _buildUnpaidChecklist(context),
+                        _buildGantiLiburChecklist(context),
+                    ],
                   ],
                   const SizedBox(height: 30),
                 ],
@@ -74,25 +76,29 @@ class CutiFormView extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              AFwidget.tombol(
-                label: 'Batal',
-                color: Colors.orange,
-                onPressed: Get.back,
-                minimumSize: const Size(120, 40),
-              ),
-              const SizedBox(width: 20),
-              AFwidget.tombol(
-                label: 'Simpan',
-                color: Colors.blue,
-                onPressed: () {
-                    controller.submitForm();
-                },
-                minimumSize: const Size(120, 40),
-              ),
-            ],
+          child: GetBuilder<CutiControl>(
+            builder: (_) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  AFwidget.tombol(
+                    label: 'Batal',
+                    color: Colors.orange,
+                    onPressed: Get.back,
+                    minimumSize: const Size(120, 40),
+                  ),
+                  const SizedBox(width: 20),
+                  AFwidget.tombol(
+                    label: 'Simpan',
+                    color: controller.canSubmit ? Colors.blue : Colors.grey,
+                    onPressed: controller.canSubmit ? () {
+                        controller.submitForm();
+                    } : null,
+                    minimumSize: const Size(120, 40),
+                  ),
+                ],
+              );
+            }
           ),
         ),
       ],
@@ -156,6 +162,14 @@ class CutiFormView extends StatelessWidget {
   }
 
   Widget _buildTahunanChecklist(BuildContext context) {
+    bool disableCheckbox = false;
+    if (formType == 'IJIN' && controller.hasJatah) {
+      disableCheckbox = true; // Cannot uncheck
+    }
+    if (!controller.hasJatah) {
+      disableCheckbox = true; // Cannot check (both CUTI and IJIN)
+    }
+
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
       child: Card(
@@ -168,7 +182,7 @@ class CutiFormView extends StatelessWidget {
                 children: [
                   Checkbox(
                     value: controller.cekTahunan,
-                    onChanged: (val) {
+                    onChanged: disableCheckbox ? null : (val) {
                       controller.cekTahunan = val ?? false;
                       controller.update();
                     },
@@ -176,6 +190,31 @@ class CutiFormView extends StatelessWidget {
                   const Text('1. Cuti Tahunan', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                 ],
               ),
+              if (!controller.hasJatah && controller.selectedKaryawan != null) ...[
+                Padding(
+                  padding: const EdgeInsets.only(left: 45, top: 10, bottom: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Jatah cuti tahunan periode ${controller.filterTahun.label} belum diinput untuk karyawan ini.',
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                      const SizedBox(height: 10),
+                      ElevatedButton(
+                        onPressed: () {
+                          controller.inputJatahForm('', 
+                            defaultKaryawanId: controller.selectedKaryawan?.id,
+                            defaultKaryawanNama: controller.selectedKaryawan?.nama,
+                            defaultTahun: controller.filterTahun.value,
+                          );
+                        },
+                        child: const Text('Input Sekarang'),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
               if(controller.cekTahunan) ...[
                 Padding(
                   padding: const EdgeInsets.only(left: 35),
@@ -587,7 +626,7 @@ class CutiFormView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
-            max > 0 && dates.length >= max 
+            (max <= 0 || dates.length >= max)
             ? const SizedBox()
             : TextButton.icon(
               icon: const Icon(Icons.add),
@@ -620,7 +659,23 @@ class CutiFormView extends StatelessWidget {
                 controller.update();
               },
             )).toList(),
-          )
+          ),
+        if (max > 0 && dates.length < max)
+          Padding(
+            padding: const EdgeInsets.only(top: 5),
+            child: Text(
+              '⚠️ Jumlah tanggal cuti (${dates.length}) kurang dari lama cuti ($max hari).',
+              style: const TextStyle(color: Colors.orange, fontSize: 12),
+            ),
+          ),
+        if (dates.length > max)
+          Padding(
+            padding: const EdgeInsets.only(top: 5),
+            child: Text(
+              '⛔ Jumlah tanggal cuti (${dates.length}) melebihi lama cuti ($max hari). Silakan hapus tanggal berlebih.',
+              style: const TextStyle(color: Colors.red, fontSize: 12),
+            ),
+          ),
       ],
     );
   }

@@ -51,7 +51,6 @@ class CutiMenuView extends StatelessWidget {
               children: [
                 _buildMenuItem(context, 'Form Cuti', Icons.flight_takeoff, 'CUTI'),
                 _buildMenuItem(context, 'Form Ijin', Icons.assignment_late, 'IJIN'),
-                _buildMenuItem(context, 'Form Unpaid Leave & Ganti Hari Libur', Icons.money_off, 'UNPAID_LEAVE'),
                 _buildMenuItem(context, 'Form Cuti Masal', Icons.groups, 'CUTI_MASAL'),
               ],
             ),
