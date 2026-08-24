@@ -33,14 +33,7 @@ class CutiFormView extends StatelessWidget {
                   _buildKaryawanSelector(),
                   if(controller.selectedKaryawan != null) ...[
                     _buildKaryawanInfo(),
-                    AFwidget.barisText(
-                      controller: controller.txtKeperluan,
-                      label: 'Keperluan Cuti',
-                      isTextArea: true,
-                      onchanged: (val) {
-                        controller.update();
-                      },
-                    ),
+
                     AFwidget.barisText(
                       controller: controller.txtTanggalKembali,
                       label: 'Tgl Masuk Kembali',
@@ -78,9 +71,15 @@ class CutiFormView extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
           child: GetBuilder<CutiControl>(
             builder: (_) {
+              bool isSubmittable = controller.canSubmit;
               return Row(
-                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
+                  Expanded(
+                    child: Text(
+                      controller.debugCanSubmitReason, 
+                      style: const TextStyle(color: Colors.red, fontSize: 12, fontStyle: FontStyle.italic),
+                    ),
+                  ),
                   AFwidget.tombol(
                     label: 'Batal',
                     color: Colors.orange,
@@ -90,8 +89,8 @@ class CutiFormView extends StatelessWidget {
                   const SizedBox(width: 20),
                   AFwidget.tombol(
                     label: 'Simpan',
-                    color: controller.canSubmit ? Colors.blue : Colors.grey,
-                    onPressed: controller.canSubmit ? () {
+                    color: isSubmittable ? Colors.blue : Colors.grey,
+                    onPressed: isSubmittable ? () {
                         controller.submitForm();
                     } : null,
                     minimumSize: const Size(120, 40),
@@ -263,6 +262,7 @@ class CutiFormView extends StatelessWidget {
                                   child: AFwidget.textField(
                                     controller: controller.txtKetTahunan,
                                     label: '',
+                                  onchanged: (val) { controller.update(); },
                                   ),
                               )
                           ]
@@ -422,6 +422,7 @@ class CutiFormView extends StatelessWidget {
                                 child: AFwidget.textField(
                                   controller: controller.txtKetKhusus,
                                   label: '',
+                                  onchanged: (val) { controller.update(); },
                                 ),
                             )
                         ]
@@ -516,6 +517,7 @@ class CutiFormView extends StatelessWidget {
                                 child: AFwidget.textField(
                                   controller: controller.txtKetUnpaid,
                                   label: '',
+                                  onchanged: (val) { controller.update(); },
                                 ),
                             )
                         ]
@@ -591,6 +593,7 @@ class CutiFormView extends StatelessWidget {
                                 child: AFwidget.textField(
                                   controller: controller.txtKetGantiLibur,
                                   label: '',
+                                  onchanged: (val) { controller.update(); },
                                 ),
                             )
                         ]

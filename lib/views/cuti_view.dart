@@ -12,6 +12,7 @@ import 'package:fjghrd/views/cuti_masal_view.dart' as cuti_masal;
 import 'package:fjghrd/views/jatah_cuti_tahunan_view.dart';
 import 'package:fjghrd/views/jenis_cuti_khusus_view.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
@@ -28,9 +29,40 @@ class CutiView extends StatelessWidget {
           'id': PlutoCell(value: rowData[index].id),
           'karyawan': PlutoCell(value: rowData[index].karyawan?.nama ?? ''),
           'jenis_form': PlutoCell(value: rowData[index].jenisForm),
-          'keperluan': PlutoCell(value: rowData[index].keperluan),
+          'tanggal_cuti': PlutoCell(value: _getTanggalCuti(rowData[index].details)),
+          'keterangan': PlutoCell(value: rowData[index].details.map((e) => e['keterangan'] ?? '').join(', ')),
           'tanggal_kembali': PlutoCell(value: AFconvert.matDate(rowData[index].tanggalKembali)),
         },
+      ),
+    );
+  }
+
+
+
+  String _getTanggalCuti(List<dynamic> details) {
+    List<String> tgls = [];
+    for (var det in details) {
+      if (det['dates'] != null) {
+        for (var d in det['dates']) {
+          DateTime? dt = AFconvert.keTanggal(d['tanggal']);
+          if (dt != null) {
+            tgls.add(DateFormat('dd/MM').format(dt));
+          }
+        }
+      }
+    }
+    return tgls.join(', ');
+  }
+
+  Widget _wrapRenderer(PlutoColumnRendererContext ctx) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Text(
+          ctx.cell.value.toString(),
+          softWrap: true,
+          style: const TextStyle(fontSize: 13),
+        ),
       ),
     );
   }
@@ -91,6 +123,7 @@ class CutiView extends StatelessWidget {
         type: PlutoColumnType.text(),
         readOnly: true,
         width: 250,
+        renderer: _wrapRenderer,
         minWidth: 150,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -99,16 +132,27 @@ class CutiView extends StatelessWidget {
         field: 'jenis_form',
         type: PlutoColumnType.text(),
         readOnly: true,
-        width: 200,
+        width: 120,
+        backgroundColor: Colors.brown.shade100,
+        renderer: _wrapRenderer,
+      ),
+      PlutoColumn(
+        title: 'Tanggal Cuti',
+        field: 'tanggal_cuti',
+        type: PlutoColumnType.text(),
+        readOnly: true,
+        width: 250,
+        renderer: _wrapRenderer,
         backgroundColor: Colors.brown.shade100,
       ),
       PlutoColumn(
-        title: 'Keperluan',
-        field: 'keperluan',
+        title: 'Keterangan',
+        field: 'keterangan',
         type: PlutoColumnType.text(),
         readOnly: true,
         width: 350,
         minWidth: 200,
+        renderer: _wrapRenderer,
         backgroundColor: Colors.brown.shade100,
       ),
       PlutoColumn(
@@ -221,7 +265,9 @@ class CutiView extends StatelessWidget {
                   onLoaded: (PlutoGridOnLoadedEvent event) {
                     event.stateManager.setShowColumnFilter(true);
                   },
-                  configuration: AFplutogridConfig.configDua(),
+                  configuration: AFplutogridConfig.configDua().copyWith(
+                    style: AFplutogridConfig.configDua().style.copyWith(rowHeight: 40),
+                  ),
                 );
               },
             ),

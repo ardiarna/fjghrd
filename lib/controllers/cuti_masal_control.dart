@@ -134,7 +134,7 @@ class CutiMasalControl extends GetxController {
       return;
     }
     if(txtKeperluan.text.isEmpty) {
-      AFwidget.snackbar('Keperluan cuti harus diisi');
+      AFwidget.snackbar('Keterangan cuti harus diisi');
       return;
     }
     
@@ -148,7 +148,7 @@ class CutiMasalControl extends GetxController {
 
     var body = {
       'tahun': filterTahun.value,
-      'keperluan': txtKeperluan.text,
+      'keterangan': txtKeperluan.text,
       'tanggal_kembali': txtTglKembali.text != '' ? AFconvert.matYMD(DateFormat('dd-MM-yyyy').parse(txtTglKembali.text)) : null,
       'karyawans': [],
     };

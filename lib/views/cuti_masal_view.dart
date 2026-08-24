@@ -68,7 +68,7 @@ class CutiMasalView extends StatelessWidget {
                   ),
                 ),
                 AFwidget.barisText(
-                  label: 'Keperluan',
+                  label: 'Keterangan',
                   controller: controller.txtKeperluan,
                   isTextArea: true,
                 ),

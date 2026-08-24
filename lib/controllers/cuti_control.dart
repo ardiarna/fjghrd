@@ -32,8 +32,7 @@ class CutiControl extends GetxController {
   List<Opsi> listKaryawan = [];
   Karyawan? selectedKaryawan;
 
-  TextEditingController txtKeperluan = TextEditingController();
-  TextEditingController txtTanggalKembali = TextEditingController();
+    TextEditingController txtTanggalKembali = TextEditingController();
 
   // Cuti Tahunan
   bool cekTahunan = false;
@@ -461,7 +460,6 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
       currentId = cuti.id;
       formType = cuti.jenisForm;
       selectedKaryawan = cuti.karyawan;
-      txtKeperluan.text = cuti.keperluan;
       if(cuti.tanggalKembali != null) {
           txtTanggalKembali.text = AFconvert.matDate(cuti.tanggalKembali);
       }
@@ -577,9 +575,9 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
   }
 
   void clearForm() {
+    debugCanSubmitReason = '';
     currentId = '';
     selectedKaryawan = null;
-    txtKeperluan.clear();
     txtTanggalKembali.clear();
     cekTahunan = false; cekKhusus = false; cekUnpaid = false; cekGantiLibur = false;
     tglTahunan.clear(); tglKhusus.clear(); tglUnpaid.clear(); tglGantiLibur.clear();
@@ -597,41 +595,50 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
   }
 
 
+  String debugCanSubmitReason = '';
+  
   bool get canSubmit {
-    if (txtKeperluan.text.isEmpty) return false;
-    if (txtTanggalKembali.text.isEmpty) return false;
+    if (selectedKaryawan == null) { debugCanSubmitReason = ''; return false; }
+    if (txtTanggalKembali.text.isEmpty) { debugCanSubmitReason = 'Tanggal Masuk Kembali belum diisi'; return false; }
     
     bool anyChecked = cekTahunan || cekKhusus || cekUnpaid || cekGantiLibur;
-    if (!anyChecked) return false;
+    if (!anyChecked) { debugCanSubmitReason = 'Pilih minimal satu jenis cuti'; return false; }
     
     if (cekTahunan) {
       int lm = AFconvert.keInt(txtAkanDiambil.text);
-      if (lm <= 0) return false;
-      if (tglTahunan.length != lm) return false;
+      if (lm <= 0) { debugCanSubmitReason = 'Lama cuti tahunan belum diisi'; return false; }
+      if (tglTahunan.length != lm) { debugCanSubmitReason = 'Jumlah tanggal cuti tahunan tidak sesuai dengan lama cuti'; return false; }
+      if (txtKetTahunan.text.isEmpty) { debugCanSubmitReason = 'Keterangan cuti tahunan belum diisi'; return false; }
     }
     
     if (cekKhusus) {
+      if (jenisKhusus == null) { debugCanSubmitReason = 'Jenis cuti khusus belum dipilih'; return false; }
       int lm = AFconvert.keInt(txtLamaKhusus.text);
-      if (lm <= 0) return false;
+      if (lm <= 0) { debugCanSubmitReason = 'Lama cuti khusus belum diisi'; return false; }
       if (lm > 5 || satuanKhusus == 'bulan') {
-        if (txtTglAwalKhusus.text.isEmpty || txtTglAkhirKhusus.text.isEmpty) return false;
+        if (txtTglAwalKhusus.text.isEmpty || txtTglAkhirKhusus.text.isEmpty) { debugCanSubmitReason = 'Tanggal mulai/akhir cuti khusus belum dipilih'; return false; }
       } else {
-        if (tglKhusus.length != lm) return false;
+        if (tglKhusus.length != lm) { debugCanSubmitReason = 'Jumlah tanggal cuti khusus tidak sesuai dengan lama cuti'; return false; }
       }
+      if (txtKetKhusus.text.isEmpty) { debugCanSubmitReason = 'Keterangan cuti khusus belum diisi'; return false; }
     }
     
     if (cekUnpaid) {
+      if (jenisUnpaid == null) { debugCanSubmitReason = 'Jenis unpaid leave belum dipilih'; return false; }
       int lm = AFconvert.keInt(txtLamaUnpaid.text);
-      if (lm <= 0) return false;
-      if (tglUnpaid.length != lm) return false;
+      if (lm <= 0) { debugCanSubmitReason = 'Lama unpaid leave belum diisi'; return false; }
+      if (tglUnpaid.length != lm) { debugCanSubmitReason = 'Jumlah tanggal unpaid leave tidak sesuai dengan lama cuti'; return false; }
+      if (txtKetUnpaid.text.isEmpty) { debugCanSubmitReason = 'Keterangan unpaid leave belum diisi'; return false; }
     }
     
     if (cekGantiLibur) {
       int lm = AFconvert.keInt(txtLamaGantiLibur.text);
-      if (lm <= 0) return false;
-      if (tglGantiLibur.length != lm) return false;
+      if (lm <= 0) { debugCanSubmitReason = 'Lama ganti libur belum diisi'; return false; }
+      if (tglGantiLibur.length != lm) { debugCanSubmitReason = 'Jumlah tanggal ganti libur tidak sesuai dengan lama libur'; return false; }
+      if (txtKetGantiLibur.text.isEmpty) { debugCanSubmitReason = 'Keterangan ganti libur belum diisi'; return false; }
     }
     
+    debugCanSubmitReason = '';
     return true;
   }
 
@@ -697,8 +704,7 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
         'id': currentId,
         'karyawan_id': selectedKaryawan!.id,
         'jenis_form': formType,
-        'keperluan': txtKeperluan.text,
-        'tanggal_kembali': txtTanggalKembali.text.isNotEmpty ? AFconvert.matYMD(DateFormat('dd-MM-yyyy').parse(txtTanggalKembali.text)) : null,
+          'tanggal_kembali': txtTanggalKembali.text.isNotEmpty ? AFconvert.matYMD(DateFormat('dd-MM-yyyy').parse(txtTanggalKembali.text)) : null,
         'tahun': AFconvert.keInt(filterTahun.value),
         'details': details,
     };
