@@ -29,6 +29,7 @@ class CutiView extends StatelessWidget {
           'id': PlutoCell(value: rowData[index].id),
           'karyawan': PlutoCell(value: rowData[index].karyawan?.nama ?? ''),
           'jenis_form': PlutoCell(value: rowData[index].jenisForm),
+          'lama_cuti': PlutoCell(value: _getLamaCuti(rowData[index].details)),
           'tanggal_cuti': PlutoCell(value: _getTanggalCuti(rowData[index].details)),
           'keterangan': PlutoCell(value: rowData[index].details.map((e) => e['keterangan'] ?? '').join(', ')),
           'tanggal_kembali': PlutoCell(value: AFconvert.matDate(rowData[index].tanggalKembali)),
@@ -38,6 +39,14 @@ class CutiView extends StatelessWidget {
   }
 
 
+
+  String _getLamaCuti(List<dynamic> details) {
+    int total = 0;
+    for (var det in details) {
+      total += AFconvert.keInt(det['lama_hari']);
+    }
+    return total.toString();
+  }
 
   String _getTanggalCuti(List<dynamic> details) {
     List<String> tgls = [];
@@ -52,19 +61,6 @@ class CutiView extends StatelessWidget {
       }
     }
     return tgls.join(', ');
-  }
-
-  Widget _wrapRenderer(PlutoColumnRendererContext ctx) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        child: Text(
-          ctx.cell.value.toString(),
-          softWrap: true,
-          style: const TextStyle(fontSize: 13),
-        ),
-      ),
-    );
   }
 
   @override
@@ -123,7 +119,6 @@ class CutiView extends StatelessWidget {
         type: PlutoColumnType.text(),
         readOnly: true,
         width: 250,
-        renderer: _wrapRenderer,
         minWidth: 150,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -134,7 +129,14 @@ class CutiView extends StatelessWidget {
         readOnly: true,
         width: 120,
         backgroundColor: Colors.brown.shade100,
-        renderer: _wrapRenderer,
+      ),
+      PlutoColumn(
+        title: 'Lama Cuti',
+        field: 'lama_cuti',
+        type: PlutoColumnType.text(),
+        readOnly: true,
+        width: 100,
+        backgroundColor: Colors.brown.shade100,
       ),
       PlutoColumn(
         title: 'Tanggal Cuti',
@@ -142,7 +144,6 @@ class CutiView extends StatelessWidget {
         type: PlutoColumnType.text(),
         readOnly: true,
         width: 250,
-        renderer: _wrapRenderer,
         backgroundColor: Colors.brown.shade100,
       ),
       PlutoColumn(
@@ -152,7 +153,6 @@ class CutiView extends StatelessWidget {
         readOnly: true,
         width: 350,
         minWidth: 200,
-        renderer: _wrapRenderer,
         backgroundColor: Colors.brown.shade100,
       ),
       PlutoColumn(
@@ -265,9 +265,7 @@ class CutiView extends StatelessWidget {
                   onLoaded: (PlutoGridOnLoadedEvent event) {
                     event.stateManager.setShowColumnFilter(true);
                   },
-                  configuration: AFplutogridConfig.configDua().copyWith(
-                    style: AFplutogridConfig.configDua().style.copyWith(rowHeight: 40),
-                  ),
+                  configuration: AFplutogridConfig.configDua(),
                 );
               },
             ),
