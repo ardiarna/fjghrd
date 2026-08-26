@@ -12,7 +12,6 @@ import 'package:fjghrd/views/cuti_masal_view.dart' as cuti_masal;
 import 'package:fjghrd/views/jatah_cuti_tahunan_view.dart';
 import 'package:fjghrd/views/jenis_cuti_khusus_view.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
@@ -41,26 +40,83 @@ class CutiView extends StatelessWidget {
 
 
   String _getLamaCuti(List<dynamic> details) {
-    int total = 0;
+    int hari = 0;
+    int bulan = 0;
+    
     for (var det in details) {
-      total += AFconvert.keInt(det['lama_hari']);
+      String satuan = 'hari';
+      if (det['jenis_khusus'] != null && det['jenis_khusus']['satuan'] != null) {
+        satuan = det['jenis_khusus']['satuan'].toString().toLowerCase();
+      }
+      
+      int lama = AFconvert.keInt(det['lama_hari']);
+      if (satuan == 'bulan') {
+        bulan += lama;
+      } else {
+        hari += lama;
+      }
     }
-    return total.toString();
+    
+    List<String> parts = [];
+    if (hari > 0 && bulan > 0) {
+      parts.add("$hari");
+      parts.add("$bulan Bulan");
+    } else if (bulan > 0) {
+      parts.add("$bulan Bulan");
+    } else if (hari > 0) {
+      parts.add("$hari");
+    } else {
+      parts.add("0");
+    }
+    
+    return parts.join(', ');
+  }
+
+  String _formatDateShort(DateTime dt) {
+    const months = ['', 'Jan', 'Peb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nop', 'Des'];
+    return "${dt.day} ${months[dt.month]}";
   }
 
   String _getTanggalCuti(List<dynamic> details) {
-    List<String> tgls = [];
+    List<String> resultLines = [];
+    
     for (var det in details) {
-      if (det['dates'] != null) {
-        for (var d in det['dates']) {
-          DateTime? dt = AFconvert.keTanggal(d['tanggal']);
-          if (dt != null) {
-            tgls.add(DateFormat('dd/MM').format(dt));
+      if (det['dates'] == null || (det['dates'] as List).isEmpty) continue;
+      
+      List<DateTime> parsedDates = [];
+      for (var d in det['dates']) {
+        DateTime? dt = AFconvert.keTanggal(d['tanggal']);
+        if (dt != null) parsedDates.add(dt);
+      }
+      if (parsedDates.isEmpty) continue;
+      
+      parsedDates.sort((a, b) => a.compareTo(b));
+      
+      if (parsedDates.length == 1) {
+        resultLines.add(_formatDateShort(parsedDates.first));
+      } else if (parsedDates.length > 5) {
+        resultLines.add("${_formatDateShort(parsedDates.first)} s/d ${_formatDateShort(parsedDates.last)}");
+      } else {
+        Map<int, List<int>> grouped = {};
+        for (var dt in parsedDates) {
+          if (!grouped.containsKey(dt.month)) {
+            grouped[dt.month] = [];
           }
+          grouped[dt.month]!.add(dt.day);
         }
+        
+        List<String> monthStrings = [];
+        const months = ['', 'Jan', 'Peb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nop', 'Des'];
+        
+        grouped.forEach((m, days) {
+          monthStrings.add("${days.join(', ')} ${months[m]}");
+        });
+        
+        resultLines.add(monthStrings.join(', '));
       }
     }
-    return tgls.join(', ');
+    
+    return resultLines.join(' | ');
   }
 
   @override
@@ -136,6 +192,7 @@ class CutiView extends StatelessWidget {
         type: PlutoColumnType.text(),
         readOnly: true,
         width: 100,
+        textAlign: PlutoColumnTextAlign.center,
         backgroundColor: Colors.brown.shade100,
       ),
       PlutoColumn(
