@@ -136,8 +136,19 @@ class CutiView extends StatelessWidget {
           return Row(
             children: [
               IconButton(
-                onPressed: () {
-                  AFdatabase.download(url: 'cuti/excel/form/${rdrCtx.row.cells['id']!.value}');
+                onPressed: () async {
+                  AFwidget.loading();
+                  var hasil = await AFdatabase.download(url: 'cuti/excel/form/${rdrCtx.row.cells['id']!.value}');
+                  Get.back();
+                  if(hasil.success) {
+                    AFwidget.formWarning(
+                      label: 'Form Cuti telah berhasil di-download. Silakan periksa direktori Download Anda (${hasil.message})',
+                      warna: Colors.green,
+                      ikon: Icons.info,
+                    );
+                  } else {
+                    AFwidget.formWarning(label: 'Gagal men-download form cuti. [${hasil.message}]');
+                  }
                 },
                 icon: const Icon(Icons.print),
                 iconSize: 18,
@@ -288,21 +299,44 @@ class CutiView extends StatelessWidget {
               tooltip: 'Download Laporan Excel',
               onSelected: (value) async {
                 final tahun = controller.filterTahun.value;
+                AFwidget.loading();
+                dynamic hasil;
+                String reportName = '';
+                
                 if(value == 'jadwal') {
-                  AFdatabase.download(url: 'cuti/excel/jadwal/$tahun');
+                  reportName = 'Jadwal Cuti';
+                  hasil = await AFdatabase.download(url: 'cuti/excel/jadwal/$tahun');
                 } else if(value == 'list') {
-                  AFdatabase.download(url: 'cuti/excel/list/$tahun');
+                  reportName = 'List Cuti';
+                  hasil = await AFdatabase.download(url: 'cuti/excel/list/$tahun');
                 } else if(value == 'tanpa_potongan') {
-                  AFdatabase.download(url: 'cuti/excel/tanpa-potongan/$tahun');
+                  reportName = 'Cuti Tanpa Potongan';
+                  hasil = await AFdatabase.download(url: 'cuti/excel/tanpa-potongan/$tahun');
                 } else if(value == 'unpaid') {
-                  AFdatabase.download(url: 'cuti/excel/unpaid/$tahun');
+                  reportName = 'Cuti Unpaid Leave & Ganti Hari Libur';
+                  hasil = await AFdatabase.download(url: 'cuti/excel/unpaid/$tahun');
+                } else {
+                  Get.back();
+                  return;
+                }
+                
+                Get.back();
+                
+                if(hasil.success) {
+                  AFwidget.formWarning(
+                    label: 'Laporan $reportName telah berhasil di-download. Silakan periksa direktori Download Anda (${hasil.message})',
+                    warna: Colors.green,
+                    ikon: Icons.info,
+                  );
+                } else {
+                  AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
                 }
               },
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
                 const PopupMenuItem<String>(value: 'jadwal', child: Text('Jadwal Cuti')),
                 const PopupMenuItem<String>(value: 'list', child: Text('List Cuti')),
                 const PopupMenuItem<String>(value: 'tanpa_potongan', child: Text('Cuti Tanpa Potongan')),
-                const PopupMenuItem<String>(value: 'unpaid', child: Text('Unpaid Leave & Ganti Libur')),
+                const PopupMenuItem<String>(value: 'unpaid', child: Text('Cuti Unpaid Leave & Ganti Hari Libur')),
               ],
             ),
           ],

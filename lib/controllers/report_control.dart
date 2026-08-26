@@ -41,6 +41,69 @@ class ReportControl extends GetxController {
     }
   }
 
+  Future<void> downloadJadwalCuti() async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'cuti/excel/jadwal/${filterTahun.value}');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan Jadwal Cuti telah berhasil dibuat. Silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+  Future<void> downloadCutiTanpaPotongan() async {
+    Get.back();
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'cuti/excel/tanpa-potongan/${filterTahunAwal.value}/${filterTahunAkhir.value}');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan Cuti Tanpa Potongan telah berhasil dibuat. Silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+  Future<void> downloadUnpaidLeave() async {
+    Get.back();
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'cuti/excel/unpaid/${filterTahunAwal.value}/${filterTahunAkhir.value}');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan Cuti Unpaid Leave & Ganti Hari Libur telah berhasil dibuat. Silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+  Future<void> downloadListCuti() async {
+    Get.back();
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'cuti/excel/list/${filterTahunAwal.value}/${filterTahunAkhir.value}');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan List Cuti telah berhasil dibuat. Silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
   Future<void> dowloadListpayroll() async {
     AFwidget.loading();
     var hasil = await AFdatabase.download(url: 'excel/list-payroll/${filterTahun.value}');

@@ -117,6 +117,22 @@ class ReportView extends StatelessWidget {
                       label: 'Slip Gaji',
                       onPressed: dialogSlipGaji,
                     ),
+                    barisBox(
+                      label: 'Jadwal Cuti',
+                      onPressed: controller.downloadJadwalCuti,
+                    ),
+                    barisBox(
+                      label: 'List Cuti',
+                      onPressed: dialogListCuti,
+                    ),
+                    barisBox(
+                      label: 'Cuti Tanpa Potongan',
+                      onPressed: dialogCutiTanpaPotongan,
+                    ),
+                    barisBox(
+                      label: 'Cuti Unpaid Leave & Ganti Hari Libur',
+                      onPressed: dialogUnpaidLeave,
+                    ),
                   ].animate(interval: 50.ms).fadeIn(duration: 400.ms).slideY(begin: 0.1, end: 0, curve: Curves.easeOut).toList();
 
                   return LayoutBuilder(
@@ -267,8 +283,310 @@ class ReportView extends StatelessWidget {
     );
   }
 
+  void dialogCutiTanpaPotongan() {
+    controller.filterTahunAwal = controller.filterTahun;
+    controller.filterTahunAkhir = controller.filterTahun;
+    AFwidget.dialog(
+      contentPadding: EdgeInsets.zero,
+      backgroundColor: Colors.transparent,
+      Container(
+        width: 500,
+        height: 300,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        child: Column(
+          children: [
+            AFwidget.formHeader('Excel Cuti Tanpa Potongan'),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 100,
+                    padding: const EdgeInsets.only(right: 15),
+                    child: const Text('Tahun Awal'),
+                  ),
+                  Expanded(
+                    child: GetBuilder<ReportControl>(
+                      builder: (_) {
+                        return AFwidget.comboField(
+                          value: controller.filterTahunAwal.label,
+                          label: '',
+                          onTap: () async {
+                            var a = await controller.pilihTahun(value: controller.filterTahunAwal.value);
+                            if(a != null && a.value != controller.filterTahunAwal.value) {
+                              controller.filterTahunAwal = a;
+                              controller.update();
+                            }
+                          }
+                        );
+                      }
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 100,
+                    padding: const EdgeInsets.only(right: 15),
+                    child: const Text('Tahun Akhir'),
+                  ),
+                  Expanded(
+                    child: GetBuilder<ReportControl>(
+                      builder: (_) {
+                        return AFwidget.comboField(
+                          value: controller.filterTahunAkhir.label,
+                          label: '',
+                          onTap: () async {
+                            var a = await controller.pilihTahun(value: controller.filterTahunAkhir.value);
+                            if(a != null && a.value != controller.filterTahunAkhir.value) {
+                              controller.filterTahunAkhir = a;
+                              controller.update();
+                            }
+                          }
+                        );
+                      }
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  AFwidget.tombol(
+                    label: 'Batal',
+                    color: Colors.orange,
+                    onPressed: Get.back,
+                    minimumSize: const Size(120, 40),
+                  ),
+                  const SizedBox(width: 40),
+                  AFwidget.tombol(
+                    label: 'Download',
+                    color: Colors.blue,
+                    onPressed: controller.downloadCutiTanpaPotongan,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void dialogUnpaidLeave() {
+    controller.filterTahunAwal = controller.filterTahun;
+    controller.filterTahunAkhir = controller.filterTahun;
+    AFwidget.dialog(
+      contentPadding: EdgeInsets.zero,
+      backgroundColor: Colors.transparent,
+      Container(
+        width: 500,
+        height: 300,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        child: Column(
+          children: [
+            AFwidget.formHeader('Excel Cuti Unpaid Leave & Ganti Hari Libur'),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 100,
+                    padding: const EdgeInsets.only(right: 15),
+                    child: const Text('Tahun Awal'),
+                  ),
+                  Expanded(
+                    child: GetBuilder<ReportControl>(
+                      builder: (_) {
+                        return AFwidget.comboField(
+                          value: controller.filterTahunAwal.label,
+                          label: '',
+                          onTap: () async {
+                            var a = await controller.pilihTahun(value: controller.filterTahunAwal.value);
+                            if(a != null && a.value != controller.filterTahunAwal.value) {
+                              controller.filterTahunAwal = a;
+                              controller.update();
+                            }
+                          }
+                        );
+                      }
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 100,
+                    padding: const EdgeInsets.only(right: 15),
+                    child: const Text('Tahun Akhir'),
+                  ),
+                  Expanded(
+                    child: GetBuilder<ReportControl>(
+                      builder: (_) {
+                        return AFwidget.comboField(
+                          value: controller.filterTahunAkhir.label,
+                          label: '',
+                          onTap: () async {
+                            var a = await controller.pilihTahun(value: controller.filterTahunAkhir.value);
+                            if(a != null && a.value != controller.filterTahunAkhir.value) {
+                              controller.filterTahunAkhir = a;
+                              controller.update();
+                            }
+                          }
+                        );
+                      }
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  AFwidget.tombol(
+                    label: 'Batal',
+                    color: Colors.orange,
+                    onPressed: Get.back,
+                    minimumSize: const Size(120, 40),
+                  ),
+                  const SizedBox(width: 40),
+                  AFwidget.tombol(
+                    label: 'Download',
+                    color: Colors.blue,
+                    onPressed: controller.downloadUnpaidLeave,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void dialogListCuti() {
+    controller.filterTahunAwal = controller.filterTahun;
+    controller.filterTahunAkhir = controller.filterTahun;
+    AFwidget.dialog(
+      contentPadding: EdgeInsets.zero,
+      backgroundColor: Colors.transparent,
+      Container(
+        width: 500,
+        height: 300,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        child: Column(
+          children: [
+            AFwidget.formHeader('Excel List Cuti Karyawan'),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 100,
+                    padding: const EdgeInsets.only(right: 15),
+                    child: const Text('Tahun Awal'),
+                  ),
+                  Expanded(
+                    child: GetBuilder<ReportControl>(
+                      builder: (_) {
+                        return AFwidget.comboField(
+                          value: controller.filterTahunAwal.label,
+                          label: '',
+                          onTap: () async {
+                            var a = await controller.pilihTahun(value: controller.filterTahunAwal.value);
+                            if(a != null && a.value != controller.filterTahunAwal.value) {
+                              controller.filterTahunAwal = a;
+                              controller.update();
+                            }
+                          }
+                        );
+                      }
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 100,
+                    padding: const EdgeInsets.only(right: 15),
+                    child: const Text('Tahun Akhir'),
+                  ),
+                  Expanded(
+                    child: GetBuilder<ReportControl>(
+                      builder: (_) {
+                        return AFwidget.comboField(
+                          value: controller.filterTahunAkhir.label,
+                          label: '',
+                          onTap: () async {
+                            var a = await controller.pilihTahun(value: controller.filterTahunAkhir.value);
+                            if(a != null && a.value != controller.filterTahunAkhir.value) {
+                              controller.filterTahunAkhir = a;
+                              controller.update();
+                            }
+                          }
+                        );
+                      }
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  AFwidget.tombol(
+                    label: 'Batal',
+                    color: Colors.orange,
+                    onPressed: Get.back,
+                    minimumSize: const Size(120, 40),
+                  ),
+                  const SizedBox(width: 40),
+                  AFwidget.tombol(
+                    label: 'Download',
+                    color: Colors.blue,
+                    onPressed: controller.downloadListCuti,
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   void dialogListPHK() {
     AFwidget.dialog(
+      contentPadding: EdgeInsets.zero,
+      backgroundColor: Colors.transparent,
       Container(
         width: 500,
         height: 300,
@@ -362,14 +680,14 @@ class ReportView extends StatelessWidget {
         ),
       ),
       scrollable: false,
-      backgroundColor: Colors.white,
-      contentPadding: const EdgeInsets.all(0),
     );
   }
 
   void dialogRekapPayroll() {
     controller.filterJenis = '';
     AFwidget.dialog(
+      contentPadding: EdgeInsets.zero,
+      backgroundColor: Colors.transparent,
       Container(
         width: 500,
         height: 300,
@@ -435,14 +753,14 @@ class ReportView extends StatelessWidget {
         ),
       ),
       scrollable: false,
-      backgroundColor: Colors.white,
-      contentPadding: const EdgeInsets.all(0),
     );
   }
 
   void dialogRekapPPh21() {
     controller.filterJenis = '';
     AFwidget.dialog(
+      contentPadding: EdgeInsets.zero,
+      backgroundColor: Colors.transparent,
       Container(
         width: 500,
         height: 300,
@@ -508,14 +826,14 @@ class ReportView extends StatelessWidget {
         ),
       ),
       scrollable: false,
-      backgroundColor: Colors.white,
-      contentPadding: const EdgeInsets.all(0),
     );
   }
 
   void dialogSlipGaji() {
     controller.filterJenis = '';
     AFwidget.dialog(
+      contentPadding: EdgeInsets.zero,
+      backgroundColor: Colors.transparent,
       Container(
         width: 500,
         height: 370,
@@ -621,8 +939,6 @@ class ReportView extends StatelessWidget {
         ),
       ),
       scrollable: false,
-      backgroundColor: Colors.white,
-      contentPadding: const EdgeInsets.all(0),
     );
   }
 
