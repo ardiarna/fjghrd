@@ -510,6 +510,47 @@ class KaryawanForm extends StatelessWidget {
                                         Container(
                                           width: 150,
                                           padding: const EdgeInsets.only(right: 15),
+                                          child: const Text('Manajemen'),
+                                        ),
+                                        Expanded(
+                                          child: GetBuilder<KaryawanControl>(
+                                            builder: (_) {
+                                              return RadioGroup<bool>(
+                                                groupValue: controller.manajemen,
+                                                onChanged: (a) {
+                                                  if(a != null && a != controller.manajemen) {
+                                                    controller.manajemen = a;
+                                                    controller.update();
+                                                  }
+                                                },
+                                                child: Row(
+                                                  children: const [
+                                                    Radio<bool>(value: true),
+                                                    SizedBox(
+                                                      width: 90,
+                                                      child: Text('Ya'),
+                                                    ),
+                                                    Radio<bool>(value: false),
+                                                    SizedBox(
+                                                      width: 110,
+                                                      child: Text('Tidak'),
+                                                    ),
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          width: 150,
+                                          padding: const EdgeInsets.only(right: 15),
                                           child: const Text('Status Aktif'),
                                         ),
                                         Expanded(

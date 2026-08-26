@@ -100,6 +100,7 @@ class KaryawanControl extends GetxController {
   String kelamin = '';
   String aktif = '';
   bool? staf = true;
+  bool? manajemen = false;
   String keluargaHubungan = '';
 
   late Opsi filterTahun;
@@ -368,6 +369,7 @@ class KaryawanControl extends GetxController {
     kelamin = '';
     aktif = '';
     staf = null;
+    manajemen = false;
     AFwidget.dialog(
       Container(
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
@@ -440,6 +442,47 @@ class KaryawanControl extends GetxController {
                                   SizedBox(
                                     width: 110,
                                     child: Text('Non Staf'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 150,
+                        padding: const EdgeInsets.only(right: 15),
+                        child: const Text('Manajemen'),
+                      ),
+                      Expanded(
+                        child: GetBuilder<KaryawanControl>(
+                          builder: (_) {
+                            return RadioGroup<bool>(
+                              groupValue: manajemen,
+                              onChanged: (a) {
+                                if(a != null && a != manajemen) {
+                                  manajemen = a;
+                                  update();
+                                }
+                              },
+                              child: Row(
+                                children: const [
+                                  Radio<bool>(value: true),
+                                  SizedBox(
+                                    width: 90,
+                                    child: Text('Ya'),
+                                  ),
+                                  Radio<bool>(value: false),
+                                  SizedBox(
+                                    width: 110,
+                                    child: Text('Tidak'),
                                   ),
                                 ],
                               ),
@@ -985,6 +1028,7 @@ class KaryawanControl extends GetxController {
     kelamin = current.kelamin;
     aktif = current.aktif;
     staf = current.staf;
+    manajemen = current.manajemen;
     loadKeluargas();
     loadKontaks();
     loadPerjanjianKerjas();
@@ -1895,6 +1939,7 @@ class KaryawanControl extends GetxController {
         pendidikanJurusan: txtPendidikanJurusan.text,
         aktif: aktif,
         staf: staf ?? true,
+        manajemen: manajemen ?? false,
       );
       a.agama = agama;
       a.area = area;
@@ -1987,6 +2032,7 @@ class KaryawanControl extends GetxController {
         pendidikanJurusan: txtPendidikanJurusan.text,
         aktif: aktif,
         staf: staf ?? true,
+        manajemen: manajemen ?? false,
       );
       a.agama = agama;
       a.area = area;
