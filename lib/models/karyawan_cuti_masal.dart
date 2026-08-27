@@ -10,6 +10,8 @@ class KaryawanCutiMasal {
   int sudahDiambil;
   int cutiMasalLama;
   int belumDiambil;
+  bool bolehMinus;
+  bool pindahKeMinus;
   
   bool isChecked;
   TextEditingController txtLamaHari;
@@ -24,6 +26,8 @@ class KaryawanCutiMasal {
     required this.sudahDiambil,
     required this.cutiMasalLama,
     required this.belumDiambil,
+    this.bolehMinus = false,
+    this.pindahKeMinus = false,
     this.isChecked = true,
   }) : txtLamaHari = TextEditingController(), inputDates = [];
 
@@ -37,19 +41,24 @@ class KaryawanCutiMasal {
       sudahDiambil: AFconvert.keInt(map['sudah_diambil']),
       cutiMasalLama: AFconvert.keInt(map['cuti_masal']),
       belumDiambil: AFconvert.keInt(map['belum_diambil']),
+      bolehMinus: map['boleh_minus'] == 'Y',
     );
   }
 
   int get inputLamaHari => AFconvert.keInt(txtLamaHari.text);
 
+  int get safeBelumDiambil => belumDiambil < 0 ? 0 : belumDiambil;
+
   int get splitCutiMasal {
     if (!hasJatah) return 0;
-    return inputLamaHari <= belumDiambil ? inputLamaHari : belumDiambil;
+    if (pindahKeMinus) return inputLamaHari;
+    return inputLamaHari <= safeBelumDiambil ? inputLamaHari : safeBelumDiambil;
   }
 
   int get splitUnpaid {
     if (!hasJatah) return inputLamaHari;
-    return inputLamaHari > belumDiambil ? inputLamaHari - belumDiambil : 0;
+    if (pindahKeMinus) return 0;
+    return inputLamaHari > safeBelumDiambil ? inputLamaHari - safeBelumDiambil : 0;
   }
 
   int get sisaAkhir {

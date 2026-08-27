@@ -96,6 +96,7 @@ class CutiControl extends GetxController {
     txtJatahJumlahCuti.addListener(update);
     txtPlusTahunLalu.addListener(update);
     txtMinTahunLalu.addListener(update);
+    txtAkanDiambil.addListener(hitungSisa);
     txtLamaUnpaid = TextEditingController();
     txtLamaGantiLibur = TextEditingController();
     txtTglAwalKhusus = TextEditingController();
@@ -233,16 +234,27 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
     fetchInfoCuti();
   }
 
-  Future<void> fetchInfoCuti() async {
+  bool bolehMinusTahunan = false;
+  
+  Future<void> fetchInfoCuti({Map<String, dynamic>? snapDet}) async {
     if(selectedKaryawan == null) return;
     var hasil = await repo.fetchInfo(karyawanId: selectedKaryawan!.id, tahun: filterTahun.value);
     if(hasil.success) {
         var data = hasil.data;
         if(data['kuota'] != null) {
-            totalHakCuti = data['kuota']['total_hak_cuti'] ?? 0;
-            sudahDiambil = data['kuota']['sudah_diambil'] ?? 0;
-            cutiMasal = data['kuota']['cuti_masal'] ?? 0;
-            belumDiambil = data['kuota']['belum_diambil'] ?? 0;
+            bolehMinusTahunan = (data['kuota']['boleh_minus'] == 'Y');
+            
+            if (snapDet != null) {
+                totalHakCuti   = AFconvert.keInt(snapDet['snap_total_hak_cuti']);
+                sudahDiambil   = AFconvert.keInt(snapDet['snap_sudah_diambil']);
+                cutiMasal      = AFconvert.keInt(snapDet['snap_cuti_masal']);
+                belumDiambil   = totalHakCuti - sudahDiambil - cutiMasal;
+            } else {
+                totalHakCuti = data['kuota']['total_hak_cuti'] ?? 0;
+                sudahDiambil = data['kuota']['sudah_diambil'] ?? 0;
+                cutiMasal = data['kuota']['cuti_masal'] ?? 0;
+                belumDiambil = data['kuota']['belum_diambil'] ?? 0;
+            }
             hitungSisa();
         }
     }
@@ -504,22 +516,13 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
       formType = cuti.jenisForm;
       selectedKaryawan = cuti.karyawan;
 
-      // Check if TAHUNAN or IJIN detail has a snapshot
+      // Check if TAHUNAN, IJIN, or CUTI_MASAL detail has a snapshot
       var snapDet = cuti.details.firstWhereOrNull(
-        (d) => (d['kategori'] == 'TAHUNAN' || d['kategori'] == 'IJIN') && d['snap_total_hak_cuti'] != null
+        (d) => (d['kategori'] == 'TAHUNAN' || d['kategori'] == 'IJIN' || d['kategori'] == 'CUTI_MASAL') && d['snap_total_hak_cuti'] != null
       );
       if (selectedKaryawan != null) {
           hasJatah = listJatah.any((e) => e.karyawanId == selectedKaryawan!.id);
-          if (snapDet != null) {
-            // Use stored snapshot — no live API call needed
-            totalHakCuti   = AFconvert.keInt(snapDet['snap_total_hak_cuti']);
-            sudahDiambil   = AFconvert.keInt(snapDet['snap_sudah_diambil']);
-            cutiMasal      = AFconvert.keInt(snapDet['snap_cuti_masal']);
-            belumDiambil   = totalHakCuti - sudahDiambil - cutiMasal;
-          } else {
-            // Old data without snapshot — fall back to live API
-            fetchInfoCuti();
-          }
+          fetchInfoCuti(snapDet: snapDet);
       }
       if(cuti.tanggalKembali != null) {
           txtTanggalKembali.text = AFconvert.matDate(cuti.tanggalKembali);
@@ -652,6 +655,7 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
   }
 
   void clearForm() {
+    bolehMinusTahunan = false;
     debugCanSubmitReason = '';
     currentId = '';
     selectedKaryawan = null;
@@ -693,6 +697,7 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
     if (cekTahunan) {
       int lm = AFconvert.keInt(txtAkanDiambil.text);
       if (lm <= 0) { debugCanSubmitReason = 'Lama cuti tahunan belum diisi'; return false; }
+      if (!bolehMinusTahunan && sisaHakCuti < 0) { debugCanSubmitReason = 'Lama cuti tidak boleh lebih besar dari sisa cuti yang dapat diambil'; return false; }
       if (tglTahunan.length != lm) { debugCanSubmitReason = 'Jumlah tanggal cuti tahunan tidak sesuai dengan lama cuti'; return false; }
       if (txtKetTahunan.text.isEmpty) { debugCanSubmitReason = 'Keterangan cuti tahunan belum diisi'; return false; }
     }

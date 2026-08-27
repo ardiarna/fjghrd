@@ -356,6 +356,28 @@ class CutiMasalView extends StatelessWidget {
                                           ],
                                         ),
                                       ),
+                                      if (k.bolehMinus && (k.splitUnpaid > 0 || k.pindahKeMinus))
+                                        Container(
+                                          margin: const EdgeInsets.only(top: 4),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              SizedBox(
+                                                width: 16,
+                                                height: 16,
+                                                child: Checkbox(
+                                                  value: k.pindahKeMinus,
+                                                  onChanged: (val) {
+                                                    k.pindahKeMinus = val ?? false;
+                                                    controller.update();
+                                                  },
+                                                ),
+                                              ),
+                                              const SizedBox(width: 4),
+                                              const Text('Pindah ke Cuti Masal', style: TextStyle(fontSize: 10, color: Colors.blue)),
+                                            ],
+                                          ),
+                                        ),
                                     ],
                                   ),
                                 ),
