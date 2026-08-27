@@ -21,6 +21,7 @@ class CutiControl extends GetxController {
   Opsi? selectedTahunFormJatah;
 
   late TextEditingController txtJatahId, txtJatahJumlahCuti, txtPlusTahunLalu, txtMinTahunLalu;
+  bool cekJatahBolehMinus = false;
   int get totalCutiJatah => AFconvert.keInt(txtJatahJumlahCuti.text) + AFconvert.keInt(txtPlusTahunLalu.text) - AFconvert.keInt(txtMinTahunLalu.text);
 
 
@@ -262,6 +263,7 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
     txtJatahJumlahCuti.text = item.jumlahCuti == 0 ? '' : item.jumlahCuti.toString();
     txtPlusTahunLalu.text = (item.id == '' || item.plusTahunLalu == 0) ? '' : item.plusTahunLalu.toString();
     txtMinTahunLalu.text = (item.id == '' || item.minTahunLalu == 0) ? '' : item.minTahunLalu.toString();
+    cekJatahBolehMinus = item.bolehMinus == 'Y';
 
     if (id != '' && item.karyawan != null) {
       selectedKaryawanJatah = Opsi(
@@ -271,14 +273,7 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
     } else if (defaultKaryawanId != null && defaultKaryawanNama != null) {
       selectedKaryawanJatah = Opsi(value: defaultKaryawanId, label: defaultKaryawanNama);
     } else {
-      if (selectedKaryawan != null) {
-        selectedKaryawanJatah = Opsi(
-          value: selectedKaryawan!.id,
-          label: selectedKaryawan!.nama,
-        );
-      } else {
-        selectedKaryawanJatah = null;
-      }
+      selectedKaryawanJatah = null;
     }
 
     if (id != '' && item.tahun.isNotEmpty) {
@@ -357,10 +352,34 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
                 AFwidget.barisText(label: '- Tahun Lalu', controller: txtMinTahunLalu, isNumber: true),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.blue.shade50,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        const Text('Total Cuti', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                        const SizedBox(width: 20),
+                        Text('${ctrl.totalCutiJatah}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 22, color: Colors.blue)),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 15, 20, 0),
                   child: Row(
                     children: [
-                      SizedBox(width: 150, child: Text('Total Cuti', style: TextStyle(fontWeight: FontWeight.bold))),
-                      Expanded(child: Text('${ctrl.totalCutiJatah}', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16))),
+                      Checkbox(
+                        value: ctrl.cekJatahBolehMinus,
+                        onChanged: (val) {
+                          ctrl.cekJatahBolehMinus = val ?? false;
+                          ctrl.update();
+                        },
+                      ),
+                      const Expanded(child: Text('Boleh memakai jatah cuti tahun depan (Boleh Minus) ?', style: TextStyle(fontWeight: FontWeight.bold))),
                     ],
                   ),
                 ),
@@ -396,6 +415,15 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
     if (selectedKaryawanJatah != null && selectedTahunFormJatah != null && txtJatahId.text == '') {
         var hasil = await AFdatabase.send(url: 'jatah-cuti/hitung-sisa?karyawan_id=${selectedKaryawanJatah!.value}&tahun=${selectedTahunFormJatah!.value}');
         if(hasil.success) {
+            if (hasil.data['exists'] == true) {
+                AFwidget.formWarning(label: 'Jatah cuti untuk karyawan dan tahun tersebut sudah diinput sebelumnya.');
+                selectedKaryawanJatah = null;
+                txtPlusTahunLalu.text = '';
+                txtMinTahunLalu.text = '';
+                update();
+                return;
+            }
+            
             var plus = hasil.data['plus_tahun_lalu'] ?? 0;
             var min = hasil.data['min_tahun_lalu'] ?? 0;
             String p = plus == 0 ? '' : plus.toString();
@@ -419,6 +447,7 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
         'jumlah_cuti': AFconvert.keInt(txtJatahJumlahCuti.text),
         'plus_tahun_lalu': AFconvert.keInt(txtPlusTahunLalu.text),
         'min_tahun_lalu': AFconvert.keInt(txtMinTahunLalu.text),
+        'boleh_minus': cekJatahBolehMinus ? 'Y' : 'N',
       };
 
       AFwidget.loading();

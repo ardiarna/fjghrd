@@ -9,6 +9,7 @@ class JatahCutiTahunan {
   int plusTahunLalu;
   int minTahunLalu;
   int totalCuti;
+  String bolehMinus;
   Karyawan? karyawan;
 
   JatahCutiTahunan({
@@ -19,6 +20,7 @@ class JatahCutiTahunan {
     this.plusTahunLalu = 0,
     this.minTahunLalu = 0,
     this.totalCuti = 0,
+    this.bolehMinus = 'N',
     this.karyawan,
   });
 
@@ -31,6 +33,7 @@ class JatahCutiTahunan {
       plusTahunLalu: AFconvert.keInt(data['plus_tahun_lalu']),
       minTahunLalu: AFconvert.keInt(data['min_tahun_lalu']),
       totalCuti: AFconvert.keInt(data['total_cuti']),
+      bolehMinus: data['boleh_minus']?.toString() ?? 'N',
     );
     if (data['karyawan'] != null) {
       obj.karyawan = Karyawan.fromMap(data['karyawan']);
@@ -47,6 +50,7 @@ class JatahCutiTahunan {
       'plus_tahun_lalu': plusTahunLalu,
       'min_tahun_lalu': minTahunLalu,
       'total_cuti': totalCuti,
+      'boleh_minus': bolehMinus,
     };
   }
 }

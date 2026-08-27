@@ -34,11 +34,12 @@ class JenisCutiKhususView extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<PlutoColumn> columns = [
       PlutoColumn(
-        title: 'ID',
+        title: '',
         field: 'id',
         type: PlutoColumnType.text(),
         readOnly: true,
-        width: 70,
+        width: 53,
+        minWidth: 53,
         backgroundColor: Colors.brown.shade100,
         enableFilterMenuItem: false,
         enableContextMenu: false,

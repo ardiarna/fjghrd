@@ -28,6 +28,7 @@ class JatahCutiTahunanView extends StatelessWidget {
           'plus_tahun_lalu': PlutoCell(value: rowData[index].plusTahunLalu),
           'min_tahun_lalu': PlutoCell(value: rowData[index].minTahunLalu),
           'total_cuti': PlutoCell(value: rowData[index].totalCuti),
+          'boleh_minus': PlutoCell(value: rowData[index].bolehMinus),
         },
       ),
     );
@@ -37,11 +38,12 @@ class JatahCutiTahunanView extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<PlutoColumn> columns = [
       PlutoColumn(
-        title: 'ID',
+        title: '',
         field: 'id',
         type: PlutoColumnType.text(),
         readOnly: true,
-        width: 70,
+        width: 53,
+        minWidth: 53,
         backgroundColor: Colors.brown.shade100,
         enableFilterMenuItem: false,
         enableContextMenu: false,
@@ -102,6 +104,14 @@ class JatahCutiTahunanView extends StatelessWidget {
         title: 'Total Cuti',
         field: 'total_cuti',
         type: PlutoColumnType.number(),
+        readOnly: true,
+        width: 100,
+        backgroundColor: Colors.brown.shade100,
+      ),
+      PlutoColumn(
+        title: 'Boleh Minus',
+        field: 'boleh_minus',
+        type: PlutoColumnType.text(),
         readOnly: true,
         width: 100,
         backgroundColor: Colors.brown.shade100,
@@ -167,7 +177,7 @@ class JatahCutiTahunanView extends StatelessWidget {
                   onLoaded: (PlutoGridOnLoadedEvent event) {
                     event.stateManager.setShowColumnFilter(true);
                   },
-                  configuration: AFplutogridConfig.configSatu(),
+                  configuration: AFplutogridConfig.configSatu().copyWith(columnSize: const PlutoGridColumnSizeConfig(autoSizeMode: PlutoAutoSizeMode.scale)),
                 );
               },
             ),
