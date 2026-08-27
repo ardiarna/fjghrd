@@ -42,11 +42,11 @@ class CutiControl extends GetxController {
   
   bool cekTahunan = false;
   bool hasJatah = false;
-  int hakCuti = 12;
+  int hakCuti = 0;
   int sisaCutiTahunLalu = 0;
-  int totalHakCuti = 12;
+  int totalHakCuti = 0;
   int sudahDiambil = 0;
-  int cutiMasal = 5;
+  int cutiMasal = 0;
   int belumDiambil = 0;
   TextEditingController txtAkanDiambil = TextEditingController();
   int sisaHakCuti = 0;
@@ -80,6 +80,11 @@ class CutiControl extends GetxController {
   List<DateTime> tglGantiLibur = [];
   TextEditingController txtLamaGantiLibur = TextEditingController();
   TextEditingController txtKetGantiLibur = TextEditingController();
+  bool cekMasal = false;
+  String idDetailMasal = '';
+  TextEditingController txtLamaMasal = TextEditingController();
+  TextEditingController txtKetMasal = TextEditingController();
+  List<DateTime> tglMasal = [];
 
 
   @override
@@ -235,11 +240,11 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
     if(hasil.success) {
         var data = hasil.data;
         if(data['kuota'] != null) {
-            hakCuti = data['kuota']['hak_cuti'] ?? 12;
+            hakCuti = data['kuota']['hak_cuti'] ?? 0;
             sisaCutiTahunLalu = data['kuota']['sisa_cuti_tahun_lalu'] ?? 0;
-            totalHakCuti = data['kuota']['total_hak_cuti'] ?? 12;
+            totalHakCuti = data['kuota']['total_hak_cuti'] ?? 0;
             sudahDiambil = data['kuota']['sudah_diambil'] ?? 0;
-            cutiMasal = data['kuota']['cuti_masal'] ?? 5;
+            cutiMasal = data['kuota']['cuti_masal'] ?? 0;
             belumDiambil = data['kuota']['belum_diambil'] ?? 0;
             hitungSisa();
         }
@@ -510,6 +515,17 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
                       if(t != null) tglKhusus.add(t);
                   }
               }
+          } else if(kat == 'CUTI_MASAL') {
+              idDetailMasal = det['id']?.toString() ?? '';
+              cekMasal = true;
+              txtLamaMasal.text = det['lama_hari']?.toString() ?? '';
+              txtKetMasal.text = det['keterangan'] ?? '';
+              if(det['dates'] != null) {
+                  for(var dt in det['dates']) {
+                      DateTime? t = AFconvert.keTanggal(dt['tanggal']);
+                      if(t != null) tglMasal.add(t);
+                  }
+              }
           } else if(kat == 'UNPAID') {
               idDetailUnpaid = det['id']?.toString() ?? '';
               cekUnpaid = true;
@@ -608,6 +624,11 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
     cekTahunan = false; cekKhusus = false; cekUnpaid = false; cekGantiLibur = false;
     tglTahunan.clear(); tglKhusus.clear(); tglUnpaid.clear(); tglGantiLibur.clear();
     txtKetTahunan.clear(); txtKetKhusus.clear(); txtKetUnpaid.clear(); txtKetGantiLibur.clear();
+    cekMasal = false;
+    idDetailMasal = '';
+    txtLamaMasal.clear();
+    txtKetMasal.clear();
+    tglMasal.clear();
     txtAkanDiambil.clear();
     txtLamaKhusus.clear();
     txtLamaUnpaid.clear();
@@ -627,7 +648,7 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
     if (selectedKaryawan == null) { debugCanSubmitReason = ''; return false; }
     if (txtTanggalKembali.text.isEmpty) { debugCanSubmitReason = 'Tanggal Masuk Kembali belum diisi'; return false; }
     
-    bool anyChecked = cekTahunan || cekKhusus || cekUnpaid || cekGantiLibur;
+    bool anyChecked = cekTahunan || cekKhusus || cekUnpaid || cekGantiLibur || cekMasal;
     if (!anyChecked) { debugCanSubmitReason = 'Pilih minimal satu jenis cuti'; return false; }
     
     if (cekTahunan) {
@@ -655,6 +676,10 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
       if (lm <= 0) { debugCanSubmitReason = 'Lama unpaid leave belum diisi'; return false; }
       if (tglUnpaid.length != lm) { debugCanSubmitReason = 'Jumlah tanggal unpaid leave tidak sesuai dengan lama cuti'; return false; }
       if (txtKetUnpaid.text.isEmpty) { debugCanSubmitReason = 'Keterangan unpaid leave belum diisi'; return false; }
+    }
+    
+    if (cekMasal) {
+      if (txtKetMasal.text.isEmpty) { debugCanSubmitReason = 'Keterangan cuti masal belum diisi'; return false; }
     }
     
     if (cekGantiLibur) {
@@ -703,6 +728,15 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
             'lama_hari': lm,
             'keterangan': txtKetKhusus.text,
             'dates': finalTglKhusus.map((e) => AFconvert.matYMD(e)).toList(),
+        });
+    }
+    if(cekMasal) {
+        details.add({
+            'id': idDetailMasal,
+            'kategori': 'CUTI_MASAL',
+            'lama_hari': AFconvert.keInt(txtLamaMasal.text),
+            'keterangan': txtKetMasal.text,
+            'dates': tglMasal.map((e) => AFconvert.matYMD(e)).toList(),
         });
     }
     if(cekUnpaid) {

@@ -71,6 +71,7 @@ class CutiMasalView extends StatelessWidget {
                   label: 'Keterangan',
                   controller: controller.txtKeperluan,
                   isTextArea: true,
+                  onchanged: (v) => controller.update(),
                 ),
                 AFwidget.barisText(
                   label: 'Tgl Kembali',
@@ -378,23 +379,34 @@ class CutiMasalView extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(15),
       color: Colors.grey[100],
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          AFwidget.tombol(
-            label: 'Batal',
-            color: Colors.orange,
-            onPressed: Get.back,
-            minimumSize: const Size(120, 40),
-          ),
-          const SizedBox(width: 20),
-          AFwidget.tombol(
-            label: 'Simpan',
-            color: Colors.blue,
-            onPressed: controller.simpanData,
-            minimumSize: const Size(120, 40),
-          ),
-        ],
+      child: GetBuilder<CutiMasalControl>(
+        builder: (_) {
+          bool isSubmittable = controller.canSubmit;
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Expanded(
+                child: Text(
+                  controller.debugCanSubmitReason, 
+                  style: const TextStyle(color: Colors.red, fontSize: 12, fontStyle: FontStyle.italic),
+                ),
+              ),
+              AFwidget.tombol(
+                label: 'Batal',
+                color: Colors.orange,
+                onPressed: Get.back,
+                minimumSize: const Size(120, 40),
+              ),
+              const SizedBox(width: 20),
+              AFwidget.tombol(
+                label: 'Simpan',
+                color: isSubmittable ? Colors.blue : Colors.grey,
+                onPressed: isSubmittable ? controller.simpanData : null,
+                minimumSize: const Size(120, 40),
+              ),
+            ],
+          );
+        }
       ),
     );
   }

@@ -28,9 +28,10 @@ class CutiView extends StatelessWidget {
           'id': PlutoCell(value: rowData[index].id),
           'karyawan': PlutoCell(value: rowData[index].karyawan?.nama ?? ''),
           'jenis_form': PlutoCell(value: rowData[index].jenisForm),
+          'kategori_display': PlutoCell(value: rowData[index].details.map((e) => e['kategori']?.toString() ?? '').toSet().join(', ')),
           'lama_cuti': PlutoCell(value: _getLamaCuti(rowData[index].details)),
           'tanggal_cuti': PlutoCell(value: _getTanggalCuti(rowData[index].details)),
-          'keterangan': PlutoCell(value: rowData[index].details.map((e) => e['keterangan'] ?? '').join(', ')),
+          'keterangan': PlutoCell(value: _getKeterangan(rowData[index])),
           'tanggal_kembali': PlutoCell(value: AFconvert.matDate(rowData[index].tanggalKembali)),
         },
       ),
@@ -38,6 +39,11 @@ class CutiView extends StatelessWidget {
   }
 
 
+
+  String _getKeterangan(Cuti cuti) {
+    var listKet = cuti.details.map((e) => e['keterangan']?.toString().trim() ?? '').where((e) => e.isNotEmpty).toList();
+    return listKet.toSet().join(', ');
+  }
 
   String _getLamaCuti(List<dynamic> details) {
     int hari = 0;
@@ -182,12 +188,18 @@ class CutiView extends StatelessWidget {
         backgroundColor: Colors.brown.shade100,
       ),
       PlutoColumn(
-        title: 'Jenis Form',
-        field: 'jenis_form',
+        title: 'Kategori',
+        field: 'kategori_display',
         type: PlutoColumnType.text(),
         readOnly: true,
         width: 120,
         backgroundColor: Colors.brown.shade100,
+      ),
+      PlutoColumn(
+        title: 'Jenis Form',
+        field: 'jenis_form',
+        type: PlutoColumnType.text(),
+        hide: true, // Hide it but keep for logic
       ),
       PlutoColumn(
         title: 'Lama Cuti',

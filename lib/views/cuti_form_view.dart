@@ -50,6 +50,10 @@ class CutiFormView extends StatelessWidget {
                       },
                     ),
                     const SizedBox(height: 20),
+                    if(formType == 'CUTI_MASAL') ...[
+                      _buildMasalChecklist(context),
+                      _buildUnpaidChecklist(context),
+                    ],
                     if(formType == 'CUTI' || formType == 'IJIN') ...[
                       _buildTahunanChecklist(context),
                       if(formType == 'CUTI') ...[
@@ -169,6 +173,74 @@ class CutiFormView extends StatelessWidget {
                 )
             ]
         )
+    );
+  }
+
+  
+  Widget _buildMasalChecklist(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Checkbox(
+                    value: controller.cekMasal,
+                    onChanged: (controller.currentId != '') ? null : (val) {
+                      controller.cekMasal = val ?? false;
+                      controller.update();
+                    },
+                  ),
+                  const Text('Cuti Masal', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                ],
+              ),
+              if (controller.cekMasal) ...[
+                Padding(
+                  padding: const EdgeInsets.only(left: 35, top: 10),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                            SizedBox(width: 150, child: Text('Lama Cuti (Hari)')),
+                            Expanded(
+                                child: AFwidget.textField(
+                                  controller: controller.txtLamaMasal, readOnly: controller.currentId != '',
+                                  label: '',
+                                  keyboard: TextInputType.number,
+                                ),
+                            )
+                        ]
+                      ),
+                      const SizedBox(height: 10),
+                      (() {
+                          int mx = AFconvert.keInt(controller.txtLamaMasal.text);
+                          return _buildDateSelector(context, 'Tanggal Cuti', controller.tglMasal, max: mx, readOnly: controller.currentId != '');
+                      })(),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                            SizedBox(width: 150, child: Text('Keterangan')),
+                            Expanded(
+                                child: AFwidget.textField(
+                                  controller: controller.txtKetMasal,
+                                  label: '',
+                                  onchanged: (val) { controller.update(); },
+                                ),
+                            )
+                        ]
+                      ),
+                    ]
+                  )
+                )
+              ]
+            ]
+          )
+        )
+      )
     );
   }
 

@@ -127,6 +127,29 @@ class CutiMasalControl extends GetxController {
     update();
   }
 
+
+  bool get canSubmit => debugCanSubmitReason.isEmpty;
+
+  String get debugCanSubmitReason {
+    if (txtKeperluan.text.isEmpty) return 'Keterangan cuti belum diisi';
+    if (txtTglKembali.text.isEmpty) return 'Tanggal kembali belum ditentukan';
+    
+    int globalLama = AFconvert.keInt(txtLamaHariGlobal.text);
+    if (globalLama <= 0) return 'Lama hari utama tidak valid (minimal 1 hari)';
+    if (listTanggalGlobal.length != globalLama) return 'Jumlah tanggal pada kalender utama tidak sesuai dengan lama hari';
+    
+    var checkedList = listKaryawan.where((e) => e.isChecked).toList();
+    if (checkedList.isEmpty) return 'Silakan pilih setidaknya satu karyawan';
+    
+    for (var k in checkedList) {
+      if (k.inputLamaHari <= 0) return 'Lama hari untuk ${k.nama} tidak valid (minimal 1 hari)';
+      if (k.inputLamaHari > globalLama) return 'Lama hari untuk ${k.nama} tidak boleh melebihi lama hari utama';
+      if (k.inputDates.length != k.inputLamaHari) return 'Jumlah tanggal cuti untuk ${k.nama} tidak sesuai dengan lama harinya';
+    }
+    
+    return '';
+  }
+
   Future<void> simpanData() async {
     var checkedList = listKaryawan.where((e) => e.isChecked).toList();
     if(checkedList.isEmpty) {
@@ -185,6 +208,7 @@ class CutiMasalControl extends GetxController {
       if(unp > 0) {
         details.add({
           'kategori': 'UNPAID',
+          'jenis_unpaid': k.hasJatah ? 'SUDAH_HABIS' : 'SEBELUM_TIMBUL',
           'lama_hari': unp,
           'dates': datesUnpaid,
         });
@@ -208,8 +232,12 @@ class CutiMasalControl extends GetxController {
       );
       Get.back();
       if(hasil.success) {
-        AFwidget.snackbar(hasil.message);
         Get.back(); // Close the page
+        AFwidget.formWarning(
+          label: hasil.message, 
+          ikon: Icons.check_circle, 
+          warna: Colors.green
+        );
         if(Get.isRegistered<CutiControl>()) {
           Get.find<CutiControl>().loadCutis();
         }
