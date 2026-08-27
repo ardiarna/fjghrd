@@ -42,8 +42,6 @@ class CutiControl extends GetxController {
   
   bool cekTahunan = false;
   bool hasJatah = false;
-  int hakCuti = 0;
-  int sisaCutiTahunLalu = 0;
   int totalHakCuti = 0;
   int sudahDiambil = 0;
   int cutiMasal = 0;
@@ -240,8 +238,6 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
     if(hasil.success) {
         var data = hasil.data;
         if(data['kuota'] != null) {
-            hakCuti = data['kuota']['hak_cuti'] ?? 0;
-            sisaCutiTahunLalu = data['kuota']['sisa_cuti_tahun_lalu'] ?? 0;
             totalHakCuti = data['kuota']['total_hak_cuti'] ?? 0;
             sudahDiambil = data['kuota']['sudah_diambil'] ?? 0;
             cutiMasal = data['kuota']['cuti_masal'] ?? 0;
@@ -478,9 +474,23 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
       currentId = cuti.id;
       formType = cuti.jenisForm;
       selectedKaryawan = cuti.karyawan;
+
+      // Check if TAHUNAN or IJIN detail has a snapshot
+      var snapDet = cuti.details.firstWhereOrNull(
+        (d) => (d['kategori'] == 'TAHUNAN' || d['kategori'] == 'IJIN') && d['snap_total_hak_cuti'] != null
+      );
       if (selectedKaryawan != null) {
           hasJatah = listJatah.any((e) => e.karyawanId == selectedKaryawan!.id);
-          fetchInfoCuti();
+          if (snapDet != null) {
+            // Use stored snapshot — no live API call needed
+            totalHakCuti   = AFconvert.keInt(snapDet['snap_total_hak_cuti']);
+            sudahDiambil   = AFconvert.keInt(snapDet['snap_sudah_diambil']);
+            cutiMasal      = AFconvert.keInt(snapDet['snap_cuti_masal']);
+            belumDiambil   = totalHakCuti - sudahDiambil - cutiMasal;
+          } else {
+            // Old data without snapshot — fall back to live API
+            fetchInfoCuti();
+          }
       }
       if(cuti.tanggalKembali != null) {
           txtTanggalKembali.text = AFconvert.matDate(cuti.tanggalKembali);

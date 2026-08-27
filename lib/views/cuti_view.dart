@@ -129,11 +129,12 @@ class CutiView extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<PlutoColumn> columns = [
       PlutoColumn(
-        title: 'ID',
+        title: '',
         field: 'id',
         type: PlutoColumnType.text(),
         readOnly: true,
-        width: 95,
+        width: 53,
+        minWidth: 53,
         backgroundColor: Colors.brown.shade100,
         enableFilterMenuItem: false,
         enableContextMenu: false,
@@ -141,26 +142,7 @@ class CutiView extends StatelessWidget {
         renderer: (rdrCtx) {
           return Row(
             children: [
-              IconButton(
-                onPressed: () async {
-                  AFwidget.loading();
-                  var hasil = await AFdatabase.download(url: 'cuti/excel/form/${rdrCtx.row.cells['id']!.value}');
-                  Get.back();
-                  if(hasil.success) {
-                    AFwidget.formWarning(
-                      label: 'Form Cuti telah berhasil di-download. Silakan periksa direktori Download Anda (${hasil.message})',
-                      warna: Colors.green,
-                      ikon: Icons.info,
-                    );
-                  } else {
-                    AFwidget.formWarning(label: 'Gagal men-download form cuti. [${hasil.message}]');
-                  }
-                },
-                icon: const Icon(Icons.print),
-                iconSize: 18,
-                color: Colors.blue,
-                padding: const EdgeInsets.all(0),
-              ),
+
               IconButton(
                 onPressed: () {
                   String id = rdrCtx.row.cells['id']!.value;
@@ -192,7 +174,7 @@ class CutiView extends StatelessWidget {
         field: 'kategori_display',
         type: PlutoColumnType.text(),
         readOnly: true,
-        width: 120,
+        width: 160,
         backgroundColor: Colors.brown.shade100,
       ),
       PlutoColumn(
@@ -202,11 +184,11 @@ class CutiView extends StatelessWidget {
         hide: true, // Hide it but keep for logic
       ),
       PlutoColumn(
-        title: 'Lama Cuti',
+        title: 'Lama',
         field: 'lama_cuti',
         type: PlutoColumnType.text(),
         readOnly: true,
-        width: 100,
+        width: 70,
         textAlign: PlutoColumnTextAlign.center,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -232,7 +214,7 @@ class CutiView extends StatelessWidget {
         field: 'tanggal_kembali',
         type: PlutoColumnType.text(),
         readOnly: true,
-        width: 120,
+        width: 100,
         backgroundColor: Colors.brown.shade100,
       ),
     ];

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
+import 'package:fjghrd/utils/af_database.dart';
 
 class CutiFormView extends StatelessWidget {
   final String formType;
@@ -86,6 +87,26 @@ class CutiFormView extends StatelessWidget {
                           controller.hapusData(controller.currentId);
                       },
                       minimumSize: const Size(100, 40),
+                    ),
+                    const SizedBox(width: 10),
+                    ElevatedButton.icon(
+                      icon: const Icon(Icons.print, size: 16),
+                      label: const Text('Cetak'),
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.blueGrey, foregroundColor: Colors.white, minimumSize: const Size(100, 40)),
+                      onPressed: () async {
+                          AFwidget.loading();
+                          var hasil = await AFdatabase.download(url: 'cuti/excel/form/${controller.currentId}');
+                          Get.back();
+                          if(hasil.success) {
+                            AFwidget.formWarning(
+                              label: 'Form Cuti telah berhasil di-download. Silakan periksa direktori Download Anda (${hasil.message})',
+                              warna: Colors.green,
+                              ikon: Icons.info,
+                            );
+                          } else {
+                            AFwidget.formWarning(label: 'Gagal men-download form cuti. [${hasil.message}]');
+                          }
+                      },
                     ),
                     const SizedBox(width: 20),
                   ],
