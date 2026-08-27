@@ -74,6 +74,17 @@ class CutiFormView extends StatelessWidget {
               bool isSubmittable = controller.canSubmit;
               return Row(
                 children: [
+                  if(controller.currentId != '') ...[
+                    AFwidget.tombol(
+                      label: 'Hapus',
+                      color: Colors.red,
+                      onPressed: () {
+                          controller.hapusData(controller.currentId);
+                      },
+                      minimumSize: const Size(100, 40),
+                    ),
+                    const SizedBox(width: 20),
+                  ],
                   Expanded(
                     child: Text(
                       controller.debugCanSubmitReason, 
@@ -114,7 +125,8 @@ class CutiFormView extends StatelessWidget {
                     child: AFwidget.comboField(
                       value: controller.selectedKaryawan?.nama ?? '',
                       label: '',
-                      onTap: () async {
+                      warnaBackground: controller.currentId != '' ? Colors.grey.shade200 : null,
+                      onTap: controller.currentId != '' ? null : () async {
                         var a = await controller.pilihKaryawan(value: controller.selectedKaryawan?.id ?? '');
                         if(a != null && a.value != controller.selectedKaryawan?.id) {
                           controller.setKaryawan(Karyawan.fromMap(a.data!));
@@ -181,7 +193,7 @@ class CutiFormView extends StatelessWidget {
                 children: [
                   Checkbox(
                     value: controller.cekTahunan,
-                    onChanged: disableCheckbox ? null : (val) {
+                    onChanged: (disableCheckbox || controller.currentId != '') ? null : (val) {
                       controller.cekTahunan = val ?? false;
                       controller.update();
                     },
@@ -231,7 +243,7 @@ class CutiFormView extends StatelessWidget {
                             SizedBox(
                               width: 100,
                               child: AFwidget.textField(
-                                controller: controller.txtAkanDiambil,
+                                controller: controller.txtAkanDiambil, readOnly: controller.currentId != '',
                                 keyboard: TextInputType.number,
                                 suffix: const Padding(padding: EdgeInsets.only(top: 15), child: Text('Hari')),
                                 inputformatters: [
@@ -252,7 +264,7 @@ class CutiFormView extends StatelessWidget {
                       const SizedBox(height: 10),
                       (() {
                         int mx = AFconvert.keInt(controller.txtAkanDiambil.text);
-                        return _buildDateSelector(context, 'Tanggal Cuti', controller.tglTahunan, max: mx);
+                        return _buildDateSelector(context, 'Tanggal Cuti', controller.tglTahunan, max: mx, readOnly: controller.currentId != '');
                       })(),
                       const SizedBox(height: 10),
                       Row(
@@ -291,7 +303,7 @@ class CutiFormView extends StatelessWidget {
                 children: [
                   Checkbox(
                     value: controller.cekKhusus,
-                    onChanged: (val) {
+                    onChanged: (controller.currentId != '') ? null : (val) {
                       controller.cekKhusus = val ?? false;
                       controller.update();
                     },
@@ -311,7 +323,8 @@ class CutiFormView extends StatelessWidget {
                                 child: AFwidget.comboField(
                                   value: controller.jenisKhusus?.label ?? '',
                                   label: '',
-                                  onTap: () async {
+                                  warnaBackground: controller.currentId != '' ? Colors.grey.shade200 : null,
+                                  onTap: controller.currentId != '' ? null : () async {
                                     var a = await controller.pilihJenisKhusus(value: controller.jenisKhusus?.value ?? '');
                                     if(a != null && a.value != controller.jenisKhusus?.value) {
                                       controller.jenisKhusus = a;
@@ -332,7 +345,7 @@ class CutiFormView extends StatelessWidget {
                             SizedBox(width: 150, child: Text(controller.satuanKhusus == 'bulan' ? 'Lama Cuti (Bulan)' : 'Lama Cuti (Hari)')),
                             Expanded(
                                 child: AFwidget.textField(
-                                  controller: controller.txtLamaKhusus,
+                                  controller: controller.txtLamaKhusus, readOnly: controller.currentId != '',
                                   label: '',
                                   keyboard: TextInputType.number,
                                   inputformatters: [
@@ -411,7 +424,7 @@ class CutiFormView extends StatelessWidget {
                                   ]
                               );
                           } else {
-                              return _buildDateSelector(context, 'Tanggal Cuti', controller.tglKhusus, max: lm);
+                              return _buildDateSelector(context, 'Tanggal Cuti', controller.tglKhusus, max: lm, readOnly: controller.currentId != '');
                           }
                       })(),
                       const SizedBox(height: 10),
@@ -451,7 +464,7 @@ class CutiFormView extends StatelessWidget {
                 children: [
                   Checkbox(
                     value: controller.cekUnpaid,
-                    onChanged: (val) {
+                    onChanged: (controller.currentId != '') ? null : (val) {
                       controller.cekUnpaid = val ?? false;
                       controller.update();
                     },
@@ -471,7 +484,8 @@ class CutiFormView extends StatelessWidget {
                                 child: AFwidget.comboField(
                                   value: controller.jenisUnpaid?.label ?? '',
                                   label: '',
-                                  onTap: () async {
+                                  warnaBackground: controller.currentId != '' ? Colors.grey.shade200 : null,
+                                  onTap: controller.currentId != '' ? null : () async {
                                     var a = await controller.pilihJenisUnpaid(value: controller.jenisUnpaid?.value ?? '');
                                     if(a != null && a.value != controller.jenisUnpaid?.value) {
                                       controller.jenisUnpaid = a;
@@ -488,7 +502,7 @@ class CutiFormView extends StatelessWidget {
                             SizedBox(width: 150, child: Text('Lama Cuti (Hari)')),
                             Expanded(
                                 child: AFwidget.textField(
-                                  controller: controller.txtLamaUnpaid,
+                                  controller: controller.txtLamaUnpaid, readOnly: controller.currentId != '',
                                   label: '',
                                   keyboard: TextInputType.number,
                                   inputformatters: [
@@ -507,7 +521,7 @@ class CutiFormView extends StatelessWidget {
                       const SizedBox(height: 10),
                       (() {
                           int mx = AFconvert.keInt(controller.txtLamaUnpaid.text);
-                          return _buildDateSelector(context, 'Tanggal Cuti', controller.tglUnpaid, max: mx);
+                          return _buildDateSelector(context, 'Tanggal Cuti', controller.tglUnpaid, max: mx, readOnly: controller.currentId != '');
                       })(),
                       const SizedBox(height: 10),
                       Row(
@@ -546,7 +560,7 @@ class CutiFormView extends StatelessWidget {
                 children: [
                   Checkbox(
                     value: controller.cekGantiLibur,
-                    onChanged: (val) {
+                    onChanged: (controller.currentId != '') ? null : (val) {
                       controller.cekGantiLibur = val ?? false;
                       controller.update();
                     },
@@ -564,7 +578,7 @@ class CutiFormView extends StatelessWidget {
                             SizedBox(width: 150, child: Text('Lama Cuti (Hari)')),
                             Expanded(
                                 child: AFwidget.textField(
-                                  controller: controller.txtLamaGantiLibur,
+                                  controller: controller.txtLamaGantiLibur, readOnly: controller.currentId != '',
                                   label: '',
                                   keyboard: TextInputType.number,
                                   inputformatters: [
@@ -583,7 +597,7 @@ class CutiFormView extends StatelessWidget {
                       const SizedBox(height: 10),
                       (() {
                           int mx = AFconvert.keInt(controller.txtLamaGantiLibur.text);
-                          return _buildDateSelector(context, 'Tanggal Penggantian', controller.tglGantiLibur, max: mx);
+                          return _buildDateSelector(context, 'Tanggal Penggantian', controller.tglGantiLibur, max: mx, readOnly: controller.currentId != '');
                       })(),
                       const SizedBox(height: 10),
                       Row(
@@ -621,7 +635,7 @@ class CutiFormView extends StatelessWidget {
     );
   }
 
-  Widget _buildDateSelector(BuildContext context, String label, List<DateTime> dates, {int max = 0}) {
+  Widget _buildDateSelector(BuildContext context, String label, List<DateTime> dates, {int max = 0, bool readOnly = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -629,7 +643,7 @@ class CutiFormView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
-            (max <= 0 || dates.length >= max)
+            (readOnly || max <= 0 || dates.length >= max)
             ? const SizedBox()
             : TextButton.icon(
               icon: const Icon(Icons.add),
@@ -657,7 +671,7 @@ class CutiFormView extends StatelessWidget {
             spacing: 10,
             children: dates.map((d) => Chip(
               label: Text(AFconvert.matDate(d)),
-              onDeleted: () {
+              onDeleted: readOnly ? null : () {
                 dates.remove(d);
                 controller.update();
               },

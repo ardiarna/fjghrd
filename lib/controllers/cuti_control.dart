@@ -35,6 +35,11 @@ class CutiControl extends GetxController {
     TextEditingController txtTanggalKembali = TextEditingController();
 
   // Cuti Tahunan
+  String idDetailTahunan = '';
+  String idDetailKhusus = '';
+  String idDetailUnpaid = '';
+  String idDetailGantiLibur = '';
+  
   bool cekTahunan = false;
   bool hasJatah = false;
   int hakCuti = 12;
@@ -63,8 +68,8 @@ class CutiControl extends GetxController {
   bool cekUnpaid = false;
   Opsi? jenisUnpaid;
   List<Opsi> listJenisUnpaid = [
-    Opsi(value: 'Sebelum Timbul', label: 'Hak Cuti Sebelum Timbul (Potong Upah)'),
-    Opsi(value: 'Sudah Habis', label: 'Hak Cuti Sudah Habis (Potong Upah)'),
+    Opsi(value: 'SEBELUM_TIMBUL', label: 'Hak Cuti Sebelum Timbul (Potong Upah)'),
+    Opsi(value: 'SUDAH_HABIS', label: 'Hak Cuti Sudah Habis (Potong Upah)'),
   ];
   List<DateTime> tglUnpaid = [];
   TextEditingController txtLamaUnpaid = TextEditingController();
@@ -110,7 +115,11 @@ class CutiControl extends GetxController {
           cekTahunan = true;
         }
         if (!hasJatah) {
-          cekTahunan = false;
+          idDetailTahunan = '';
+    idDetailKhusus = '';
+    idDetailUnpaid = '';
+    idDetailGantiLibur = '';
+    cekTahunan = false;
         }
         fetchInfoCuti();
       }
@@ -210,7 +219,11 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
         cekTahunan = true;
       }
       if (!hasJatah) {
-        cekTahunan = false;
+        idDetailTahunan = '';
+    idDetailKhusus = '';
+    idDetailUnpaid = '';
+    idDetailGantiLibur = '';
+    cekTahunan = false;
       }
     }
     fetchInfoCuti();
@@ -460,6 +473,10 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
       currentId = cuti.id;
       formType = cuti.jenisForm;
       selectedKaryawan = cuti.karyawan;
+      if (selectedKaryawan != null) {
+          hasJatah = listJatah.any((e) => e.karyawanId == selectedKaryawan!.id);
+          fetchInfoCuti();
+      }
       if(cuti.tanggalKembali != null) {
           txtTanggalKembali.text = AFconvert.matDate(cuti.tanggalKembali);
       }
@@ -467,6 +484,7 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
       for(var det in cuti.details) {
           String kat = det['kategori'] ?? '';
           if(kat == 'TAHUNAN') {
+              idDetailTahunan = det['id']?.toString() ?? '';
               cekTahunan = true;
               txtAkanDiambil.text = det['lama_hari']?.toString() ?? '';
               txtKetTahunan.text = det['keterangan'] ?? '';
@@ -478,6 +496,7 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
               }
               hitungSisa();
           } else if(kat == 'KHUSUS') {
+              idDetailKhusus = det['id']?.toString() ?? '';
               cekKhusus = true;
               var dJenis = det['jenis_cuti_khusus_id'];
               if(dJenis != null) {
@@ -492,6 +511,7 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
                   }
               }
           } else if(kat == 'UNPAID') {
+              idDetailUnpaid = det['id']?.toString() ?? '';
               cekUnpaid = true;
               var dJenis = det['jenis_unpaid'];
               if(dJenis != null) {
@@ -505,6 +525,7 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
                   }
               }
           } else if(kat == 'GANTI_HARI_LIBUR') {
+              idDetailGantiLibur = det['id']?.toString() ?? '';
               cekGantiLibur = true;
               txtKetGantiLibur.text = det['keterangan'] ?? '';
               if(det['dates'] != null) {
@@ -515,6 +536,7 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
               }
           } else if(kat == 'IJIN') {
               // Ijin form uses TAHUNAN variables under the hood in CutiFormView (it checks formType == 'IJIN' and displays Tahunan checklist)
+              idDetailTahunan = det['id']?.toString() ?? '';
               cekTahunan = true;
               txtAkanDiambil.text = det['lama_hari']?.toString() ?? '';
               txtKetTahunan.text = det['keterangan'] ?? '';
@@ -579,6 +601,10 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
     currentId = '';
     selectedKaryawan = null;
     txtTanggalKembali.clear();
+    idDetailTahunan = '';
+    idDetailKhusus = '';
+    idDetailUnpaid = '';
+    idDetailGantiLibur = '';
     cekTahunan = false; cekKhusus = false; cekUnpaid = false; cekGantiLibur = false;
     tglTahunan.clear(); tglKhusus.clear(); tglUnpaid.clear(); tglGantiLibur.clear();
     txtKetTahunan.clear(); txtKetKhusus.clear(); txtKetUnpaid.clear(); txtKetGantiLibur.clear();
@@ -652,6 +678,7 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
     
     if(cekTahunan) {
         details.add({
+            'id': idDetailTahunan,
             'kategori': formType == 'IJIN' ? 'IJIN' : 'TAHUNAN',
             'lama_hari': AFconvert.keInt(txtAkanDiambil.text),
             'keterangan': txtKetTahunan.text,
@@ -670,6 +697,7 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
             }
         }
         details.add({
+            'id': idDetailKhusus,
             'kategori': 'KHUSUS',
             'jenis_cuti_khusus_id': jenisKhusus?.value,
             'lama_hari': lm,
@@ -679,8 +707,9 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
     }
     if(cekUnpaid) {
         details.add({
+            'id': idDetailUnpaid,
             'kategori': 'UNPAID',
-            'jenis_unpaid': jenisUnpaid?.label,
+            'jenis_unpaid': jenisUnpaid?.value,
             'lama_hari': AFconvert.keInt(txtLamaUnpaid.text),
             'keterangan': txtKetUnpaid.text,
             'dates': tglUnpaid.map((e) => AFconvert.matYMD(e)).toList(),
@@ -688,6 +717,7 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
     }
     if(cekGantiLibur) {
         details.add({
+            'id': idDetailGantiLibur,
             'kategori': 'GANTI_HARI_LIBUR',
             'lama_hari': AFconvert.keInt(txtLamaGantiLibur.text),
             'keterangan': txtKetGantiLibur.text,
@@ -732,6 +762,7 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
         Get.back();
         if(hasil.success) {
           loadCutis();
+          Get.back();
           Get.back();
           AFwidget.snackbar('Data berhasil dihapus');
         } else {

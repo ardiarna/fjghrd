@@ -127,7 +127,7 @@ class CutiView extends StatelessWidget {
         field: 'id',
         type: PlutoColumnType.text(),
         readOnly: true,
-        width: 160,
+        width: 95,
         backgroundColor: Colors.brown.shade100,
         enableFilterMenuItem: false,
         enableContextMenu: false,
@@ -167,15 +167,7 @@ class CutiView extends StatelessWidget {
                 color: Colors.green,
                 padding: const EdgeInsets.all(0),
               ),
-              IconButton(
-                onPressed: () {
-                  controller.hapusData(rdrCtx.row.cells['id']!.value);
-                },
-                icon: const Icon(Icons.delete),
-                iconSize: 18,
-                color: Colors.red,
-                padding: const EdgeInsets.all(0),
-              ),
+
             ],
           );
         },
