@@ -473,9 +473,11 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
       if (hasil.success) {
         loadJatah();
         if (Get.isRegistered<cuti_masal.CutiMasalControl>()) {
-          Get.find<cuti_masal.CutiMasalControl>().loadInfoMasal();
+          if (selectedKaryawanJatah != null) {
+            Get.find<cuti_masal.CutiMasalControl>().loadSingleInfoMasal(selectedKaryawanJatah!.value);
+          }
         }
-        Get.back();
+        Get.back(); // Close the jatah form dialog
         AFwidget.snackbar(hasil.message);
       } else {
         AFwidget.formWarning(label: hasil.message);

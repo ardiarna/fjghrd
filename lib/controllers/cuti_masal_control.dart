@@ -22,6 +22,7 @@ class CutiMasalControl extends GetxController {
   List<DateTime> listTanggalGlobal = [];
   List<KaryawanCutiMasal> listKaryawan = [];
   bool checkSemua = true;
+  bool isGenerated = false;
 
   @override
   void onInit() {
@@ -29,6 +30,9 @@ class CutiMasalControl extends GetxController {
     txtKeperluan = TextEditingController();
     txtTglKembali = TextEditingController();
     txtLamaHariGlobal = TextEditingController();
+    txtKeperluan.addListener(update);
+    txtTglKembali.addListener(update);
+    txtLamaHariGlobal.addListener(update);
     
     int startTahun = 2024;
     for (int i = 0; i < 10; i++) {
@@ -80,6 +84,51 @@ class CutiMasalControl extends GetxController {
     }
   }
 
+  Future<void> loadSingleInfoMasal(String karyawanId) async {
+    try {
+      var hasil = await AFdatabase.send(
+        url: 'cuti/info-masal?tahun=${filterTahun.value}&karyawan_id=$karyawanId',
+      );
+      if(hasil.success && hasil.daftar.isNotEmpty) {
+        var updatedKaryawan = KaryawanCutiMasal.fromMap(hasil.daftar.first);
+        int index = listKaryawan.indexWhere((k) => k.karyawanId == karyawanId);
+        if (index != -1) {
+          // preserve existing user inputs
+          updatedKaryawan.txtLamaHari.text = listKaryawan[index].txtLamaHari.text;
+          updatedKaryawan.inputDates = List.from(listKaryawan[index].inputDates);
+          updatedKaryawan.isChecked = listKaryawan[index].isChecked;
+          updatedKaryawan.pindahKeMinus = listKaryawan[index].pindahKeMinus;
+          listKaryawan[index] = updatedKaryawan;
+          update();
+        }
+      }
+    } catch(e) {
+      print(e);
+    }
+  }
+
+  Future<DateTime?> pilihTanggalKaryawan(KaryawanCutiMasal k) async {
+    List<Opsi> available = [];
+    for (var tgl in listTanggalGlobal) {
+      if (!k.inputDates.any((e) => e.year == tgl.year && e.month == tgl.month && e.day == tgl.day)) {
+        available.add(Opsi(value: tgl.toIso8601String(), label: DateFormat('dd-MM-yyyy').format(tgl)));
+      }
+    }
+    if (available.isEmpty) {
+      AFwidget.snackbar('Semua tanggal cuti utama sudah dipilih');
+      return null;
+    }
+    var res = await AFcombobox.bottomSheet(
+      listOpsi: available,
+      valueSelected: '',
+      judul: 'Pilih Tanggal',
+    );
+    if (res != null) {
+      return DateTime.parse(res.value);
+    }
+    return null;
+  }
+
   Future<Opsi?> pilihTahun({String value = ''}) async {
     return await AFcombobox.bottomSheet(
       listOpsi: listTahun,
@@ -110,21 +159,68 @@ class CutiMasalControl extends GetxController {
     update();
   }
 
-  void generateGlobal() {
+  String get debugCanGenerateReason {
+    if (txtKeperluan.text.isEmpty) return 'Keterangan cuti harus diisi';
+    if (txtTglKembali.text.isEmpty) return 'Tanggal masuk kembali harus dipilih';
     int lama = AFconvert.keInt(txtLamaHariGlobal.text);
-    if(lama <= 0) {
-      AFwidget.snackbar('Lama hari harus diisi');
-      return;
-    }
-    if(listTanggalGlobal.length > lama) {
-      AFwidget.snackbar('Jumlah tanggal cuti melebihi lama hari');
-      return;
-    }
+    if (lama <= 0) return 'Lama hari harus diisi (minimal 1)';
+    if (listTanggalGlobal.length != lama) return 'Jumlah tanggal cuti harus sama dengan lama hari';
+    return '';
+  }
+
+  bool get canGenerate => debugCanGenerateReason.isEmpty;
+
+  void executeGenerate() {
+    int lama = AFconvert.keInt(txtLamaHariGlobal.text);
     for(var k in listKaryawan) {
       k.txtLamaHari.text = lama.toString();
       k.inputDates = List.from(listTanggalGlobal);
     }
+    isGenerated = true;
     update();
+  }
+
+  void generateGlobal() {
+    if (!canGenerate) return;
+    
+    if (isGenerated) {
+      AFwidget.dialog(
+        Container(
+          width: 400,
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(15)),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.warning, color: Colors.orange, size: 50),
+              const SizedBox(height: 15),
+              const Text('Warning', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 10),
+              const Text('Konfigurasi lama hari, tanggal cuti, dan alokasi per karyawan yang sudah Anda ubah akan hilang digenerate ulang. Lanjutkan?', textAlign: TextAlign.center),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  OutlinedButton(onPressed: () => Get.back(), child: const Text('Batal')),
+                  const SizedBox(width: 10),
+                  ElevatedButton(
+                    onPressed: () {
+                      Get.back();
+                      executeGenerate();
+                    },
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                    child: const Text('Ya, Regenerate', style: TextStyle(color: Colors.white)),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+        backgroundColor: Colors.transparent,
+      );
+    } else {
+      executeGenerate();
+    }
   }
 
 

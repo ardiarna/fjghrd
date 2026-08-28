@@ -22,10 +22,12 @@ class CutiMasalView extends StatelessWidget {
                 onBack: () => Get.back(),
               ),
               _buildTopSection(context, controller),
-              Expanded(
-                child: _buildTableSection(context, controller),
-              ),
-              _buildBottomAction(controller),
+              if (controller.isGenerated)
+                Expanded(
+                  child: _buildTableSection(context, controller),
+                ),
+              if (controller.isGenerated)
+                _buildBottomAction(controller),
             ],
           ),
         );
@@ -143,14 +145,21 @@ class CutiMasalView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 20),
-                    child: ElevatedButton(
-                      onPressed: controller.generateGlobal,
-                      child: const Text('Generate ke Semua Karyawan'),
-                    ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          controller.debugCanGenerateReason,
+                          style: const TextStyle(color: Colors.red, fontSize: 12, fontStyle: FontStyle.italic),
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: controller.canGenerate ? controller.generateGlobal : null,
+                        child: Text(controller.isGenerated ? 'Regenerate ke Semua Karyawan' : 'Generate ke Semua Karyawan'),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -188,7 +197,7 @@ class CutiMasalView extends StatelessWidget {
                           onChanged: controller.toggleCheckSemua,
                         ),
                       ),
-                      SizedBox(width: namaWidth, child: const Text('Nama Karyawan', style: TextStyle(fontWeight: FontWeight.bold))),
+                      SizedBox(width: namaWidth, child: Text('${controller.listKaryawan.where((e) => e.isChecked).length} / ${controller.listKaryawan.length} Karyawan', style: const TextStyle(fontWeight: FontWeight.bold))),
                       const SizedBox(width: 130, child: Text('Jabatan', style: TextStyle(fontWeight: FontWeight.bold))),
                       const SizedBox(width: 150, child: Text('Kuota Info', style: TextStyle(fontWeight: FontWeight.bold))),
                       const SizedBox(width: 80, child: Text('Lama Hari', style: TextStyle(fontWeight: FontWeight.bold))),
@@ -300,14 +309,13 @@ class CutiMasalView extends StatelessWidget {
                                             controller.update();
                                           } : null,
                                         ),
-                                      if (k.inputDates.length < k.inputLamaHari)
+                                      if (k.inputDates.length < k.inputLamaHari && k.inputLamaHari <= AFconvert.keInt(controller.txtLamaHariGlobal.text))
                                         ActionChip(
                                           label: const Text('+', style: TextStyle(fontSize: 11)),
                                           padding: const EdgeInsets.all(0),
                                           onPressed: k.isChecked ? () async {
-                                            var a = await AFwidget.pickDate(context: context, initialDate: DateTime.now());
+                                            var a = await controller.pilihTanggalKaryawan(k);
                                             if (a != null) {
-                                              if(k.inputDates.any((e) => e.year == a.year && e.month == a.month && e.day == a.day)) return;
                                               k.inputDates.add(a);
                                               controller.update();
                                             }
