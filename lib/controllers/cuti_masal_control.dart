@@ -103,7 +103,7 @@ class CutiMasalControl extends GetxController {
         }
       }
     } catch(e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 

@@ -362,7 +362,7 @@ class CutiFormView extends StatelessWidget {
                       const SizedBox(height: 10),
                       Row(
                           children: [
-                              SizedBox(width: 100, child: Text('Keterangan')),
+                              SizedBox(width: 150, child: Text('Keterangan')),
                               Expanded(
                                   child: AFwidget.textField(
                                     controller: controller.txtKetTahunan,
@@ -729,65 +729,79 @@ class CutiFormView extends StatelessWidget {
   }
 
   Widget _buildDateSelector(BuildContext context, String label, List<DateTime> dates, {int max = 0, bool readOnly = false}) {
-    return Column(
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(label, style: const TextStyle(fontWeight: FontWeight.bold)),
-            (readOnly || max <= 0 || dates.length >= max)
-            ? const SizedBox()
-            : TextButton.icon(
-              icon: const Icon(Icons.add),
-              label: const Text('Tambah Tanggal'),
-              onPressed: () async {
-                DateTime? picked = await AFwidget.pickDate(
-                  context: context,
-                  initialDate: DateTime.now(),
-                );
-                if(picked != null) {
-                  bool exists = controller.isTanggalDuplicate(picked);
-                  if(exists) {
-                    AFwidget.snackbar('Tanggal tersebut sudah dipilih (termasuk di kategori lain)');
-                  } else {
-                    dates.add(picked);
-                    controller.update();
-                  }
-                }
-              },
-            )
-          ],
+        SizedBox(
+          width: 150,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 10.0),
+            child: Text(label),
+          ),
         ),
-        if(dates.isNotEmpty)
-          Wrap(
-            spacing: 10,
-            children: dates.map((d) => Chip(
-              label: Text(AFconvert.matDate(d)),
-              onDeleted: readOnly ? null : () {
-                dates.remove(d);
-                controller.update();
-              },
-            )).toList(),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if(dates.isNotEmpty)
+                Wrap(
+                  spacing: 10,
+                  children: dates.map((d) => Chip(
+                    label: Text(AFconvert.matDate(d)),
+                    onDeleted: readOnly ? null : () {
+                      dates.remove(d);
+                      controller.update();
+                    },
+                  )).toList(),
+                ),
+              (readOnly || max <= 0 || dates.length >= max)
+              ? const SizedBox()
+              : Padding(
+                  padding: dates.isNotEmpty ? const EdgeInsets.only(top: 10) : EdgeInsets.zero,
+                  child: TextButton.icon(
+                    icon: const Icon(Icons.add),
+                    label: const Text('Tambah Tanggal'),
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                      alignment: Alignment.centerLeft,
+                    ),
+                    onPressed: () async {
+                      DateTime? picked = await AFwidget.pickDate(
+                        context: context,
+                        initialDate: DateTime.now(),
+                      );
+                      if(picked != null) {
+                        bool exists = controller.isTanggalDuplicate(picked);
+                        if(exists) {
+                          AFwidget.snackbar('Tanggal tersebut sudah dipilih (termasuk di kategori lain)');
+                        } else {
+                          dates.add(picked);
+                          controller.update();
+                        }
+                      }
+                    },
+                  ),
+                ),
+              if (max > 0 && dates.length < max)
+                Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Text(
+                    '⚠️ Jumlah tanggal cuti (${dates.length}) kurang dari lama cuti ($max hari).',
+                    style: const TextStyle(color: Colors.orange, fontSize: 12),
+                  ),
+                ),
+              if (dates.length > max)
+                Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: Text(
+                    '⛔ Jumlah tanggal cuti (${dates.length}) melebihi lama cuti ($max hari). Silakan hapus tanggal berlebih.',
+                    style: const TextStyle(color: Colors.red, fontSize: 12),
+                  ),
+                )
+            ],
           ),
-        if (max > 0 && dates.length < max)
-          Padding(
-            padding: const EdgeInsets.only(top: 5),
-            child: Text(
-              '⚠️ Jumlah tanggal cuti (${dates.length}) kurang dari lama cuti ($max hari).',
-              style: const TextStyle(color: Colors.orange, fontSize: 12),
-            ),
-          ),
-        if (dates.length > max)
-          Padding(
-            padding: const EdgeInsets.only(top: 5),
-            child: Text(
-              '⛔ Jumlah tanggal cuti (${dates.length}) melebihi lama cuti ($max hari). Silakan hapus tanggal berlebih.',
-              style: const TextStyle(color: Colors.red, fontSize: 12),
-            ),
-          ),
+        )
       ],
     );
   }
-
 }
