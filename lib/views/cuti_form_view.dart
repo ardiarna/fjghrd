@@ -88,26 +88,28 @@ class CutiFormView extends StatelessWidget {
                       },
                       minimumSize: const Size(100, 40),
                     ),
-                    const SizedBox(width: 10),
-                    ElevatedButton.icon(
-                      icon: const Icon(Icons.print, size: 16),
-                      label: const Text('Cetak'),
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.blueGrey, foregroundColor: Colors.white, minimumSize: const Size(100, 40)),
-                      onPressed: () async {
-                          AFwidget.loading();
-                          var hasil = await AFdatabase.download(url: 'cuti/excel/form/${controller.currentId}');
-                          Get.back();
-                          if(hasil.success) {
-                            AFwidget.formWarning(
-                              label: 'Form Cuti telah berhasil di-download. Silakan periksa direktori Download Anda (${hasil.message})',
-                              warna: Colors.green,
-                              ikon: Icons.info,
-                            );
-                          } else {
-                            AFwidget.formWarning(label: 'Gagal men-download form cuti. [${hasil.message}]');
-                          }
-                      },
-                    ),
+                    if (controller.formType == 'CUTI') ...[
+                      const SizedBox(width: 10),
+                      ElevatedButton.icon(
+                        icon: const Icon(Icons.print, size: 16),
+                        label: const Text('Cetak'),
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.blueGrey, foregroundColor: Colors.white, minimumSize: const Size(100, 40)),
+                        onPressed: () async {
+                            AFwidget.loading();
+                            var hasil = await AFdatabase.download(url: 'cuti/excel/form/${controller.currentId}');
+                            Get.back();
+                            if(hasil.success) {
+                              AFwidget.formWarning(
+                                label: 'Form Cuti telah berhasil di-download. Silakan periksa direktori Download Anda (${hasil.message})',
+                                warna: Colors.green,
+                                ikon: Icons.info,
+                              );
+                            } else {
+                              AFwidget.formWarning(label: 'Gagal men-download form cuti. [${hasil.message}]');
+                            }
+                        },
+                      ),
+                    ],
                     const SizedBox(width: 20),
                   ],
                   Expanded(
@@ -179,15 +181,19 @@ class CutiFormView extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10),
                         border: Border.all(color: Colors.grey.shade300),
                       ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Table(
+                        columnWidths: const {
+                          0: IntrinsicColumnWidth(),
+                          1: FixedColumnWidth(15),
+                          2: FlexColumnWidth(),
+                        },
                         children: [
-                          Text('Nama: ${k.nama}', style: const TextStyle(fontWeight: FontWeight.bold)),
-                          Text('Bagian/Divisi: ${k.divisi.nama} / ${k.area.nama}'),
-                          Text('Jabatan: ${k.jabatan.nama}'),
-                          Text('NIK: ${k.nik}'),
-                          Text('Status: ${k.statusKerja.nama}'),
-                          Text('Tgl Masuk: ${AFconvert.matDate(k.tanggalMasuk)}'),
+                          TableRow(children: [const Padding(padding: EdgeInsets.only(right: 15), child: Text('Nama')), const Text(':'), Text(k.nama, style: const TextStyle(fontWeight: FontWeight.bold))]),
+                          TableRow(children: [const Padding(padding: EdgeInsets.only(top: 5, right: 15), child: Text('Bagian')), const Padding(padding: EdgeInsets.only(top: 5), child: Text(':')), Padding(padding: const EdgeInsets.only(top: 5), child: Text(k.divisi.nama))]),
+                          TableRow(children: [const Padding(padding: EdgeInsets.only(top: 5, right: 15), child: Text('Jabatan')), const Padding(padding: EdgeInsets.only(top: 5), child: Text(':')), Padding(padding: const EdgeInsets.only(top: 5), child: Text(k.jabatan.nama))]),
+                          TableRow(children: [const Padding(padding: EdgeInsets.only(top: 5, right: 15), child: Text('NIK')), const Padding(padding: EdgeInsets.only(top: 5), child: Text(':')), Padding(padding: const EdgeInsets.only(top: 5), child: Text(k.nik))]),
+                          TableRow(children: [const Padding(padding: EdgeInsets.only(top: 5, right: 15), child: Text('Status Karyawan')), const Padding(padding: EdgeInsets.only(top: 5), child: Text(':')), Padding(padding: const EdgeInsets.only(top: 5), child: Text(k.statusKerja.nama))]),
+                          TableRow(children: [const Padding(padding: EdgeInsets.only(top: 5, right: 15), child: Text('Tanggal Mulai Masuk Kerja')), const Padding(padding: EdgeInsets.only(top: 5), child: Text(':')), Padding(padding: const EdgeInsets.only(top: 5), child: Text(AFconvert.matDate(k.tanggalMasuk)))]),
                         ],
                       ),
                     )
