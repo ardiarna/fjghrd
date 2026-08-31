@@ -1,26 +1,27 @@
 import 'package:fjghrd/controllers/home_control.dart' as fjghrd;
-import 'package:fjghrd/views/cic_cuti_view.dart' as fjghrd2;
+import 'package:fjghrd/views/cuti_view.dart' as fjghrd3;
+import 'package:fjghrd/views/cic_karyawan_view.dart';
 import 'package:fjghrd/utils/af_database.dart';
-import 'package:fjghrd/controllers/cuti_control.dart';
+import 'package:fjghrd/controllers/cic_cuti_control.dart';
 import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/models/cuti.dart';
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:fjghrd/utils/af_widget.dart';
-import 'package:fjghrd/views/cuti_form_view.dart';
-import 'package:fjghrd/views/cuti_masal_view.dart' as cuti_masal;
+import 'package:fjghrd/views/cic_cuti_form_view.dart';
+import 'package:fjghrd/views/cic_cuti_masal_view.dart' as cuti_masal;
 
-import 'package:fjghrd/views/jatah_cuti_tahunan_view.dart';
-import 'package:fjghrd/views/jenis_cuti_khusus_view.dart';
+import 'package:fjghrd/views/cic_jatah_cuti_tahunan_view.dart';
+import 'package:fjghrd/views/cic_jenis_cuti_khusus_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
-class CutiView extends StatelessWidget {
-  CutiView({super.key});
+class CicCutiView extends StatelessWidget {
+  CicCutiView({super.key});
 
-  final CutiControl controller = Get.put(CutiControl());
+  final CicCutiControl controller = Get.put(CicCutiControl());
 
   List<PlutoRow> _buildRows(List<Cuti> rowData) {
     return List.generate(
@@ -28,7 +29,7 @@ class CutiView extends StatelessWidget {
           (index) => PlutoRow(
         cells: {
           'id': PlutoCell(value: rowData[index].id),
-          'karyawan': PlutoCell(value: rowData[index].karyawan?.nama ?? ''),
+          'cic/karyawan': PlutoCell(value: rowData[index].karyawan?.nama ?? ''),
           'jenis_form': PlutoCell(value: rowData[index].jenisForm),
           'kategori_display': PlutoCell(value: rowData[index].details.map((e) => e['kategori']?.toString() ?? '').toSet().join(', ')),
           'lama_cuti': PlutoCell(value: _getLamaCuti(rowData[index].details)),
@@ -164,7 +165,7 @@ class CutiView extends StatelessWidget {
       ),
       PlutoColumn(
         title: 'Karyawan',
-        field: 'karyawan',
+        field: 'cic/karyawan',
         type: PlutoColumnType.text(),
         readOnly: true,
         width: 250,
@@ -224,8 +225,12 @@ class CutiView extends StatelessWidget {
     return Column(
       children: [
         AFwidget.pageHeader(
-          title: 'CUTI & IJIN',
+          title: 'CIC CUTI & IJIN',
           icon: Icons.beach_access,
+          onBack: () {
+            Get.find<fjghrd.HomeControl>().kontener = fjghrd3.CutiView();
+            Get.find<fjghrd.HomeControl>().update();
+          },
           children: [
             _tombol(
               label: 'Form Cuti',
@@ -241,14 +246,14 @@ class CutiView extends StatelessWidget {
               label: 'Cuti Masal',
               icon: Icons.groups,
               onPressed: () {
-                Get.to(() => const cuti_masal.CutiMasalView());
+                Get.to(() => const cuti_masal.CicCutiMasalView());
               },
             ),
             _tombol(
               label: 'Jatah Tahunan',
               icon: Icons.date_range,
               onPressed: () {
-                Get.find<HomeControl>().kontener = JatahCutiTahunanView();
+                Get.find<HomeControl>().kontener = CicJatahCutiTahunanView();
                 Get.find<HomeControl>().update();
               },
             ),
@@ -256,14 +261,22 @@ class CutiView extends StatelessWidget {
               label: 'Jenis Cuti Khusus',
               icon: Icons.category_outlined,
               onPressed: () {
-                Get.find<HomeControl>().kontener = JenisCutiKhususView();
+                Get.find<HomeControl>().kontener = CicJenisCutiKhususView();
+                Get.find<HomeControl>().update();
+              },
+            ),
+            _tombol(
+              label: 'Data Karyawan',
+              icon: Icons.people_alt,
+              onPressed: () {
+                Get.find<HomeControl>().kontener = CicKaryawanView();
                 Get.find<HomeControl>().update();
               },
             ),
             const SizedBox(width: 20),
             SizedBox(
               width: 120,
-              child: GetBuilder<CutiControl>(
+              child: GetBuilder<CicCutiControl>(
                 builder: (_) {
                   return AFwidget.comboField(
                     value: controller.filterTahun.label,
@@ -293,16 +306,16 @@ class CutiView extends StatelessWidget {
                 
                 if(value == 'jadwal') {
                   reportName = 'Jadwal Cuti';
-                  hasil = await AFdatabase.download(url: 'cuti/excel/jadwal/$tahun');
+                  hasil = await AFdatabase.download(url: 'cic/cuti/excel/jadwal/$tahun');
                 } else if(value == 'list') {
                   reportName = 'List Cuti';
-                  hasil = await AFdatabase.download(url: 'cuti/excel/list/$tahun');
+                  hasil = await AFdatabase.download(url: 'cic/cuti/excel/list/$tahun');
                 } else if(value == 'tanpa_potongan') {
                   reportName = 'Cuti Tanpa Potongan';
-                  hasil = await AFdatabase.download(url: 'cuti/excel/tanpa-potongan/$tahun');
+                  hasil = await AFdatabase.download(url: 'cic/cuti/excel/tanpa-potongan/$tahun');
                 } else if(value == 'unpaid') {
                   reportName = 'Cuti Unpaid Leave & Ganti Hari Libur';
-                  hasil = await AFdatabase.download(url: 'cuti/excel/unpaid/$tahun');
+                  hasil = await AFdatabase.download(url: 'cic/cuti/excel/unpaid/$tahun');
                 } else {
                   Get.back();
                   return;
@@ -327,15 +340,6 @@ class CutiView extends StatelessWidget {
                 const PopupMenuItem<String>(value: 'unpaid', child: Text('Cuti Unpaid Leave & Ganti Hari Libur')),
               ],
             ),
-            const Spacer(),
-            _tombol(
-              label: 'CIC',
-              icon: Icons.business,
-              onPressed: () {
-                Get.find<fjghrd.HomeControl>().kontener = fjghrd2.CicCutiView();
-                Get.find<fjghrd.HomeControl>().update();
-              },
-            ),
           ],
         ),
         Expanded(
@@ -343,7 +347,7 @@ class CutiView extends StatelessWidget {
             decoration: const BoxDecoration(
               image: bgLineBlue,
             ),
-            child: GetBuilder<CutiControl>(
+            child: GetBuilder<CicCutiControl>(
               builder: (_) {
                 return PlutoGrid(
                   key: UniqueKey(),
@@ -374,7 +378,7 @@ class CutiView extends StatelessWidget {
         ),
         child: ClipRRect(
             borderRadius: BorderRadius.circular(15),
-            child: CutiFormView(formType: formType),
+            child: CicCutiFormView(formType: formType),
         ),
       ),
       barrierDismissible: false,

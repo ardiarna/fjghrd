@@ -23,11 +23,11 @@ class Cuti {
   factory Cuti.fromMap(Map<String, dynamic> map) {
     return Cuti(
       id: map['id']?.toString() ?? '',
-      karyawanId: map['karyawan_id']?.toString() ?? '',
+      karyawanId: map['karyawan_id']?.toString() ?? map['cic_karyawan_id']?.toString() ?? '',
       jenisForm: map['jenis_form'] ?? '',
       tanggalKembali: AFconvert.keTanggal(map['tanggal_kembali']),
       tahun: map['tahun']?.toString() ?? '',
-      karyawan: map['karyawan'] != null ? Karyawan.fromMap(map['karyawan']) : null,
+      karyawan: map['karyawan'] != null ? Karyawan.fromMap(map['karyawan']) : (map['cic_karyawan'] != null ? Karyawan.fromMap(map['cic_karyawan']) : null),
       details: map['details'] ?? [],
     );
   }

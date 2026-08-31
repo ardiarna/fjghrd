@@ -27,7 +27,7 @@ class JatahCutiTahunan {
   factory JatahCutiTahunan.fromMap(Map<String, dynamic> data) {
     var obj = JatahCutiTahunan(
       id: AFconvert.keString(data['id']),
-      karyawanId: AFconvert.keString(data['karyawan_id']),
+      karyawanId: AFconvert.keString(data['karyawan_id'] ?? data['cic_karyawan_id']),
       tahun: AFconvert.keString(data['tahun']),
       jumlahCuti: AFconvert.keInt(data['jumlah_cuti']),
       plusTahunLalu: AFconvert.keInt(data['plus_tahun_lalu']),
@@ -35,8 +35,10 @@ class JatahCutiTahunan {
       totalCuti: AFconvert.keInt(data['total_cuti']),
       bolehMinus: data['boleh_minus']?.toString() ?? 'N',
     );
-    if (data['karyawan'] != null) {
+if (data['karyawan'] != null) {
       obj.karyawan = Karyawan.fromMap(data['karyawan']);
+    } else if (data['cic_karyawan'] != null) {
+      obj.karyawan = Karyawan.fromMap(data['cic_karyawan']);
     }
     return obj;
   }
