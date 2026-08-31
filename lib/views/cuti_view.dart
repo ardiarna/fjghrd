@@ -222,7 +222,7 @@ class CutiView extends StatelessWidget {
     return Column(
       children: [
         AFwidget.pageHeader(
-          title: 'DATA CUTI & IJIN',
+          title: 'CUTI & IJIN',
           icon: Icons.beach_access,
           children: [
             _tombol(

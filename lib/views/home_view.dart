@@ -1,4 +1,3 @@
-import 'package:fjghrd/views/cuti_view.dart';
 import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/views/agama_view.dart';
@@ -47,9 +46,9 @@ class HomeView extends StatelessWidget {
       bottomNavigationBar: GetBuilder<HomeControl>(
         builder: (_) {
           return NavigationBar(
-            selectedIndex: controller.tabId > 4 ? 0 : controller.tabId,
+            selectedIndex: controller.tabId > 5 ? 0 : controller.tabId,
             onDestinationSelected: (idx) {
-              if (idx == 4) {
+              if (idx == 5) {
                  controller.scaffoldKey.currentState?.openEndDrawer();
               } else {
                  controller.pindahTab(idx);
@@ -70,6 +69,11 @@ class HomeView extends StatelessWidget {
                 icon: Icon(Icons.assignment_outlined),
                 selectedIcon: Icon(Icons.assignment),
                 label: 'Payroll',
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.beach_access_outlined),
+                selectedIcon: Icon(Icons.beach_access),
+                label: 'Cuti / Ijin',
               ),
               NavigationDestination(
                 icon: Icon(Icons.analytics_outlined),
@@ -98,7 +102,7 @@ class HomeView extends StatelessWidget {
                     icon: Icons.maps_home_work_outlined,
                     color: Colors.blueGrey,
                     onTap: () {
-                      controller.tabId = 4;
+                      controller.tabId = 5;
                       controller.kontener = AreaView();
                       Get.back();
                       controller.update();
@@ -109,7 +113,7 @@ class HomeView extends StatelessWidget {
                     icon: Icons.dataset_linked_outlined,
                     color: Colors.blueGrey,
                     onTap: () {
-                      controller.tabId = 4;
+                      controller.tabId = 5;
                       controller.kontener = DivisiView();
                       Get.back();
                       controller.update();
@@ -120,7 +124,7 @@ class HomeView extends StatelessWidget {
                     icon: Icons.chair_alt_outlined,
                     color: Colors.blueGrey,
                     onTap: () {
-                      controller.tabId = 4;
+                      controller.tabId = 5;
                       controller.kontener = JabatanView();
                       Get.back();
                       controller.update();
@@ -131,7 +135,7 @@ class HomeView extends StatelessWidget {
                     icon: Icons.mosque_outlined,
                     color: Colors.blueGrey,
                     onTap: () {
-                      controller.tabId = 4;
+                      controller.tabId = 5;
                       controller.kontener = AgamaView();
                       Get.back();
                       controller.update();
@@ -142,7 +146,7 @@ class HomeView extends StatelessWidget {
                     icon: Icons.school_outlined,
                     color: Colors.blueGrey,
                     onTap: () {
-                      controller.tabId = 4;
+                      controller.tabId = 5;
                       controller.kontener = PendidikanView();
                       Get.back();
                       controller.update();
@@ -153,7 +157,7 @@ class HomeView extends StatelessWidget {
                     icon: Icons.arrow_drop_down_circle_outlined,
                     color: Colors.blueGrey,
                     onTap: () {
-                      controller.tabId = 4;
+                      controller.tabId = 5;
                       controller.kontener = StatusKerjaView();
                       Get.back();
                       controller.update();
@@ -164,7 +168,7 @@ class HomeView extends StatelessWidget {
                     icon: Icons.arrow_drop_down_circle_outlined,
                     color: Colors.blueGrey,
                     onTap: () {
-                      controller.tabId = 4;
+                      controller.tabId = 5;
                       controller.kontener = StatusPhkView();
                       Get.back();
                       controller.update();
@@ -175,7 +179,7 @@ class HomeView extends StatelessWidget {
                     icon: Icons.arrow_drop_down_circle_outlined,
                     color: Colors.blueGrey,
                     onTap: () {
-                      controller.tabId = 4;
+                      controller.tabId = 5;
                       controller.kontener = PtkpView();
                       Get.back();
                       controller.update();
@@ -186,7 +190,7 @@ class HomeView extends StatelessWidget {
                     icon: Icons.money,
                     color: Colors.blueGrey,
                     onTap: () {
-                      controller.tabId = 4;
+                      controller.tabId = 5;
                       controller.kontener = TarifEfektifView();
                       Get.back();
                       controller.update();
@@ -197,19 +201,8 @@ class HomeView extends StatelessWidget {
                     icon: Icons.emoji_people,
                     color: Colors.blueGrey,
                     onTap: () {
-                      controller.tabId = 4;
+                      controller.tabId = 5;
                       controller.kontener = CustomerView();
-                      Get.back();
-                      controller.update();
-                    },
-                  ),
-                  drawItem(
-                    label: 'Cuti / Ijin',
-                    icon: Icons.beach_access_outlined,
-                    color: Colors.blueGrey,
-                    onTap: () {
-                      controller.tabId = 4;
-                      controller.kontener = CutiView();
                       Get.back();
                       controller.update();
                     },
@@ -219,7 +212,7 @@ class HomeView extends StatelessWidget {
                     icon: Icons.calendar_month,
                     color: Colors.blueGrey,
                     onTap: () {
-                      controller.tabId = 4;
+                      controller.tabId = 5;
                       controller.kontener = HariLiburView();
                       Get.back();
                       controller.update();
@@ -232,7 +225,7 @@ class HomeView extends StatelessWidget {
                     color: Colors.red,
                     onTap: () {
                       Get.back();
-                      controller.tabId = 4;
+                      controller.tabId = 5;
                       dialogChangeEmail();
                     },
                   ),
@@ -242,7 +235,7 @@ class HomeView extends StatelessWidget {
                     color: Colors.red,
                     onTap: () {
                       Get.back();
-                      controller.tabId = 4;
+                      controller.tabId = 5;
                       dialogChangePassword();
                     },
                   ),

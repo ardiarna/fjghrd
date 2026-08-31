@@ -2,6 +2,7 @@ import 'package:fjghrd/controllers/auth_control.dart';
 import 'package:fjghrd/repositories/user_repository.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/views/beranda_view.dart';
+import 'package:fjghrd/views/cuti_view.dart';
 import 'package:fjghrd/views/karyawan_view.dart';
 import 'package:fjghrd/views/payroll_view.dart';
 import 'package:fjghrd/views/report_view.dart';
@@ -34,8 +35,11 @@ class HomeControl extends GetxController {
       kontener = PayrollView();
     } else if(idx == 3) {
       tabId = idx;
-      kontener = ReportView();
+      kontener = CutiView();
     } else if(idx == 4) {
+      tabId = idx;
+      kontener = ReportView();
+    } else if(idx == 5) {
       if(scaffoldKey.currentState!.isEndDrawerOpen) {
         scaffoldKey.currentState!.closeEndDrawer();
       } else {
