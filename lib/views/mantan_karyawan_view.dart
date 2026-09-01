@@ -255,7 +255,6 @@ class MantanKaryawanView extends StatelessWidget {
         backgroundColor: Colors.red.shade100,
       ),
     ];
-    controller.loadMantanKaryawans();
     return Column(
       children: [
         AFwidget.pageHeader(

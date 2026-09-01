@@ -1991,6 +1991,7 @@ class KaryawanControl extends GetxController {
       Get.back();
       if(hasil.success) {
         loadKaryawans();
+        loadCalonKaryawans();
         Get.back();
         AFwidget.snackbar(hasil.message);
       } else {
@@ -2106,6 +2107,8 @@ class KaryawanControl extends GetxController {
       Get.back();
       if(hasil.success) {
         loadKaryawans();
+        loadCalonKaryawans();
+        loadMantanKaryawans();
         Get.back();
         Get.back();
         AFwidget.snackbar(hasil.message);
@@ -2260,7 +2263,7 @@ class KaryawanControl extends GetxController {
     TrainingKaryawan item = TrainingKaryawan();
     if(id != '') item = listTrainingKaryawan.where((element) => element.id == id).first;
     txtTrainingKaryawanId.text = item.id;
-    txtTrainingKaryawanTanggal.text = AFconvert.matYMD(AFconvert.keTanggal(item.tanggal) ?? _now);
+    txtTrainingKaryawanTanggal.text = AFconvert.matYMD(AFconvert.keTanggal(item.tanggal));
     txtTrainingKaryawanKeterangan.text = item.keterangan ?? '';
     trainingTerpilih = item.training;
 
@@ -2307,6 +2310,23 @@ class KaryawanControl extends GetxController {
                           }
                         ),
                       ),
+                      GetBuilder<KaryawanControl>(
+                        builder: (_) {
+                          if (trainingTerpilih != null) {
+                            return Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: IconButton(
+                                onPressed: () {
+                                  trainingTerpilih = null;
+                                  update();
+                                },
+                                icon: const Icon(Icons.highlight_off),
+                              ),
+                            );
+                          }
+                          return Container();
+                        },
+                      ),
                     ],
                   ),
                 ),
@@ -2317,7 +2337,7 @@ class KaryawanControl extends GetxController {
                       Container(
                         width: 150,
                         padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Tanggal Pelaksanaan'),
+                        child: const Text('Tanggal'),
                       ),
                       Expanded(
                         child: AFwidget.textField(
@@ -2331,9 +2351,27 @@ class KaryawanControl extends GetxController {
                             );
                             if(a != null) {
                               txtTrainingKaryawanTanggal.text = AFconvert.matYMD(a);
+                              update();
                             }
                           },
                         ),
+                      ),
+                      GetBuilder<KaryawanControl>(
+                        builder: (_) {
+                          if(txtTrainingKaryawanTanggal.text.isNotEmpty) {
+                            return Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: IconButton(
+                                onPressed: () {
+                                  txtTrainingKaryawanTanggal.text = '';
+                                  update();
+                                },
+                                icon: const Icon(Icons.highlight_off),
+                              ),
+                            );
+                          }
+                          return Container();
+                        },
                       ),
                     ],
                   ),
@@ -2385,30 +2423,38 @@ class KaryawanControl extends GetxController {
   }
 
   Future<void> simpanTrainingKaryawanData() async {
-    if(trainingTerpilih == null) {
-      AFwidget.snackbar('Training belum dipilih');
-      return;
-    }
-    AFwidget.loading();
-    Map<String, dynamic> body = {
-      'id': txtTrainingKaryawanId.text,
-      'karyawan_id': current.id,
-      'training_id': trainingTerpilih!.id,
-      'tanggal': txtTrainingKaryawanTanggal.text,
-      'keterangan': txtTrainingKaryawanKeterangan.text,
-    };
-    
-    var hasil = body['id'] == '' 
-        ? await _repo.trainingKaryawanCreate(body) 
-        : await _repo.trainingKaryawanUpdate(body);
-        
-    Get.back();
-    if(hasil.success) {
+    try {
+      if(current.id.isEmpty) {
+        throw 'ID Karyawan tidak ditemukan';
+      }
+      if(trainingTerpilih == null) {
+        throw 'Silakan pilih Training';
+      }
+
+
+      Map<String, dynamic> body = {
+        'id': txtTrainingKaryawanId.text,
+        'karyawan_id': current.id,
+        'training_id': trainingTerpilih!.id,
+        'tanggal': txtTrainingKaryawanTanggal.text,
+        'keterangan': txtTrainingKaryawanKeterangan.text,
+      };
+
+      AFwidget.loading();
+      var hasil = body['id'] == ''
+          ? await _repo.trainingKaryawanCreate(body)
+          : await _repo.trainingKaryawanUpdate(body);
       Get.back();
-      AFwidget.snackbar(hasil.message);
-      loadTrainingKaryawan();
-    } else {
-      AFwidget.snackbar(hasil.message);
+
+      if(hasil.success) {
+        loadTrainingKaryawan();
+        Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
+      }
+    } catch (er) {
+      AFwidget.formWarning(label: '$er');
     }
   }
 
@@ -2424,7 +2470,7 @@ class KaryawanControl extends GetxController {
           AFwidget.snackbar(hasil.message);
           loadTrainingKaryawan();
         } else {
-          AFwidget.snackbar(hasil.message);
+          AFwidget.formWarning(label: hasil.message);
         }
       },
     );
@@ -3756,6 +3802,8 @@ class KaryawanControl extends GetxController {
     tahunPhk = Opsi(value: '${_now.year}', label: '${_now.year}');
     bulanPhk = Opsi(value: '${_now.month}', label: mapBulan[_now.month]!);
     loadKaryawans();
+    loadCalonKaryawans();
+    loadMantanKaryawans();
     loadAllData();
     super.onInit();
   }

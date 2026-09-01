@@ -179,31 +179,24 @@ class KaryawanForm extends StatelessWidget {
         field: 'id',
         type: PlutoColumnType.text(),
         readOnly: true,
-        width: 100,
+        width: 63,
         backgroundColor: Colors.brown.shade100,
-        renderer: (rendererContext) {
+        enableFilterMenuItem: false,
+        enableContextMenu: false,
+        enableDropToResize: false,
+        frozen: PlutoColumnFrozen.start,
+        renderer: (rdrCtx) {
           return Row(
             children: [
               IconButton(
-                icon: const Icon(
-                  Icons.edit,
-                ),
                 onPressed: () {
-                  controller.trainingKaryawanForm(rendererContext.cell.value.toString(), rendererContext.stateManager.gridFocusNode.context!);
+                  controller.trainingKaryawanForm(rdrCtx.row.cells['id']!.value, context);
                 },
+                icon: const Icon(
+                  Icons.edit_square,
+                ),
                 iconSize: 18,
                 color: Colors.green,
-                padding: const EdgeInsets.all(0),
-              ),
-              IconButton(
-                icon: const Icon(
-                  Icons.delete,
-                ),
-                onPressed: () {
-                  controller.hapusTrainingKaryawan(rendererContext.cell.value.toString());
-                },
-                iconSize: 18,
-                color: Colors.red,
                 padding: const EdgeInsets.all(0),
               ),
             ],
@@ -211,15 +204,15 @@ class KaryawanForm extends StatelessWidget {
         },
       ),
       PlutoColumn(
-        title: 'Training',
+        title: 'TRAINING',
         field: 'training',
         type: PlutoColumnType.text(),
         readOnly: true,
-        width: 150,
+        width: 250,
         backgroundColor: Colors.brown.shade100,
       ),
       PlutoColumn(
-        title: 'Tanggal',
+        title: 'TANGGAL',
         field: 'tanggal',
         type: PlutoColumnType.text(),
         readOnly: true,
@@ -227,11 +220,11 @@ class KaryawanForm extends StatelessWidget {
         backgroundColor: Colors.brown.shade100,
       ),
       PlutoColumn(
-        title: 'Keterangan',
+        title: 'KETERANGAN',
         field: 'keterangan',
         type: PlutoColumnType.text(),
         readOnly: true,
-        width: 200,
+        width: 350,
         backgroundColor: Colors.brown.shade100,
       ),
     ];

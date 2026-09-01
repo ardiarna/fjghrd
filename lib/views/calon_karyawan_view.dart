@@ -293,7 +293,6 @@ class CalonKaryawanView extends StatelessWidget {
         hide: true,
       ),
     ];
-    controller.loadCalonKaryawans();
     return Column(
       children: [
         AFwidget.pageHeader(
