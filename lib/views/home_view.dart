@@ -1,3 +1,4 @@
+import 'package:fjghrd/views/training_view.dart';
 import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/views/agama_view.dart';
@@ -148,6 +149,17 @@ class HomeView extends StatelessWidget {
                     onTap: () {
                       controller.tabId = 5;
                       controller.kontener = PendidikanView();
+                      Get.back();
+                      controller.update();
+                    },
+                  ),
+                  drawItem(
+                    label: 'Training',
+                    icon: Icons.model_training,
+                    color: Colors.blueGrey,
+                    onTap: () {
+                      controller.tabId = 55;
+                      controller.kontener = TrainingView();
                       Get.back();
                       controller.update();
                     },

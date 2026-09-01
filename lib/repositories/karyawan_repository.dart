@@ -119,6 +119,36 @@ class KaryawanRepository {
     );
   }
 
+
+  Future<Hasil> trainingKaryawanFindAll(String id) async {
+    return await AFdatabase.send(
+      url: 'training-karyawan?karyawan_id=$id',
+    );
+  }
+
+  Future<Hasil> trainingKaryawanCreate(Map<String, dynamic> body) async {
+    return await AFdatabase.send(
+      url: 'training-karyawan',
+      methodeRequest: MethodeRequest.post,
+      body: body,
+    );
+  }
+
+  Future<Hasil> trainingKaryawanUpdate(Map<String, dynamic> body) async {
+    return await AFdatabase.send(
+      url: 'training-karyawan/${body['id']}',
+      methodeRequest: MethodeRequest.put,
+      body: body,
+    );
+  }
+
+  Future<Hasil> trainingKaryawanDelete(String trainingKaryawanId) async {
+    return await AFdatabase.send(
+      url: 'training-karyawan/$trainingKaryawanId',
+      methodeRequest: MethodeRequest.delete,
+    );
+  }
+
   Future<Hasil> mantanFindAll({String isStaf = ''}) async {
     return await AFdatabase.send(
       url: 'karyawan?aktif=N&staf=$isStaf&sort_by=tanggal_keluar&sort_order=desc',

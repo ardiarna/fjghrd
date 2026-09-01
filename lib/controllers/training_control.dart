@@ -1,0 +1,169 @@
+import 'package:fjghrd/controllers/auth_control.dart';
+import 'package:fjghrd/models/training.dart';
+import 'package:fjghrd/repositories/training_repository.dart';
+import 'package:fjghrd/utils/af_convert.dart';
+import 'package:fjghrd/utils/af_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+
+class TrainingControl extends GetxController {
+  final authControl = Get.find<AuthControl>();
+  final TrainingRepository _repo = TrainingRepository();
+
+  List<Training> listTraining = [];
+
+  late TextEditingController txtId, txtNama, txtUrutan;
+
+  Future<void> loadTrainings() async {
+    var hasil = await _repo.findAll();
+    if (hasil.success) {
+      listTraining.clear();
+      for (var data in hasil.daftar) {
+        listTraining.add(Training.fromMap(data));
+      }
+      update();
+    }
+  }
+
+  void inputForm(String id) {
+    Training item = id == '' ? Training() : listTraining.where((element) => element.id == id).first;
+    txtId.text = item.id;
+    txtNama.text = item.nama;
+    txtUrutan.text = item.urutan.toString();
+    AFwidget.dialog(
+      Container(
+        width: 700,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        child: Column(
+          children: [
+            AFwidget.formHeader('Form ${item.id == '' ? 'Tambah' : 'Ubah'} Training'),
+            AFwidget.barisText(
+              label: 'Nama',
+              controller: txtNama,
+            ),
+            AFwidget.barisText(
+              label: 'Urutan',
+              controller: txtUrutan,
+              isNumber: true,
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  item.id == '' ? Container() :
+                  AFwidget.tombol(
+                    label: 'Hapus Data',
+                    color: Colors.red,
+                    onPressed: () {
+                      hapusForm(item);
+                    },
+                    minimumSize: const Size(120, 40),
+                  ),
+                  const Spacer(),
+                  AFwidget.tombol(
+                    label: 'Batal',
+                    color: Colors.orange,
+                    onPressed: Get.back,
+                    minimumSize: const Size(120, 40),
+                  ),
+                  const SizedBox(width: 40),
+                  AFwidget.tombol(
+                    label: 'Simpan',
+                    color: Colors.blue,
+                    onPressed: simpanData,
+                    minimumSize: const Size(120, 40),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      barrierDismissible: false,
+      backgroundColor: Colors.white,
+      contentPadding: const EdgeInsets.all(0),
+    );
+  }
+
+  void hapusForm(Training item) {
+    AFwidget.formHapus(
+      label: 'training ${item.nama}',
+      aksi: () {
+        hapusData(item.id);
+      },
+    );
+  }
+
+  Future<void> simpanData() async {
+    try {
+      if(txtNama.text.isEmpty) {
+        throw 'Nama harus diisi';
+      }
+      if(txtUrutan.text.isEmpty) {
+        throw 'Urutan harus diisi';
+      }
+
+      var a = Training(
+        id: txtId.text,
+        nama: txtNama.text,
+        urutan: AFconvert.keInt(txtUrutan.text),
+      );
+
+      AFwidget.loading();
+      var hasil = a.id == ''
+          ? await _repo.create(a.toMap())
+          : await _repo.update(a.id, a.toMap());
+      Get.back();
+      if(hasil.success) {
+        loadTrainings();
+        Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
+      }
+    } catch (er) {
+      AFwidget.formWarning(label: '$er');
+    }
+  }
+
+  Future<void> hapusData(String id) async {
+    try {
+      if(id == '') {
+        throw 'ID Training null';
+      }
+      AFwidget.loading();
+      var hasil = await _repo.delete(id);
+      Get.back();
+      if(hasil.success) {
+        loadTrainings();
+        Get.back();
+        Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
+      }
+    } catch (er) {
+      AFwidget.formWarning(label: '$er');
+    }
+  }
+
+  @override
+  void onInit() {
+    txtId = TextEditingController();
+    txtNama = TextEditingController();
+    txtUrutan = TextEditingController();
+    super.onInit();
+  }
+
+  @override
+  void onClose() {
+    txtId.dispose();
+    txtNama.dispose();
+    txtUrutan.dispose();
+    super.onClose();
+  }
+}

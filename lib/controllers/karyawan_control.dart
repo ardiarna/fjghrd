@@ -10,6 +10,10 @@ import 'package:fjghrd/models/keluarga_kontak.dart';
 import 'package:fjghrd/models/payroll.dart';
 import 'package:fjghrd/models/pendidikan.dart';
 import 'package:fjghrd/models/perjanjian_kerja.dart';
+import 'package:fjghrd/models/training.dart';
+import 'package:fjghrd/models/training_karyawan.dart';
+import 'package:fjghrd/repositories/training_repository.dart';
+
 import 'package:fjghrd/models/phk.dart';
 import 'package:fjghrd/models/payroll_phk.dart';
 import 'package:fjghrd/models/ptkp.dart';
@@ -56,6 +60,7 @@ class KaryawanControl extends GetxController {
   List<KeluargaKaryawan> listKeluarga = [];
   List<KeluargaKontak> listKontak = [];
   List<PerjanjianKerja> listPerjanjianKerja = [];
+  List<TrainingKaryawan> listTrainingKaryawan = [];
   List<TimelineMasakerja> listTimelineMasakerja = [];
   List<Payroll> listPayroll = [];
   PayrollPhk payrollPhk = PayrollPhk();
@@ -303,6 +308,37 @@ class KaryawanControl extends GetxController {
     if (hasil.success) {
       for (var data in hasil.daftar) {
         listKontak.add(KeluargaKontak.fromMap(data));
+      }
+    }
+    update();
+  }
+
+
+  TextEditingController txtTrainingKaryawanId = TextEditingController();
+  TextEditingController txtTrainingKaryawanTanggal = TextEditingController();
+  TextEditingController txtTrainingKaryawanKeterangan = TextEditingController();
+  Training? trainingTerpilih;
+  List<Opsi> listTraining = [];
+
+  Future<void> loadTrainings() async {
+    TrainingRepository repo = TrainingRepository();
+    var hasil = await repo.findAll();
+    if(hasil.success) {
+      listTraining.clear();
+      for (var data in hasil.daftar) {
+        listTraining.add(
+          Opsi(value: AFconvert.keString(data['id']), label: data['nama'], data: data),
+        );
+      }
+    }
+  }
+
+  Future<void> loadTrainingKaryawan() async {
+    listTrainingKaryawan.clear();
+    var hasil = await _repo.trainingKaryawanFindAll(current.id.toString());
+    if (hasil.success) {
+      for (var data in hasil.daftar) {
+        listTrainingKaryawan.add(TrainingKaryawan.fromMap(data));
       }
     }
     update();
@@ -1032,6 +1068,7 @@ class KaryawanControl extends GetxController {
     loadKeluargas();
     loadKontaks();
     loadPerjanjianKerjas();
+    loadTrainingKaryawan();
     loadTimelineMasakerja();
     Get.toNamed(Rute.karyawanForm);
   }
@@ -2209,6 +2246,190 @@ class KaryawanControl extends GetxController {
     }
   }
 
+
+  Future<Opsi?> pilihTraining({String value = ''}) async {
+    var a = await AFcombobox.bottomSheet(
+      listOpsi: listTraining,
+      valueSelected: value,
+      judul: 'Pilih Training',
+    );
+    return a;
+  }
+
+      void trainingKaryawanForm(String id, BuildContext context) {
+    TrainingKaryawan item = TrainingKaryawan();
+    if(id != '') item = listTrainingKaryawan.where((element) => element.id == id).first;
+    txtTrainingKaryawanId.text = item.id;
+    txtTrainingKaryawanTanggal.text = AFconvert.matYMD(AFconvert.keTanggal(item.tanggal) ?? _now);
+    txtTrainingKaryawanKeterangan.text = item.keterangan ?? '';
+    trainingTerpilih = item.training;
+
+    AFwidget.dialog(
+      Container(
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+        width: 700,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        child: Stack(
+          children: [
+            ListView(
+              children: [
+                AFwidget.barisInfo(
+                  label: 'Nama Karyawan',
+                  nilai: current.nama,
+                  paddingTop: 70,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 150,
+                        padding: const EdgeInsets.only(right: 15),
+                        child: const Text('Training'),
+                      ),
+                      Expanded(
+                        child: GetBuilder<KaryawanControl>(
+                          builder: (_) {
+                            return AFwidget.comboField(
+                              value: trainingTerpilih?.nama ?? '',
+                              label: '',
+                              onTap: () async {
+                                var a = await pilihTraining(value: trainingTerpilih?.id ?? '');
+                                if(a != null && a.value != trainingTerpilih?.id) {
+                                  trainingTerpilih = Training.fromMap(a.data!);
+                                  update();
+                                }
+                              },
+                            );
+                          }
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 150,
+                        padding: const EdgeInsets.only(right: 15),
+                        child: const Text('Tanggal Pelaksanaan'),
+                      ),
+                      Expanded(
+                        child: AFwidget.textField(
+                          marginTop: 0,
+                          controller: txtTrainingKaryawanTanggal,
+                          readOnly: true,
+                          ontap: () async {
+                            DateTime? a = await AFwidget.pickDate(
+                              context: context,
+                              initialDate: AFconvert.keTanggal(txtTrainingKaryawanTanggal.text) ?? _now,
+                            );
+                            if(a != null) {
+                              txtTrainingKaryawanTanggal.text = AFconvert.matYMD(a);
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                AFwidget.barisText(
+                  label: 'Keterangan',
+                  controller: txtTrainingKaryawanKeterangan,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
+                  child: Row(
+                    children: [
+                      id != '' ? AFwidget.tombol(
+                        label: 'Hapus',
+                        color: Colors.red,
+                        onPressed: () {
+                          hapusTrainingKaryawan(id);
+                        },
+                        minimumSize: const Size(120, 40),
+                      ) : Container(),
+                      const Spacer(),
+                      AFwidget.tombol(
+                        label: 'Batal',
+                        color: Colors.orange,
+                        onPressed: Get.back,
+                        minimumSize: const Size(120, 40),
+                      ),
+                      const SizedBox(width: 40),
+                      AFwidget.tombol(
+                        label: 'Simpan',
+                        color: Colors.blue,
+                        onPressed: simpanTrainingKaryawanData,
+                        minimumSize: const Size(120, 40),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            AFwidget.formHeader('Form ${id == '' ? 'Tambah' : 'Ubah'} Riwayat Training'),
+          ],
+        ),
+      ),
+      barrierDismissible: false,
+      scrollable: false,
+      backgroundColor: Colors.white,
+      contentPadding: const EdgeInsets.all(0),
+    );
+  }
+
+  Future<void> simpanTrainingKaryawanData() async {
+    if(trainingTerpilih == null) {
+      AFwidget.snackbar('Training belum dipilih');
+      return;
+    }
+    AFwidget.loading();
+    Map<String, dynamic> body = {
+      'id': txtTrainingKaryawanId.text,
+      'karyawan_id': current.id,
+      'training_id': trainingTerpilih!.id,
+      'tanggal': txtTrainingKaryawanTanggal.text,
+      'keterangan': txtTrainingKaryawanKeterangan.text,
+    };
+    
+    var hasil = body['id'] == '' 
+        ? await _repo.trainingKaryawanCreate(body) 
+        : await _repo.trainingKaryawanUpdate(body);
+        
+    Get.back();
+    if(hasil.success) {
+      Get.back();
+      AFwidget.snackbar(hasil.message);
+      loadTrainingKaryawan();
+    } else {
+      AFwidget.snackbar(hasil.message);
+    }
+  }
+
+  void hapusTrainingKaryawan(String id) {
+    AFwidget.formHapus(
+      label: 'riwayat training ini',
+      aksi: () async {
+        AFwidget.loading();
+        var hasil = await _repo.trainingKaryawanDelete(id);
+        Get.back();
+        if(hasil.success) {
+          Get.back();
+          AFwidget.snackbar(hasil.message);
+          loadTrainingKaryawan();
+        } else {
+          AFwidget.snackbar(hasil.message);
+        }
+      },
+    );
+  }
+
   Future<void> simpanPerjanjianData() async {
     try {
       if(current.id.isEmpty) {
@@ -2241,6 +2462,7 @@ class KaryawanControl extends GetxController {
       if(hasil.success) {
         statusKerja = a.statusKerja;
         loadPerjanjianKerjas();
+    loadTrainingKaryawan();
         loadTimelineMasakerja();
         loadKaryawans();
         Get.back();
@@ -2266,6 +2488,7 @@ class KaryawanControl extends GetxController {
       Get.back();
       if(hasil.success) {
         loadPerjanjianKerjas();
+    loadTrainingKaryawan();
         loadTimelineMasakerja();
         Get.back();
         Get.back();
@@ -3231,6 +3454,7 @@ class KaryawanControl extends GetxController {
     await loadDivisis();
     await loadJabatans();
     await loadPendidikans();
+    await loadTrainings();
     await loadStatusKerjas();
     await loadStatusPhks();
     await loadPtkps();

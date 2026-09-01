@@ -59,6 +59,23 @@ class KaryawanForm extends StatelessWidget {
     );
   }
 
+
+  List<PlutoRow> _buildRowsTraining(List<dynamic> rowData) {
+    return List.generate(
+      rowData.length,
+      (index) {
+        return PlutoRow(
+          cells: {
+            'id': PlutoCell(value: rowData[index].id),
+            'training': PlutoCell(value: rowData[index].training?.nama ?? ''),
+            'tanggal': PlutoCell(value: rowData[index].tanggal ?? ''),
+            'keterangan': PlutoCell(value: rowData[index].keterangan ?? ''),
+          },
+        );
+      },
+    );
+  }
+
   List<PlutoRow> _buildRowsPerjanjian(List<PerjanjianKerja> rowData) {
     return List.generate(
       rowData.length,
@@ -155,6 +172,70 @@ class KaryawanForm extends StatelessWidget {
         backgroundColor: Colors.brown.shade100,
       ),
     ];
+
+    final List<PlutoColumn> columnsTraining = [
+      PlutoColumn(
+        title: '',
+        field: 'id',
+        type: PlutoColumnType.text(),
+        readOnly: true,
+        width: 100,
+        backgroundColor: Colors.brown.shade100,
+        renderer: (rendererContext) {
+          return Row(
+            children: [
+              IconButton(
+                icon: const Icon(
+                  Icons.edit,
+                ),
+                onPressed: () {
+                  controller.trainingKaryawanForm(rendererContext.cell.value.toString(), rendererContext.stateManager.gridFocusNode.context!);
+                },
+                iconSize: 18,
+                color: Colors.green,
+                padding: const EdgeInsets.all(0),
+              ),
+              IconButton(
+                icon: const Icon(
+                  Icons.delete,
+                ),
+                onPressed: () {
+                  controller.hapusTrainingKaryawan(rendererContext.cell.value.toString());
+                },
+                iconSize: 18,
+                color: Colors.red,
+                padding: const EdgeInsets.all(0),
+              ),
+            ],
+          );
+        },
+      ),
+      PlutoColumn(
+        title: 'Training',
+        field: 'training',
+        type: PlutoColumnType.text(),
+        readOnly: true,
+        width: 150,
+        backgroundColor: Colors.brown.shade100,
+      ),
+      PlutoColumn(
+        title: 'Tanggal',
+        field: 'tanggal',
+        type: PlutoColumnType.text(),
+        readOnly: true,
+        width: 120,
+        backgroundColor: Colors.brown.shade100,
+      ),
+      PlutoColumn(
+        title: 'Keterangan',
+        field: 'keterangan',
+        type: PlutoColumnType.text(),
+        readOnly: true,
+        width: 200,
+        backgroundColor: Colors.brown.shade100,
+      ),
+    ];
+
     final List<PlutoColumn> columnsKontak = [
       PlutoColumn(
         title: '',
@@ -1296,6 +1377,69 @@ class KaryawanForm extends StatelessWidget {
                                 );
                               },
                             ),
+
+                            Container(
+                              margin: const EdgeInsets.only(top: 15),
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                              ),
+                              child: Row(
+                                children: [
+                                  const Padding(
+                                    padding: EdgeInsets.fromLTRB(20, 10, 30, 10),
+                                    child: Text('Riwayat Training',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () {
+                                      controller.trainingKaryawanForm('', context);
+                                    },
+                                    icon: const Icon(
+                                      Icons.add,
+                                    ),
+                                    iconSize: 30,
+                                    color: Colors.blue,
+                                    padding: const EdgeInsets.all(0),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            GetBuilder<KaryawanControl>(
+                              builder: (_) {
+                                if(controller.listTrainingKaryawan.isEmpty) {
+                                  return Container(
+                                    margin: const EdgeInsets.symmetric(horizontal: 10),
+                                    padding: const EdgeInsets.all(7),
+                                    width: double.infinity,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: Colors.brown.shade200),
+                                    ),
+                                    child: const Text('Tidak ada riwayat training'),
+                                  );
+                                }
+                                int jumlah = controller.listTrainingKaryawan.length;
+                                return Container(
+                                  margin: const EdgeInsets.symmetric(horizontal: 10),
+                                  height: jumlah > 4 ? 215 : jumlah == 4 ? 183 : jumlah == 3 ? 153 : jumlah == 2 ? 121 : 90,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(color: Colors.brown.shade200),
+                                  ),
+                                  child: PlutoGrid(
+                                    key: UniqueKey(),
+                                    columns: columnsTraining,
+                                    rows: _buildRowsTraining(controller.listTrainingKaryawan),
+                                    onLoaded: (PlutoGridOnLoadedEvent event) {},
+                                    configuration: AFplutogridConfig.configSatu(),
+                                  ),
+                                );
+                              },
+                            ),
+
                           ],
                         ),
                       ),
