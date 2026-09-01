@@ -298,6 +298,7 @@ class CicCutiView extends StatelessWidget {
             PopupMenuButton<String>(
               icon: const Icon(Icons.download, color: Colors.green),
               tooltip: 'Download Laporan Excel',
+              constraints: const BoxConstraints(minWidth: 350, maxWidth: 400),
               onSelected: (value) async {
                 final tahun = controller.filterTahun.value;
                 AFwidget.loading();
@@ -305,16 +306,16 @@ class CicCutiView extends StatelessWidget {
                 String reportName = '';
                 
                 if(value == 'jadwal') {
-                  reportName = 'Jadwal Cuti';
+                  reportName = 'Jadwal Cuti CIC';
                   hasil = await AFdatabase.download(url: 'cic/cuti/excel/jadwal/$tahun');
                 } else if(value == 'list') {
-                  reportName = 'List Cuti';
+                  reportName = 'List Cuti CIC';
                   hasil = await AFdatabase.download(url: 'cic/cuti/excel/list/$tahun');
                 } else if(value == 'tanpa_potongan') {
-                  reportName = 'Cuti Tanpa Potongan';
+                  reportName = 'Cuti Tanpa Potongan CIC';
                   hasil = await AFdatabase.download(url: 'cic/cuti/excel/tanpa-potongan/$tahun');
                 } else if(value == 'unpaid') {
-                  reportName = 'Cuti Unpaid Leave & Ganti Hari Libur';
+                  reportName = 'Cuti Unpaid Leave & Ganti Hari Libur CIC';
                   hasil = await AFdatabase.download(url: 'cic/cuti/excel/unpaid/$tahun');
                 } else {
                   Get.back();
@@ -334,10 +335,10 @@ class CicCutiView extends StatelessWidget {
                 }
               },
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                const PopupMenuItem<String>(value: 'jadwal', child: Text('Jadwal Cuti')),
-                const PopupMenuItem<String>(value: 'list', child: Text('List Cuti')),
-                const PopupMenuItem<String>(value: 'tanpa_potongan', child: Text('Cuti Tanpa Potongan')),
-                const PopupMenuItem<String>(value: 'unpaid', child: Text('Cuti Unpaid Leave & Ganti Hari Libur')),
+                const PopupMenuItem<String>(value: 'jadwal', child: Text('Jadwal Cuti CIC')),
+                const PopupMenuItem<String>(value: 'list', child: Text('List Cuti CIC')),
+                const PopupMenuItem<String>(value: 'tanpa_potongan', child: Text('Cuti Tanpa Potongan CIC')),
+                const PopupMenuItem<String>(value: 'unpaid', child: Text('Cuti Unpaid Leave & Ganti Hari Libur CIC')),
               ],
             ),
           ],
