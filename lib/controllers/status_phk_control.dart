@@ -156,6 +156,7 @@ class StatusPhkControl extends GetxController {
     txtId = TextEditingController();
     txtNama = TextEditingController();
     txtUrutan = TextEditingController();
+    loadStatusPhks();
     super.onInit();
   }
 

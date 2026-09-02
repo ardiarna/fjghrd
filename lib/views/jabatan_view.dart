@@ -69,7 +69,6 @@ class JabatanView extends StatelessWidget {
         backgroundColor: Colors.brown.shade100,
       ),
     ];
-    controller.loadJabatans();
     return Column(
       children: [
         AFwidget.pageHeader(

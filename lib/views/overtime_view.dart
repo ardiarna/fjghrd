@@ -164,8 +164,6 @@ class OvertimeView extends StatelessWidget {
         titleTextAlign: PlutoColumnTextAlign.center,
       ),
     ];
-    controller.loadOvertimes();
-    controller.loadKaryawans();
     return Column(
       children: [
         AFwidget.pageHeader(

@@ -83,7 +83,6 @@ class PtkpView extends StatelessWidget {
         textAlign: PlutoColumnTextAlign.center,
       ),
     ];
-    controller.loadPtkps();
     return Column(
       children: [
         AFwidget.pageHeader(

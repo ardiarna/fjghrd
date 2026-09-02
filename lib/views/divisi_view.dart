@@ -78,7 +78,6 @@ class DivisiView extends StatelessWidget {
         backgroundColor: Colors.brown.shade100,
       ),
     ];
-    controller.loadDivisis();
     return Column(
       children: [
         AFwidget.pageHeader(

@@ -69,7 +69,6 @@ class AgamaView extends StatelessWidget {
         backgroundColor: Colors.brown.shade100,
       ),
     ];
-    controller.loadAgamas();
     return Column(
       children: [
         AFwidget.pageHeader(

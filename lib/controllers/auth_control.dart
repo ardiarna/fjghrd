@@ -10,6 +10,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthControl extends GetxController {
   
   User user = User();
+  RxInt karyawanUpdateTrigger = 0.obs;
+  RxInt customerUpdateTrigger = 0.obs;
   final UserRepository _userRepository = UserRepository();
 
   Future<void> getSession() async {

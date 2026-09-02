@@ -177,7 +177,6 @@ class UpahView extends StatelessWidget {
         },
       ),
     ];
-    controller.loadKaryawans();
     return Column(
       children: [
         AFwidget.pageHeader(

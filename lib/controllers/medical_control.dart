@@ -807,6 +807,8 @@ class MedicalControl extends GetxController {
 
   @override
   void onInit() {
+    loadKaryawans();
+    ever(authControl.karyawanUpdateTrigger, (_) => loadKaryawans());
     filterTahun = Opsi(value: '${_now.year}', label: '${_now.year}');
     filterBulan = Opsi(value: '${_now.month}', label: mapBulan[_now.month]!);
     tahun = Opsi(value: '${_now.year}', label: '${_now.year}');
@@ -815,6 +817,7 @@ class MedicalControl extends GetxController {
     txtId = TextEditingController();
     txtJumlah = TextEditingController();
     txtKeterangan = TextEditingController();
+    loadMedicals();
     super.onInit();
   }
 

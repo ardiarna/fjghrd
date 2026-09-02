@@ -156,6 +156,7 @@ class PendidikanControl extends GetxController {
     txtId = TextEditingController();
     txtNama = TextEditingController();
     txtUrutan = TextEditingController();
+    loadPendidikans();
     super.onInit();
   }
 

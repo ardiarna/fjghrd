@@ -156,6 +156,7 @@ class JabatanControl extends GetxController {
     txtId = TextEditingController();
     txtNama = TextEditingController();
     txtUrutan = TextEditingController();
+    loadJabatans();
     super.onInit();
   }
 

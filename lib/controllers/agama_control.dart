@@ -156,6 +156,7 @@ class AgamaControl extends GetxController {
     txtId = TextEditingController();
     txtNama = TextEditingController();
     txtUrutan = TextEditingController();
+    loadAgamas();
     super.onInit();
   }
 

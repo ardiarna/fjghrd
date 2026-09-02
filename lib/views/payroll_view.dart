@@ -22,8 +22,6 @@ class PayrollView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    controller.loadPayrolls();
-    controller.loadKaryawans();
     return Column(
       children: [
         Container(

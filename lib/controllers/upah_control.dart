@@ -261,6 +261,8 @@ class UpahControl extends GetxController {
 
   @override
   void onInit() {
+    loadKaryawans();
+    ever(authControl.karyawanUpdateTrigger, (_) => loadKaryawans());
     txtUangMakan = TextEditingController();
     super.onInit();
   }

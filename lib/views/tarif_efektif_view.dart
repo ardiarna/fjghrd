@@ -83,7 +83,6 @@ class TarifEfektifView extends StatelessWidget {
         titleTextAlign: PlutoColumnTextAlign.center,
       ),
     ];
-    controller.loadTarifEfektifs();
     return Column(
       children: [
         AFwidget.pageHeader(

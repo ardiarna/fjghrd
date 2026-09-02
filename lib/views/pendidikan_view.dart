@@ -69,7 +69,6 @@ class PendidikanView extends StatelessWidget {
         backgroundColor: Colors.brown.shade100,
       ),
     ];
-    controller.loadPendidikans();
     return Column(
       children: [
         AFwidget.pageHeader(

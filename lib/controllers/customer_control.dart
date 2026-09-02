@@ -115,6 +115,7 @@ class CustomerControl extends GetxController {
       Get.back();
       if(hasil.success) {
         loadCustomers();
+        authControl.customerUpdateTrigger.value++;
         Get.back();
         AFwidget.snackbar(hasil.message);
       } else {
@@ -135,6 +136,7 @@ class CustomerControl extends GetxController {
       Get.back();
       if(hasil.success) {
         loadCustomers();
+        authControl.customerUpdateTrigger.value++;
         Get.back();
         Get.back();
         AFwidget.snackbar(hasil.message);
@@ -151,6 +153,7 @@ class CustomerControl extends GetxController {
     txtId = TextEditingController();
     txtNama = TextEditingController();
     txtAlamat = TextEditingController();
+    loadCustomers();
     super.onInit();
   }
 

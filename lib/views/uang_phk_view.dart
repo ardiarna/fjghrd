@@ -215,7 +215,6 @@ class UangPhkView extends StatelessWidget {
         },
       ),
     ];
-    controller.loadUangPhks();
     return Column(
       children: [
         AFwidget.pageHeader(

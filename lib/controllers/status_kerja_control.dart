@@ -156,6 +156,7 @@ class StatusKerjaControl extends GetxController {
     txtId = TextEditingController();
     txtNama = TextEditingController();
     txtUrutan = TextEditingController();
+    loadStatusKerjas();
     super.onInit();
   }
 

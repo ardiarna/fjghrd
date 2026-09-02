@@ -157,8 +157,6 @@ class PotonganView extends StatelessWidget {
         titleTextAlign: PlutoColumnTextAlign.center,
       ),
     ];
-    controller.loadPotongans();
-    controller.loadKaryawans();
     return Column(
       children: [
         AFwidget.pageHeader(

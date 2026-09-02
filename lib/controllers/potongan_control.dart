@@ -11,8 +11,10 @@ import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:fjghrd/controllers/auth_control.dart';
 
 class PotonganControl extends GetxController {
+  final authControl = Get.find<AuthControl>();
   final homeControl = Get.find<HomeControl>();
   final PotonganRepository _repo = PotonganRepository();
 
@@ -848,6 +850,8 @@ class PotonganControl extends GetxController {
 
   @override
   void onInit() {
+    loadKaryawans();
+    ever(authControl.karyawanUpdateTrigger, (_) => loadKaryawans());
     filterTahun = Opsi(value: '${_now.year}', label: '${_now.year}');
     filterBulan = Opsi(value: '${_now.month}', label: mapBulan[_now.month]!);
     tahun = Opsi(value: '${_now.year}', label: '${_now.year}');
@@ -858,6 +862,7 @@ class PotonganControl extends GetxController {
     txtHari = TextEditingController();
     txtJumlah = TextEditingController();
     txtKeterangan = TextEditingController();
+    loadPotongans();
     super.onInit();
   }
 

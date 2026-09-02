@@ -73,7 +73,6 @@ class HariLiburView extends StatelessWidget {
       ),
 
     ];
-    controller.loadHariLiburs();
     return Column(
       children: [
         AFwidget.pageHeader(

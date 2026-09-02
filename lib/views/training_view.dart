@@ -69,7 +69,6 @@ class TrainingView extends StatelessWidget {
         backgroundColor: Colors.brown.shade100,
       ),
     ];
-    controller.loadTrainings();
     return Column(
       children: [
         AFwidget.pageHeader(

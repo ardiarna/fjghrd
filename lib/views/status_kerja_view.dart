@@ -69,7 +69,6 @@ class StatusKerjaView extends StatelessWidget {
         backgroundColor: Colors.brown.shade100,
       ),
     ];
-    controller.loadStatusKerjas();
     return Column(
       children: [
         AFwidget.pageHeader(

@@ -166,6 +166,7 @@ class DivisiControl extends GetxController {
     txtKode = TextEditingController();
     txtNama = TextEditingController();
     txtUrutan = TextEditingController();
+    loadDivisis();
     super.onInit();
   }
 

@@ -134,8 +134,6 @@ class OncallCustomerView extends StatelessWidget {
         titleTextAlign: PlutoColumnTextAlign.center,
       ),
     ];
-    controller.loadOncallCustomers();
-    controller.loadCustomers();
     return Column(
       children: [
         AFwidget.pageHeader(

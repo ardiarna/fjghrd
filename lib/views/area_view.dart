@@ -78,7 +78,6 @@ class AreaView extends StatelessWidget {
         backgroundColor: Colors.brown.shade100,
       ),
     ];
-    controller.loadAreas();
     return Column(
       children: [
         AFwidget.pageHeader(

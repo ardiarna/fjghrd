@@ -1991,6 +1991,7 @@ class KaryawanControl extends GetxController {
       Get.back();
       if(hasil.success) {
         loadKaryawans();
+        authControl.karyawanUpdateTrigger.value++;
         loadCalonKaryawans();
         Get.back();
         AFwidget.snackbar(hasil.message);
@@ -2085,6 +2086,7 @@ class KaryawanControl extends GetxController {
       Get.back();
       if(hasil.success) {
         loadKaryawans();
+        authControl.karyawanUpdateTrigger.value++;
         loadCalonKaryawans();
         loadMantanKaryawans();
         Get.back();
@@ -2107,6 +2109,7 @@ class KaryawanControl extends GetxController {
       Get.back();
       if(hasil.success) {
         loadKaryawans();
+        authControl.karyawanUpdateTrigger.value++;
         loadCalonKaryawans();
         loadMantanKaryawans();
         Get.back();
@@ -2154,6 +2157,7 @@ class KaryawanControl extends GetxController {
       if(hasil.success) {
         loadKeluargas();
         loadKaryawans();
+        authControl.karyawanUpdateTrigger.value++;
         Get.back();
         AFwidget.snackbar(hasil.message);
       } else {
@@ -2178,6 +2182,7 @@ class KaryawanControl extends GetxController {
       if(hasil.success) {
         loadKeluargas();
         loadKaryawans();
+        authControl.karyawanUpdateTrigger.value++;
         Get.back();
         Get.back();
         AFwidget.snackbar(hasil.message);
@@ -2511,6 +2516,7 @@ class KaryawanControl extends GetxController {
     loadTrainingKaryawan();
         loadTimelineMasakerja();
         loadKaryawans();
+        authControl.karyawanUpdateTrigger.value++;
         Get.back();
         AFwidget.snackbar(hasil.message);
       } else {
@@ -2601,6 +2607,7 @@ class KaryawanControl extends GetxController {
       Get.back();
       if(hasilA.success && hasilB.success) {
         loadKaryawans();
+        authControl.karyawanUpdateTrigger.value++;
         loadMantanKaryawans();
         Get.back();
         Get.back();
@@ -2624,6 +2631,7 @@ class KaryawanControl extends GetxController {
       var hasil = await _repo.phkDelete(current.id, current.phk.id);
       if(hasil.success) {
         loadKaryawans();
+        authControl.karyawanUpdateTrigger.value++;
         loadMantanKaryawans();
         Get.back();
         Get.back();

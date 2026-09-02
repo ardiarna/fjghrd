@@ -208,6 +208,7 @@ class TarifEfektifControl extends GetxController {
     txtId = TextEditingController();
     txtPersen = TextEditingController();
     txtPenghasilan = TextEditingController();
+    loadTarifEfektifs();
     super.onInit();
   }
 

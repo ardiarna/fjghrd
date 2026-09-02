@@ -69,7 +69,6 @@ class StatusPhkView extends StatelessWidget {
         backgroundColor: Colors.brown.shade100,
       ),
     ];
-    controller.loadStatusPhks();
     return Column(
       children: [
         AFwidget.pageHeader(

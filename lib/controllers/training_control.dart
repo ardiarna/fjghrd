@@ -156,6 +156,7 @@ class TrainingControl extends GetxController {
     txtId = TextEditingController();
     txtNama = TextEditingController();
     txtUrutan = TextEditingController();
+    loadTrainings();
     super.onInit();
   }
 

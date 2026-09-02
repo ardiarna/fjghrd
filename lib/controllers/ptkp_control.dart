@@ -207,6 +207,7 @@ class PtkpControl extends GetxController {
     txtId = TextEditingController();
     txtKode = TextEditingController();
     txtJumlah = TextEditingController();
+    loadPtkps();
     super.onInit();
   }
 

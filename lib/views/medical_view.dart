@@ -216,8 +216,6 @@ class MedicalView extends StatelessWidget {
         titleTextAlign: PlutoColumnTextAlign.center,
       ),
     ];
-    controller.loadMedicals();
-    controller.loadKaryawans();
     return Column(
       children: [
         AFwidget.pageHeader(

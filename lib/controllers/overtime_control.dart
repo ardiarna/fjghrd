@@ -664,6 +664,8 @@ class OvertimeControl extends GetxController {
 
   @override
   void onInit() {
+    loadKaryawans();
+    ever(authControl.karyawanUpdateTrigger, (_) => loadKaryawans());
     filterTahun = Opsi(value: '${_now.year}', label: '${_now.year}');
     filterBulan = Opsi(value: '${_now.month}', label: mapBulan[_now.month]!);
     tahun = Opsi(value: '${_now.year}', label: '${_now.year}');
@@ -674,6 +676,7 @@ class OvertimeControl extends GetxController {
     txtJumlah = TextEditingController();
     txtJum2 = TextEditingController();
     txtKeterangan = TextEditingController();
+    loadOvertimes();
     super.onInit();
   }
 

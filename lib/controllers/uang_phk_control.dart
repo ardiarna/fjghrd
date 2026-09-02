@@ -609,6 +609,7 @@ class UangPhkControl extends GetxController {
 
   @override
   void onInit() {
+    ever(authControl.karyawanUpdateTrigger, (_) => loadKaryawans());
     loadKaryawans();
     filterTahun = Opsi(value: '${_now.year}', label: '${_now.year}');
     tahun = Opsi(value: '${_now.year}', label: '${_now.year}');
@@ -626,6 +627,7 @@ class UangPhkControl extends GetxController {
     txtPotCutiJumlah = TextEditingController();
     txtPotLain = TextEditingController();
     txtKeterangan = TextEditingController();
+    loadUangPhks();
     super.onInit();
   }
 

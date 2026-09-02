@@ -69,7 +69,6 @@ class CustomerView extends StatelessWidget {
         backgroundColor: Colors.brown.shade100,
       ),
     ];
-    controller.loadCustomers();
     return Column(
       children: [
         AFwidget.pageHeader(

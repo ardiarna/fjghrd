@@ -191,6 +191,7 @@ class HariLiburControl extends GetxController {
     txtId = TextEditingController();
     txtNama = TextEditingController();
     txtTanggal = TextEditingController();
+    loadHariLiburs();
     super.onInit();
   }
 

@@ -564,6 +564,7 @@ class OncallCustomerControl extends GetxController {
 
   @override
   void onInit() {
+    ever(authControl.customerUpdateTrigger, (_) => loadCustomers());
     filterTahun = Opsi(value: '${_now.year}', label: '${_now.year}');
     filterBulan = Opsi(value: '${_now.month}', label: mapBulan[_now.month]!);
     tahun = Opsi(value: '${_now.year}', label: '${_now.year}');
@@ -573,6 +574,8 @@ class OncallCustomerControl extends GetxController {
     txtTanggal = TextEditingController();
     txtJumlah = TextEditingController();
     txtKeterangan = TextEditingController();
+    loadOncallCustomers();
+    loadCustomers();
     super.onInit();
   }
 

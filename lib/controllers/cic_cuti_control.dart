@@ -11,8 +11,10 @@ import 'package:fjghrd/utils/af_combobox.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:fjghrd/controllers/auth_control.dart';
 
 class CicCutiControl extends GetxController {
+  final authControl = Get.find<AuthControl>();
   final CicCutiRepository repo = CicCutiRepository();
   List<Cuti> listCuti = [];
 
@@ -88,6 +90,7 @@ class CicCutiControl extends GetxController {
 
   @override
   void onInit() {
+    ever(authControl.karyawanUpdateTrigger, (_) => loadKaryawan());
     super.onInit();
     txtJatahId = TextEditingController();
     txtJatahJumlahCuti = TextEditingController();

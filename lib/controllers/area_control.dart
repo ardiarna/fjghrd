@@ -166,6 +166,7 @@ class AreaControl extends GetxController {
     txtKode = TextEditingController();
     txtNama = TextEditingController();
     txtUrutan = TextEditingController();
+    loadAreas();
     super.onInit();
   }
 

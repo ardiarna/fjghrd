@@ -166,8 +166,6 @@ class PenghasilanView extends StatelessWidget {
         titleTextAlign: PlutoColumnTextAlign.center,
       ),
     ];
-    controller.loadPenghasilans();
-    controller.loadKaryawans();
     return Column(
       children: [
         AFwidget.pageHeader(
