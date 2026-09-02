@@ -2,6 +2,8 @@ import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/views/payroll_view.dart';
 import 'package:fjghrd/controllers/penghasilan_control.dart';
+import 'package:fjghrd/views/penghasilan_tambah_form.dart';
+import 'package:fjghrd/views/penghasilan_ubah_form.dart';
 import 'package:fjghrd/models/penghasilan.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
@@ -61,7 +63,7 @@ class PenghasilanView extends StatelessWidget {
           }
           return IconButton(
             onPressed: () {
-              controller.ubahForm(rdrCtx.row.cells['id']!.value, context);
+              showPenghasilanUbahForm(rdrCtx.row.cells['id']!.value, context);
             },
             icon: const Icon(
               Icons.edit_square,
@@ -181,7 +183,7 @@ class PenghasilanView extends StatelessWidget {
             const SizedBox(width: 40),
               IconButton(
                 onPressed: () {
-                  controller.tambahForm(context);
+                  showPenghasilanTambahForm(context);
                 },
                 icon: const Icon(
                   Icons.add_circle,
@@ -204,6 +206,7 @@ class PenghasilanView extends StatelessWidget {
                         var a = await controller.pilihJenis(value: controller.filterJenis.value, withSemua: true);
                         if(a != null && a.value != controller.filterJenis.value) {
                           controller.filterJenis = a;
+                          controller.update();
                           controller.loadPenghasilans();
                         }
                       },
@@ -225,6 +228,7 @@ class PenghasilanView extends StatelessWidget {
                         var a = await controller.pilihBulan(value: controller.filterBulan.value);
                         if(a != null && a.value != controller.filterBulan.value) {
                           controller.filterBulan = a;
+                          controller.update();
                           controller.loadPenghasilans();
                         }
                       },
@@ -245,6 +249,7 @@ class PenghasilanView extends StatelessWidget {
                         var a = await controller.pilihTahun(value: controller.filterTahun.value);
                         if(a != null && a.value != controller.filterTahun.value) {
                           controller.filterTahun = a;
+                          controller.update();
                           controller.loadPenghasilans();
                         }
                       },
@@ -254,7 +259,12 @@ class PenghasilanView extends StatelessWidget {
               ),
               const SizedBox(width: 100),
               IconButton(
-                onPressed: controller.hapusBanyakForm,
+                onPressed: () {
+                  AFwidget.formHapus(
+                    label: '${controller.filterJenis.label} penghasilan pada bulan ${controller.filterBulan.label} ${controller.filterTahun.label} ',
+                    aksi: controller.hapusBanyakData,
+                  );
+                },
                 icon: const Icon(Icons.delete_forever),
                 iconSize: 30,
                 color: Colors.red,
@@ -267,8 +277,7 @@ class PenghasilanView extends StatelessWidget {
             decoration: const BoxDecoration(
               image: bgLineBlue,
             ),
-            child: GetBuilder<PenghasilanControl>(
-              builder: (_) {
+            child: Obx(() {
                 return PlutoGrid(
                   key: UniqueKey(),
                   columns: columns,

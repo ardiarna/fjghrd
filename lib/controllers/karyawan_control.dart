@@ -256,7 +256,7 @@ class KaryawanControl extends GetxController {
         totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]!['TOTAL KARYAWAN'] = totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]!['TOTAL KARYAWAN']! + 1;
       }
       listKaryawan.assignAll(tempKaryawans);
-      update();
+      update(['summary_karyawan', 'ulang_tahun', 'demografi', 'beranda']);
     }
   }
 
@@ -283,7 +283,7 @@ class KaryawanControl extends GetxController {
         }
       }
       listCalonKaryawan.assignAll(tempCalon);
-      update();
+      update(['summary_calon']);
     }
   }
 
@@ -291,7 +291,6 @@ class KaryawanControl extends GetxController {
     var hasil = await _repo.mantanFindAll(isStaf: filterStaf.value);
     if (hasil.success) {
       listMantanKaryawan.assignAll(hasil.daftar.map<Karyawan>((data) => Karyawan.fromMap(data)).toList());
-      update();
     }
   }
 

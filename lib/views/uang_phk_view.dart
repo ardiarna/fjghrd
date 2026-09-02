@@ -1,5 +1,7 @@
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/controllers/uang_phk_control.dart';
+import 'package:fjghrd/views/uang_phk_tambah_form.dart';
+import 'package:fjghrd/views/uang_phk_ubah_form.dart';
 import 'package:fjghrd/models/uang_phk.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:fjghrd/utils/af_widget.dart';
@@ -54,7 +56,7 @@ class UangPhkView extends StatelessWidget {
           }
           return IconButton(
             onPressed: () {
-              controller.ubahForm(rdrCtx.row.cells['id']!.value, context);
+              showUangPhkUbahForm(rdrCtx.row.cells['id']!.value, context);
             },
             icon: const Icon(
               Icons.edit_square,
@@ -224,7 +226,7 @@ class UangPhkView extends StatelessWidget {
             const Spacer(),
             IconButton(
                 onPressed: () {
-                  controller.tambahForm(context);
+                  showUangPhkTambahForm(context);
                 },
                 icon: const Icon(
                   Icons.add_circle,
@@ -246,6 +248,7 @@ class UangPhkView extends StatelessWidget {
                         var a = await controller.pilihTahun(value: controller.filterTahun.value);
                         if(a != null && a.value != controller.filterTahun.value) {
                           controller.filterTahun = a;
+                          controller.update();
                           controller.loadUangPhks();
                         }
                       },
@@ -260,8 +263,7 @@ class UangPhkView extends StatelessWidget {
             decoration: const BoxDecoration(
               image: bgLineBlue,
             ),
-            child: GetBuilder<UangPhkControl>(
-              builder: (_) {
+            child: Obx(() {
                 return PlutoGrid(
                   key: UniqueKey(),
                   columns: columns,

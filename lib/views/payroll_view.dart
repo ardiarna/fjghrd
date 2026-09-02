@@ -114,6 +114,7 @@ class PayrollView extends StatelessWidget {
                         var a = await controller.pilihTahun(value: controller.filterTahun.value);
                         if(a != null && a.value != controller.filterTahun.value) {
                           controller.filterTahun = a;
+                          controller.update();
                           controller.loadPayrolls();
                         }
                       },
@@ -140,8 +141,7 @@ class PayrollView extends StatelessWidget {
                     Container(
                       width: double.infinity,
                       padding: const EdgeInsets.all(10),
-                      child: GetBuilder<PayrollControl>(
-                        builder: (_) {
+                      child: Obx(() {
                           return Wrap(
                             spacing: 10,
                             runSpacing: 10,
@@ -225,9 +225,14 @@ class PayrollView extends StatelessWidget {
               ),
               IconButton(
                 onPressed: item.dikunci ? null : () {
-                  controller.kunciPayrollForm(
-                    id: item.id,
-                    periode: '${mapBulan[item.bulan]} ${item.tahun}',
+                  AFwidget.formWarning(
+                    label: 'Anda akan mengunci data payroll untuk periode ${mapBulan[item.bulan]} ${item.tahun}, pastikan Anda telah memeriksa dan memvalidasi keakuratan data. Lanjutkan untuk mengunci data?',
+                    ikon: Icons.lock_outline,
+                    warna: Colors.red,
+                    isKonfirmasi: true,
+                    aksi: () {
+                      controller.kunciPayrollData(item.id);
+                    },
                   );
                 },
                 icon: Icon(

@@ -1,4 +1,5 @@
 import 'package:fjghrd/controllers/upah_control.dart';
+import 'package:fjghrd/views/upah_ubah_form.dart';
 import 'package:fjghrd/models/karyawan.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:fjghrd/utils/af_widget.dart';
@@ -59,7 +60,7 @@ class UpahView extends StatelessWidget {
           }
           return IconButton(
             onPressed: () {
-              controller.ubahForm(rdrCtx.row.cells['id']!.value, context);
+              showUpahUbahForm(rdrCtx.row.cells['id']!.value, context);
             },
             icon: const Icon(
               Icons.edit_square,
@@ -227,9 +228,8 @@ class UpahView extends StatelessWidget {
           ],
         ),
         Expanded(
-          child: GetBuilder<UpahControl>(
-            builder: (_) {
-              return PlutoGrid(
+          child: Obx(() {
+                return PlutoGrid(
                 key: UniqueKey(),
                 columns: columns,
                 rows: _buildRows(controller.listKaryawan),

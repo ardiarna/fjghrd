@@ -140,6 +140,7 @@ class BerandaView extends StatelessWidget {
                           child: Column(
                             children: [
                               GetBuilder<KaryawanControl>(
+                                id: 'beranda',
                                 builder: (_) {
                                   return Text(
                                     'KETERANGAN STATUS KARYAWAN ${karyawanControl.filterStaf.label} :',
@@ -150,6 +151,7 @@ class BerandaView extends StatelessWidget {
                                 },
                               ),
                               GetBuilder<KaryawanControl>(
+                                id: 'beranda',
                                 builder: (_) {
                                   return Visibility(
                                     visible:
@@ -167,6 +169,7 @@ class BerandaView extends StatelessWidget {
                                 },
                               ),
                               GetBuilder<KaryawanControl>(
+                                id: 'beranda',
                                 builder: (_) {
                                   return Visibility(
                                     visible: karyawanControl
@@ -190,6 +193,7 @@ class BerandaView extends StatelessWidget {
                           ),
                         ),
                         GetBuilder<KaryawanControl>(
+                          id: 'beranda',
                           builder: (_) {
                             if (karyawanControl.listUlangTahun.isEmpty) {
                               return Container();
@@ -593,6 +597,7 @@ class BerandaView extends StatelessWidget {
 
   Widget summaryInfo() {
     return GetBuilder<KaryawanControl>(
+      id: 'beranda',
       builder: (_) {
         List<Widget> widgets = [];
         List<Widget> areaWidgets = [];

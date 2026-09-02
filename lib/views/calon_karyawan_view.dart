@@ -390,6 +390,7 @@ class CalonKaryawanView extends StatelessWidget {
             color: Colors.white,
           ),
           child: GetBuilder<KaryawanControl>(
+            id: 'summary_calon',
             builder: (_) {
               return Wrap(
                 spacing: 15,

@@ -2,6 +2,8 @@ import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/views/payroll_view.dart';
 import 'package:fjghrd/controllers/oncall_customer_control.dart';
+import 'package:fjghrd/views/oncall_customer_tambah_form.dart';
+import 'package:fjghrd/views/oncall_customer_ubah_form.dart';
 import 'package:fjghrd/models/oncall_customer.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
@@ -56,7 +58,7 @@ class OncallCustomerView extends StatelessWidget {
           }
           return IconButton(
             onPressed: () {
-              controller.ubahForm(rdrCtx.row.cells['id']!.value, context);
+              showOncallCustomerUbahForm(rdrCtx.row.cells['id']!.value, context);
             },
             icon: const Icon(
               Icons.edit_square,
@@ -149,7 +151,7 @@ class OncallCustomerView extends StatelessWidget {
             const SizedBox(width: 40),
               IconButton(
                 onPressed: () {
-                  controller.tambahForm(context);
+                  showOncallCustomerTambahForm(context);
                 },
                 icon: const Icon(
                   Icons.add_circle,
@@ -172,6 +174,7 @@ class OncallCustomerView extends StatelessWidget {
                         var a = await controller.pilihBulan(value: controller.filterBulan.value);
                         if(a != null && a.value != controller.filterBulan.value) {
                           controller.filterBulan = a;
+                          controller.update();
                           controller.loadOncallCustomers();
                         }
                       },
@@ -192,6 +195,7 @@ class OncallCustomerView extends StatelessWidget {
                         var a = await controller.pilihTahun(value: controller.filterTahun.value);
                         if(a != null && a.value != controller.filterTahun.value) {
                           controller.filterTahun = a;
+                          controller.update();
                           controller.loadOncallCustomers();
                         }
                       },
@@ -201,7 +205,12 @@ class OncallCustomerView extends StatelessWidget {
               ),
               const SizedBox(width: 100),
               IconButton(
-                onPressed: controller.hapusBanyakForm,
+                onPressed: () {
+                  AFwidget.formHapus(
+                    label: 'oncall customer pada bulan ${controller.filterBulan.label} ${controller.filterTahun.label} ',
+                    aksi: controller.hapusBanyakData,
+                  );
+                },
                 icon: const Icon(Icons.delete_forever),
                 iconSize: 30,
                 color: Colors.red,
@@ -214,8 +223,7 @@ class OncallCustomerView extends StatelessWidget {
             decoration: const BoxDecoration(
               image: bgLineBlue,
             ),
-            child: GetBuilder<OncallCustomerControl>(
-              builder: (_) {
+            child: Obx(() {
                 return PlutoGrid(
                   key: UniqueKey(),
                   columns: columns,

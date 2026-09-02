@@ -87,6 +87,7 @@ class DemografiView extends StatelessWidget {
     return boxKonten(
       title: 'JENIS KELAMIN',
       child: GetBuilder<KaryawanControl>(
+        id: 'demografi',
         builder: (_) {
           return Column(
             children: [
@@ -168,6 +169,7 @@ class DemografiView extends StatelessWidget {
     return boxKonten(
       title: 'STATUS MENIKAH',
       child: GetBuilder<KaryawanControl>(
+        id: 'demografi',
         builder: (_) {
           return Column(
             children: [
@@ -240,6 +242,7 @@ class DemografiView extends StatelessWidget {
     return boxKonten(
       title: 'AGAMA',
       child: GetBuilder<KaryawanControl>(
+        id: 'demografi',
         builder: (_) {
           return Column(
             children: [

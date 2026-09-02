@@ -1,3 +1,6 @@
+import 'package:fjghrd/views/payroll_ubah_form.dart';
+import 'package:fjghrd/views/payroll_ubah_detil_form.dart';
+
 import 'package:fjghrd/controllers/payroll_control.dart';
 import 'package:fjghrd/models/payroll.dart';
 import 'package:fjghrd/utils/af_constant.dart';
@@ -183,7 +186,7 @@ class PayrollForm extends StatelessWidget {
           }
           return IconButton(
             onPressed: () {
-              controller.ubahDetilForm(rdrCtx.row.cells['id']!.value, context);
+              showPayrollUbahDetilForm(rdrCtx.row.cells['id']!.value, context);
             },
             icon: const Icon(
               Icons.edit_square,
@@ -1142,7 +1145,7 @@ class PayrollForm extends StatelessWidget {
     return Column(
       children: [
         GetBuilder<PayrollControl>(
-          builder: (_) {
+            builder: (_) {
             return AFwidget.pageHeader(
               onBack: () {
                 controller.homeControl.kontener = PayrollView();
@@ -1164,7 +1167,7 @@ class PayrollForm extends StatelessWidget {
                   visible: isEdit,
                   child: IconButton(
                     onPressed: () {
-                      controller.ubahForm(context);
+                      showPayrollUbahForm(context);
                     },
                     icon: const Icon(
                       Icons.edit,
@@ -1194,8 +1197,7 @@ class PayrollForm extends StatelessWidget {
           }
         ),
         Expanded(
-          child: GetBuilder<PayrollControl>(
-            builder: (_) {
+          child: Obx(() {
               return PlutoGrid(
                 key: UniqueKey(),
                 columns: columns,

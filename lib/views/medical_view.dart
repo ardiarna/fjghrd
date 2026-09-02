@@ -2,6 +2,8 @@ import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/views/payroll_view.dart';
 import 'package:fjghrd/controllers/medical_control.dart';
+import 'package:fjghrd/views/medical_tambah_form.dart';
+import 'package:fjghrd/views/medical_ubah_form.dart';
 import 'package:fjghrd/models/medical.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
@@ -144,7 +146,7 @@ class MedicalView extends StatelessWidget {
             children: ids.map((id) {
               return IconButton(
                 onPressed: () {
-                  controller.ubahForm(id, context);
+                  showMedicalUbahForm(id, context);
                 },
                 icon: const Icon(Icons.edit_square),
                 iconSize: 18,
@@ -231,7 +233,7 @@ class MedicalView extends StatelessWidget {
             const SizedBox(width: 40),
               IconButton(
                 onPressed: () {
-                  controller.tambahForm(context);
+                  showMedicalTambahForm(context);
                 },
                 icon: const Icon(Icons.add_circle),
                 iconSize: 30,
@@ -252,6 +254,7 @@ class MedicalView extends StatelessWidget {
                         var a = await controller.pilihJenis(value: controller.filterJenis.value, withSemua: true);
                         if(a != null && a.value != controller.filterJenis.value) {
                           controller.filterJenis = a;
+                          controller.update();
                           controller.loadMedicals();
                         }
                       },
@@ -273,6 +276,7 @@ class MedicalView extends StatelessWidget {
                         var a = await controller.pilihBulan(value: controller.filterBulan.value);
                         if(a != null && a.value != controller.filterBulan.value) {
                           controller.filterBulan = a;
+                          controller.update();
                           controller.loadMedicals();
                         }
                       },
@@ -293,6 +297,7 @@ class MedicalView extends StatelessWidget {
                         var a = await controller.pilihTahun(value: controller.filterTahun.value);
                         if(a != null && a.value != controller.filterTahun.value) {
                           controller.filterTahun = a;
+                          controller.update();
                           controller.loadMedicals();
                         }
                       },
@@ -302,7 +307,12 @@ class MedicalView extends StatelessWidget {
               ),
               const SizedBox(width: 100),
               IconButton(
-                onPressed: controller.hapusBanyakForm,
+                onPressed: () {
+                  AFwidget.formHapus(
+                    label: '${controller.filterJenis.label} medical pada bulan ${controller.filterBulan.label} ${controller.filterTahun.label} ',
+                    aksi: controller.hapusBanyakData,
+                  );
+                },
                 icon: const Icon(Icons.delete_forever),
                 iconSize: 30,
                 color: Colors.red,
@@ -315,8 +325,7 @@ class MedicalView extends StatelessWidget {
             decoration: const BoxDecoration(
               image: bgLineBlue,
             ),
-            child: GetBuilder<MedicalControl>(
-              builder: (_) {
+            child: Obx(() {
                 return PlutoGrid(
                   key: UniqueKey(),
                   columns: columns,

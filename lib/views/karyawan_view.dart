@@ -369,6 +369,7 @@ class KaryawanView extends StatelessWidget {
                         var a = await controller.pilihStaf(value: controller.filterStaf.value);
                         if(a != null && a.value != controller.filterStaf.value) {
                           controller.filterStaf = a;
+                          controller.update();
                           controller.loadKaryawans();
                         }
                       },
@@ -395,6 +396,7 @@ class KaryawanView extends StatelessWidget {
                         var a = await controller.pilihArea(value: controller.filterArea.value, withSemua: true);
                         if(a != null && a.value != controller.filterArea.value) {
                           controller.filterArea = a;
+                          controller.update();
                           controller.loadKaryawans();
                         }
                       },
@@ -497,6 +499,7 @@ class KaryawanView extends StatelessWidget {
             children: [
               Flexible(
                 child: GetBuilder<KaryawanControl>(
+                  id: 'ulang_tahun',
                   builder: (_) {
                     if(controller.listUlangTahun.isEmpty) {
                       return Container();
@@ -543,6 +546,7 @@ class KaryawanView extends StatelessWidget {
 
   Widget summaryInfo() {
     return GetBuilder<KaryawanControl>(
+      id: 'summary_karyawan',
       builder: (_) {
         List<Widget> widgets = [];
         List<Widget> areaWidgets = [];
