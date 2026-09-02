@@ -1,6 +1,7 @@
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/controllers/area_control.dart';
+import 'package:fjghrd/views/area_form.dart';
 import 'package:fjghrd/models/area.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +43,7 @@ class AreaView extends StatelessWidget {
         renderer: (rdrCtx) {
           return IconButton(
             onPressed: () {
-              controller.inputForm(rdrCtx.row.cells['id']!.value);
+              showAreaForm(rdrCtx.row.cells['id']!.value);
             },
             icon: const Icon(
               Icons.edit_square,
@@ -87,7 +88,7 @@ class AreaView extends StatelessWidget {
             const Spacer(),
             IconButton(
                 onPressed: () {
-                  controller.inputForm('');
+                  showAreaForm('');
                 },
                 icon: const Icon(
                   Icons.add_circle,
@@ -103,8 +104,7 @@ class AreaView extends StatelessWidget {
             decoration: const BoxDecoration(
               image: bgLineBlue,
             ),
-            child: GetBuilder<AreaControl>(
-              builder: (_) {
+            child: Obx(() {
                 return PlutoGrid(
                   key: UniqueKey(),
                   columns: columns,

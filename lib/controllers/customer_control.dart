@@ -10,92 +10,21 @@ class CustomerControl extends GetxController {
   final authControl = Get.find<AuthControl>();
   final CustomerRepository _repo = CustomerRepository();
 
-  List<Customer> listCustomer = [];
+  RxList<Customer> listCustomer = <Customer>[].obs;
 
   late TextEditingController txtId, txtNama, txtAlamat;
 
   Future<void> loadCustomers() async {
     var hasil = await _repo.findAll();
     if (hasil.success) {
-      listCustomer.clear();
-      for (var data in hasil.daftar) {
-        listCustomer.add(Customer.fromMap(data));
-      }
-      update();
+      listCustomer.assignAll(hasil.daftar.map<Customer>((data) => Customer.fromMap(data)).toList());
+      
     }
   }
 
-  void inputForm(String id) {
-    Customer item = id == '' ? Customer() : listCustomer.where((element) => element.id == id).first;
-    txtId.text = item.id;
-    txtNama.text = item.nama;
-    txtAlamat.text = item.alamat;
-    AFwidget.dialog(
-      Container(
-        width: 700,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-        ),
-        child: Column(
-          children: [
-            AFwidget.formHeader('Form ${item.id == '' ? 'Tambah' : 'Ubah'} Customer'),
-            AFwidget.barisText(
-              label: 'Nama',
-              controller: txtNama,
-            ),
-            AFwidget.barisText(
-              label: 'Alamat',
-              controller: txtAlamat,
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  item.id == '' ? Container() :
-                  AFwidget.tombol(
-                    label: 'Hapus Data',
-                    color: Colors.red,
-                    onPressed: () {
-                      hapusForm(item);
-                    },
-                    minimumSize: const Size(120, 40),
-                  ),
-                  const Spacer(),
-                  AFwidget.tombol(
-                    label: 'Batal',
-                    color: Colors.orange,
-                    onPressed: Get.back,
-                    minimumSize: const Size(120, 40),
-                  ),
-                  const SizedBox(width: 40),
-                  AFwidget.tombol(
-                    label: 'Simpan',
-                    color: Colors.blue,
-                    onPressed: simpanData,
-                    minimumSize: const Size(120, 40),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-      barrierDismissible: false,
-      backgroundColor: Colors.white,
-      contentPadding: const EdgeInsets.all(0),
-    );
-  }
+  
 
-  void hapusForm(Customer item) {
-    AFwidget.formHapus(
-      label: 'customer ${item.nama}',
-      aksi: () {
-        hapusData(item.id);
-      },
-    );
-  }
+  
 
   Future<void> simpanData() async {
     try {

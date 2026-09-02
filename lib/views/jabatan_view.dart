@@ -1,6 +1,7 @@
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/controllers/jabatan_control.dart';
+import 'package:fjghrd/views/jabatan_form.dart';
 import 'package:fjghrd/models/jabatan.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,7 @@ class JabatanView extends StatelessWidget {
         renderer: (rdrCtx) {
           return IconButton(
             onPressed: () {
-              controller.inputForm(rdrCtx.row.cells['id']!.value);
+              showJabatanForm(rdrCtx.row.cells['id']!.value);
             },
             icon: const Icon(
               Icons.edit_square,
@@ -78,7 +79,7 @@ class JabatanView extends StatelessWidget {
             const Spacer(),
             IconButton(
                 onPressed: () {
-                  controller.inputForm('');
+                  showJabatanForm('');
                 },
                 icon: const Icon(
                   Icons.add_circle,
@@ -94,8 +95,7 @@ class JabatanView extends StatelessWidget {
             decoration: const BoxDecoration(
               image: bgLineBlue,
             ),
-            child: GetBuilder<JabatanControl>(
-              builder: (_) {
+            child: Obx(() {
                 return PlutoGrid(
                   key: UniqueKey(),
                   columns: columns,

@@ -1,6 +1,7 @@
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/controllers/tarif_efektif_control.dart';
+import 'package:fjghrd/views/tarif_efektif_form.dart';
 import 'package:fjghrd/models/tarif_efektif.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:flutter/material.dart';
@@ -42,7 +43,7 @@ class TarifEfektifView extends StatelessWidget {
         renderer: (rdrCtx) {
           return IconButton(
             onPressed: () {
-              controller.inputForm(rdrCtx.row.cells['id']!.value);
+              showTarifEfektifForm(rdrCtx.row.cells['id']!.value);
             },
             icon: const Icon(
               Icons.edit_square,
@@ -92,7 +93,7 @@ class TarifEfektifView extends StatelessWidget {
             const Spacer(),
             IconButton(
                 onPressed: () {
-                  controller.inputForm('');
+                  showTarifEfektifForm('');
                 },
                 icon: const Icon(
                   Icons.add_circle,
@@ -108,8 +109,8 @@ class TarifEfektifView extends StatelessWidget {
             decoration: const BoxDecoration(
               image: bgLineBlue,
             ),
-            child: GetBuilder<TarifEfektifControl>(
-              builder: (_) {
+            child: Obx(
+              () {
                 return PlutoGrid(
                   key: UniqueKey(),
                   columns: columns,

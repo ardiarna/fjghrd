@@ -11,98 +11,21 @@ class DivisiControl extends GetxController {
   final authControl = Get.find<AuthControl>();
   final DivisiRepository _repo = DivisiRepository();
 
-  List<Divisi> listDivisi = [];
+  RxList<Divisi> listDivisi = <Divisi>[].obs;
 
   late TextEditingController txtId, txtKode, txtNama, txtUrutan;
 
   Future<void> loadDivisis() async {
     var hasil = await _repo.findAll();
     if (hasil.success) {
-      listDivisi.clear();
-      for (var data in hasil.daftar) {
-        listDivisi.add(Divisi.fromMap(data));
-      }
-      update();
+      listDivisi.assignAll(hasil.daftar.map<Divisi>((data) => Divisi.fromMap(data)).toList());
+      
     }
   }
 
-  void inputForm(String id) {
-    var item = id == '' ? Divisi() : listDivisi.where((element) => element.id == id).first;
-    txtId.text = item.id;
-    txtKode.text = item.kode;
-    txtNama.text = item.nama;
-    txtUrutan.text = item.urutan.toString();
-    AFwidget.dialog(
-      Container(
-        width: 700,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-        ),
-        child: Column(
-          children: [
-            AFwidget.formHeader('Form ${item.id == '' ? 'Tambah' : 'Ubah'} Divisi'),
-            AFwidget.barisText(
-              label: 'Kode',
-              controller: txtKode,
-            ),
-            AFwidget.barisText(
-              label: 'Nama',
-              controller: txtNama,
-            ),
-            AFwidget.barisText(
-              label: 'Urutan',
-              controller: txtUrutan,
-              isNumber: true,
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  item.id == '' ? Container() :
-                  AFwidget.tombol(
-                    label: 'Hapus Data',
-                    color: Colors.red,
-                    onPressed: () {
-                      hapusForm(item);
-                    },
-                    minimumSize: const Size(120, 40),
-                  ),
-                  const Spacer(),
-                  AFwidget.tombol(
-                    label: 'Batal',
-                    color: Colors.orange,
-                    onPressed: Get.back,
-                    minimumSize: const Size(120, 40),
-                  ),
-                  const SizedBox(width: 40),
-                  AFwidget.tombol(
-                    label: 'Simpan',
-                    color: Colors.blue,
-                    onPressed: simpanData,
-                    minimumSize: const Size(120, 40),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-      barrierDismissible: false,
-      backgroundColor: Colors.white,
-      contentPadding: const EdgeInsets.all(0),
-    );
-  }
+  
 
-  void hapusForm(Divisi item) {
-    AFwidget.formHapus(
-      label: 'divisi ${item.nama}',
-      aksi: () {
-        hapusData(item.id);
-      },
-    );
-  }
+  
 
   Future<void> simpanData() async {
     try {

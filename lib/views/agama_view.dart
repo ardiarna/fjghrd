@@ -1,6 +1,7 @@
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/controllers/agama_control.dart';
+import 'package:fjghrd/views/agama_form.dart';
 import 'package:fjghrd/models/agama.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,7 @@ class AgamaView extends StatelessWidget {
         renderer: (rdrCtx) {
           return IconButton(
             onPressed: () {
-              controller.inputForm(rdrCtx.row.cells['id']!.value);
+              showAgamaForm(rdrCtx.row.cells['id']!.value);
             },
             icon: const Icon(
               Icons.edit_square,
@@ -78,7 +79,7 @@ class AgamaView extends StatelessWidget {
             const Spacer(),
             IconButton(
                 onPressed: () {
-                  controller.inputForm('');
+                  showAgamaForm('');
                 },
                 icon: const Icon(
                   Icons.add_circle,
@@ -94,8 +95,8 @@ class AgamaView extends StatelessWidget {
             decoration: const BoxDecoration(
               image: bgLineBlue,
             ),
-            child: GetBuilder<AgamaControl>(
-              builder: (_) {
+            child: Obx(
+              () {
                 return PlutoGrid(
                   key: UniqueKey(),
                   columns: columns,

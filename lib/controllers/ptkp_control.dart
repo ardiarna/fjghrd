@@ -11,140 +11,22 @@ class PtkpControl extends GetxController {
   final authControl = Get.find<AuthControl>();
   final PtkpRepository _repo = PtkpRepository();
 
-  List<Ptkp> listPtkp = [];
+  RxList<Ptkp> listPtkp = <Ptkp>[].obs;
 
   late TextEditingController txtId, txtKode, txtJumlah;
-  String kategoriTER = '';
+  RxString kategoriTER = ''.obs;
 
   Future<void> loadPtkps() async {
     var hasil = await _repo.findAll();
     if (hasil.success) {
-      listPtkp.clear();
-      for (var data in hasil.daftar) {
-        listPtkp.add(Ptkp.fromMap(data));
-      }
-      update();
+      listPtkp.assignAll(hasil.daftar.map<Ptkp>((data) => Ptkp.fromMap(data)).toList());
+      
     }
   }
 
-  void inputForm(String id) {
-    Ptkp item = id == '' ? Ptkp() : listPtkp.where((element) => element.id == id).first;
-    txtId.text = item.id;
-    txtKode.text = item.kode;
-    txtJumlah.text = AFconvert.matNumber(item.jumlah);
-    kategoriTER = item.ter;
-    AFwidget.dialog(
-      Container(
-        width: 700,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-        ),
-        child: Column(
-          children: [
-            AFwidget.formHeader('Form ${item.id == '' ? 'Tambah' : 'Ubah'} PTKP'),
-            AFwidget.barisText(
-              label: 'Kode',
-              controller: txtKode,
-            ),
-            AFwidget.barisText(
-              label: 'Jumlah',
-              controller: txtJumlah,
-              isNumber: true,
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
-              child: Row(
-                children: [
-                  const SizedBox(
-                    width: 150,
-                    child: Text('Kategori TER'),
-                  ),
-                  Expanded(
-                    child: GetBuilder<PtkpControl>(
-                      builder: (_) {
-                        return RadioGroup<String>(
-                          groupValue: kategoriTER,
-                          onChanged: (a) {
-                            if (a != null && a != kategoriTER) {
-                              kategoriTER = a;
-                              update();
-                            }
-                          },
-                          child: Row(
-                            children: const [
-                              Radio<String>(value: 'A'),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
-                                child: Text('TER A'),
-                              ),
-                              Radio<String>(value: 'B'),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
-                                child: Text('TER B'),
-                              ),
-                              Radio<String>(value: 'C'),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                child: Text('TER C'),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  item.id == '' ? Container() :
-                  AFwidget.tombol(
-                    label: 'Hapus Data',
-                    color: Colors.red,
-                    onPressed: () {
-                      hapusForm(item);
-                    },
-                    minimumSize: const Size(120, 40),
-                  ),
-                  const Spacer(),
-                  AFwidget.tombol(
-                    label: 'Batal',
-                    color: Colors.orange,
-                    onPressed: Get.back,
-                    minimumSize: const Size(120, 40),
-                  ),
-                  const SizedBox(width: 40),
-                  AFwidget.tombol(
-                    label: 'Simpan',
-                    color: Colors.blue,
-                    onPressed: simpanData,
-                    minimumSize: const Size(120, 40),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-      barrierDismissible: false,
-      backgroundColor: Colors.white,
-      contentPadding: const EdgeInsets.all(0),
-    );
-  }
+  
 
-  void hapusForm(Ptkp item) {
-    AFwidget.formHapus(
-      label: 'PTKP ${item.kode}',
-      aksi: () {
-        hapusData(item.id);
-      },
-    );
-  }
+  
 
   Future<void> simpanData() async {
     try {
@@ -154,14 +36,14 @@ class PtkpControl extends GetxController {
       if(txtJumlah.text.isEmpty) {
         throw ValidationException('Jumlah harus diisi');
       }
-      if(kategoriTER.isEmpty) {
+      if(kategoriTER.value.isEmpty) {
         throw ValidationException('Kategori TER harus diisi');
       }
 
       var a = Ptkp(
         id: txtId.text,
         kode: txtKode.text,
-        ter: kategoriTER,
+        ter: kategoriTER.value,
         jumlah: AFconvert.keInt(txtJumlah.text),
       );
 

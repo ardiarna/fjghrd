@@ -1,5 +1,6 @@
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/controllers/hari_libur_control.dart';
+import 'package:fjghrd/views/hari_libur_form.dart';
 import 'package:fjghrd/models/hari_libur.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
@@ -42,7 +43,7 @@ class HariLiburView extends StatelessWidget {
         renderer: (rdrCtx) {
           return IconButton(
             onPressed: () {
-              controller.inputForm(rdrCtx.row.cells['id']!.value, context);
+              showHariLiburForm(rdrCtx.row.cells['id']!.value);
             },
             icon: const Icon(
               Icons.edit_square,
@@ -83,15 +84,14 @@ class HariLiburView extends StatelessWidget {
             const SizedBox(width: 20),
               SizedBox(
                 width: 200,
-                child: GetBuilder<HariLiburControl>(
-                  builder: (_) {
+                child: Obx(() {
                     return AFwidget.comboField(
-                      value: controller.filterTahun.label,
+                      value: controller.filterTahun.value.label,
                       label: '',
                       onTap: () async {
-                        var a = await controller.pilihTahun(value: controller.filterTahun.value);
-                        if(a != null && a.value != controller.filterTahun.value) {
-                          controller.filterTahun = a;
+                        var a = await controller.pilihTahun(value: controller.filterTahun.value.value);
+                        if(a != null && a.value != controller.filterTahun.value.value) {
+                          controller.filterTahun.value = a;
                           controller.loadHariLiburs();
                         }
                       },
@@ -102,7 +102,7 @@ class HariLiburView extends StatelessWidget {
               const SizedBox(width: 40),
               IconButton(
                 onPressed: () {
-                  controller.inputForm('', context);
+                  showHariLiburForm('');
                 },
                 icon: const Icon(
                   Icons.add_circle,
@@ -118,8 +118,7 @@ class HariLiburView extends StatelessWidget {
             decoration: const BoxDecoration(
               image: bgLineBlue,
             ),
-            child: GetBuilder<HariLiburControl>(
-              builder: (_) {
+            child: Obx(() {
                 return PlutoGrid(
                   key: UniqueKey(),
                   columns: columns,

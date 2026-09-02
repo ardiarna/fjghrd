@@ -11,93 +11,21 @@ class AgamaControl extends GetxController {
   final authControl = Get.find<AuthControl>();
   final AgamaRepository _repo = AgamaRepository();
 
-  List<Agama> listAgama = [];
+  RxList<Agama> listAgama = <Agama>[].obs;
 
   late TextEditingController txtId, txtNama, txtUrutan;
 
   Future<void> loadAgamas() async {
     var hasil = await _repo.findAll();
     if (hasil.success) {
-      listAgama.clear();
-      for (var data in hasil.daftar) {
-        listAgama.add(Agama.fromMap(data));
-      }
-      update();
+      listAgama.assignAll(hasil.daftar.map<Agama>((data) => Agama.fromMap(data)).toList());
+      
     }
   }
 
-  void inputForm(String id) {
-    Agama item = id == '' ? Agama() : listAgama.where((element) => element.id == id).first;
-    txtId.text = item.id;
-    txtNama.text = item.nama;
-    txtUrutan.text = item.urutan.toString();
-    AFwidget.dialog(
-      Container(
-        width: 700,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-        ),
-        child: Column(
-          children: [
-            AFwidget.formHeader('Form ${item.id == '' ? 'Tambah' : 'Ubah'} Agama'),
-            AFwidget.barisText(
-              label: 'Nama',
-              controller: txtNama,
-            ),
-            AFwidget.barisText(
-              label: 'Urutan',
-              controller: txtUrutan,
-              isNumber: true,
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  item.id == '' ? Container() :
-                  AFwidget.tombol(
-                    label: 'Hapus Data',
-                    color: Colors.red,
-                    onPressed: () {
-                      hapusForm(item);
-                    },
-                    minimumSize: const Size(120, 40),
-                  ),
-                  const Spacer(),
-                  AFwidget.tombol(
-                    label: 'Batal',
-                    color: Colors.orange,
-                    onPressed: Get.back,
-                    minimumSize: const Size(120, 40),
-                  ),
-                  const SizedBox(width: 40),
-                  AFwidget.tombol(
-                    label: 'Simpan',
-                    color: Colors.blue,
-                    onPressed: simpanData,
-                    minimumSize: const Size(120, 40),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-      barrierDismissible: false,
-      backgroundColor: Colors.white,
-      contentPadding: const EdgeInsets.all(0),
-    );
-  }
+  
 
-  void hapusForm(Agama item) {
-    AFwidget.formHapus(
-      label: 'agama ${item.nama}',
-      aksi: () {
-        hapusData(item.id);
-      },
-    );
-  }
+  
 
   Future<void> simpanData() async {
     try {
