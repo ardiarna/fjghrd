@@ -1,4 +1,9 @@
 import 'package:fjghrd/controllers/karyawan_control.dart';
+import 'package:fjghrd/controllers/karyawan_forms/training_karyawan_form_ext.dart';
+import 'package:fjghrd/controllers/karyawan_forms/phk_form_ext.dart';
+import 'package:fjghrd/controllers/karyawan_forms/kontak_form_ext.dart';
+import 'package:fjghrd/controllers/karyawan_forms/keluarga_form_ext.dart';
+import 'package:fjghrd/controllers/karyawan_forms/perjanjian_form_ext.dart';
 import 'package:fjghrd/models/agama.dart';
 import 'package:fjghrd/models/area.dart';
 import 'package:fjghrd/models/divisi.dart';

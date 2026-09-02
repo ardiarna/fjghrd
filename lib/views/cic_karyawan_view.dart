@@ -360,7 +360,7 @@ class CicKaryawanView extends StatelessWidget {
                     for (int i = 2; i <= 20; i++) {
                       try {
                         event.stateManager.autoFitColumn(context, columns[i]);
-                      } catch(e) {}
+                      } catch (e) { /* ignore */ }
                     }
                   },
                   rowColorCallback: (rtx) {
