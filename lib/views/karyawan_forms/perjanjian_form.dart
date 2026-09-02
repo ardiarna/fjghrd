@@ -6,17 +6,17 @@ import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/models/status_kerja.dart';
 
-extension PerjanjianFormExt on KaryawanControl {
-  void perjanjianForm(String id, BuildContext context) {
+class PerjanjianForm extends StatelessWidget {
+  final String id;
+  const PerjanjianForm({super.key, required this.id});
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = Get.find<KaryawanControl>();
     PerjanjianKerja item = PerjanjianKerja();
-    if(id != '') item = listPerjanjianKerja.where((element) => element.id == id).first;
-    txtPerjanjianId.text = item.id;
-    txtPerjanjianNomor.text = item.nomor;
-    txtPerjanjianTglAwal.text = AFconvert.matYMD(item.tanggalAwal ?? DateTime.now());
-    txtPerjanjianTglAkhir.text = AFconvert.matYMD(item.tanggalAKhir);
-    statusKerjaPerjanjian = item.statusKerja;
-    AFwidget.dialog(
-      Container(
+    if(id != '') item = controller.listPerjanjianKerja.where((element) => element.id == id).first;
+    
+    return Container(
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
         width: 700,
         decoration: const BoxDecoration(
@@ -29,12 +29,12 @@ extension PerjanjianFormExt on KaryawanControl {
               children: [
                 AFwidget.barisInfo(
                   label: 'Nama Karyawan',
-                  nilai: current.nama,
+                  nilai: controller.current.nama,
                   paddingTop: 70,
                 ),
                 AFwidget.barisText(
                   label: 'Nomor',
-                  controller: txtPerjanjianNomor,
+                  controller: controller.txtPerjanjianNomor,
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
@@ -48,16 +48,16 @@ extension PerjanjianFormExt on KaryawanControl {
                       Expanded(
                         child: AFwidget.textField(
                           marginTop: 0,
-                          controller: txtPerjanjianTglAwal,
+                          controller: controller.txtPerjanjianTglAwal,
                           readOnly: true,
                           prefixIcon: const Icon(Icons.calendar_month),
                           ontap: () async {
                             var a = await AFwidget.pickDate(
                               context: context,
-                              initialDate: AFconvert.keTanggal(txtPerjanjianTglAwal.text),
+                              initialDate: AFconvert.keTanggal(controller.txtPerjanjianTglAwal.text),
                             );
                             if(a != null) {
-                              txtPerjanjianTglAwal.text = AFconvert.matYMD(a);
+                              controller.txtPerjanjianTglAwal.text = AFconvert.matYMD(a);
                             }
                           },
                         ),
@@ -77,30 +77,30 @@ extension PerjanjianFormExt on KaryawanControl {
                       Expanded(
                         child: AFwidget.textField(
                           marginTop: 0,
-                          controller: txtPerjanjianTglAkhir,
+                          controller: controller.txtPerjanjianTglAkhir,
                           readOnly: true,
                           prefixIcon: const Icon(Icons.calendar_month),
                           ontap: () async {
                             var a = await AFwidget.pickDate(
                               context: context,
-                              initialDate: AFconvert.keTanggal(txtPerjanjianTglAkhir.text),
+                              initialDate: AFconvert.keTanggal(controller.txtPerjanjianTglAkhir.text),
                             );
                             if(a != null) {
-                              txtPerjanjianTglAkhir.text = AFconvert.matYMD(a);
-                              update();
+                              controller.txtPerjanjianTglAkhir.text = AFconvert.matYMD(a);
+                              controller.update();
                             }
                           },
                         ),
                       ),
                       GetBuilder<KaryawanControl>(
                         builder: (_) {
-                          if(txtPerjanjianTglAkhir.text.isNotEmpty) {
+                          if(controller.txtPerjanjianTglAkhir.text.isNotEmpty) {
                             return Padding(
                               padding: const EdgeInsets.only(left: 10),
                               child: IconButton(
                                 onPressed: () {
-                                  txtPerjanjianTglAkhir.text = '';
-                                  update();
+                                  controller.txtPerjanjianTglAkhir.text = '';
+                                  controller.update();
                                 },
                                 icon: const Icon(Icons.highlight_off),
                               ),
@@ -125,13 +125,13 @@ extension PerjanjianFormExt on KaryawanControl {
                         child: GetBuilder<KaryawanControl>(
                           builder: (_) {
                             return AFwidget.comboField(
-                              value: statusKerjaPerjanjian.nama,
+                              value: controller.statusKerjaPerjanjian.nama,
                               label: '',
                               onTap: () async {
-                                var a = await pilihStatusKerja(value: statusKerjaPerjanjian.id);
-                                if(a != null && a.value != statusKerjaPerjanjian.id) {
-                                  statusKerjaPerjanjian = StatusKerja.fromMap(a.data!);
-                                  update();
+                                var a = await controller.pilihStatusKerja(value: controller.statusKerjaPerjanjian.id);
+                                if(a != null && a.value != controller.statusKerjaPerjanjian.id) {
+                                  controller.statusKerjaPerjanjian = StatusKerja.fromMap(a.data!);
+                                  controller.update();
                                 }
                               },
                             );
@@ -149,7 +149,12 @@ extension PerjanjianFormExt on KaryawanControl {
                         label: 'Hapus',
                         color: Colors.red,
                         onPressed: () {
-                          hapusPerjanjianForm(item);
+                          AFwidget.formHapus(
+                            label: 'perjanjian kerja dengan nomor ${item.nomor}',
+                            aksi: () {
+                              controller.hapusPerjanjianData(item.id);
+                            },
+                          );
                         },
                         minimumSize: const Size(120, 40),
                       ) : Container(),
@@ -164,7 +169,7 @@ extension PerjanjianFormExt on KaryawanControl {
                       AFwidget.tombol(
                         label: 'Simpan',
                         color: Colors.blue,
-                        onPressed: simpanPerjanjianData,
+                        onPressed: controller.simpanPerjanjianData,
                         minimumSize: const Size(120, 40),
                       ),
                     ],
@@ -175,11 +180,25 @@ extension PerjanjianFormExt on KaryawanControl {
             AFwidget.formHeader('Form ${id == '' ? 'Tambah' : 'Ubah'} Perjanjian Kerja'),
           ],
         ),
-      ),
-      barrierDismissible: false,
-      scrollable: false,
-      backgroundColor: Colors.white,
-      contentPadding: const EdgeInsets.all(0),
-    );
+      );
   }
+}
+
+void showPerjanjianForm(String id, BuildContext context) {
+  final controller = Get.find<KaryawanControl>();
+  PerjanjianKerja item = PerjanjianKerja();
+  if(id != '') item = controller.listPerjanjianKerja.where((element) => element.id == id).first;
+  controller.txtPerjanjianId.text = item.id;
+  controller.txtPerjanjianNomor.text = item.nomor;
+  controller.txtPerjanjianTglAwal.text = AFconvert.matYMD(item.tanggalAwal ?? DateTime.now());
+  controller.txtPerjanjianTglAkhir.text = AFconvert.matYMD(item.tanggalAKhir);
+  controller.statusKerjaPerjanjian = item.statusKerja;
+
+  AFwidget.dialog(
+    PerjanjianForm(id: id),
+    barrierDismissible: false,
+    scrollable: false,
+    backgroundColor: Colors.white,
+    contentPadding: const EdgeInsets.all(0),
+  );
 }

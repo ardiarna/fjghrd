@@ -1,9 +1,9 @@
 import 'package:fjghrd/controllers/karyawan_control.dart';
-import 'package:fjghrd/controllers/karyawan_forms/training_karyawan_form_ext.dart';
-import 'package:fjghrd/controllers/karyawan_forms/phk_form_ext.dart';
-import 'package:fjghrd/controllers/karyawan_forms/kontak_form_ext.dart';
-import 'package:fjghrd/controllers/karyawan_forms/keluarga_form_ext.dart';
-import 'package:fjghrd/controllers/karyawan_forms/perjanjian_form_ext.dart';
+import 'package:fjghrd/views/karyawan_forms/training_karyawan_form.dart';
+import 'package:fjghrd/views/karyawan_forms/phk_form.dart';
+import 'package:fjghrd/views/karyawan_forms/kontak_form.dart';
+import 'package:fjghrd/views/karyawan_forms/keluarga_form.dart';
+import 'package:fjghrd/views/karyawan_forms/perjanjian_form.dart';
 import 'package:fjghrd/models/agama.dart';
 import 'package:fjghrd/models/area.dart';
 import 'package:fjghrd/models/divisi.dart';
@@ -115,7 +115,7 @@ class KaryawanForm extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: () {
-                  controller.keluargaForm(rdrCtx.row.cells['id']!.value, context);
+                  showKeluargaForm(rdrCtx.row.cells['id']!.value, context);
                 },
                 icon: const Icon(
                   Icons.edit_square,
@@ -195,7 +195,7 @@ class KaryawanForm extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: () {
-                  controller.trainingKaryawanForm(rdrCtx.row.cells['id']!.value, context);
+                  showTrainingKaryawanForm(rdrCtx.row.cells['id']!.value, context);
                 },
                 icon: const Icon(
                   Icons.edit_square,
@@ -252,7 +252,7 @@ class KaryawanForm extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: () {
-                  controller.kontakForm(rdrCtx.row.cells['id']!.value, context);
+                  showKontakForm(rdrCtx.row.cells['id']!.value, context);
                 },
                 icon: const Icon(
                   Icons.edit_square,
@@ -309,7 +309,7 @@ class KaryawanForm extends StatelessWidget {
             children: [
               IconButton(
                 onPressed: () {
-                  controller.perjanjianForm(rdrCtx.row.cells['id']!.value, context);
+                  showPerjanjianForm(rdrCtx.row.cells['id']!.value, context);
                 },
                 icon: const Icon(
                   Icons.edit_square,
@@ -373,7 +373,7 @@ class KaryawanForm extends StatelessWidget {
                       label: controller.current.aktif == 'Y' ? 'PHK' : 'Ubah Data PHK',
                       color: Colors.orange,
                       onPressed: () {
-                        controller.phkForm(context);
+                        showPhkForm(context);
                       },
                       minimumSize: const Size(120, 40),
                     );
@@ -388,7 +388,17 @@ class KaryawanForm extends StatelessWidget {
                       return AFwidget.tombol(
                         label: 'Masuk / Aktif Kembali',
                         color: Colors.purple,
-                        onPressed: controller.hapusPhkForm,
+                        onPressed: () {
+                          AFwidget.formWarning(
+                            label: 'Anda akan mengaktifkan kembali ${controller.current.nama}. Data PHK sebelumnya tidak akan terhapus dan karyawan akan kembali aktif. Lanjutkan?',
+                            labelBatal: 'Kembali',
+                            labelYa: 'Ya, Lanjutkan',
+                            ikon: Icons.autorenew,
+                            warna: Colors.purple,
+                            isKonfirmasi: true,
+                            aksi: controller.hapusPhkData,
+                          );
+                        },
                         minimumSize: const Size(120, 40),
                       );
                     }
@@ -400,7 +410,12 @@ class KaryawanForm extends StatelessWidget {
                 label: 'Hapus Data Karyawan',
                 color: Colors.red,
                 onPressed: () {
-                  controller.hapusForm();
+                  AFwidget.formHapus(
+                    label: 'karyawan ${controller.current.nama}',
+                    aksi: () {
+                      controller.hapusData(controller.current.id);
+                    },
+                  );
                 },
                 minimumSize: const Size(120, 40),
               ),
@@ -1211,7 +1226,7 @@ class KaryawanForm extends StatelessWidget {
                                 ),
                                 IconButton(
                                   onPressed: () {
-                                    controller.keluargaForm('', context);
+                                    showKeluargaForm('', context);
                                   },
                                   icon: const Icon(
                                     Icons.add,
@@ -1271,7 +1286,7 @@ class KaryawanForm extends StatelessWidget {
                                   ),
                                   IconButton(
                                     onPressed: () {
-                                      controller.kontakForm('', context);
+                                      showKontakForm('', context);
                                     },
                                     icon: const Icon(
                                       Icons.add,
@@ -1332,7 +1347,7 @@ class KaryawanForm extends StatelessWidget {
                                   ),
                                   IconButton(
                                     onPressed: () {
-                                      controller.perjanjianForm('', context);
+                                      showPerjanjianForm('', context);
                                     },
                                     icon: const Icon(
                                       Icons.add,
@@ -1394,7 +1409,7 @@ class KaryawanForm extends StatelessWidget {
                                   ),
                                   IconButton(
                                     onPressed: () {
-                                      controller.trainingKaryawanForm('', context);
+                                      showTrainingKaryawanForm('', context);
                                     },
                                     icon: const Icon(
                                       Icons.add,

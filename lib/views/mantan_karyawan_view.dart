@@ -290,8 +290,7 @@ class MantanKaryawanView extends StatelessWidget {
           ],
         ),
         Expanded(
-          child: GetBuilder<KaryawanControl>(
-            builder: (_) {
+          child: Obx(() {
               return PlutoGrid(
                 key: UniqueKey(),
                 columns: columns,

@@ -48,12 +48,18 @@ abstract class AFdatabase {
           if (relogin) {
             try {
               // Retry the exact same request with the new token
-              var newOptions = e.requestOptions;
-              newOptions.headers['Authorization'] = 'Bearer ${_authControl.user.tokenJWT}';
-              
-              var retryResponse = await dio.fetch(newOptions);
+              var retryResponse = await dio.request(
+                e.requestOptions.path,
+                data: e.requestOptions.data,
+                queryParameters: e.requestOptions.queryParameters,
+                options: Options(
+                  method: e.requestOptions.method,
+                  headers: e.requestOptions.headers..['Authorization'] = 'Bearer ${_authControl.user.tokenJWT}',
+                ),
+              );
               return handler.resolve(retryResponse);
             } catch (retryError) {
+              debugPrint('--- RETRY ERROR: $retryError');
               return handler.next(e);
             }
           } else {

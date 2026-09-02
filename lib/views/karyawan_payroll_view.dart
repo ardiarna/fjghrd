@@ -95,8 +95,7 @@ class KaryawanPayrollView extends StatelessWidget {
                       decoration: const BoxDecoration(
                         image: bgLineBlue,
                       ),
-                      child: GetBuilder<KaryawanControl>(
-                        builder: (_) {
+                      child: Obx(() {
                           return Wrap(
                             spacing: 10,
                             runSpacing: 10,

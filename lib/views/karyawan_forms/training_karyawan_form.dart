@@ -6,17 +6,15 @@ import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/models/training.dart';
 import 'package:fjghrd/models/training_karyawan.dart';
 
-extension TrainingKaryawanFormExt on KaryawanControl {
-  void trainingKaryawanForm(String id, BuildContext context) {
-    TrainingKaryawan item = TrainingKaryawan();
-    if(id != '') item = listTrainingKaryawan.where((element) => element.id == id).first;
-    txtTrainingKaryawanId.text = item.id;
-    txtTrainingKaryawanTanggal.text = AFconvert.matYMD(AFconvert.keTanggal(item.tanggal));
-    txtTrainingKaryawanKeterangan.text = item.keterangan ?? '';
-    trainingTerpilih = item.training;
+class TrainingKaryawanForm extends StatelessWidget {
+  final String id;
+  const TrainingKaryawanForm({super.key, required this.id});
 
-    AFwidget.dialog(
-      Container(
+  @override
+  Widget build(BuildContext context) {
+    final controller = Get.find<KaryawanControl>();
+    
+    return Container(
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
         width: 700,
         decoration: const BoxDecoration(
@@ -29,7 +27,7 @@ extension TrainingKaryawanFormExt on KaryawanControl {
               children: [
                 AFwidget.barisInfo(
                   label: 'Nama Karyawan',
-                  nilai: current.nama,
+                  nilai: controller.current.nama,
                   paddingTop: 70,
                 ),
                 Padding(
@@ -45,13 +43,13 @@ extension TrainingKaryawanFormExt on KaryawanControl {
                         child: GetBuilder<KaryawanControl>(
                           builder: (_) {
                             return AFwidget.comboField(
-                              value: trainingTerpilih?.nama ?? '',
+                              value: controller.trainingTerpilih?.nama ?? '',
                               label: '',
                               onTap: () async {
-                                var a = await pilihTraining(value: trainingTerpilih?.id ?? '');
-                                if(a != null && a.value != trainingTerpilih?.id) {
-                                  trainingTerpilih = Training.fromMap(a.data!);
-                                  update();
+                                var a = await controller.pilihTraining(value: controller.trainingTerpilih?.id ?? '');
+                                if(a != null && a.value != controller.trainingTerpilih?.id) {
+                                  controller.trainingTerpilih = Training.fromMap(a.data!);
+                                  controller.update();
                                 }
                               },
                             );
@@ -60,13 +58,13 @@ extension TrainingKaryawanFormExt on KaryawanControl {
                       ),
                       GetBuilder<KaryawanControl>(
                         builder: (_) {
-                          if (trainingTerpilih != null) {
+                          if (controller.trainingTerpilih != null) {
                             return Padding(
                               padding: const EdgeInsets.only(left: 10),
                               child: IconButton(
                                 onPressed: () {
-                                  trainingTerpilih = null;
-                                  update();
+                                  controller.trainingTerpilih = null;
+                                  controller.update();
                                 },
                                 icon: const Icon(Icons.highlight_off),
                               ),
@@ -90,29 +88,29 @@ extension TrainingKaryawanFormExt on KaryawanControl {
                       Expanded(
                         child: AFwidget.textField(
                           marginTop: 0,
-                          controller: txtTrainingKaryawanTanggal,
+                          controller: controller.txtTrainingKaryawanTanggal,
                           readOnly: true,
                           ontap: () async {
                             DateTime? a = await AFwidget.pickDate(
                               context: context,
-                              initialDate: AFconvert.keTanggal(txtTrainingKaryawanTanggal.text) ?? DateTime.now(),
+                              initialDate: AFconvert.keTanggal(controller.txtTrainingKaryawanTanggal.text) ?? DateTime.now(),
                             );
                             if(a != null) {
-                              txtTrainingKaryawanTanggal.text = AFconvert.matYMD(a);
-                              update();
+                              controller.txtTrainingKaryawanTanggal.text = AFconvert.matYMD(a);
+                              controller.update();
                             }
                           },
                         ),
                       ),
                       GetBuilder<KaryawanControl>(
                         builder: (_) {
-                          if(txtTrainingKaryawanTanggal.text.isNotEmpty) {
+                          if(controller.txtTrainingKaryawanTanggal.text.isNotEmpty) {
                             return Padding(
                               padding: const EdgeInsets.only(left: 10),
                               child: IconButton(
                                 onPressed: () {
-                                  txtTrainingKaryawanTanggal.text = '';
-                                  update();
+                                  controller.txtTrainingKaryawanTanggal.text = '';
+                                  controller.update();
                                 },
                                 icon: const Icon(Icons.highlight_off),
                               ),
@@ -126,7 +124,7 @@ extension TrainingKaryawanFormExt on KaryawanControl {
                 ),
                 AFwidget.barisText(
                   label: 'Keterangan',
-                  controller: txtTrainingKaryawanKeterangan,
+                  controller: controller.txtTrainingKaryawanKeterangan,
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
@@ -136,7 +134,12 @@ extension TrainingKaryawanFormExt on KaryawanControl {
                         label: 'Hapus',
                         color: Colors.red,
                         onPressed: () {
-                          hapusTrainingKaryawan(id);
+                          AFwidget.formHapus(
+                            label: 'riwayat training ini',
+                            aksi: () {
+                              controller.hapusTrainingKaryawanData(id);
+                            },
+                          );
                         },
                         minimumSize: const Size(120, 40),
                       ) : Container(),
@@ -151,7 +154,7 @@ extension TrainingKaryawanFormExt on KaryawanControl {
                       AFwidget.tombol(
                         label: 'Simpan',
                         color: Colors.blue,
-                        onPressed: simpanTrainingKaryawanData,
+                        onPressed: controller.simpanTrainingKaryawanData,
                         minimumSize: const Size(120, 40),
                       ),
                     ],
@@ -162,11 +165,24 @@ extension TrainingKaryawanFormExt on KaryawanControl {
             AFwidget.formHeader('Form ${id == '' ? 'Tambah' : 'Ubah'} Riwayat Training'),
           ],
         ),
-      ),
-      barrierDismissible: false,
-      scrollable: false,
-      backgroundColor: Colors.white,
-      contentPadding: const EdgeInsets.all(0),
-    );
+      );
   }
+}
+
+void showTrainingKaryawanForm(String id, BuildContext context) {
+  final controller = Get.find<KaryawanControl>();
+  TrainingKaryawan item = TrainingKaryawan();
+  if(id != '') item = controller.listTrainingKaryawan.where((element) => element.id == id).first;
+  controller.txtTrainingKaryawanId.text = item.id;
+  controller.txtTrainingKaryawanTanggal.text = AFconvert.matYMD(AFconvert.keTanggal(item.tanggal));
+  controller.txtTrainingKaryawanKeterangan.text = item.keterangan ?? '';
+  controller.trainingTerpilih = item.training;
+
+  AFwidget.dialog(
+    TrainingKaryawanForm(id: id),
+    barrierDismissible: false,
+    scrollable: false,
+    backgroundColor: Colors.white,
+    contentPadding: const EdgeInsets.all(0),
+  );
 }

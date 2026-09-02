@@ -45,9 +45,9 @@ class KaryawanControl extends GetxController {
   final DateTime _now = DateTime.now();
 
   Karyawan current = Karyawan();
-  List<Karyawan> listKaryawan = [];
-  List<Karyawan> listCalonKaryawan = [];
-  List<Karyawan> listMantanKaryawan = [];
+  RxList<Karyawan> listKaryawan = <Karyawan>[].obs;
+  RxList<Karyawan> listCalonKaryawan = <Karyawan>[].obs;
+  RxList<Karyawan> listMantanKaryawan = <Karyawan>[].obs;
   List<Karyawan> listUlangTahun = [];
   List<Opsi> listAgama = [];
   List<Opsi> listArea = [];
@@ -62,7 +62,7 @@ class KaryawanControl extends GetxController {
   List<PerjanjianKerja> listPerjanjianKerja = [];
   List<TrainingKaryawan> listTrainingKaryawan = [];
   List<TimelineMasakerja> listTimelineMasakerja = [];
-  List<Payroll> listPayroll = [];
+  RxList<Payroll> listPayroll = <Payroll>[].obs;
   PayrollPhk payrollPhk = PayrollPhk();
   Opsi filterStaf = Opsi(value: 'Y', label: 'STAF');
   Opsi filterArea = Opsi(value: '', label: 'SEMUA');
@@ -83,6 +83,7 @@ class KaryawanControl extends GetxController {
       txtKeluargaTanggalLahir, txtKeluargaTelepon, txtKeluargaEmail;
   late TextEditingController txtKontakId, txtKontakNama, txtKontakTelepon, txtKontakEmail;
   late TextEditingController txtPerjanjianId, txtPerjanjianNomor, txtPerjanjianTglAwal, txtPerjanjianTglAkhir, txtPhkKeterangan;
+  late TextEditingController txtTrainingKaryawanId, txtTrainingKaryawanTanggal, txtTrainingKaryawanKeterangan;
   late TextEditingController txtKompensasi, txtPesangon, txtMasaKerja, txtUangPisah, txtSisaCutiHari, txtSisaCutiJumlah, txtLain,
       txtPotKas, txtPotCutiHari, txtPotCutiJumlah, txtPotLain;
   late TextEditingController txtPayrollPhkTglAwal, txtPayrollPhkTglAkhir, txtPayrollPhkGaji, txtPayrollPhkKenaikanGaji, txtPayrollPhkHariMakan, txtPayrollPhkUangMakanHarian,
@@ -98,6 +99,7 @@ class KaryawanControl extends GetxController {
   Pendidikan pendidikan = Pendidikan();
   StatusKerja statusKerja = StatusKerja();
   StatusKerja statusKerjaPerjanjian = StatusKerja();
+  Training? trainingTerpilih;
   StatusPhk statusPhk = StatusPhk();
   Ptkp ptkp = Ptkp();
 
@@ -112,6 +114,7 @@ class KaryawanControl extends GetxController {
   late Opsi tahunPhk;
   late Opsi bulanPhk;
   late List<Opsi> listTahun;
+  List<Opsi> listTraining = [];
   List<Opsi> listBulan = mapBulan.entries.map((e) => Opsi(value: e.key.toString(), label: e.value)).toList();
 
   // Field untuk dialog download Excel Payroll per periode
@@ -157,6 +160,7 @@ class KaryawanControl extends GetxController {
     );
     if (hasil.success) {
       listKaryawan.clear();
+      List<Karyawan> tempKaryawans = [];
       listUlangTahun.clear();
       totalKaryawanPerArea.clear();
       totalKaryawanPerStatuskerjaPerArea.clear();
@@ -168,7 +172,7 @@ class KaryawanControl extends GetxController {
       String hariUltah = AFconvert.matMD(_now);
       for (var data in hasil.daftar) {
         var k = Karyawan.fromMap(data);
-        listKaryawan.add(k);
+        tempKaryawans.add(k);
 
         if(AFconvert.matMD(k.tanggalLahir) == hariUltah) {
           listUlangTahun.add(k);
@@ -251,6 +255,7 @@ class KaryawanControl extends GetxController {
         }
         totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]!['TOTAL KARYAWAN'] = totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]!['TOTAL KARYAWAN']! + 1;
       }
+      listKaryawan.assignAll(tempKaryawans);
       update();
     }
   }
@@ -259,10 +264,11 @@ class KaryawanControl extends GetxController {
     var hasil = await _repo.calonFindAll(isStaf: filterStaf.value, area: filterArea.value);
     if (hasil.success) {
       listCalonKaryawan.clear();
+      List<Karyawan> tempCalon = [];
       totalCalonKaryawanPerArea.clear();
       for (var data in hasil.daftar) {
         var k = Karyawan.fromMap(data);
-        listCalonKaryawan.add(k);
+        tempCalon.add(k);
         if(filterArea.value == '') {
           if (totalCalonKaryawanPerArea.containsKey('TOTAL KARYAWAN')) {
             totalCalonKaryawanPerArea['TOTAL KARYAWAN'] = totalCalonKaryawanPerArea['TOTAL KARYAWAN']! + 1;
@@ -276,6 +282,7 @@ class KaryawanControl extends GetxController {
           totalCalonKaryawanPerArea[k.area.kode] = 1;
         }
       }
+      listCalonKaryawan.assignAll(tempCalon);
       update();
     }
   }
@@ -283,10 +290,7 @@ class KaryawanControl extends GetxController {
   Future<void> loadMantanKaryawans() async {
     var hasil = await _repo.mantanFindAll(isStaf: filterStaf.value);
     if (hasil.success) {
-      listMantanKaryawan.clear();
-      for (var data in hasil.daftar) {
-        listMantanKaryawan.add(Karyawan.fromMap(data));
-      }
+      listMantanKaryawan.assignAll(hasil.daftar.map<Karyawan>((data) => Karyawan.fromMap(data)).toList());
       update();
     }
   }
@@ -312,13 +316,6 @@ class KaryawanControl extends GetxController {
     }
     update();
   }
-
-
-  TextEditingController txtTrainingKaryawanId = TextEditingController();
-  TextEditingController txtTrainingKaryawanTanggal = TextEditingController();
-  TextEditingController txtTrainingKaryawanKeterangan = TextEditingController();
-  Training? trainingTerpilih;
-  List<Opsi> listTraining = [];
 
   Future<void> loadTrainings() async {
     TrainingRepository repo = TrainingRepository();
@@ -377,657 +374,6 @@ class KaryawanControl extends GetxController {
     update();
   }
 
-  void tambahForm(BuildContext context) {
-    txtId.text = '';
-    txtNama.text = '';
-    txtNik.text = '';
-    txtTanggalMasuk.text = AFconvert.matYMD(_now);
-    txtNomorKk.text = '';
-    txtNomorKtp.text = '';
-    txtNomorPaspor.text = '';
-    txtNomorPwp.text = '';
-    txtTempatLahir.text = '';
-    txtTanggalLahir.text = AFconvert.matYMD(_now);
-    txtAlamatKtp.text = '';
-    txtAlamatTinggal.text = '';
-    txtTelepon.text = '';
-    txtEmail.text = '';
-    txtPendidikanAlmamater.text = '';
-    txtPendidikanJurusan.text = '';
-    agama = Agama();
-    area = Area();
-    divisi = Divisi();
-    jabatan = Jabatan();
-    pendidikan = Pendidikan();
-    statusKerja = StatusKerja();
-    ptkp = Ptkp();
-    kawin = '';
-    kelamin = '';
-    aktif = '';
-    staf = null;
-    manajemen = false;
-    AFwidget.dialog(
-      Container(
-        padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
-        width: 700,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-        ),
-        child: Stack(
-          children: [
-            ListView(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 70, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Area'),
-                      ),
-                      Expanded(
-                        child: GetBuilder<KaryawanControl>(
-                          builder: (_) {
-                            return AFwidget.comboField(
-                              value: area.nama,
-                              label: '',
-                              onTap: () async {
-                                var a = await pilihArea(value: area.id);
-                                if(a != null && a.value != area.id) {
-                                  area = Area.fromMap(a.data!);
-                                  update();
-                                }
-                              },
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Jenis Karyawan'),
-                      ),
-                      Expanded(
-                        child: GetBuilder<KaryawanControl>(
-                          builder: (_) {
-                            return RadioGroup<bool>(
-                              groupValue: staf,
-                              onChanged: (a) {
-                                if(a != null && a != staf) {
-                                  staf = a;
-                                  update();
-                                }
-                              },
-                              child: Row(
-                                children: const [
-                                  Radio<bool>(value: true),
-                                  SizedBox(
-                                    width: 90,
-                                    child: Text('Staf'),
-                                  ),
-                                  Radio<bool>(value: false),
-                                  SizedBox(
-                                    width: 110,
-                                    child: Text('Non Staf'),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Manajemen'),
-                      ),
-                      Expanded(
-                        child: GetBuilder<KaryawanControl>(
-                          builder: (_) {
-                            return RadioGroup<bool>(
-                              groupValue: manajemen,
-                              onChanged: (a) {
-                                if(a != null && a != manajemen) {
-                                  manajemen = a;
-                                  update();
-                                }
-                              },
-                              child: Row(
-                                children: const [
-                                  Radio<bool>(value: true),
-                                  SizedBox(
-                                    width: 90,
-                                    child: Text('Ya'),
-                                  ),
-                                  Radio<bool>(value: false),
-                                  SizedBox(
-                                    width: 110,
-                                    child: Text('Tidak'),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Status Aktif'),
-                      ),
-                      Expanded(
-                        child: GetBuilder<KaryawanControl>(
-                          builder: (_) {
-                            return RadioGroup<String>(
-                              groupValue: aktif,
-                              onChanged: (a) {
-                                if(a != null && a != aktif) {
-                                  aktif = a;
-                                  update();
-                                }
-                              },
-                              child: Row(
-                                children: const [
-                                  Radio<String>(value: 'Y'),
-                                  SizedBox(
-                                    width: 90,
-                                    child: Text('Sudah'),
-                                  ),
-                                  Radio<String>(value: 'P'),
-                                  SizedBox(
-                                    width: 110,
-                                    child: Text('Belum'),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                AFwidget.barisText(
-                  label: 'Nama',
-                  controller: txtNama,
-                ),
-                AFwidget.barisText(
-                  label: 'NIK',
-                  controller: txtNik,
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Masa Kerja'),
-                      ),
-                      Expanded(
-                        child: AFwidget.textField(
-                          marginTop: 0,
-                          controller: txtTanggalMasuk,
-                          readOnly: true,
-                          prefixIcon: const Icon(Icons.calendar_month),
-                          ontap: () async {
-                            var a = await AFwidget.pickDate(
-                              context: context,
-                              initialDate: AFconvert.keTanggal(txtTanggalMasuk.text),
-                            );
-                            if(a != null) {
-                              txtTanggalMasuk.text = AFconvert.matYMD(a);
-                            }
-                          },
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Agama'),
-                      ),
-                      Expanded(
-                        child: GetBuilder<KaryawanControl>(
-                          builder: (_) {
-                            return AFwidget.comboField(
-                              value: agama.nama,
-                              label: '',
-                              onTap: () async {
-                                var a = await pilihAgama(value: agama.id);
-                                if(a != null && a.value != agama.id) {
-                                  agama = Agama.fromMap(a.data!);
-                                  update();
-                                }
-                              },
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Divisi'),
-                      ),
-                      Expanded(
-                        child: GetBuilder<KaryawanControl>(
-                          builder: (_) {
-                            return AFwidget.comboField(
-                              value: divisi.nama,
-                              label: '',
-                              onTap: () async {
-                                var a = await pilihDivisi(value: divisi.id);
-                                if(a != null && a.value != divisi.id) {
-                                  divisi = Divisi.fromMap(a.data!);
-                                  update();
-                                }
-                              },
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Jabatan'),
-                      ),
-                      Expanded(
-                        child: GetBuilder<KaryawanControl>(
-                          builder: (_) {
-                            return AFwidget.comboField(
-                              value: jabatan.nama,
-                              label: '',
-                              onTap: () async {
-                                var a = await pilihJabatan(value: jabatan.id);
-                                if(a != null && a.value != jabatan.id) {
-                                  jabatan = Jabatan.fromMap(a.data!);
-                                  update();
-                                }
-                              },
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                AFwidget.barisText(
-                  label: 'Nomor KK',
-                  controller: txtNomorKk,
-                ),
-                AFwidget.barisText(
-                  label: 'Nomor KTP',
-                  controller: txtNomorKtp,
-                ),
-                AFwidget.barisText(
-                  label: 'Nomor Paspor',
-                  controller: txtNomorPaspor,
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Tempat & Tgl Lahir'),
-                      ),
-                      Expanded(
-                        child: AFwidget.textField(
-                          marginTop: 0,
-                          controller: txtTempatLahir,
-                        ),
-                      ),
-                      Container(
-                        width: 165,
-                        margin: const EdgeInsets.only(left: 15),
-                        child: AFwidget.textField(
-                          marginTop: 0,
-                          controller: txtTanggalLahir,
-                          readOnly: true,
-                          prefixIcon: const Icon(Icons.calendar_month),
-                          ontap: () async {
-                            var a = await AFwidget.pickDate(
-                              context: context,
-                              initialDate: AFconvert.keTanggal(txtTanggalLahir.text),
-                            );
-                            if(a != null) {
-                              txtTanggalLahir.text = AFconvert.matYMD(a);
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                AFwidget.barisText(
-                  label: 'Alamat KTP',
-                  controller: txtAlamatKtp,
-                  isTextArea: true,
-                ),
-                AFwidget.barisText(
-                  label: 'Alamat Tinggal Sekarang',
-                  controller: txtAlamatTinggal,
-                  isTextArea: true,
-                ),
-                AFwidget.barisText(
-                  label: 'No. Telepon',
-                  controller: txtTelepon,
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Jenis Kelamin'),
-                      ),
-                      Expanded(
-                        child: GetBuilder<KaryawanControl>(
-                          builder: (_) {
-                            return RadioGroup(
-                              groupValue: kelamin,
-                              onChanged: (a) {
-                                if(a != null && a != kelamin) {
-                                  kelamin = a;
-                                  update();
-                                }
-                              },
-                              child: Row(
-                                children: const [
-                                  Radio<String>(value: 'L'),
-                                  SizedBox(
-                                    width: 90,
-                                    child: Text('Laki-Laki'),
-                                  ),
-                                  Radio<String>(value: 'P'),
-                                  SizedBox(
-                                    width: 110,
-                                    child: Text('Perempuan'),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Status'),
-                      ),
-                      Expanded(
-                        child: GetBuilder<KaryawanControl>(
-                          builder: (_) {
-                            return RadioGroup<String>(
-                              groupValue: kawin,
-                              onChanged: (a) {
-                                if(a != null && a != kawin) {
-                                  kawin = a;
-                                  update();
-                                }
-                              },
-                              child: Row(
-                                children: const [
-                                  Radio<String>(value: 'Y'),
-                                  SizedBox(
-                                    width: 90,
-                                    child: Text('Kawin'),
-                                  ),
-                                  Radio<String>(value: 'N'),
-                                  SizedBox(
-                                    width: 110,
-                                    child: Text('Single'),
-                                  ),
-                                  Radio<String>(value: 'P',
-                                  ),
-                                  SizedBox(
-                                    width: 110,
-                                    child: Text('Single Parent'),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Pendidikan Terakhir'),
-                      ),
-                      Expanded(
-                        child: GetBuilder<KaryawanControl>(
-                          builder: (_) {
-                            return AFwidget.comboField(
-                              value: pendidikan.nama,
-                              label: '',
-                              onTap: () async {
-                                var a = await pilihPendidikan(value: pendidikan.id);
-                                if(a != null && a.value != pendidikan.id) {
-                                  pendidikan = Pendidikan.fromMap(a.data!);
-                                  update();
-                                }
-                              },
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
-                  child: Row(
-                    children: [
-                      const SizedBox(width: 150),
-                      Container(
-                        width: 100,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Almamater'),
-                      ),
-                      Expanded(
-                        child: AFwidget.textField(
-                          marginTop: 0,
-                          controller: txtPendidikanAlmamater,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
-                  child: Row(
-                    children: [
-                      const SizedBox(width: 150),
-                      Container(
-                        width: 100,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Jurusan'),
-                      ),
-                      Expanded(
-                        child: AFwidget.textField(
-                          marginTop: 0,
-                          controller: txtPendidikanJurusan,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                AFwidget.barisText(
-                  label: 'Email Pribadi',
-                  controller: txtEmail,
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 150,
-                        padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Status Karyawan'),
-                      ),
-                      Expanded(
-                        child: GetBuilder<KaryawanControl>(
-                          builder: (_) {
-                            return AFwidget.comboField(
-                              value: statusKerja.nama,
-                              label: '',
-                              onTap: () async {
-                                var a = await pilihStatusKerja(value: statusKerja.id);
-                                if(a != null && a.value != statusKerja.id) {
-                                  statusKerja = StatusKerja.fromMap(a.data!);
-                                  update();
-                                }
-                              },
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                AFwidget.barisText(
-                  label: 'NPWP',
-                  controller: txtNomorPwp,
-                ),
-                Visibility(
-                  visible: false,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 150,
-                          padding: const EdgeInsets.only(right: 15),
-                          child: const Text('PTKP'),
-                        ),
-                        Expanded(
-                          child: GetBuilder<KaryawanControl>(
-                            builder: (_) {
-                              return AFwidget.comboField(
-                                value: ptkp.kode,
-                                label: '',
-                                onTap: () async {
-                                  var a = await pilihPtkp(value: ptkp.id);
-                                  if(a != null && a.value != ptkp.id) {
-                                    ptkp = Ptkp.fromMap(a.data!);
-                                    update();
-                                  }
-                                },
-                              );
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      AFwidget.tombol(
-                        label: 'Batal',
-                        color: Colors.orange,
-                        onPressed: Get.back,
-                        minimumSize: const Size(120, 40),
-                      ),
-                      const SizedBox(width: 40),
-                      AFwidget.tombol(
-                        label: 'Simpan',
-                        color: Colors.blue,
-                        onPressed: tambahData,
-                        minimumSize: const Size(120, 40),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            AFwidget.formHeader(
-              'Form Tambah Karyawan',
-              actions: [
-                IconButton(
-                  onPressed: () async {
-                    AFwidget.loading();
-                    await loadAllData();
-                    Get.back();
-                  },
-                  icon: const Icon(Icons.refresh),
-                  padding: EdgeInsets.zero,
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-      barrierDismissible: false,
-      scrollable: false,
-      backgroundColor: Colors.white,
-      contentPadding: const EdgeInsets.all(0),
-    );
-  }
-
   void ubahForm(String id, String statusAktif) {
     if(statusAktif == 'P') {
       current = listCalonKaryawan.where((element) => element.id == id).first;
@@ -1071,62 +417,6 @@ class KaryawanControl extends GetxController {
     loadTrainingKaryawan();
     loadTimelineMasakerja();
     Get.toNamed(Rute.karyawanForm);
-  }
-
-  void hapusForm() {
-    AFwidget.formHapus(
-      label: 'karyawan ${current.nama}',
-      aksi: () {
-        hapusData(current.id);
-      },
-    );
-  }
-
-
-
-  void hapusKeluargaForm(KeluargaKaryawan item) {
-    AFwidget.formHapus(
-      label: 'keluarga bernama ${item.nama}',
-      aksi: () {
-        hapusKeluargaData(item.id);
-      },
-    );
-  }
-
-
-
-  void hapusKontakForm(KeluargaKontak item) {
-    AFwidget.formHapus(
-      label: 'kontak keluarga ${item.telepon} (${item.nama})',
-      aksi: () {
-        hapusKontakData(item.id);
-      },
-    );
-  }
-
-
-
-  void hapusPerjanjianForm(PerjanjianKerja item) {
-    AFwidget.formHapus(
-      label: 'perjanjian kerja dengan nomor ${item.nomor}',
-      aksi: () {
-        hapusPerjanjianData(item.id);
-      },
-    );
-  }
-
-
-
-  void hapusPhkForm() {
-    AFwidget.formWarning(
-      label: 'Anda akan mengaktifkan kembali ${current.nama}. Data PHK sebelumnya tidak akan terhapus dan karyawan akan kembali aktif. Lanjutkan?',
-      labelBatal: 'Kembali',
-      labelYa: 'Ya, Lanjutkan',
-      ikon: Icons.autorenew,
-      warna: Colors.purple,
-      isKonfirmasi: true,
-      aksi: hapusPhkData,
-    );
   }
 
   void payrollView(String id) {
@@ -1471,7 +761,6 @@ class KaryawanControl extends GetxController {
     }
   }
 
-
   Future<Opsi?> pilihTraining({String value = ''}) async {
     var a = await AFcombobox.bottomSheet(
       listOpsi: listTraining,
@@ -1481,8 +770,6 @@ class KaryawanControl extends GetxController {
     return a;
   }
 
-    
-
   Future<void> simpanTrainingKaryawanData() async {
     try {
       if(current.id.isEmpty) {
@@ -1491,7 +778,6 @@ class KaryawanControl extends GetxController {
       if(trainingTerpilih == null) {
         throw ValidationException('Silakan pilih Training');
       }
-
 
       Map<String, dynamic> body = {
         'id': txtTrainingKaryawanId.text,
@@ -1519,22 +805,17 @@ class KaryawanControl extends GetxController {
     }
   }
 
-  void hapusTrainingKaryawan(String id) {
-    AFwidget.formHapus(
-      label: 'riwayat training ini',
-      aksi: () async {
-        AFwidget.loading();
-        var hasil = await _repo.trainingKaryawanDelete(id);
-        Get.back();
-        if(hasil.success) {
-          Get.back();
-          AFwidget.snackbar(hasil.message);
-          loadTrainingKaryawan();
-        } else {
-          AFwidget.formWarning(label: hasil.message);
-        }
-      },
-    );
+  Future<void> hapusTrainingKaryawanData(String id) async {
+    AFwidget.loading();
+    var hasil = await _repo.trainingKaryawanDelete(id);
+    Get.back();
+    if(hasil.success) {
+      Get.back();
+      AFwidget.snackbar(hasil.message);
+      loadTrainingKaryawan();
+    } else {
+      AFwidget.formWarning(label: hasil.message);
+    }
   }
 
   Future<void> simpanPerjanjianData() async {
@@ -1787,9 +1068,6 @@ class KaryawanControl extends GetxController {
       AFwidget.formWarning(label: '$er');
     }
   }
-
-
-
 
   Future<void> loadAgamas() async {
     AgamaRepository repo = AgamaRepository();
@@ -2058,7 +1336,6 @@ class KaryawanControl extends GetxController {
     }
   }
 
-
   Future<void> downloadSlipGaji() async {
     AFwidget.loading();
     List<int> selected = bulanTerpilih.entries
@@ -2159,6 +1436,9 @@ class KaryawanControl extends GetxController {
     txtPerjanjianNomor = TextEditingController();
     txtPerjanjianTglAwal = TextEditingController();
     txtPerjanjianTglAkhir = TextEditingController();
+    txtTrainingKaryawanId = TextEditingController();
+    txtTrainingKaryawanTanggal = TextEditingController();
+    txtTrainingKaryawanKeterangan = TextEditingController();
     txtPhkKeterangan = TextEditingController();
     txtKompensasi = TextEditingController();
     txtPesangon = TextEditingController();
@@ -2243,6 +1523,9 @@ class KaryawanControl extends GetxController {
     txtPerjanjianNomor.dispose();
     txtPerjanjianTglAwal.dispose();
     txtPerjanjianTglAkhir.dispose();
+    txtTrainingKaryawanId.dispose();
+    txtTrainingKaryawanTanggal.dispose();
+    txtTrainingKaryawanKeterangan.dispose();
     txtPhkKeterangan.dispose();
     txtKompensasi.dispose();
     txtPesangon.dispose();

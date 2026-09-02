@@ -3,30 +3,18 @@ import 'package:get/get.dart';
 import 'package:fjghrd/controllers/karyawan_control.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/utils/af_convert.dart';
-import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
-import 'package:fjghrd/models/status_phk.dart';
-import 'package:fjghrd/controllers/karyawan_forms/payroll_phk_form_ext.dart';
 
-extension PhkFormExt on KaryawanControl {
-  void phkForm(BuildContext context) {
-    loadPayrollPhkData();
-    txtPhkKeterangan.text = current.phk.keterangan;
-    txtTanggalMasuk.text = AFconvert.matYMD(current.phk.tanggalAwal ?? current.tanggalMasuk);
-    txtTanggalKeluar.text = AFconvert.matYMD(current.phk.tanggalAKhir ?? DateTime.now());
-    statusPhk = current.phk.statusPhk;
-    txtKompensasi.text = AFconvert.matNumber(current.uangPhk.kompensasi);
-    txtPesangon.text = AFconvert.matNumber(current.uangPhk.pesangon);
-    txtMasaKerja.text = AFconvert.matNumber(current.uangPhk.masaKerja);
-    txtUangPisah.text = AFconvert.matNumber(current.uangPhk.uangPisah);
-    txtSisaCutiHari.text = AFconvert.matNumber(current.uangPhk.sisaCutiHari);
-    txtSisaCutiJumlah.text = AFconvert.matNumber(current.uangPhk.sisaCutiJumlah);
-    txtLain.text = AFconvert.matNumber(current.uangPhk.lain);
-    txtPotKas.text = AFconvert.matNumber(current.uangPhk.potKas);
-    txtPotCutiHari.text = AFconvert.matNumber(current.uangPhk.potCutiHari);
-    txtPotCutiJumlah.text = AFconvert.matNumber(current.uangPhk.potCutiJumlah);
-    txtPotLain.text = AFconvert.matNumber(current.uangPhk.potLain);
-    AFwidget.dialog(
-      Container(
+import 'package:fjghrd/models/status_phk.dart';
+import 'package:fjghrd/views/karyawan_forms/payroll_phk_form.dart';
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+
+class PhkForm extends StatelessWidget {
+  const PhkForm({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = Get.find<KaryawanControl>();
+    return Container(
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
         width: Get.width,
         decoration: const BoxDecoration(
@@ -39,12 +27,12 @@ extension PhkFormExt on KaryawanControl {
               children: [
                 AFwidget.barisInfo(
                   label: 'Nama Karyawan',
-                  nilai: current.nama,
+                  nilai: controller.current.nama,
                   paddingTop: 70,
                 ),
                 AFwidget.barisInfo(
                   label: 'Status Karyawan',
-                  nilai: current.statusKerja.nama,
+                  nilai: controller.current.statusKerja.nama,
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
@@ -58,16 +46,16 @@ extension PhkFormExt on KaryawanControl {
                       Expanded(
                         child: AFwidget.textField(
                           marginTop: 0,
-                          controller: txtTanggalMasuk,
+                          controller: controller.txtTanggalMasuk,
                           readOnly: true,
                           prefixIcon: const Icon(Icons.calendar_month),
                           ontap: () async {
                             var a = await AFwidget.pickDate(
                               context: context,
-                              initialDate: AFconvert.keTanggal(txtTanggalMasuk.text),
+                              initialDate: AFconvert.keTanggal(controller.txtTanggalMasuk.text),
                             );
                             if(a != null) {
-                              txtTanggalMasuk.text = AFconvert.matYMD(a);
+                              controller.txtTanggalMasuk.text = AFconvert.matYMD(a);
                             }
                           },
                         ),
@@ -76,16 +64,16 @@ extension PhkFormExt on KaryawanControl {
                       Expanded(
                         child: AFwidget.textField(
                           marginTop: 0,
-                          controller: txtTanggalKeluar,
+                          controller: controller.txtTanggalKeluar,
                           readOnly: true,
                           prefixIcon: const Icon(Icons.calendar_month),
                           ontap: () async {
                             var a = await AFwidget.pickDate(
                               context: context,
-                              initialDate: AFconvert.keTanggal(txtTanggalKeluar.text),
+                              initialDate: AFconvert.keTanggal(controller.txtTanggalKeluar.text),
                             );
                             if(a != null) {
-                              txtTanggalKeluar.text = AFconvert.matYMD(a);
+                              controller.txtTanggalKeluar.text = AFconvert.matYMD(a);
                             }
                           },
                         ),
@@ -106,13 +94,13 @@ extension PhkFormExt on KaryawanControl {
                         child: GetBuilder<KaryawanControl>(
                           builder: (_) {
                             return AFwidget.comboField(
-                              value: statusPhk.nama,
+                              value: controller.statusPhk.nama,
                               label: '',
                               onTap: () async {
-                                var a = await pilihStatusPhk(value: statusPhk.id);
-                                if(a != null && a.value != statusPhk.id) {
-                                  statusPhk = StatusPhk.fromMap(a.data!);
-                                  update();
+                                var a = await controller.pilihStatusPhk(value: controller.statusPhk.id);
+                                if(a != null && a.value != controller.statusPhk.id) {
+                                  controller.statusPhk = StatusPhk.fromMap(a.data!);
+                                  controller.update();
                                 }
                               },
                             );
@@ -124,7 +112,7 @@ extension PhkFormExt on KaryawanControl {
                 ),
                 AFwidget.barisText(
                   label: 'Keterangan',
-                  controller: txtPhkKeterangan,
+                  controller: controller.txtPhkKeterangan,
                   isTextArea: true,
                 ),
                 Padding(
@@ -136,12 +124,12 @@ extension PhkFormExt on KaryawanControl {
                         id: 'payroll_phk_button',
                         builder: (_) {
                           String label = 'Payroll PHK';
-                          if (payrollPhk.id.isNotEmpty) {
-                            label = 'Payroll PHK : Rp. ${AFconvert.matNumber(payrollPhk.totalDiterima)}';
+                          if (controller.payrollPhk.id.isNotEmpty) {
+                            label = 'Payroll PHK : Rp. ${AFconvert.matNumber(controller.payrollPhk.totalDiterima)}';
                           }
                           return AFwidget.tombol(
                             label: label,
-                            onPressed: () => payrollPhkForm(context),
+                            onPressed: () => showPayrollPhkForm(context),
                           );
                         },
                       ),
@@ -170,28 +158,28 @@ extension PhkFormExt on KaryawanControl {
                               ),
                               AFwidget.barisText(
                                 label: 'Kompensasi',
-                                controller: txtKompensasi,
+                                controller: controller.txtKompensasi,
                                 isNumber: true,
                                 labelWidth: 130,
                                 paddingLeft: 40,
                               ),
                               AFwidget.barisText(
                                 label: 'Pesangon',
-                                controller: txtPesangon,
+                                controller: controller.txtPesangon,
                                 isNumber: true,
                                 labelWidth: 130,
                                 paddingLeft: 40,
                               ),
                               AFwidget.barisText(
                                 label: 'Masa Kerja',
-                                controller: txtMasaKerja,
+                                controller: controller.txtMasaKerja,
                                 isNumber: true,
                                 labelWidth: 130,
                                 paddingLeft: 40,
                               ),
                               AFwidget.barisText(
                                 label: 'Uang Pisah',
-                                controller: txtUangPisah,
+                                controller: controller.txtUangPisah,
                                 isNumber: true,
                                 labelWidth: 130,
                                 paddingLeft: 40,
@@ -213,7 +201,7 @@ extension PhkFormExt on KaryawanControl {
                                           const Text('Hari :'),
                                           AFwidget.textField(
                                             marginTop: 0,
-                                            controller: txtSisaCutiHari,
+                                            controller: controller.txtSisaCutiHari,
                                             inputformatters: [
                                               CurrencyTextInputFormatter.currency(
                                                 symbol: '',
@@ -234,7 +222,7 @@ extension PhkFormExt on KaryawanControl {
                                           const Text('Jumlah IDR :'),
                                           AFwidget.textField(
                                             marginTop: 0,
-                                            controller: txtSisaCutiJumlah,
+                                            controller: controller.txtSisaCutiJumlah,
                                             inputformatters: [
                                               CurrencyTextInputFormatter.currency(
                                                 symbol: '',
@@ -251,7 +239,7 @@ extension PhkFormExt on KaryawanControl {
                               ),
                               AFwidget.barisText(
                                 label: 'Lain-lain',
-                                controller: txtLain,
+                                controller: controller.txtLain,
                                 isNumber: true,
                                 labelWidth: 130,
                                 paddingLeft: 40,
@@ -277,7 +265,7 @@ extension PhkFormExt on KaryawanControl {
                               ),
                               AFwidget.barisText(
                                 label: 'Kas / Cicilan',
-                                controller: txtPotKas,
+                                controller: controller.txtPotKas,
                                 isNumber: true,
                                 labelWidth: 130,
                                 paddingLeft: 40,
@@ -299,7 +287,7 @@ extension PhkFormExt on KaryawanControl {
                                           const Text('Hari :'),
                                           AFwidget.textField(
                                             marginTop: 0,
-                                            controller: txtPotCutiHari,
+                                            controller: controller.txtPotCutiHari,
                                             inputformatters: [
                                               CurrencyTextInputFormatter.currency(
                                                 symbol: '',
@@ -320,7 +308,7 @@ extension PhkFormExt on KaryawanControl {
                                           const Text('Jumlah IDR :'),
                                           AFwidget.textField(
                                             marginTop: 0,
-                                            controller: txtPotCutiJumlah,
+                                            controller: controller.txtPotCutiJumlah,
                                             inputformatters: [
                                               CurrencyTextInputFormatter.currency(
                                                 symbol: '',
@@ -337,7 +325,7 @@ extension PhkFormExt on KaryawanControl {
                               ),
                               AFwidget.barisText(
                                 label: 'Lain-lain',
-                                controller: txtPotLain,
+                                controller: controller.txtPotLain,
                                 isNumber: true,
                                 labelWidth: 130,
                                 paddingLeft: 40,
@@ -364,7 +352,7 @@ extension PhkFormExt on KaryawanControl {
                       AFwidget.tombol(
                         label: 'Simpan',
                         color: Colors.blue,
-                        onPressed: simpanPhkData,
+                        onPressed: controller.simpanPhkData,
                         minimumSize: const Size(120, 40),
                       ),
                     ],
@@ -375,11 +363,34 @@ extension PhkFormExt on KaryawanControl {
             AFwidget.formHeader('Form PHK Karyawan'),
           ],
         ),
-      ),
+      );
+  }
+}
+
+void showPhkForm(BuildContext context) {
+  final controller = Get.find<KaryawanControl>();
+    controller.loadPayrollPhkData();
+    controller.txtPhkKeterangan.text = controller.current.phk.keterangan;
+    controller.txtTanggalMasuk.text = AFconvert.matYMD(controller.current.phk.tanggalAwal ?? controller.current.tanggalMasuk);
+    controller.txtTanggalKeluar.text = AFconvert.matYMD(controller.current.phk.tanggalAKhir ?? DateTime.now());
+    controller.statusPhk = controller.current.phk.statusPhk;
+    controller.txtKompensasi.text = AFconvert.matNumber(controller.current.uangPhk.kompensasi);
+    controller.txtPesangon.text = AFconvert.matNumber(controller.current.uangPhk.pesangon);
+    controller.txtMasaKerja.text = AFconvert.matNumber(controller.current.uangPhk.masaKerja);
+    controller.txtUangPisah.text = AFconvert.matNumber(controller.current.uangPhk.uangPisah);
+    controller.txtSisaCutiHari.text = AFconvert.matNumber(controller.current.uangPhk.sisaCutiHari);
+    controller.txtSisaCutiJumlah.text = AFconvert.matNumber(controller.current.uangPhk.sisaCutiJumlah);
+    controller.txtLain.text = AFconvert.matNumber(controller.current.uangPhk.lain);
+    controller.txtPotKas.text = AFconvert.matNumber(controller.current.uangPhk.potKas);
+    controller.txtPotCutiHari.text = AFconvert.matNumber(controller.current.uangPhk.potCutiHari);
+    controller.txtPotCutiJumlah.text = AFconvert.matNumber(controller.current.uangPhk.potCutiJumlah);
+    controller.txtPotLain.text = AFconvert.matNumber(controller.current.uangPhk.potLain);
+  AFwidget.dialog(
+      const PhkForm(),
       barrierDismissible: false,
       scrollable: false,
       backgroundColor: Colors.white,
       contentPadding: const EdgeInsets.all(0),
     );
-  }
+  
 }

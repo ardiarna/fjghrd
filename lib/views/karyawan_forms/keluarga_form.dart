@@ -5,20 +5,17 @@ import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/models/keluarga_karyawan.dart';
 
-extension KeluargaFormExt on KaryawanControl {
-  void keluargaForm(String id, BuildContext context) {
+class KeluargaForm extends StatelessWidget {
+  final String id;
+  const KeluargaForm({super.key, required this.id});
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = Get.find<KaryawanControl>();
     KeluargaKaryawan item = KeluargaKaryawan();
-    if(id != '') item = listKeluarga.where((element) => element.id == id).first;
-    txtKeluargaId.text = item.id;
-    txtKeluargaNama.text = item.nama;
-    txtKeluargaNomorKtp.text = item.nomorKtp;
-    txtKeluargaTempatLahir.text = item.tempatLahir;
-    txtKeluargaTanggalLahir.text = AFconvert.matYMD(item.tanggalLahir ?? DateTime.now());
-    txtKeluargaTelepon.text = item.telepon;
-    txtKeluargaEmail.text = item.email;
-    keluargaHubungan = item.hubungan;
-    AFwidget.dialog(
-      Container(
+    if(id != '') item = controller.listKeluarga.where((element) => element.id == id).first;
+    
+    return Container(
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
         width: 700,
         decoration: const BoxDecoration(
@@ -31,16 +28,16 @@ extension KeluargaFormExt on KaryawanControl {
               children: [
                 AFwidget.barisInfo(
                   label: 'Nama Karyawan',
-                  nilai: current.nama,
+                  nilai: controller.current.nama,
                   paddingTop: 70,
                 ),
                 AFwidget.barisText(
                   label: 'Nama',
-                  controller: txtKeluargaNama,
+                  controller: controller.txtKeluargaNama,
                 ),
                 AFwidget.barisText(
                   label: 'Nomor KTP',
-                  controller: txtKeluargaNomorKtp,
+                  controller: controller.txtKeluargaNomorKtp,
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
@@ -55,16 +52,16 @@ extension KeluargaFormExt on KaryawanControl {
                         child: GetBuilder<KaryawanControl>(
                           builder: (_) {
                             return RadioGroup<String>(
-                              groupValue: keluargaHubungan,
+                              groupValue: controller.keluargaHubungan,
                               onChanged: (a) {
-                                if(a != null && a != keluargaHubungan) {
-                                  keluargaHubungan = a;
-                                  update();
+                                if(a != null && a != controller.keluargaHubungan) {
+                                  controller.keluargaHubungan = a;
+                                  controller.update();
                                 }
                               },
                               child: Wrap(
                                 spacing: 35,
-                                children: mapKeluargaHubungan.entries.map((entry) {
+                                children: controller.mapKeluargaHubungan.entries.map((entry) {
                                   return Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
@@ -93,7 +90,7 @@ extension KeluargaFormExt on KaryawanControl {
                       Expanded(
                         child: AFwidget.textField(
                           marginTop: 0,
-                          controller: txtKeluargaTempatLahir,
+                          controller: controller.txtKeluargaTempatLahir,
                         ),
                       ),
                       Container(
@@ -101,16 +98,16 @@ extension KeluargaFormExt on KaryawanControl {
                         margin: const EdgeInsets.only(left: 15),
                         child: AFwidget.textField(
                           marginTop: 0,
-                          controller: txtKeluargaTanggalLahir,
+                          controller: controller.txtKeluargaTanggalLahir,
                           readOnly: true,
                           prefixIcon: const Icon(Icons.calendar_month),
                           ontap: () async {
                             var a = await AFwidget.pickDate(
                               context: context,
-                              initialDate: AFconvert.keTanggal(txtKeluargaTanggalLahir.text),
+                              initialDate: AFconvert.keTanggal(controller.txtKeluargaTanggalLahir.text),
                             );
                             if(a != null) {
-                              txtKeluargaTanggalLahir.text = AFconvert.matYMD(a);
+                              controller.txtKeluargaTanggalLahir.text = AFconvert.matYMD(a);
                             }
                           },
                         ),
@@ -120,11 +117,11 @@ extension KeluargaFormExt on KaryawanControl {
                 ),
                 AFwidget.barisText(
                   label: 'No. Telepon',
-                  controller: txtKeluargaTelepon,
+                  controller: controller.txtKeluargaTelepon,
                 ),
                 AFwidget.barisText(
                   label: 'Email Pribadi',
-                  controller: txtKeluargaEmail,
+                  controller: controller.txtKeluargaEmail,
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
@@ -134,7 +131,12 @@ extension KeluargaFormExt on KaryawanControl {
                         label: 'Hapus',
                         color: Colors.red,
                         onPressed: () {
-                          hapusKeluargaForm(item);
+                          AFwidget.formHapus(
+                            label: 'keluarga bernama ${item.nama}',
+                            aksi: () {
+                              controller.hapusKeluargaData(item.id);
+                            },
+                          );
                         },
                         minimumSize: const Size(120, 40),
                       ) : Container(),
@@ -149,7 +151,7 @@ extension KeluargaFormExt on KaryawanControl {
                       AFwidget.tombol(
                         label: 'Simpan',
                         color: Colors.blue,
-                        onPressed: simpanKeluargaData,
+                        onPressed: controller.simpanKeluargaData,
                         minimumSize: const Size(120, 40),
                       ),
                     ],
@@ -160,11 +162,28 @@ extension KeluargaFormExt on KaryawanControl {
             AFwidget.formHeader('Form ${id == '' ? 'Tambah' : 'Ubah'} Anggota Keluarga'),
           ],
         ),
-      ),
-      barrierDismissible: false,
-      scrollable: false,
-      backgroundColor: Colors.white,
-      contentPadding: const EdgeInsets.all(0),
-    );
+      );
   }
+}
+
+void showKeluargaForm(String id, BuildContext context) {
+  final controller = Get.find<KaryawanControl>();
+  KeluargaKaryawan item = KeluargaKaryawan();
+  if(id != '') item = controller.listKeluarga.where((element) => element.id == id).first;
+  controller.txtKeluargaId.text = item.id;
+  controller.txtKeluargaNama.text = item.nama;
+  controller.txtKeluargaNomorKtp.text = item.nomorKtp;
+  controller.txtKeluargaTempatLahir.text = item.tempatLahir;
+  controller.txtKeluargaTanggalLahir.text = AFconvert.matYMD(item.tanggalLahir ?? DateTime.now());
+  controller.txtKeluargaTelepon.text = item.telepon;
+  controller.txtKeluargaEmail.text = item.email;
+  controller.keluargaHubungan = item.hubungan;
+
+  AFwidget.dialog(
+    KeluargaForm(id: id),
+    barrierDismissible: false,
+    scrollable: false,
+    backgroundColor: Colors.white,
+    contentPadding: const EdgeInsets.all(0),
+  );
 }

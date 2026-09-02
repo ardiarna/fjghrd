@@ -1,5 +1,6 @@
 import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/controllers/karyawan_control.dart';
+import 'package:fjghrd/views/karyawan_tambah_form.dart';
 import 'package:fjghrd/models/durasi_tanggal.dart';
 import 'package:fjghrd/models/karyawan.dart';
 import 'package:fjghrd/models/opsi.dart';
@@ -345,7 +346,7 @@ class KaryawanView extends StatelessWidget {
               const SizedBox(width: 20),
               IconButton(
                 onPressed: () {
-                  controller.tambahForm(context);
+                  showKaryawanTambahForm(context);
                 },
                 icon: const Icon(
                   Icons.add_circle,
@@ -457,8 +458,7 @@ class KaryawanView extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: GetBuilder<KaryawanControl>(
-            builder: (_) {
+          child: Obx(() {
               return PlutoGrid(
                 key: UniqueKey(),
                 columns: columns,

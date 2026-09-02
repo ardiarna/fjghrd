@@ -4,16 +4,17 @@ import 'package:fjghrd/controllers/karyawan_control.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/models/keluarga_kontak.dart';
 
-extension KontakFormExt on KaryawanControl {
-  void kontakForm(String id, BuildContext context) {
+class KontakForm extends StatelessWidget {
+  final String id;
+  const KontakForm({super.key, required this.id});
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = Get.find<KaryawanControl>();
     KeluargaKontak item = KeluargaKontak();
-    if (id != '') item = listKontak.where((element) => element.id == id).first;
-    txtKontakId.text = item.id;
-    txtKontakNama.text = item.nama;
-    txtKontakTelepon.text = item.telepon;
-    txtKontakEmail.text = item.email;
-    AFwidget.dialog(
-      Container(
+    if (id != '') item = controller.listKontak.where((element) => element.id == id).first;
+    
+    return Container(
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
         width: 700,
         decoration: const BoxDecoration(
@@ -26,20 +27,20 @@ extension KontakFormExt on KaryawanControl {
               children: [
                 AFwidget.barisInfo(
                   label: 'Nama Karyawan',
-                  nilai: current.nama,
+                  nilai: controller.current.nama,
                   paddingTop: 70,
                 ),
                 AFwidget.barisText(
                   label: 'No. Telepon',
-                  controller: txtKontakTelepon,
+                  controller: controller.txtKontakTelepon,
                 ),
                 AFwidget.barisText(
                   label: 'Keterangan',
-                  controller: txtKontakNama,
+                  controller: controller.txtKontakNama,
                 ),
                 AFwidget.barisText(
                   label: 'Email Pribadi',
-                  controller: txtKontakEmail,
+                  controller: controller.txtKontakEmail,
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
@@ -49,7 +50,12 @@ extension KontakFormExt on KaryawanControl {
                         label: 'Hapus',
                         color: Colors.red,
                         onPressed: () {
-                          hapusKontakForm(item);
+                          AFwidget.formHapus(
+                            label: 'kontak keluarga ${item.telepon} (${item.nama})',
+                            aksi: () {
+                              controller.hapusKontakData(item.id);
+                            },
+                          );
                         },
                         minimumSize: const Size(120, 40),
                       ) : Container(),
@@ -64,7 +70,7 @@ extension KontakFormExt on KaryawanControl {
                       AFwidget.tombol(
                         label: 'Simpan',
                         color: Colors.blue,
-                        onPressed: simpanKontakData,
+                        onPressed: controller.simpanKontakData,
                         minimumSize: const Size(120, 40),
                       ),
                     ],
@@ -75,11 +81,24 @@ extension KontakFormExt on KaryawanControl {
             AFwidget.formHeader('Form ${id == '' ? 'Tambah' : 'Ubah'} Kontak Keluarga'),
           ],
         ),
-      ),
-      barrierDismissible: false,
-      scrollable: false,
-      backgroundColor: Colors.white,
-      contentPadding: const EdgeInsets.all(0),
-    );
+      );
   }
+}
+
+void showKontakForm(String id, BuildContext context) {
+  final controller = Get.find<KaryawanControl>();
+  KeluargaKontak item = KeluargaKontak();
+  if (id != '') item = controller.listKontak.where((element) => element.id == id).first;
+  controller.txtKontakId.text = item.id;
+  controller.txtKontakNama.text = item.nama;
+  controller.txtKontakTelepon.text = item.telepon;
+  controller.txtKontakEmail.text = item.email;
+
+  AFwidget.dialog(
+    KontakForm(id: id),
+    barrierDismissible: false,
+    scrollable: false,
+    backgroundColor: Colors.white,
+    contentPadding: const EdgeInsets.all(0),
+  );
 }
