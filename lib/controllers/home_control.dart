@@ -8,6 +8,7 @@ import 'package:fjghrd/views/payroll_view.dart';
 import 'package:fjghrd/views/report_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:fjghrd/utils/validation_exception.dart';
 
 class HomeControl extends GetxController {
   AuthControl authControl = Get.find();
@@ -65,7 +66,7 @@ class HomeControl extends GetxController {
   Future<void> changeEmail() async {
     try {
       if(txtEmail.text.isEmpty) {
-        throw 'Email harus diisi';
+        throw ValidationException('Email harus diisi');
       }
       AFwidget.loading();
       var hasil = await _userRepository.update({ 'email': txtEmail.text });
@@ -85,13 +86,13 @@ class HomeControl extends GetxController {
   Future<void> changePassword() async {
     try {
       if(txtPassOld.text.isEmpty) {
-        throw 'Password lama harus diisi';
+        throw ValidationException('Password lama harus diisi');
       }
       if(txtPassword.text.isEmpty) {
-        throw 'Password baru harus diisi';
+        throw ValidationException('Password baru harus diisi');
       }
       if(txtPassConfirm.text.isEmpty) {
-        throw 'Konfirmasi password baru harus diisi';
+        throw ValidationException('Konfirmasi password baru harus diisi');
       }
       AFwidget.loading();
       var hasil = await _userRepository.changePassword(

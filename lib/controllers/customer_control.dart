@@ -4,6 +4,7 @@ import 'package:fjghrd/repositories/customer_repository.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:fjghrd/utils/validation_exception.dart';
 
 class CustomerControl extends GetxController {
   final authControl = Get.find<AuthControl>();
@@ -99,7 +100,7 @@ class CustomerControl extends GetxController {
   Future<void> simpanData() async {
     try {
       if(txtNama.text.isEmpty) {
-        throw 'Nama harus diisi';
+        throw ValidationException('Nama harus diisi');
       }
 
       var a = Customer(
@@ -129,7 +130,7 @@ class CustomerControl extends GetxController {
   Future<void> hapusData(String id) async {
     try {
       if(id == '') {
-        throw 'ID Customer null';
+        throw ValidationException('ID Customer null');
       }
       AFwidget.loading();
       var hasil = await _repo.delete(id);

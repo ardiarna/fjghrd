@@ -6,6 +6,7 @@ import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:fjghrd/utils/validation_exception.dart';
 
 class HariLiburControl extends GetxController {
   final authControl = Get.find<AuthControl>();
@@ -126,10 +127,10 @@ class HariLiburControl extends GetxController {
   Future<void> simpanData() async {
     try {
       if(txtTanggal.text.isEmpty) {
-        throw 'Tanggal harus diisi';
+        throw ValidationException('Tanggal harus diisi');
       }
       if(txtNama.text.isEmpty) {
-        throw 'Nama harus diisi';
+        throw ValidationException('Nama harus diisi');
       }
       var a = HariLibur(
         id: txtId.text,
@@ -157,7 +158,7 @@ class HariLiburControl extends GetxController {
   Future<void> hapusData(String id) async {
     try {
       if(id == '') {
-        throw 'ID Hari Libur null';
+        throw ValidationException('ID Hari Libur null');
       }
       AFwidget.loading();
       var hasil = await _repo.delete(id);

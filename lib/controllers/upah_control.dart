@@ -9,6 +9,7 @@ import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/utils/hasil.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:fjghrd/utils/validation_exception.dart';
 
 class UpahControl extends GetxController {
   final authControl = Get.find<AuthControl>();
@@ -207,16 +208,16 @@ class UpahControl extends GetxController {
   Future<void> ubahData() async {
     try {
       if(current.id.isEmpty) {
-        throw 'ID karyawan tidak ditemukan';
+        throw ValidationException('ID karyawan tidak ditemukan');
       }
       if(txtUangMakan.text.isEmpty) {
-        throw 'Uang Makan harus diisi';
+        throw ValidationException('Uang Makan harus diisi');
       }
       if(makanHarian == null) {
-        throw 'Silakan pilih apakah uang makan harian atau tidak';
+        throw ValidationException('Silakan pilih apakah uang makan harian atau tidak');
       }
       if(overtime == null) {
-        throw 'Silakan pilih status overtime ya atau tidak';
+        throw ValidationException('Silakan pilih status overtime ya atau tidak');
       }
       var a = Upah(
         id: current.upah.id,

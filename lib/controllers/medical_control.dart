@@ -11,6 +11,7 @@ import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:fjghrd/utils/validation_exception.dart';
 
 class MedicalControl extends GetxController {
   final authControl = Get.find<AuthControl>();
@@ -639,16 +640,16 @@ class MedicalControl extends GetxController {
   Future<void> tambahData() async {
     try {
       if(jenis.value.isEmpty) {
-        throw 'Silakan pilih jenis medical';
+        throw ValidationException('Silakan pilih jenis medical');
       }
       if(bulan.value.isEmpty || tahun.value.isEmpty) {
-        throw 'Periode harus diisi';
+        throw ValidationException('Periode harus diisi');
       }
       if(karyawan.id.isEmpty) {
-        throw 'Silakan pilih karyawan';
+        throw ValidationException('Silakan pilih karyawan');
       }
       if(txtJumlah.text.isEmpty) {
-        throw 'Jumlah harus diisi';
+        throw ValidationException('Jumlah harus diisi');
       }
       int year = AFconvert.keInt(tahun.value);
       int month = AFconvert.keInt(bulan.value);
@@ -680,19 +681,19 @@ class MedicalControl extends GetxController {
   Future<void> ubahData() async {
     try {
       if(txtId.text.isEmpty) {
-        throw 'ID medical tidak ditemukan';
+        throw ValidationException('ID medical tidak ditemukan');
       }
       if(karyawan.id.isEmpty) {
-        throw 'Silakan pilih karyawan';
+        throw ValidationException('Silakan pilih karyawan');
       }
       if(jenis.value.isEmpty) {
-        throw 'Silakan pilih jenis medical';
+        throw ValidationException('Silakan pilih jenis medical');
       }
       if(bulan.value.isEmpty || tahun.value.isEmpty) {
-        throw 'Periode harus diisi';
+        throw ValidationException('Periode harus diisi');
       }
       if(txtJumlah.text.isEmpty) {
-        throw 'Jumlah harus diisi';
+        throw ValidationException('Jumlah harus diisi');
       }
       int year = AFconvert.keInt(tahun.value);
       int month = AFconvert.keInt(bulan.value);
@@ -724,7 +725,7 @@ class MedicalControl extends GetxController {
   Future<void> hapusData(String id) async {
     try {
       if(id == '') {
-        throw 'ID medical tidak ditemukan';
+        throw ValidationException('ID medical tidak ditemukan');
       }
       AFwidget.loading();
       var hasil = await _repo.delete(id);

@@ -12,6 +12,7 @@ import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/utils/af_combobox.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:fjghrd/utils/validation_exception.dart';
 
 class CicKaryawanControl extends GetxController {
   List<Karyawan> listData = [];
@@ -714,18 +715,18 @@ AFwidget.dialog(
 
   Future<void> simpanData() async {
     try {
-      if(area.id == '') throw 'Silakan pilih area';
-      if(jabatan.id == '') throw 'Silakan pilih jabatan';
-      if(txtNama.text.isEmpty) throw 'Nama tidak boleh kosong';
-      if(txtTanggalMasuk.text.isEmpty) throw 'Masa kerja harus diisi';
-      if(txtNomorKtp.text.isEmpty) throw 'No KTP tidak boleh kosong';
-      if(txtTempatLahir.text.isEmpty || txtTanggalLahir.text.isEmpty) throw 'Tempat & tanggal lahir harus diisi';
-      if(txtAlamatKtp.text.isEmpty) throw 'Alamat sesuai KTP harus diisi';
-      if(txtTelepon.text.isEmpty) throw 'Nomor telepon harus diisi';
-      if(kawin == '') throw 'Silakan isi status kawin';
-      if(kelamin == '') throw 'Silakan isi jenis kelamin';
-      if(aktif == '') throw 'Silakan isi status aktif';
-      if(staf == null) throw 'Silakan isi jenis karyawan (Staf/Non)';
+      if(area.id == '') throw ValidationException('Silakan pilih area');
+      if(jabatan.id == '') throw ValidationException('Silakan pilih jabatan');
+      if(txtNama.text.isEmpty) throw ValidationException('Nama tidak boleh kosong');
+      if(txtTanggalMasuk.text.isEmpty) throw ValidationException('Masa kerja harus diisi');
+      if(txtNomorKtp.text.isEmpty) throw ValidationException('No KTP tidak boleh kosong');
+      if(txtTempatLahir.text.isEmpty || txtTanggalLahir.text.isEmpty) throw ValidationException('Tempat & tanggal lahir harus diisi');
+      if(txtAlamatKtp.text.isEmpty) throw ValidationException('Alamat sesuai KTP harus diisi');
+      if(txtTelepon.text.isEmpty) throw ValidationException('Nomor telepon harus diisi');
+      if(kawin == '') throw ValidationException('Silakan isi status kawin');
+      if(kelamin == '') throw ValidationException('Silakan isi jenis kelamin');
+      if(aktif == '') throw ValidationException('Silakan isi status aktif');
+      if(staf == null) throw ValidationException('Silakan isi jenis karyawan (Staf/Non)');
       
       Map<String, dynamic> body = {
         'nama': txtNama.text,

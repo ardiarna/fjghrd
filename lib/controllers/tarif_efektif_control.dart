@@ -5,6 +5,7 @@ import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:fjghrd/utils/validation_exception.dart';
 
 class TarifEfektifControl extends GetxController {
   final authControl = Get.find<AuthControl>();
@@ -150,13 +151,13 @@ class TarifEfektifControl extends GetxController {
   Future<void> simpanData() async {
     try {
       if(kategoriTER.isEmpty) {
-        throw 'Kategori TER harus diisi';
+        throw ValidationException('Kategori TER harus diisi');
       }
       if(txtPenghasilan.text.isEmpty) {
-        throw 'Penghasilan harus diisi';
+        throw ValidationException('Penghasilan harus diisi');
       }
       if(txtPersen.text.isEmpty) {
-        throw 'Persen harus diisi';
+        throw ValidationException('Persen harus diisi');
       }
       var a = TarifEfektif(
         id: txtId.text,
@@ -185,7 +186,7 @@ class TarifEfektifControl extends GetxController {
   Future<void> hapusData(String id) async {
     try {
       if(id == '') {
-        throw 'ID TER null';
+        throw ValidationException('ID TER null');
       }
       AFwidget.loading();
       var hasil = await _repo.delete(id);

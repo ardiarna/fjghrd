@@ -10,6 +10,7 @@ import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:fjghrd/utils/validation_exception.dart';
 
 class UangPhkControl extends GetxController {
   final authControl = Get.find<AuthControl>();
@@ -497,10 +498,10 @@ class UangPhkControl extends GetxController {
   Future<void> tambahData() async {
     try {
       if(karyawan.id.isEmpty) {
-        throw 'Silakan pilih karyawan';
+        throw ValidationException('Silakan pilih karyawan');
       }
       if(txtKompensasi.text.isEmpty && txtUangPisah.text.isEmpty && txtPesangon.text.isEmpty && txtMasaKerja.text.isEmpty && txtLain.text.isEmpty) {
-        throw 'silakan isi minimal satu jenis uang PHK';
+        throw ValidationException('silakan isi minimal satu jenis uang PHK');
       }
 
       var a = UangPhk(
@@ -531,16 +532,16 @@ class UangPhkControl extends GetxController {
   Future<void> ubahData() async {
     try {
       if(txtId.text.isEmpty) {
-        throw 'ID uang PHK tidak ditemukan';
+        throw ValidationException('ID uang PHK tidak ditemukan');
       }
       if(karyawan.id.isEmpty) {
-        throw 'Silakan pilih karyawan';
+        throw ValidationException('Silakan pilih karyawan');
       }
       if(tahun.value.isEmpty) {
-        throw 'Periode harus diisi';
+        throw ValidationException('Periode harus diisi');
       }
       if(txtKompensasi.text.isEmpty && txtUangPisah.text.isEmpty && txtPesangon.text.isEmpty && txtMasaKerja.text.isEmpty && txtLain.text.isEmpty) {
-        throw 'silakan isi minimal satu jenis uang PHK';
+        throw ValidationException('silakan isi minimal satu jenis uang PHK');
       }
       var a = UangPhk(
         tahun: AFconvert.keInt(tahun.value),
@@ -570,7 +571,7 @@ class UangPhkControl extends GetxController {
   Future<void> hapusData(String id) async {
     try {
       if(id == '') {
-        throw 'ID uang PHK tidak ditemukan';
+        throw ValidationException('ID uang PHK tidak ditemukan');
       }
       AFwidget.loading();
       var hasil = await _repo.delete(id);

@@ -5,6 +5,7 @@ import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:fjghrd/utils/validation_exception.dart';
 
 class DivisiControl extends GetxController {
   final authControl = Get.find<AuthControl>();
@@ -106,13 +107,13 @@ class DivisiControl extends GetxController {
   Future<void> simpanData() async {
     try {
       if(txtKode.text.isEmpty) {
-        throw 'Kode harus diisi';
+        throw ValidationException('Kode harus diisi');
       }
       if(txtNama.text.isEmpty) {
-        throw 'Nama harus diisi';
+        throw ValidationException('Nama harus diisi');
       }
       if(txtUrutan.text.isEmpty) {
-        throw 'Urutan harus diisi';
+        throw ValidationException('Urutan harus diisi');
       }
 
       var a = Divisi(
@@ -142,7 +143,7 @@ class DivisiControl extends GetxController {
   Future<void> hapusData(String id) async {
     try {
       if(id == '') {
-        throw 'ID Divisi null';
+        throw ValidationException('ID Divisi null');
       }
       AFwidget.loading();
       var hasil = await _repo.delete(id);

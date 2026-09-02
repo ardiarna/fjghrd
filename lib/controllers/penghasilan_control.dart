@@ -11,6 +11,7 @@ import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:fjghrd/utils/validation_exception.dart';
 import 'package:fjghrd/controllers/auth_control.dart';
 
 class PenghasilanControl extends GetxController {
@@ -593,22 +594,22 @@ class PenghasilanControl extends GetxController {
   Future<void> tambahData() async {
     try {
       if(jenis.value.isEmpty) {
-        throw 'Silakan pilih jenis penghasilan';
+        throw ValidationException('Silakan pilih jenis penghasilan');
       }
       if(bulan.value.isEmpty || tahun.value.isEmpty) {
-        throw 'Periode harus diisi';
+        throw ValidationException('Periode harus diisi');
       }
       if(txtTanggal.text.isEmpty) {
-        throw 'Tanggal harus diisi';
+        throw ValidationException('Tanggal harus diisi');
       }
       if(karyawan.id.isEmpty) {
-        throw 'Silakan pilih karyawan';
+        throw ValidationException('Silakan pilih karyawan');
       }
       if(jenis.value == 'AB' && txtHari.text.isEmpty) {
-        throw 'Jumlah hari harus diisi';
+        throw ValidationException('Jumlah hari harus diisi');
       }
       if(txtJumlah.text.isEmpty) {
-        throw 'Jumlah IDR harus diisi';
+        throw ValidationException('Jumlah IDR harus diisi');
       }
 
       var a = Penghasilan(
@@ -650,25 +651,25 @@ class PenghasilanControl extends GetxController {
   Future<void> ubahData() async {
     try {
       if(txtId.text.isEmpty) {
-        throw 'ID penghasilan tidak ditemukan';
+        throw ValidationException('ID penghasilan tidak ditemukan');
       }
       if(karyawan.id.isEmpty) {
-        throw 'Silakan pilih karyawan';
+        throw ValidationException('Silakan pilih karyawan');
       }
       if(jenis.value.isEmpty) {
-        throw 'Silakan pilih jenis penghasilan';
+        throw ValidationException('Silakan pilih jenis penghasilan');
       }
       if(bulan.value.isEmpty || tahun.value.isEmpty) {
-        throw 'Periode harus diisi';
+        throw ValidationException('Periode harus diisi');
       }
       if(txtTanggal.text.isEmpty) {
-        throw 'Tanggal harus diisi';
+        throw ValidationException('Tanggal harus diisi');
       }
       if(jenis.value == 'AB' && txtHari.text.isEmpty) {
-        throw 'Jumlah hari harus diisi';
+        throw ValidationException('Jumlah hari harus diisi');
       }
       if(txtJumlah.text.isEmpty) {
-        throw 'Jumlah IDR harus diisi';
+        throw ValidationException('Jumlah IDR harus diisi');
       }
       var a = Penghasilan(
         jenis: jenis.value,
@@ -709,7 +710,7 @@ class PenghasilanControl extends GetxController {
   Future<void> hapusData(String id) async {
     try {
       if(id == '') {
-        throw 'ID penghasilan tidak ditemukan';
+        throw ValidationException('ID penghasilan tidak ditemukan');
       }
       AFwidget.loading();
       var hasil = await _repo.delete(id);

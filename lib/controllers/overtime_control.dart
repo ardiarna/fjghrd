@@ -11,6 +11,7 @@ import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/utils/hasil.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:fjghrd/utils/validation_exception.dart';
 
 class OvertimeControl extends GetxController {
   final authControl = Get.find<AuthControl>();
@@ -475,16 +476,16 @@ class OvertimeControl extends GetxController {
   Future<void> tambahData() async {
     try {
       if(bulan.value.isEmpty || tahun.value.isEmpty) {
-        throw 'Periode harus diisi';
+        throw ValidationException('Periode harus diisi');
       }
       if(txtTanggal.text.isEmpty) {
-        throw 'Tanggal harus diisi';
+        throw ValidationException('Tanggal harus diisi');
       }
       if(karyawan.id.isEmpty) {
-        throw 'Silakan pilih karyawan';
+        throw ValidationException('Silakan pilih karyawan');
       }
       if(txtJumlah.text.isEmpty && txtJum2.text.isEmpty) {
-        throw 'Jumlah Overtime Fratekindo atau Customer, salah satu harus diisi';
+        throw ValidationException('Jumlah Overtime Fratekindo atau Customer, salah satu harus diisi');
       }
 
       Hasil hasil = Hasil();
@@ -540,22 +541,22 @@ class OvertimeControl extends GetxController {
   Future<void> ubahData() async {
     try {
       if(txtId.text.isEmpty) {
-        throw 'ID overtime tidak ditemukan';
+        throw ValidationException('ID overtime tidak ditemukan');
       }
       if(karyawan.id.isEmpty) {
-        throw 'Silakan pilih karyawan';
+        throw ValidationException('Silakan pilih karyawan');
       }
       if(jenis.isEmpty) {
-        throw 'Silakan pilih jenis overtime';
+        throw ValidationException('Silakan pilih jenis overtime');
       }
       if(bulan.value.isEmpty || tahun.value.isEmpty) {
-        throw 'Periode harus diisi';
+        throw ValidationException('Periode harus diisi');
       }
       if(txtTanggal.text.isEmpty) {
-        throw 'Tanggal harus diisi';
+        throw ValidationException('Tanggal harus diisi');
       }
       if(txtJumlah.text.isEmpty) {
-        throw 'Jumlah harus diisi';
+        throw ValidationException('Jumlah harus diisi');
       }
       var a = Overtime(
         jenis: jenis,
@@ -585,7 +586,7 @@ class OvertimeControl extends GetxController {
   Future<void> hapusData(String id) async {
     try {
       if(id == '') {
-        throw 'ID overtime tidak ditemukan';
+        throw ValidationException('ID overtime tidak ditemukan');
       }
       AFwidget.loading();
       var hasil = await _repo.delete(id);

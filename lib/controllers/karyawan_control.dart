@@ -36,6 +36,7 @@ import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:fjghrd/utils/validation_exception.dart';
 
 class KaryawanControl extends GetxController {
   final authControl = Get.find<AuthControl>();
@@ -1137,40 +1138,40 @@ class KaryawanControl extends GetxController {
   Future<void> tambahData() async {
     try {
       if(area.id == '') {
-        throw 'Silakan pilih area';
+        throw ValidationException('Silakan pilih area');
       }
       if(staf == null) {
-        throw 'Silakan pilih jenis karyawan (staf atau non staf)';
+        throw ValidationException('Silakan pilih jenis karyawan (staf atau non staf)');
       }
       if(aktif == '') {
-        throw 'Silakan pilih status aktif';
+        throw ValidationException('Silakan pilih status aktif');
       }
       if(txtNama.text.isEmpty) {
-        throw 'Nama harus diisi';
+        throw ValidationException('Nama harus diisi');
       }
       if(txtTanggalMasuk.text.isEmpty) {
-        throw 'Masa kerja harus diisi';
+        throw ValidationException('Masa kerja harus diisi');
       }
       if(jabatan.id == '') {
-        throw 'Silakan pilih jabatan';
+        throw ValidationException('Silakan pilih jabatan');
       }
       if(txtNomorKtp.text.isEmpty) {
-        throw 'Nomor KTP harus diisi';
+        throw ValidationException('Nomor KTP harus diisi');
       }
       if(txtTempatLahir.text.isEmpty || txtTanggalLahir.text.isEmpty) {
-        throw 'Tempat & tanggal lahir harus diisi';
+        throw ValidationException('Tempat & tanggal lahir harus diisi');
       }
       if(txtAlamatKtp.text.isEmpty) {
-        throw 'Alamat sesuai KTP harus diisi';
+        throw ValidationException('Alamat sesuai KTP harus diisi');
       }
       if(txtTelepon.text.isEmpty) {
-        throw 'Nomor telepon harus diisi';
+        throw ValidationException('Nomor telepon harus diisi');
       }
       if(kawin == '') {
-        throw 'Silakan isi status kawin';
+        throw ValidationException('Silakan isi status kawin');
       }
       if(kelamin == '') {
-        throw 'Silakan pilih jenis kelamin';
+        throw ValidationException('Silakan pilih jenis kelamin');
       }
       var a = Karyawan(
         nama: txtNama.text,
@@ -1222,49 +1223,49 @@ class KaryawanControl extends GetxController {
   Future<void> ubahData() async {
     try {
       if(txtId.text.isEmpty) {
-        throw 'ID harus diisi';
+        throw ValidationException('ID harus diisi');
       }
       if(txtNama.text.isEmpty) {
-        throw 'Nama harus diisi';
+        throw ValidationException('Nama harus diisi');
       }
       if(txtTanggalMasuk.text.isEmpty) {
-        throw 'Masa kerja harus diisi';
+        throw ValidationException('Masa kerja harus diisi');
       }
       if(area.id == '') {
-        throw 'Silakan pilih area';
+        throw ValidationException('Silakan pilih area');
       }
       if(divisi.id == '') {
-        throw 'Silakan pilih divisi';
+        throw ValidationException('Silakan pilih divisi');
       }
       if(jabatan.id == '') {
-        throw 'Silakan pilih jabatan';
+        throw ValidationException('Silakan pilih jabatan');
       }
       if(txtNomorKtp.text.isEmpty) {
-        throw 'Nomor KTP harus diisi';
+        throw ValidationException('Nomor KTP harus diisi');
       }
       if(txtTempatLahir.text.isEmpty || txtTanggalLahir.text.isEmpty) {
-        throw 'Tempat & tanggal lahir harus diisi';
+        throw ValidationException('Tempat & tanggal lahir harus diisi');
       }
       if(txtAlamatKtp.text.isEmpty) {
-        throw 'Alamat sesuai KTP harus diisi';
+        throw ValidationException('Alamat sesuai KTP harus diisi');
       }
       if(txtTelepon.text.isEmpty) {
-        throw 'Nomor telepon harus diisi';
+        throw ValidationException('Nomor telepon harus diisi');
       }
       if(kawin == '') {
-        throw 'Silakan isi status kawin';
+        throw ValidationException('Silakan isi status kawin');
       }
       if(staf == null) {
-        throw 'Silakan pilih jenis karyawan (staf atau non staf)';
+        throw ValidationException('Silakan pilih jenis karyawan (staf atau non staf)');
       }
       if(aktif == '') {
-        throw 'Silakan pilih status aktif';
+        throw ValidationException('Silakan pilih status aktif');
       }
       if(kelamin == '') {
-        throw 'Silakan pilih jenis kelamin';
+        throw ValidationException('Silakan pilih jenis kelamin');
       }
       if(statusKerja.id == '') {
-        throw 'Silakan pilih status karyawan';
+        throw ValidationException('Silakan pilih status karyawan');
       }
       var a = Karyawan(
         id: txtId.text,
@@ -1318,7 +1319,7 @@ class KaryawanControl extends GetxController {
   Future<void> hapusData(String id) async {
     try {
       if(id == '') {
-        throw 'ID Karyawan null';
+        throw ValidationException('ID Karyawan null');
       }
       AFwidget.loading();
       var hasil = await _repo.delete(id);
@@ -1342,16 +1343,16 @@ class KaryawanControl extends GetxController {
   Future<void> simpanKeluargaData() async {
     try {
       if(current.id.isEmpty) {
-        throw 'ID Karyawan tidak ditemukan';
+        throw ValidationException('ID Karyawan tidak ditemukan');
       }
       if(txtKeluargaNama.text.isEmpty) {
-        throw 'Nama harus diisi';
+        throw ValidationException('Nama harus diisi');
       }
       if(keluargaHubungan == '') {
-        throw 'Silakan pilih hubungan keluarga dengan karyawan';
+        throw ValidationException('Silakan pilih hubungan keluarga dengan karyawan');
       }
       if(txtTempatLahir.text.isEmpty || txtTanggalLahir.text.isEmpty) {
-        throw 'Tempat & tanggal lahir harus diisi';
+        throw ValidationException('Tempat & tanggal lahir harus diisi');
       }
       var a = KeluargaKaryawan(
         id: txtKeluargaId.text,
@@ -1387,10 +1388,10 @@ class KaryawanControl extends GetxController {
   Future<void> hapusKeluargaData(String keluargaId) async {
     try {
       if(current.id == '') {
-        throw 'ID karyawan null';
+        throw ValidationException('ID karyawan null');
       }
       if(keluargaId == '') {
-        throw 'ID keluarga null';
+        throw ValidationException('ID keluarga null');
       }
       AFwidget.loading();
       var hasil = await _repo.keluargaDelete(current.id, keluargaId);
@@ -1413,13 +1414,13 @@ class KaryawanControl extends GetxController {
   Future<void> simpanKontakData() async {
     try {
       if(current.id.isEmpty) {
-        throw 'ID Karyawan tidak ditemukan';
+        throw ValidationException('ID Karyawan tidak ditemukan');
       }
       if(txtKontakTelepon.text.isEmpty) {
-        throw 'Nomor Telepon harus diisi';
+        throw ValidationException('Nomor Telepon harus diisi');
       }
       if(txtKontakNama.text.isEmpty) {
-        throw 'Keterangan harus diisi';
+        throw ValidationException('Keterangan harus diisi');
       }
       var a = KeluargaKontak(
         id: txtKontakId.text,
@@ -1449,10 +1450,10 @@ class KaryawanControl extends GetxController {
   Future<void> hapusKontakData(String kontakId) async {
     try {
       if(current.id == '') {
-        throw 'ID karyawan null';
+        throw ValidationException('ID karyawan null');
       }
       if(kontakId == '') {
-        throw 'ID kontak keluarga null';
+        throw ValidationException('ID kontak keluarga null');
       }
       AFwidget.loading();
       var hasil = await _repo.kontakKeluargaDelete(current.id, kontakId);
@@ -1485,10 +1486,10 @@ class KaryawanControl extends GetxController {
   Future<void> simpanTrainingKaryawanData() async {
     try {
       if(current.id.isEmpty) {
-        throw 'ID Karyawan tidak ditemukan';
+        throw ValidationException('ID Karyawan tidak ditemukan');
       }
       if(trainingTerpilih == null) {
-        throw 'Silakan pilih Training';
+        throw ValidationException('Silakan pilih Training');
       }
 
 
@@ -1539,16 +1540,16 @@ class KaryawanControl extends GetxController {
   Future<void> simpanPerjanjianData() async {
     try {
       if(current.id.isEmpty) {
-        throw 'ID Karyawan tidak ditemukan';
+        throw ValidationException('ID Karyawan tidak ditemukan');
       }
       if(txtPerjanjianNomor.text.isEmpty) {
-        throw 'Nomor perjanjian kerja harus diisi';
+        throw ValidationException('Nomor perjanjian kerja harus diisi');
       }
       if(txtPerjanjianTglAwal.text.isEmpty) {
-        throw 'Tanggal awal harus diisi';
+        throw ValidationException('Tanggal awal harus diisi');
       }
       if(statusKerjaPerjanjian.id == '') {
-        throw 'Silakan pilih status';
+        throw ValidationException('Silakan pilih status');
       }
 
       var a = PerjanjianKerja(
@@ -1585,10 +1586,10 @@ class KaryawanControl extends GetxController {
   Future<void> hapusPerjanjianData(String perjanjianKerjaid) async {
     try {
       if(current.id == '') {
-        throw 'ID karyawan null';
+        throw ValidationException('ID karyawan null');
       }
       if(perjanjianKerjaid == '') {
-        throw 'ID perjanjian kerja null';
+        throw ValidationException('ID perjanjian kerja null');
       }
       AFwidget.loading();
       var hasil = await _repo.perjanjianKerjaDelete(current.id, perjanjianKerjaid);
@@ -1611,16 +1612,16 @@ class KaryawanControl extends GetxController {
   Future<void> simpanPhkData() async {
     try {
       if(current.id.isEmpty) {
-        throw 'ID Karyawan tidak ditemukan';
+        throw ValidationException('ID Karyawan tidak ditemukan');
       }
       if(txtTanggalMasuk.text.isEmpty) {
-        throw 'Tanggal awal masa kerja harus diisi';
+        throw ValidationException('Tanggal awal masa kerja harus diisi');
       }
       if(txtTanggalKeluar.text.isEmpty) {
-        throw 'Tanggal akhir masa kerja harus diisi';
+        throw ValidationException('Tanggal akhir masa kerja harus diisi');
       }
       if(statusPhk.id == '') {
-        throw 'Silakan pilih status phk';
+        throw ValidationException('Silakan pilih status phk');
       }
 
       var a = Phk(
@@ -1678,10 +1679,10 @@ class KaryawanControl extends GetxController {
   Future<void> hapusPhkData() async {
     try {
       if(current.id.isEmpty) {
-        throw 'ID Karyawan tidak ditemukan';
+        throw ValidationException('ID Karyawan tidak ditemukan');
       }
       if(current.phk.id.isEmpty) {
-        throw 'ID PHK tidak ditemukan';
+        throw ValidationException('ID PHK tidak ditemukan');
       }
       var hasil = await _repo.phkDelete(current.id, current.phk.id);
       if(hasil.success) {
@@ -1725,16 +1726,16 @@ class KaryawanControl extends GetxController {
   Future<void> simpanPayrollPhkData() async {
     try {
       if(current.id.isEmpty) {
-        throw 'ID Karyawan tidak ditemukan';
+        throw ValidationException('ID Karyawan tidak ditemukan');
       }
       if(tahunPhk.value.isEmpty || bulanPhk.value.isEmpty) {
-        throw 'Periode penggajian harus diisi';
+        throw ValidationException('Periode penggajian harus diisi');
       }
       if(txtPayrollPhkTglAwal.text.isEmpty || txtPayrollPhkTglAkhir.text.isEmpty) {
-        throw 'Periode batas (cut-off) harus diisi';
+        throw ValidationException('Periode batas (cut-off) harus diisi');
       }
       if(txtPayrollPhkGaji.text.isEmpty) {
-        throw 'Gaji harus diisi';
+        throw ValidationException('Gaji harus diisi');
       }
       var a = PayrollPhk(
         id: payrollPhk.id,

@@ -5,6 +5,7 @@ import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:fjghrd/utils/validation_exception.dart';
 
 class PtkpControl extends GetxController {
   final authControl = Get.find<AuthControl>();
@@ -148,13 +149,13 @@ class PtkpControl extends GetxController {
   Future<void> simpanData() async {
     try {
       if(txtKode.text.isEmpty) {
-        throw 'Kode harus diisi';
+        throw ValidationException('Kode harus diisi');
       }
       if(txtJumlah.text.isEmpty) {
-        throw 'Jumlah harus diisi';
+        throw ValidationException('Jumlah harus diisi');
       }
       if(kategoriTER.isEmpty) {
-        throw 'Kategori TER harus diisi';
+        throw ValidationException('Kategori TER harus diisi');
       }
 
       var a = Ptkp(
@@ -184,7 +185,7 @@ class PtkpControl extends GetxController {
   Future<void> hapusData(String id) async {
     try {
       if(id == '') {
-        throw 'ID PTKP null';
+        throw ValidationException('ID PTKP null');
       }
       AFwidget.loading();
       var hasil = await _repo.delete(id);

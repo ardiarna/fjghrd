@@ -11,6 +11,7 @@ import 'package:fjghrd/utils/af_combobox.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:fjghrd/utils/validation_exception.dart';
 import 'package:fjghrd/controllers/auth_control.dart';
 
 class CutiControl extends GetxController {
@@ -452,9 +453,9 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
 
   Future<void> simpanJatah() async {
     try {
-      if (selectedKaryawanJatah == null) throw 'Karyawan harus dipilih';
-      if (selectedTahunFormJatah == null) throw 'Tahun harus dipilih';
-      if (txtJatahJumlahCuti.text.isEmpty) throw 'Jumlah cuti harus diisi';
+      if (selectedKaryawanJatah == null) throw ValidationException('Karyawan harus dipilih');
+      if (selectedTahunFormJatah == null) throw ValidationException('Tahun harus dipilih');
+      if (txtJatahJumlahCuti.text.isEmpty) throw ValidationException('Jumlah cuti harus diisi');
 
       var body = {
         'karyawan_id': selectedKaryawanJatah!.value,

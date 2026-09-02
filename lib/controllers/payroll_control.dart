@@ -22,6 +22,7 @@ import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/views/payroll_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:fjghrd/utils/validation_exception.dart';
 
 class PayrollControl extends GetxController {
   final authControl = Get.find<AuthControl>();
@@ -996,13 +997,13 @@ class PayrollControl extends GetxController {
   Future<void> ubahData() async {
     try {
       if(currentPayroll.id.isEmpty) {
-        throw 'ID Payroll tidak ditemukan';
+        throw ValidationException('ID Payroll tidak ditemukan');
       }
       if(tahun.value.isEmpty || bulan.value.isEmpty) {
-        throw 'Periode penggajian harus diisi';
+        throw ValidationException('Periode penggajian harus diisi');
       }
       if(txtTanggalAwal.text.isEmpty || txtTanggalAkhir.text.isEmpty) {
-        throw 'Periode batas (cut-off) harus diisi';
+        throw ValidationException('Periode batas (cut-off) harus diisi');
       }
       AFwidget.loading();
       var id = currentPayroll.id;
@@ -1032,7 +1033,7 @@ class PayrollControl extends GetxController {
   Future<void> hapusData(String id) async {
     try {
       if(id == '') {
-        throw 'ID Payroll null';
+        throw ValidationException('ID Payroll null');
       }
       AFwidget.loading();
       var hasil = await _payrollRepo.delete(id);
@@ -1055,10 +1056,10 @@ class PayrollControl extends GetxController {
   Future<void> ubahDetilData() async {
     try {
       if(currentDetilPayroll.id.isEmpty) {
-        throw 'ID Payroll tidak ditemukan';
+        throw ValidationException('ID Payroll tidak ditemukan');
       }
       if(txtGaji.text.isEmpty) {
-        throw 'Gaji harus diisi';
+        throw ValidationException('Gaji harus diisi');
       }
       var a = Payroll(
         id: currentDetilPayroll.id,

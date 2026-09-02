@@ -10,6 +10,7 @@ import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:fjghrd/utils/validation_exception.dart';
 
 class OncallCustomerControl extends GetxController {
   final authControl = Get.find<AuthControl>();
@@ -415,16 +416,16 @@ class OncallCustomerControl extends GetxController {
   Future<void> tambahData() async {
     try {
       if(bulan.value.isEmpty || tahun.value.isEmpty) {
-        throw 'Periode harus diisi';
+        throw ValidationException('Periode harus diisi');
       }
       if(txtTanggal.text.isEmpty) {
-        throw 'Tanggal harus diisi';
+        throw ValidationException('Tanggal harus diisi');
       }
       if(customer.id.isEmpty) {
-        throw 'Silakan pilih customer';
+        throw ValidationException('Silakan pilih customer');
       }
       if(txtJumlah.text.isEmpty) {
-        throw 'Jumlah harus diisi';
+        throw ValidationException('Jumlah harus diisi');
       }
 
       var a = OncallCustomer(
@@ -454,19 +455,19 @@ class OncallCustomerControl extends GetxController {
   Future<void> ubahData() async {
     try {
       if(txtId.text.isEmpty) {
-        throw 'ID pvertime & oncall_ customer tidak ditemukan';
+        throw ValidationException('ID pvertime & oncall_ customer tidak ditemukan');
       }
       if(customer.id.isEmpty) {
-        throw 'Silakan pilih customer';
+        throw ValidationException('Silakan pilih customer');
       }
       if(bulan.value.isEmpty || tahun.value.isEmpty) {
-        throw 'Periode harus diisi';
+        throw ValidationException('Periode harus diisi');
       }
       if(txtTanggal.text.isEmpty) {
-        throw 'Tanggal harus diisi';
+        throw ValidationException('Tanggal harus diisi');
       }
       if(txtJumlah.text.isEmpty) {
-        throw 'Jumlah harus diisi';
+        throw ValidationException('Jumlah harus diisi');
       }
       var a = OncallCustomer(
         tanggal: AFconvert.keTanggal('${AFconvert.matDMYtoYMD(txtTanggal.text)} 08:00:00'),
@@ -495,7 +496,7 @@ class OncallCustomerControl extends GetxController {
   Future<void> hapusData(String id) async {
     try {
       if(id == '') {
-        throw 'ID overtime & oncall customer tidak ditemukan';
+        throw ValidationException('ID overtime & oncall customer tidak ditemukan');
       }
       AFwidget.loading();
       var hasil = await _repo.delete(id);

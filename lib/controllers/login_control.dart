@@ -5,6 +5,7 @@ import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:fjghrd/utils/validation_exception.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginControl extends GetxController {
@@ -20,10 +21,10 @@ class LoginControl extends GetxController {
   Future<void> signIn() async {
     try {
       if (txtEmail.text.isEmpty) {
-        throw 'Email harus diisi';
+        throw ValidationException('Email harus diisi');
       }
       if (txtPassword.text.isEmpty) {
-        throw 'Password harus diisi';
+        throw ValidationException('Password harus diisi');
       }
 
       AFwidget.loading();
@@ -48,16 +49,16 @@ class LoginControl extends GetxController {
   Future<void> signUp() async {
     try {
       if (txtEmail.text.isEmpty) {
-        throw 'Email harus diisi';
+        throw ValidationException('Email harus diisi');
       }
       if (txtNama.text.isEmpty) {
-        throw 'Nama lengkap harus diisi';
+        throw ValidationException('Nama lengkap harus diisi');
       }
       if (txtPassword.text.isEmpty) {
-        throw 'Password harus diisi';
+        throw ValidationException('Password harus diisi');
       }
       if (txtPassConfirm.text.isEmpty) {
-        throw 'Ulangi password harus diisi';
+        throw ValidationException('Ulangi password harus diisi');
       }
       var user = User(
         email: txtEmail.text,
