@@ -1690,6 +1690,7 @@ class RunpayrollView extends StatelessWidget {
                       payrolls: listData,
                     );
                     if(a) {
+                      controller.loadPayrolls();
                       controller.homeControl.kontener = PayrollView();
                       controller.homeControl.update();
                     }

@@ -118,7 +118,7 @@ class MedicalControl extends GetxController {
     if(txtJumlah.text.isEmpty) return 'Isi jumlah IDR';
     
     int valJumlah = AFconvert.keInt(txtJumlah.text);
-    if(valJumlah <= 0) return 'Jumlah IDR tidak boleh 0';
+    if(valJumlah == 0) return 'Jumlah IDR tidak boleh 0';
     if(jenis.value == 'R' && valJumlah > sisaTunjangan) return 'Jumlah melebihi sisa klaim';
     
     return '';
