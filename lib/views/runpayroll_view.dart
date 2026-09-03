@@ -21,13 +21,22 @@ class RunpayrollView extends StatelessWidget {
   PlutoGridStateManager? stateManager;
 
   List<PlutoRow> _buildRows(List<Karyawan> rowData) {
-    int hariMakanDefault = controller.countWorkingDays();
     return rowData.map((e) {
-      var hariMakan = controller.listPenghasilan
-          .where((element) => element.karyawan.id == e.id && element.jenis == 'AB')
-          .fold(0.0, (sum, element) => sum + element.hari);
-      if(hariMakan == 0) {
-        hariMakan = hariMakanDefault.toDouble();
+      double hariMakan = -1.0;
+      String makanTglAwal = '';
+      String makanTglAkhir = '';
+      try {
+        var listAB = controller.listPenghasilan.where((element) => element.karyawan.id == e.id && element.jenis == 'AB').toList();
+        if (listAB.isNotEmpty) {
+            hariMakan = listAB.fold(0.0, (sum, element) => sum + element.hari);
+            makanTglAwal = listAB[0].tglAwal;
+            makanTglAkhir = listAB[0].tglAkhir;
+        }
+      } catch (_) {}
+      
+      String periodeBatas = '';
+      if (makanTglAwal.isNotEmpty && makanTglAkhir.isNotEmpty) {
+          periodeBatas = '${AFconvert.matDate(AFconvert.keTanggal('$makanTglAwal 00:00:00'))} s/d ${AFconvert.matDate(AFconvert.keTanggal('$makanTglAkhir 00:00:00'))}';
       }
       int uangMakanHarian = e.upah.makanHarian ? e.upah.uangMakan : 0;
       int uangMakanJumlah = controller.listPenghasilan
@@ -118,6 +127,9 @@ class RunpayrollView extends StatelessWidget {
           'gaji': PlutoCell(value: e.upah.gaji),
           'kenaikan_gaji': PlutoCell(value: kenaikanGaji),
           'makan_harian': PlutoCell(value: e.upah.makanHarian ? 'Y' : 'N'),
+          'periode_batas': PlutoCell(value: periodeBatas),
+          'makan_tgl_awal': PlutoCell(value: makanTglAwal),
+          'makan_tgl_akhir': PlutoCell(value: makanTglAkhir),
           'hari_makan': PlutoCell(value: hariMakan),
           'uang_makan_harian': PlutoCell(value: uangMakanHarian),
           'uang_makan_jumlah': PlutoCell(value: uangMakanJumlah),
@@ -306,7 +318,7 @@ class RunpayrollView extends StatelessWidget {
       readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
-        if(value == 0) {
+        if(value < 0) {
           return const Text('');
         }
         return Text(
@@ -343,7 +355,7 @@ class RunpayrollView extends StatelessWidget {
       readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
-        if(value == 0) {
+        if(value < 0) {
           return const Text('');
         }
         return Text(
@@ -366,6 +378,19 @@ class RunpayrollView extends StatelessWidget {
       },
     ),
     PlutoColumn(
+      title: 'PERIODE BATAS',
+      field: 'periode_batas',
+      type: PlutoColumnType.text(),
+      width: 220,
+      backgroundColor: Colors.brown.shade100,
+      titleTextAlign: PlutoColumnTextAlign.center,
+      suppressedAutoSize: true,
+      enableContextMenu: false,
+      enableSorting: false,
+      enableColumnDrag: false,
+      readOnly: true,
+    ),
+    PlutoColumn(
       title: 'HR',
       field: 'hari_makan',
       type: PlutoColumnType.number(),
@@ -378,7 +403,7 @@ class RunpayrollView extends StatelessWidget {
       readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
-        if(value == 0) {
+        if(value < 0) {
           return const Text('');
         }
         return Text(
@@ -400,7 +425,7 @@ class RunpayrollView extends StatelessWidget {
       readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
-        if(value == 0) {
+        if(value < 0) {
           return const Text('');
         }
         return Text(
@@ -422,7 +447,7 @@ class RunpayrollView extends StatelessWidget {
       readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
-        if(value == 0) {
+        if(value < 0) {
           return const Text('');
         }
         return Text(
@@ -457,7 +482,7 @@ class RunpayrollView extends StatelessWidget {
       readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
-        if(value == 0) {
+        if(value < 0) {
           return const Text('');
         }
         return Text(
@@ -492,7 +517,7 @@ class RunpayrollView extends StatelessWidget {
       readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
-        if(value == 0) {
+        if(value < 0) {
           return const Text('');
         }
         return Text(
@@ -527,7 +552,7 @@ class RunpayrollView extends StatelessWidget {
       readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
-        if(value == 0) {
+        if(value < 0) {
           return const Text('');
         }
         return Text(
@@ -562,7 +587,7 @@ class RunpayrollView extends StatelessWidget {
       readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
-        if(value == 0) {
+        if(value < 0) {
           return const Text('');
         }
         return Text(
@@ -597,7 +622,7 @@ class RunpayrollView extends StatelessWidget {
       readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
-        if(value == 0) {
+        if(value < 0) {
           return const Text('');
         }
         return Text(
@@ -632,7 +657,7 @@ class RunpayrollView extends StatelessWidget {
       readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
-        if(value == 0) {
+        if(value < 0) {
           return const Text('');
         }
         return Text(
@@ -667,7 +692,7 @@ class RunpayrollView extends StatelessWidget {
       readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
-        if(value == 0) {
+        if(value < 0) {
           return const Text('');
         }
         return Text(
@@ -702,7 +727,7 @@ class RunpayrollView extends StatelessWidget {
       readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
-        if(value == 0) {
+        if(value < 0) {
           return const Text('');
         }
         return Text(
@@ -737,7 +762,7 @@ class RunpayrollView extends StatelessWidget {
       readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
-        if(value == 0) {
+        if(value < 0) {
           return const Text('');
         }
         return Text(
@@ -772,7 +797,7 @@ class RunpayrollView extends StatelessWidget {
       readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
-        if(value == 0) {
+        if(value < 0) {
           return const Text('');
         }
         return Text(
@@ -807,7 +832,7 @@ class RunpayrollView extends StatelessWidget {
       readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
-        if(value == 0) {
+        if(value < 0) {
           return const Text('');
         }
         return Text(
@@ -842,7 +867,7 @@ class RunpayrollView extends StatelessWidget {
       readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
-        if(value == 0) {
+        if(value < 0) {
           return const Text('');
         }
         return Text(
@@ -877,7 +902,7 @@ class RunpayrollView extends StatelessWidget {
       readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
-        if(value == 0) {
+        if(value < 0) {
           return const Text('');
         }
         return Text(
@@ -912,7 +937,7 @@ class RunpayrollView extends StatelessWidget {
       readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
-        if(value == 0) {
+        if(value < 0) {
           return const Text('');
         }
         return Text(
@@ -947,7 +972,7 @@ class RunpayrollView extends StatelessWidget {
       readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
-        if(value == 0) {
+        if(value < 0) {
           return const Text('');
         }
         return Text(
@@ -982,7 +1007,7 @@ class RunpayrollView extends StatelessWidget {
       readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
-        if(value == 0) {
+        if(value < 0) {
           return const Text('');
         }
         return Text(
@@ -1017,7 +1042,7 @@ class RunpayrollView extends StatelessWidget {
       readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
-        if(value == 0) {
+        if(value < 0) {
           return const Text('');
         }
         return Text(
@@ -1087,7 +1112,7 @@ class RunpayrollView extends StatelessWidget {
       readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
-        if(value == 0) {
+        if(value < 0) {
           return const Text('');
         }
         return Text(
@@ -1122,7 +1147,7 @@ class RunpayrollView extends StatelessWidget {
       readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
-        if(value == 0) {
+        if(value < 0) {
           return const Text('');
         }
         return Text(
@@ -1159,7 +1184,7 @@ class RunpayrollView extends StatelessWidget {
       readOnly: true,
       renderer: (rendererContext) {
         final value = rendererContext.cell.value;
-        if(value == 0) {
+        if(value < 0) {
           return const Text('');
         }
         return Text(
@@ -1678,7 +1703,11 @@ class RunpayrollView extends StatelessWidget {
                     for(var e in stateManager!.rows) {
                       rowData = {};
                       for(var h in e.cells.entries) {
-                        rowData[h.key] = h.value.value.toString();
+                        if (h.key == 'hari_makan' && h.value.value == -1.0) {
+                          rowData[h.key] = '0';
+                        } else {
+                          rowData[h.key] = h.value.value.toString();
+                        }
                       }
                       listData.add(rowData);
                     }

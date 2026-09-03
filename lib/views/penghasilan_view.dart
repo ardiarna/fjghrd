@@ -23,19 +23,29 @@ class PenghasilanView extends StatelessWidget {
       rowData.length,
           (index) {
         var jenis = controller.listJenis.where((element) => element.value == rowData[index].jenis).first;
+        String strKeterangan = rowData[index].keterangan;
+        if (rowData[index].jenis == 'AB') {
+          String strHari = AFconvert.matNumber(rowData[index].hari);
+          String strPeriode = '';
+          if (rowData[index].tglAwal != '' && rowData[index].tglAkhir != '') {
+             strPeriode = ' per ${AFconvert.matDate(AFconvert.keTanggal('${rowData[index].tglAwal} 00:00:00'))} s/d ${AFconvert.matDate(AFconvert.keTanggal('${rowData[index].tglAkhir} 00:00:00'))}';
+          }
+          String gabung = '$strHari hari$strPeriode';
+          strKeterangan = strKeterangan.isEmpty ? gabung : '$gabung; $strKeterangan';
+        }
         return PlutoRow(
           cells: {
             'id': PlutoCell(value: rowData[index].id),
             'karyawan_id': PlutoCell(value: rowData[index].karyawan.id),
             'jenis': PlutoCell(value:  jenis.label),
             'nama': PlutoCell(value: rowData[index].karyawan.nama),
-            'area': PlutoCell(value: rowData[index].karyawan.area.nama),
+            'area': PlutoCell(value: rowData[index].karyawan.area.kode),
             'jabatan': PlutoCell(value: rowData[index].karyawan.jabatan.nama),
             'tanggal': PlutoCell(value: AFconvert.matDate(rowData[index].tanggal)),
             'tahun': PlutoCell(value: rowData[index].tahun),
             'bulan': PlutoCell(value: rowData[index].bulan),
             'jumlah': PlutoCell(value: rowData[index].jumlah),
-            'keterangan': PlutoCell(value: rowData[index].keterangan),
+            'keterangan': PlutoCell(value: strKeterangan),
           },
         );
       },
@@ -90,8 +100,11 @@ class PenghasilanView extends StatelessWidget {
         field: 'area',
         type: PlutoColumnType.text(),
         readOnly: true,
-        minWidth: 230,
+        width: 80,
         backgroundColor: Colors.brown.shade100,
+        titleTextAlign: PlutoColumnTextAlign.center,
+        textAlign: PlutoColumnTextAlign.center,
+        suppressedAutoSize: true,
       ),
       PlutoColumn(
         title: 'JABATAN',
@@ -289,7 +302,6 @@ class PenghasilanView extends StatelessWidget {
                   onLoaded: (PlutoGridOnLoadedEvent event) {
                     event.stateManager.setShowColumnFilter(true);
                     event.stateManager.autoFitColumn(context, columns[1]);
-                    event.stateManager.autoFitColumn(context, columns[2]);
                     event.stateManager.autoFitColumn(context, columns[3]);
                   },
                   configuration: AFplutogridConfig.configDua(),

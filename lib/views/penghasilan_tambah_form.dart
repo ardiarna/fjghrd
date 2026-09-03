@@ -23,8 +23,60 @@ class PenghasilanTambahForm extends StatelessWidget {
           children: [
             ListView(
               children: [
+
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 70, 20, 0),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 150,
+                        padding: const EdgeInsets.only(right: 15),
+                        child: const Text('Periode'),
+                      ),
+                      Expanded(
+                        child: GetBuilder<PenghasilanControl>(
+                          id: 'form_penghasilan_periode',
+                          builder: (_) {
+                            return AFwidget.comboField(
+                              value: controller.bulan.label,
+                              label: '',
+                              onTap: () async {
+                                var a = await controller.pilihBulan(value: controller.bulan.value);
+                                if(a != null && a.value != controller.bulan.value) {
+                                  controller.bulan = a;
+                                  controller.txtTanggal.text = AFconvert.matDate(DateTime(AFconvert.keInt(controller.tahun.value), AFconvert.keInt(controller.bulan.value)));
+                                  controller.update(['form_penghasilan_periode']);
+                                }
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: GetBuilder<PenghasilanControl>(
+                          id: 'form_penghasilan_periode',
+                          builder: (_) {
+                            return AFwidget.comboField(
+                              value: controller.tahun.label,
+                              label: '',
+                              onTap: () async {
+                                var a = await controller.pilihTahun(value: controller.tahun.value);
+                                if(a != null && a.value != controller.tahun.value) {
+                                  controller.tahun = a;
+                                  controller.txtTanggal.text = AFconvert.matDate(DateTime(AFconvert.keInt(controller.tahun.value), AFconvert.keInt(controller.bulan.value)));
+                                  controller.update(['form_penghasilan_periode']);
+                                }
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -128,14 +180,65 @@ class PenghasilanTambahForm extends StatelessWidget {
                   id: 'form_penghasilan',
                   builder: (_) {
                     if(controller.jenis.value == 'AB') {
-                      return AFwidget.barisText(
-                        label: 'Jumlah Hari',
-                        controller: controller.txtHari,
-                        isNumber: true,
-                        onchanged:controller.hitungJumlahIdr,
+                      return Column(
+                        children: [
+                          AFwidget.barisText(
+                            label: 'Jumlah Hari',
+                            controller: controller.txtHari,
+                            isNumber: true,
+                            onchanged:controller.hitungJumlahIdr,
+                          ),
+
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 150,
+                                  padding: const EdgeInsets.only(right: 15),
+                                  child: const Text('Tanggal Cut-Off'),
+                                ),
+                                Expanded(
+                                  child: AFwidget.textField(
+                                    marginTop: 0,
+                                    controller: controller.txtTglAwal,
+                                    readOnly: true,
+                                    prefixIcon: const Icon(Icons.calendar_month),
+                                    ontap: () async {
+                                      DateTime? d = await AFwidget.pickDate(context: context, initialDate: controller.txtTglAwal.text != '' ? AFconvert.keTanggal('${AFconvert.matDMYtoYMD(controller.txtTglAwal.text)} 00:00:00') : null);
+                                      if (d != null) {
+                                        controller.txtTglAwal.text = AFconvert.matDate(d);
+                                      }
+                                    }
+                                  ),
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  child: Text('s/d'),
+                                ),
+                                Expanded(
+                                  child: AFwidget.textField(
+                                    marginTop: 0,
+                                    controller: controller.txtTglAkhir,
+                                    readOnly: true,
+                                    prefixIcon: const Icon(Icons.calendar_month),
+                                    ontap: () async {
+                                      DateTime? d = await AFwidget.pickDate(context: context, initialDate: controller.txtTglAkhir.text != '' ? AFconvert.keTanggal('${AFconvert.matDMYtoYMD(controller.txtTglAkhir.text)} 00:00:00') : null);
+                                      if (d != null) {
+                                        controller.txtTglAkhir.text = AFconvert.matDate(d);
+                                      }
+                                    }
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       );
                     }
                     controller.txtHari.text = '';
+  controller.txtTglAwal.text = '';
+  controller.txtTglAkhir.text = '';
                     return Container();
                   },
                 ),
@@ -177,7 +280,12 @@ class PenghasilanTambahForm extends StatelessWidget {
                 ),
               ],
             ),
-            AFwidget.formHeader('Form Tambah Penghasilan - ${controller.bulan.label} ${controller.tahun.label}'),
+            GetBuilder<PenghasilanControl>(
+              id: 'form_penghasilan_periode',
+              builder: (_) {
+                return AFwidget.formHeader('Form Tambah Penghasilan - ${controller.bulan.label} ${controller.tahun.label}');
+              }
+            ),
           ],
         ),
       );
@@ -192,6 +300,8 @@ void showPenghasilanTambahForm(BuildContext context) {
   controller.txtTanggal.text = AFconvert.matDate(DateTime(AFconvert.keInt(controller.filterTahun.value), AFconvert.keInt(controller.filterBulan.value)));
   controller.txtKeterangan.text = '';
   controller.txtHari.text = '';
+  controller.txtTglAwal.text = '';
+  controller.txtTglAkhir.text = '';
   controller.txtJumlah.text = '';
   controller.karyawan = Karyawan();
   if(controller.filterJenis.value == '') {

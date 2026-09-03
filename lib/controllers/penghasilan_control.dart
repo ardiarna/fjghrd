@@ -40,7 +40,7 @@ class PenghasilanControl extends GetxController {
   late Opsi filterTahun;
   late Opsi filterBulan;
 
-  late TextEditingController txtId, txtTanggal, txtHari, txtJumlah, txtKeterangan;
+  late TextEditingController txtId, txtTanggal, txtHari, txtJumlah, txtKeterangan, txtTglAwal, txtTglAkhir;
   Karyawan karyawan = Karyawan();
   Opsi jenis = Opsi(value: '', label: '');
   late Opsi tahun;
@@ -114,6 +114,8 @@ class PenghasilanControl extends GetxController {
         bulan: AFconvert.keInt(bulan.value),
         hari: AFconvert.keDouble(txtHari.text),
         jumlah: AFconvert.keInt(txtJumlah.text),
+        tglAwal: txtTglAwal.text != '' ? AFconvert.matDMYtoYMD(txtTglAwal.text) : '',
+        tglAkhir: txtTglAkhir.text != '' ? AFconvert.matDMYtoYMD(txtTglAkhir.text) : '',
         keterangan: txtKeterangan.text,
       );
       a.karyawan = karyawan;
@@ -173,6 +175,8 @@ class PenghasilanControl extends GetxController {
         bulan: AFconvert.keInt(bulan.value),
         hari: AFconvert.keDouble(txtHari.text),
         jumlah: AFconvert.keInt(txtJumlah.text),
+        tglAwal: txtTglAwal.text != '' ? AFconvert.matDMYtoYMD(txtTglAwal.text) : '',
+        tglAkhir: txtTglAkhir.text != '' ? AFconvert.matDMYtoYMD(txtTglAkhir.text) : '',
         keterangan: txtKeterangan.text,
       );
       a.karyawan = karyawan;
@@ -311,6 +315,8 @@ class PenghasilanControl extends GetxController {
     txtId = TextEditingController();
     txtTanggal = TextEditingController();
     txtHari = TextEditingController();
+    txtTglAwal = TextEditingController();
+    txtTglAkhir = TextEditingController();
     txtJumlah = TextEditingController();
     txtKeterangan = TextEditingController();
     loadPenghasilans();
@@ -322,6 +328,8 @@ class PenghasilanControl extends GetxController {
     txtId.dispose();
     txtTanggal.dispose();
     txtHari.dispose();
+    txtTglAwal.dispose();
+    txtTglAkhir.dispose();
     txtJumlah.dispose();
     txtKeterangan.dispose();
     super.onClose();

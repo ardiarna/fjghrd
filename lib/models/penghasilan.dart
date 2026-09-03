@@ -10,6 +10,8 @@ class Penghasilan {
   int bulan;
   double hari;
   int jumlah;
+  String tglAwal;
+  String tglAkhir;
   String keterangan;
   DateTime? createdAt;
   DateTime? updatedAt;
@@ -22,6 +24,8 @@ class Penghasilan {
     this.bulan = 0,
     this.hari = 0,
     this.jumlah = 0,
+    this.tglAwal = '',
+    this.tglAkhir = '',
     this.keterangan = '',
     this.createdAt,
     this.updatedAt,
@@ -36,6 +40,8 @@ class Penghasilan {
       bulan: AFconvert.keInt(data['bulan']),
       hari: AFconvert.keDouble(data['hari']),
       jumlah: AFconvert.keInt(data['jumlah']),
+      tglAwal: AFconvert.keString(data['tgl_awal']),
+      tglAkhir: AFconvert.keString(data['tgl_akhir']),
       keterangan: AFconvert.keString(data['keterangan']),
       createdAt: AFconvert.keTanggal(data['created_at']),
       updatedAt: AFconvert.keTanggal(data['updated_at']),
@@ -58,6 +64,8 @@ class Penghasilan {
       'jumlah': AFconvert.keString(jumlah),
       'keterangan': keterangan,
     };
+    if (tglAwal != '') data['tgl_awal'] = tglAwal;
+    if (tglAkhir != '') data['tgl_akhir'] = tglAkhir;
     return data;
   }
 
