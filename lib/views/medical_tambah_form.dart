@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:fjghrd/controllers/medical_control.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/utils/af_convert.dart';
+import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/models/opsi.dart';
 import 'package:fjghrd/models/karyawan.dart';
 
@@ -27,6 +28,56 @@ class MedicalTambahForm extends StatelessWidget {
                     children: [
                       Padding(
                         padding: const EdgeInsets.fromLTRB(20, 70, 20, 0),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 150,
+                              padding: const EdgeInsets.only(right: 15),
+                              child: const Text('Periode'),
+                            ),
+                            Expanded(
+                              child: GetBuilder<MedicalControl>(
+                                id: 'form_medical',
+                                builder: (_) {
+                                  return AFwidget.comboField(
+                                    value: controller.bulan.label,
+                                    label: '',
+                                    onTap: () async {
+                                      var a = await controller.pilihBulan(value: controller.bulan.value);
+                                      if(a != null && a.value != controller.bulan.value) {
+                                        controller.bulan = a;
+                                        controller.update(['form_medical']);
+                                      }
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            Expanded(
+                              child: GetBuilder<MedicalControl>(
+                                id: 'form_medical',
+                                builder: (_) {
+                                  return AFwidget.comboField(
+                                    value: controller.tahun.label,
+                                    label: '',
+                                    onTap: () async {
+                                      var a = await controller.pilihTahun(value: controller.tahun.value);
+                                      if(a != null && a.value != controller.tahun.value) {
+                                        controller.tahun = a;
+                                        controller.update(['form_medical']);
+                                        if (controller.jenis.value == 'R') controller.loadInfoMedical();
+                                      }
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                         child: Row(
                           children: [
                             Container(
@@ -91,37 +142,48 @@ class MedicalTambahForm extends StatelessWidget {
                         label: 'Jumlah',
                         controller: controller.txtJumlah,
                         isNumber: true,
+                        onchanged: (v) => controller.update(['form_medical']),
                       ),
                       AFwidget.barisText(
                         label: 'Keterangan',
                         controller: controller.txtKeterangan,
                         isTextArea: true,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            AFwidget.tombol(
-                              label: 'Batal',
-                              color: Colors.orange,
-                              onPressed: Get.back,
-                              minimumSize: const Size(120, 40),
+                      GetBuilder<MedicalControl>(
+                        id: 'form_medical',
+                        builder: (_) {
+                          String msg = controller.pesanValidasi;
+                          return Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
+                            child: Row(
+                              children: [
+                                if(msg.isNotEmpty)
+                                  Expanded(
+                                    child: Text(msg, style: const TextStyle(color: Colors.red, fontStyle: FontStyle.italic)),
+                                  ),
+                                if(msg.isEmpty) const Spacer(),
+                                AFwidget.tombol(
+                                  label: 'Batal',
+                                  color: Colors.orange,
+                                  onPressed: Get.back,
+                                  minimumSize: const Size(120, 40),
+                                ),
+                                const SizedBox(width: 40),
+                                AFwidget.tombol(
+                                  label: 'Simpan',
+                                  color: msg.isEmpty ? Colors.blue : Colors.grey,
+                                  onPressed: msg.isEmpty ? controller.tambahData : null,
+                                  minimumSize: const Size(120, 40),
+                                ),
+                              ],
                             ),
-                            const SizedBox(width: 40),
-                            AFwidget.tombol(
-                              label: 'Simpan',
-                              color: Colors.blue,
-                              onPressed: controller.tambahData,
-                              minimumSize: const Size(120, 40),
-                            ),
-                          ],
-                        ),
+                          );
+                        }
                       ),
                     ],
                   ),
                   AFwidget.formHeader(
-                    'Form Tambah Medical - ${controller.bulan.label} ${controller.tahun.label}',
+                    'Form Tambah Medical',
                     radiusRight: false,
                   ),
                 ],
@@ -137,19 +199,14 @@ class MedicalTambahForm extends StatelessWidget {
                   bottomRight: Radius.circular(15),
                 ),
               ),
-              child: GetBuilder<MedicalControl>(
+              child: GetBuilder<MedicalControl>(id: 'info_medical',
                 builder: (_) {
                   if(controller.jenis.value == 'R') {
-                    controller.tunjangan = controller.karyawan.kelamin == 'L' ? controller.medicalRekap.gaji*2 : controller.medicalRekap.gaji;
-                    controller.jumlahKlaim = controller.medicalRekap.bln1 + controller.medicalRekap.bln2 + controller.medicalRekap.bln3 +
-                        controller.medicalRekap.bln4 + controller.medicalRekap.bln5 + controller.medicalRekap.bln6 +
-                        controller.medicalRekap.bln7 + controller.medicalRekap.bln8 + controller.medicalRekap.bln9 +
-                        controller.medicalRekap.bln10 + controller.medicalRekap.bln11 + controller.medicalRekap.bln12;
-                    controller.sisaTunjangan = controller.tunjangan - controller.jumlahKlaim;
+                    
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Nama controller.karyawan:'),
+                        const Text('Nama Karyawan:'),
                         Container(
                           width: double.infinity,
                           padding: const EdgeInsets.all(5),
@@ -202,13 +259,26 @@ class MedicalTambahForm extends StatelessWidget {
                       ],
                     );
                   } else {
+                    String jenisLabel = '';
+                    if (controller.jenis.value == 'K') { jenisLabel = 'kacamata'; }
+                    else if (controller.jenis.value == 'I') { jenisLabel = 'melahirkan'; }
+                    
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text('History:'),
                         const SizedBox(height: 10),
-                        Expanded(
-                          child: ListView.builder(
+                        if (controller.medicalHistory.isEmpty && jenisLabel.isNotEmpty && controller.karyawan.id.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(left: 5, top: 10),
+                            child: Text(
+                              'Tidak ada history medical $jenisLabel',
+                              style: const TextStyle(fontStyle: FontStyle.italic, color: Colors.grey),
+                            ),
+                          )
+                        else
+                          Expanded(
+                            child: ListView.builder(
                             itemCount: controller.medicalHistory.length,
                             itemBuilder: (_, i) {
                               return Container(
@@ -246,8 +316,14 @@ class MedicalTambahForm extends StatelessWidget {
 void showMedicalTambahForm(BuildContext context) {
   final controller = Get.find<MedicalControl>();
   controller.txtId.text = '';
-  controller.tahun = Opsi(value: controller.filterTahun.value, label: controller.filterTahun.label);
-  controller.bulan = Opsi(value: controller.filterBulan.value, label: controller.filterBulan.label);
+    controller.tahun = Opsi(value: controller.filterTahun.value, label: controller.filterTahun.label);
+  if(controller.filterBulan.value == '') {
+    DateTime now = DateTime.now();
+    controller.bulan = Opsi(value: now.month.toString(), label: mapBulan[now.month] ?? '');
+  } else {
+    controller.bulan = Opsi(value: controller.filterBulan.value, label: controller.filterBulan.label);
+  }
+
   controller.txtKeterangan.text = '';
   controller.txtJumlah.text = '';
   controller.karyawan = Karyawan();

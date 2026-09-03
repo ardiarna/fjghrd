@@ -54,14 +54,7 @@ class MedicalUbahForm extends StatelessWidget {
                                   return AFwidget.comboField(
                                     value: controller.jenis.label,
                                     label: '',
-                                    onTap: () async {
-                                      var a = await controller.pilihJenis(value: controller.jenis.value);
-                                      if(a != null && a.value != controller.jenis.value) {
-                                        controller.jenis = a;
-                                        controller.update(['form_medical']);
-                                        controller.loadInfoMedical();
-                                      }
-                                    },
+                                    onTap: null,
                                   );
                                 },
                               ),
@@ -85,13 +78,7 @@ class MedicalUbahForm extends StatelessWidget {
                                   return AFwidget.comboField(
                                     value: controller.bulan.label,
                                     label: '',
-                                    onTap: () async {
-                                      var a = await controller.pilihBulan(value: controller.bulan.value);
-                                      if(a != null && a.value != controller.bulan.value) {
-                                        controller.bulan = a;
-                                        controller.update(['form_medical']);
-                                      }
-                                    },
+                                    onTap: null,
                                   );
                                 },
                               ),
@@ -104,17 +91,7 @@ class MedicalUbahForm extends StatelessWidget {
                                   return AFwidget.comboField(
                                     value: controller.tahun.label,
                                     label: '',
-                                    onTap: () async {
-                                      var a = await controller.pilihTahun(value: controller.tahun.value);
-                                      if(a != null && a.value != controller.tahun.value) {
-                                        controller.tahun = a;
-                                        if(controller.jenis.value == 'R') {
-                                          controller.loadInfoMedical();
-                                        } else {
-                                          controller.update(['form_medical']);
-                                        }
-                                      }
-                                    },
+                                    onTap: null,
                                   );
                                 },
                               ),
@@ -126,6 +103,7 @@ class MedicalUbahForm extends StatelessWidget {
                         label: 'Jumlah',
                         controller: controller.txtJumlah,
                         isNumber: true,
+                        onchanged: (v) => controller.update(['form_medical']),
                       ),
                       AFwidget.barisText(
                         label: 'Keterangan',
@@ -181,15 +159,10 @@ class MedicalUbahForm extends StatelessWidget {
                   bottomRight: Radius.circular(15),
                 ),
               ),
-              child: GetBuilder<MedicalControl>(
+              child: GetBuilder<MedicalControl>(id: 'info_medical',
                 builder: (_) {
                   if(controller.jenis.value == 'R') {
-                    controller.tunjangan = controller.karyawan.kelamin == 'L' ? controller.medicalRekap.gaji*2 : controller.medicalRekap.gaji;
-                    controller.jumlahKlaim = controller.medicalRekap.bln1 + controller.medicalRekap.bln2 + controller.medicalRekap.bln3 +
-                        controller.medicalRekap.bln4 + controller.medicalRekap.bln5 + controller.medicalRekap.bln6 +
-                        controller.medicalRekap.bln7 + controller.medicalRekap.bln8 + controller.medicalRekap.bln9 +
-                        controller.medicalRekap.bln10 + controller.medicalRekap.bln11 + controller.medicalRekap.bln12;
-                    controller.sisaTunjangan = controller.tunjangan - controller.jumlahKlaim;
+                    
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -236,13 +209,26 @@ class MedicalUbahForm extends StatelessWidget {
                       ],
                     );
                   } else {
+                    String jenisLabel = '';
+                    if (controller.jenis.value == 'K') { jenisLabel = 'kacamata'; }
+                    else if (controller.jenis.value == 'I') { jenisLabel = 'melahirkan'; }
+                    
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text('History:'),
                         const SizedBox(height: 10),
-                        Expanded(
-                          child: ListView.builder(
+                        if (controller.medicalHistory.isEmpty && jenisLabel.isNotEmpty && controller.karyawan.id.isNotEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(left: 5, top: 10),
+                            child: Text(
+                              'Tidak ada history medical $jenisLabel',
+                              style: const TextStyle(fontStyle: FontStyle.italic, color: Colors.grey),
+                            ),
+                          )
+                        else
+                          Expanded(
+                            child: ListView.builder(
                             itemCount: controller.medicalHistory.length,
                             itemBuilder: (_, i) {
                               return Container(

@@ -29,7 +29,7 @@ class MedicalView extends StatelessWidget {
     };
 
     for (var m in daftar) {
-      final key = m.karyawan.id;
+      final key = '${m.karyawan.id}-${m.bulan}-${m.tahun}';
 
       // Jika belum ada, buat baru
       if (!gabungan.containsKey(key)) {
@@ -105,18 +105,23 @@ class MedicalView extends StatelessWidget {
       groupedData.length,
           (index) {
         final ids = groupedData[index].id.split(',').map((e) => e.trim()).toList();
+        String nmBulan = mapBulan[groupedData[index].bulan] ?? '';
+        String thn = groupedData[index].tahun.toString();
+        if(thn.length == 4) thn = thn.substring(2);
+        String periode = "$nmBulan '$thn";
         return PlutoRow(
           cells: {
             'id': PlutoCell(value: ids),
             'karyawan_id': PlutoCell(value: groupedData[index].karyawan.id),
             'jenis': PlutoCell(value: groupedData[index].jenis),
             'nama': PlutoCell(value: groupedData[index].karyawan.nama),
-            'area': PlutoCell(value: groupedData[index].karyawan.area.nama),
+            'area': PlutoCell(value: groupedData[index].karyawan.area.kode),
             'jabatan': PlutoCell(value: groupedData[index].karyawan.jabatan.nama),
             'tanggal': PlutoCell(value: AFconvert.matDate(groupedData[index].tanggal)),
             'bulan': PlutoCell(value: groupedData[index].bulan),
             'tahun': PlutoCell(value: groupedData[index].tahun),
             'jumlah': PlutoCell(value: groupedData[index].jumlah),
+            'periode': PlutoCell(value: periode),
             'keterangan': PlutoCell(value: groupedData[index].keterangan),
           },
         );
@@ -173,8 +178,12 @@ class MedicalView extends StatelessWidget {
         field: 'area',
         type: PlutoColumnType.text(),
         readOnly: true,
-        minWidth: 230,
+        width: 100,
+        minWidth: 100,
         backgroundColor: Colors.brown.shade100,
+        titleTextAlign: PlutoColumnTextAlign.center,
+        textAlign: PlutoColumnTextAlign.center,
+        suppressedAutoSize: true,
       ),
       PlutoColumn(
         title: 'JABATAN',
@@ -207,6 +216,18 @@ class MedicalView extends StatelessWidget {
             },
           );
         },
+      ),
+      PlutoColumn(
+        title: 'PERIODE',
+        field: 'periode',
+        type: PlutoColumnType.text(),
+        readOnly: true,
+        width: 130,
+        minWidth: 130,
+        backgroundColor: Colors.brown.shade100,
+        titleTextAlign: PlutoColumnTextAlign.center,
+        textAlign: PlutoColumnTextAlign.center,
+        suppressedAutoSize: true,
       ),
       PlutoColumn(
         title: 'KETERANGAN',
@@ -275,7 +296,7 @@ class MedicalView extends StatelessWidget {
                       label: '',
                       warnaBackground: Colors.white,
                       onTap: () async {
-                        var a = await controller.pilihBulan(value: controller.filterBulan.value);
+                        var a = await controller.pilihBulan(value: controller.filterBulan.value, withSemua: true);
                         if(a != null && a.value != controller.filterBulan.value) {
                           controller.filterBulan = a;
                           controller.update(['filter_medical']);

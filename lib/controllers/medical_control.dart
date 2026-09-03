@@ -93,6 +93,15 @@ class MedicalControl extends GetxController {
           }
         }
       }
+
+      if(karyawan.id != '' && jenis.value == 'R') {
+        tunjangan = karyawan.kelamin == 'L' ? medicalRekap.gaji*2 : medicalRekap.gaji;
+        jumlahKlaim = medicalRekap.bln1 + medicalRekap.bln2 + medicalRekap.bln3 +
+            medicalRekap.bln4 + medicalRekap.bln5 + medicalRekap.bln6 +
+            medicalRekap.bln7 + medicalRekap.bln8 + medicalRekap.bln9 +
+            medicalRekap.bln10 + medicalRekap.bln11 + medicalRekap.bln12;
+        sisaTunjangan = tunjangan - jumlahKlaim;
+      }
       update(['info_medical']);
     } catch (er) {
       update(['info_medical']);
@@ -100,7 +109,23 @@ class MedicalControl extends GetxController {
     }
   }
 
+
+  String get pesanValidasi {
+    if(bulan.value.isEmpty) return 'Pilih bulan';
+    if(tahun.value.isEmpty) return 'Pilih tahun';
+    if(jenis.value.isEmpty) return 'Pilih jenis medical';
+    if(karyawan.id.isEmpty) return 'Pilih karyawan';
+    if(txtJumlah.text.isEmpty) return 'Isi jumlah IDR';
+    
+    int valJumlah = AFconvert.keInt(txtJumlah.text);
+    if(valJumlah <= 0) return 'Jumlah IDR tidak boleh 0';
+    if(jenis.value == 'R' && valJumlah > sisaTunjangan) return 'Jumlah melebihi sisa klaim';
+    
+    return '';
+  }
+
   Future<void> tambahData() async {
+
     try {
       if(jenis.value.isEmpty) {
         throw ValidationException('Silakan pilih jenis medical');
@@ -259,9 +284,13 @@ class MedicalControl extends GetxController {
     return a;
   }
 
-  Future<Opsi?> pilihBulan({String value = ''}) async {
+  Future<Opsi?> pilihBulan({String value = '', bool withSemua = false}) async {
+    List<Opsi> list = [...listBulan];
+    if(withSemua) {
+      list.add(Opsi(value: '', label: 'Semua'));
+    }
     var a = await AFcombobox.bottomSheet(
-      listOpsi: listBulan,
+      listOpsi: list,
       valueSelected: value,
       judul: 'Pilih Bulan',
       withCari: false,
