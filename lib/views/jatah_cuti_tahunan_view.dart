@@ -1,6 +1,7 @@
 // ignore: must_be_immutable
 import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/controllers/cuti_control.dart';
+import 'package:fjghrd/views/jatah_cuti_tahunan_form.dart';
 import 'package:fjghrd/models/jatah_cuti_tahunan.dart';
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
@@ -51,7 +52,7 @@ class JatahCutiTahunanView extends StatelessWidget {
         renderer: (rdrCtx) {
           return IconButton(
             onPressed: () {
-              controller.inputJatahForm(rdrCtx.row.cells['id']!.value);
+              showJatahCutiTahunanForm(rdrCtx.row.cells['id']!.value);
             },
             icon: const Icon(Icons.edit_square),
             iconSize: 18,
@@ -153,7 +154,7 @@ class JatahCutiTahunanView extends StatelessWidget {
             const Spacer(),
             IconButton(
               onPressed: () {
-                controller.inputJatahForm('');
+                showJatahCutiTahunanForm('');
               },
               icon: const Icon(Icons.add_circle),
               iconSize: 30,
@@ -167,8 +168,7 @@ class JatahCutiTahunanView extends StatelessWidget {
             decoration: const BoxDecoration(
               image: bgLineBlue,
             ),
-            child: GetBuilder<CutiControl>(
-              builder: (_) {
+            child: Obx(() {
                 return PlutoGrid(
                   key: UniqueKey(),
                   columns: columns,

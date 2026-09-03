@@ -17,9 +17,9 @@ import 'package:fjghrd/controllers/auth_control.dart';
 class CutiControl extends GetxController {
   final authControl = Get.find<AuthControl>();
   final CutiRepository repo = CutiRepository();
-  List<Cuti> listCuti = [];
+  RxList<Cuti> listCuti = <Cuti>[].obs;
 
-  List<JatahCutiTahunan> listJatah = [];
+  RxList<JatahCutiTahunan> listJatah = <JatahCutiTahunan>[].obs;
   Opsi? selectedKaryawanJatah;
   Opsi? selectedTahunFormJatah;
 
@@ -36,7 +36,7 @@ class CutiControl extends GetxController {
   List<Opsi> listKaryawan = [];
   Karyawan? selectedKaryawan;
 
-    TextEditingController txtTanggalKembali = TextEditingController();
+  TextEditingController txtTanggalKembali = TextEditingController();
 
   // Cuti Tahunan
   String idDetailTahunan = '';
@@ -97,10 +97,10 @@ class CutiControl extends GetxController {
     txtJatahJumlahCuti = TextEditingController();
     txtPlusTahunLalu = TextEditingController();
     txtMinTahunLalu = TextEditingController();
-    txtJatahJumlahCuti.addListener(update);
-    txtPlusTahunLalu.addListener(update);
-    txtMinTahunLalu.addListener(update);
-    txtAkanDiambil.addListener(hitungSisa);
+    txtJatahJumlahCuti.addListener(() => update(['form_cuti', 'total_jatah']));
+    txtPlusTahunLalu.addListener(() => update(['form_cuti', 'total_jatah']));
+    txtMinTahunLalu.addListener(() => update(['form_cuti', 'total_jatah']));
+    txtAkanDiambil.addListener(() { hitungSisa(); update(['form_cuti']); });
     txtLamaUnpaid = TextEditingController();
     txtLamaGantiLibur = TextEditingController();
     txtTglAwalKhusus = TextEditingController();
@@ -114,10 +114,11 @@ class CutiControl extends GetxController {
   Future<void> loadJatah() async {
     var hasil = await AFdatabase.send(url: 'jatah-cuti?tahun=${filterTahun.value}');
     if (hasil.success) {
-      listJatah.clear();
+      List<JatahCutiTahunan> tempList = [];
       for (var data in hasil.daftar) {
-        listJatah.add(JatahCutiTahunan.fromMap(data));
+        tempList.add(JatahCutiTahunan.fromMap(data));
       }
+      listJatah.assignAll(tempList);
       if (selectedKaryawan != null) {
         hasJatah = listJatah.any((e) => e.karyawanId == selectedKaryawan!.id);
         if (formType == 'IJIN' && hasJatah) {
@@ -125,30 +126,28 @@ class CutiControl extends GetxController {
         }
         if (!hasJatah) {
           idDetailTahunan = '';
-    idDetailKhusus = '';
-    idDetailUnpaid = '';
-    idDetailGantiLibur = '';
-    cekTahunan = false;
+          idDetailKhusus = '';
+          idDetailUnpaid = '';
+          idDetailGantiLibur = '';
+          cekTahunan = false;
         }
         fetchInfoCuti();
       }
-      update();
+      update(['form_cuti']);
     }
   }
 
   Future<void> loadCutis() async {
     var hasil = await repo.findAll(tahun: filterTahun.value);
     if(hasil.success) {
-      listCuti.clear();
+      List<Cuti> tempList = [];
       for (var data in hasil.daftar) {
-        listCuti.add(Cuti.fromMap(data));
+        tempList.add(Cuti.fromMap(data));
       }
-      update();
+      listCuti.assignAll(tempList);
     }
     loadJatah();
   }
-
-
 
   Future<void> loadKaryawan() async {
     var hasil = await AFdatabase.send(
@@ -160,8 +159,7 @@ class CutiControl extends GetxController {
         listKaryawan.add(
           Opsi(value: AFconvert.keString(data['id']), label: data['nama'], data: data),
         );
-      }
-      update();
+      }   
     }
   }
 
@@ -176,10 +174,8 @@ class CutiControl extends GetxController {
           data: d,
         ));
       }
-      update();
     }
   }
-
 
   Future<Opsi?> pilihJenisKhusus({String value = ''}) async {
     return await AFcombobox.bottomSheet(
@@ -229,10 +225,10 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
       }
       if (!hasJatah) {
         idDetailTahunan = '';
-    idDetailKhusus = '';
-    idDetailUnpaid = '';
-    idDetailGantiLibur = '';
-    cekTahunan = false;
+        idDetailKhusus = '';
+        idDetailUnpaid = '';
+        idDetailGantiLibur = '';
+        cekTahunan = false;
       }
     }
     fetchInfoCuti();
@@ -240,7 +236,7 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
 
   bool bolehMinusTahunan = false;
   
-  Future<void> fetchInfoCuti({Map<String, dynamic>? snapDet}) async {
+  Future<void> fetchInfoCuti({CutiDetail? snapDet}) async {
     if(selectedKaryawan == null) return;
     var hasil = await repo.fetchInfo(karyawanId: selectedKaryawan!.id, tahun: filterTahun.value);
     if(hasil.success) {
@@ -249,9 +245,9 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
             bolehMinusTahunan = (data['kuota']['boleh_minus'] == 'Y');
             
             if (snapDet != null) {
-                totalHakCuti   = AFconvert.keInt(snapDet['snap_total_hak_cuti']);
-                sudahDiambil   = AFconvert.keInt(snapDet['snap_sudah_diambil']);
-                cutiMasal      = AFconvert.keInt(snapDet['snap_cuti_masal']);
+                totalHakCuti   = snapDet.snapTotalHakCuti ?? 0;
+                sudahDiambil   = snapDet.snapCutiTerambil ?? 0;
+                cutiMasal      = snapDet.snapCutiMasal ?? 0;
                 belumDiambil   = totalHakCuti - sudahDiambil - cutiMasal;
             } else {
                 totalHakCuti = data['kuota']['total_hak_cuti'] ?? 0;
@@ -267,164 +263,7 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
   void hitungSisa() {
     int akanDiambil = AFconvert.keInt(txtAkanDiambil.text);
     sisaHakCuti = belumDiambil - akanDiambil;
-    update();
-  }
-
-void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryawanNama, String? defaultTahun}) {
-    JatahCutiTahunan item = id == ''
-        ? JatahCutiTahunan()
-        : listJatah.where((e) => e.id == id).first;
-
-    txtJatahId.text = item.id;
-    txtJatahJumlahCuti.text = item.jumlahCuti == 0 ? '' : item.jumlahCuti.toString();
-    txtPlusTahunLalu.text = (item.id == '' || item.plusTahunLalu == 0) ? '' : item.plusTahunLalu.toString();
-    txtMinTahunLalu.text = (item.id == '' || item.minTahunLalu == 0) ? '' : item.minTahunLalu.toString();
-    cekJatahBolehMinus = item.bolehMinus == 'Y';
-
-    if (id != '' && item.karyawan != null) {
-      selectedKaryawanJatah = Opsi(
-        value: item.karyawanId,
-        label: item.karyawan!.nama,
-      );
-    } else if (defaultKaryawanId != null && defaultKaryawanNama != null) {
-      selectedKaryawanJatah = Opsi(value: defaultKaryawanId, label: defaultKaryawanNama);
-    } else {
-      selectedKaryawanJatah = null;
-    }
-
-    if (id != '' && item.tahun.isNotEmpty) {
-      selectedTahunFormJatah = Opsi(value: item.tahun, label: item.tahun);
-    } else if (defaultTahun != null) {
-      selectedTahunFormJatah = Opsi(value: defaultTahun, label: defaultTahun);
-    } else {
-      selectedTahunFormJatah = filterTahun;
-    }
-
-    if (id == '' && selectedKaryawanJatah != null && selectedTahunFormJatah != null) {
-        hitungSisaJatah();
-    }
-
-    update();
-
-    AFwidget.dialog(
-      GetBuilder<CutiControl>(
-        builder: (ctrl) {
-          return Container(
-            width: 700,
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(15)),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                AFwidget.formHeader('Form Jatah Cuti Tahunan'),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
-                  child: Row(
-                    children: [
-                      SizedBox(width: 150, child: const Text('Karyawan')),
-                      Expanded(
-                        child: AFwidget.comboField(
-                          value: ctrl.selectedKaryawanJatah?.label ?? '',
-                          label: '',
-                          onTap: () async {
-                            var a = await ctrl.pilihKaryawan(value: ctrl.selectedKaryawanJatah?.value ?? '');
-                            if (a != null) {
-                              ctrl.selectedKaryawanJatah = a;
-                              ctrl.update();
-                              await ctrl.hitungSisaJatah();
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
-                  child: Row(
-                    children: [
-                      SizedBox(width: 150, child: const Text('Tahun')),
-                      Expanded(
-                        child: AFwidget.comboField(
-                          value: ctrl.selectedTahunFormJatah?.label ?? '',
-                          label: '',
-                          onTap: () async {
-                            var a = await ctrl.pilihTahun(value: ctrl.selectedTahunFormJatah?.value ?? '');
-                            if (a != null) {
-                              ctrl.selectedTahunFormJatah = a;
-                              ctrl.update();
-                              await ctrl.hitungSisaJatah();
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                AFwidget.barisText(label: 'Jumlah Cuti', controller: txtJatahJumlahCuti, isNumber: true),
-                AFwidget.barisText(label: '+ Tahun Lalu', controller: txtPlusTahunLalu, isNumber: true),
-                AFwidget.barisText(label: '- Tahun Lalu', controller: txtMinTahunLalu, isNumber: true),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.blue.shade50,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        const Text('Total Cuti', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                        const SizedBox(width: 20),
-                        Text('${ctrl.totalCutiJatah}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 22, color: Colors.blue)),
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 15, 20, 0),
-                  child: Row(
-                    children: [
-                      Checkbox(
-                        value: ctrl.cekJatahBolehMinus,
-                        onChanged: (val) {
-                          ctrl.cekJatahBolehMinus = val ?? false;
-                          ctrl.update();
-                        },
-                      ),
-                      const Expanded(child: Text('Boleh memakai jatah cuti tahun depan (Boleh Minus) ?', style: TextStyle(fontWeight: FontWeight.bold))),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      item.id == '' ? Container() : AFwidget.tombol(
-                        label: 'Hapus Data', color: Colors.red,
-                        onPressed: () { hapusJatah(item.id); },
-                        minimumSize: const Size(120, 40),
-                      ),
-                      const Spacer(),
-                      AFwidget.tombol(label: 'Batal', color: Colors.orange, onPressed: Get.back, minimumSize: const Size(120, 40)),
-                      const SizedBox(width: 40),
-                      AFwidget.tombol(label: 'Simpan', color: Colors.blue, onPressed: simpanJatah, minimumSize: const Size(120, 40)),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-      barrierDismissible: false,
-      backgroundColor: Colors.white,
-      contentPadding: const EdgeInsets.all(0),
-    );
+    update(['form_cuti']);
   }
 
   Future<void> hitungSisaJatah() async {
@@ -436,7 +275,7 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
                 selectedKaryawanJatah = null;
                 txtPlusTahunLalu.text = '';
                 txtMinTahunLalu.text = '';
-                update();
+                update(['total_jatah']);
                 return;
             }
             
@@ -446,7 +285,7 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
             String m = min == 0 ? '' : min.toString();
             txtPlusTahunLalu.value = TextEditingValue(text: p, selection: TextSelection.collapsed(offset: p.length));
             txtMinTahunLalu.value = TextEditingValue(text: m, selection: TextSelection.collapsed(offset: m.length));
-            update();
+            update(['total_jatah']);
         }
     }
   }
@@ -524,7 +363,7 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
 
       // Check if TAHUNAN, IJIN, or CUTI_MASAL detail has a snapshot
       var snapDet = cuti.details.firstWhereOrNull(
-        (d) => (d['kategori'] == 'TAHUNAN' || d['kategori'] == 'IJIN' || d['kategori'] == 'CUTI_MASAL') && d['snap_total_hak_cuti'] != null
+        (d) => (d.kategori == 'TAHUNAN' || d.kategori == 'IJIN' || d.kategori == 'CUTI_MASAL') && d.snapTotalHakCuti != null
       );
       if (selectedKaryawan != null) {
           hasJatah = listJatah.any((e) => e.karyawanId == selectedKaryawan!.id);
@@ -535,78 +374,78 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
       }
       
       for(var det in cuti.details) {
-          String kat = det['kategori'] ?? '';
+          String kat = det.kategori;
           if(kat == 'TAHUNAN') {
-              idDetailTahunan = det['id']?.toString() ?? '';
+              idDetailTahunan = det.id;
               cekTahunan = true;
-              txtAkanDiambil.text = det['lama_hari']?.toString() ?? '';
-              txtKetTahunan.text = det['keterangan'] ?? '';
-              if(det['dates'] != null) {
-                  for(var dt in det['dates']) {
-                      DateTime? t = AFconvert.keTanggal(dt['tanggal']);
+              txtAkanDiambil.text = det.lamaHari > 0 ? det.lamaHari.toString() : '';
+              txtKetTahunan.text = det.keterangan;
+              if(det.dates.isNotEmpty) {
+                  for(var dt in det.dates) {
+                      DateTime? t = dt.tanggal;
                       if(t != null) tglTahunan.add(t);
                   }
               }
               hitungSisa();
           } else if(kat == 'KHUSUS') {
-              idDetailKhusus = det['id']?.toString() ?? '';
+              idDetailKhusus = det.id;
               cekKhusus = true;
-              var dJenis = det['jenis_cuti_khusus_id'];
+              var dJenis = det.jenisCutiKhususId;
               if(dJenis != null) {
                   jenisKhusus = listJenisKhusus.firstWhereOrNull((e) => e.value == dJenis.toString());
               }
-              txtLamaKhusus.text = det['lama_hari']?.toString() ?? '';
-              txtKetKhusus.text = det['keterangan'] ?? '';
-              if(det['dates'] != null) {
-                  for(var dt in det['dates']) {
-                      DateTime? t = AFconvert.keTanggal(dt['tanggal']);
+              txtLamaKhusus.text = det.lamaHari > 0 ? det.lamaHari.toString() : '';
+              txtKetKhusus.text = det.keterangan;
+              if(det.dates.isNotEmpty) {
+                  for(var dt in det.dates) {
+                      DateTime? t = dt.tanggal;
                       if(t != null) tglKhusus.add(t);
                   }
               }
           } else if(kat == 'CUTI_MASAL') {
-              idDetailMasal = det['id']?.toString() ?? '';
+              idDetailMasal = det.id;
               cekMasal = true;
-              txtLamaMasal.text = det['lama_hari']?.toString() ?? '';
-              txtKetMasal.text = det['keterangan'] ?? '';
-              if(det['dates'] != null) {
-                  for(var dt in det['dates']) {
-                      DateTime? t = AFconvert.keTanggal(dt['tanggal']);
+              txtLamaMasal.text = det.lamaHari > 0 ? det.lamaHari.toString() : '';
+              txtKetMasal.text = det.keterangan;
+              if(det.dates.isNotEmpty) {
+                  for(var dt in det.dates) {
+                      DateTime? t = dt.tanggal;
                       if(t != null) tglMasal.add(t);
                   }
               }
           } else if(kat == 'UNPAID') {
-              idDetailUnpaid = det['id']?.toString() ?? '';
+              idDetailUnpaid = det.id;
               cekUnpaid = true;
-              var dJenis = det['jenis_unpaid'];
+              var dJenis = det.jenisUnpaid;
               if(dJenis != null) {
                   jenisUnpaid = listJenisUnpaid.firstWhereOrNull((e) => e.value == dJenis);
               }
-              txtKetUnpaid.text = det['keterangan'] ?? '';
-              if(det['dates'] != null) {
-                  for(var dt in det['dates']) {
-                      DateTime? t = AFconvert.keTanggal(dt['tanggal']);
+              txtKetUnpaid.text = det.keterangan;
+              if(det.dates.isNotEmpty) {
+                  for(var dt in det.dates) {
+                      DateTime? t = dt.tanggal;
                       if(t != null) tglUnpaid.add(t);
                   }
               }
           } else if(kat == 'GANTI_HARI_LIBUR') {
-              idDetailGantiLibur = det['id']?.toString() ?? '';
+              idDetailGantiLibur = det.id;
               cekGantiLibur = true;
-              txtKetGantiLibur.text = det['keterangan'] ?? '';
-              if(det['dates'] != null) {
-                  for(var dt in det['dates']) {
-                      DateTime? t = AFconvert.keTanggal(dt['tanggal']);
+              txtKetGantiLibur.text = det.keterangan;
+              if(det.dates.isNotEmpty) {
+                  for(var dt in det.dates) {
+                      DateTime? t = dt.tanggal;
                       if(t != null) tglGantiLibur.add(t);
                   }
               }
           } else if(kat == 'IJIN') {
               // Ijin form uses TAHUNAN variables under the hood in CutiFormView (it checks formType == 'IJIN' and displays Tahunan checklist)
-              idDetailTahunan = det['id']?.toString() ?? '';
+              idDetailTahunan = det.id;
               cekTahunan = true;
-              txtAkanDiambil.text = det['lama_hari']?.toString() ?? '';
-              txtKetTahunan.text = det['keterangan'] ?? '';
-              if(det['dates'] != null) {
-                  for(var dt in det['dates']) {
-                      DateTime? t = AFconvert.keTanggal(dt['tanggal']);
+              txtAkanDiambil.text = det.lamaHari > 0 ? det.lamaHari.toString() : '';
+              txtKetTahunan.text = det.keterangan;
+              if(det.dates.isNotEmpty) {
+                  for(var dt in det.dates) {
+                      DateTime? t = dt.tanggal;
                       if(t != null) tglTahunan.add(t);
                   }
               }
@@ -614,7 +453,7 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
           }
       }
       
-      var detKhusus = cuti.details.firstWhereOrNull((d) => d['kategori'] == 'KHUSUS');
+      var detKhusus = cuti.details.firstWhereOrNull((d) => d.kategori == 'KHUSUS');
       if(detKhusus != null) {
           if(tglKhusus.length > 5 || satuanKhusus == 'bulan') {
               tglKhusus.sort();
@@ -625,17 +464,17 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
           }
       }
 
-      var detUnpaid = cuti.details.firstWhereOrNull((d) => d['kategori'] == 'UNPAID');
+      var detUnpaid = cuti.details.firstWhereOrNull((d) => d.kategori == 'UNPAID');
       if(detUnpaid != null) {
-          txtLamaUnpaid.text = detUnpaid['lama_hari']?.toString() ?? '';
+          txtLamaUnpaid.text = detUnpaid.lamaHari > 0 ? detUnpaid.lamaHari.toString() : '';
       }
       
-      var detLibur = cuti.details.firstWhereOrNull((d) => d['kategori'] == 'GANTI_HARI_LIBUR');
+      var detLibur = cuti.details.firstWhereOrNull((d) => d.kategori == 'GANTI_HARI_LIBUR');
       if(detLibur != null) {
-          txtLamaGantiLibur.text = detLibur['lama_hari']?.toString() ?? '';
+          txtLamaGantiLibur.text = detLibur.lamaHari > 0 ? detLibur.lamaHari.toString() : '';
       }
       
-      update();
+      update(['form_cuti']);
     }
   }
 
@@ -687,7 +526,7 @@ void inputJatahForm(String id, {String? defaultKaryawanId, String? defaultKaryaw
     satuanKhusus = 'hari';
     jenisKhusus = null;
     jenisUnpaid = null;
-    update();
+    update(['form_cuti']);
   }
 
 

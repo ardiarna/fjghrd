@@ -2,6 +2,7 @@ import 'package:fjghrd/controllers/cic_cuti_control.dart';
 import 'package:fjghrd/models/karyawan.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
+import 'package:fjghrd/views/cic_jatah_cuti_tahunan_form.dart';
 import 'package:flutter/material.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:intl/intl.dart';
@@ -26,6 +27,7 @@ class CicCutiFormView extends StatelessWidget {
         AFwidget.formHeader('$title ${controller.filterTahun.label}'),
         Expanded(
           child: GetBuilder<CicCutiControl>(
+            id: 'form_cuti',
             builder: (_) {
               return ListView(
                 padding: const EdgeInsets.all(0),
@@ -46,7 +48,7 @@ class CicCutiFormView extends StatelessWidget {
                         );
                         if (picked != null) {
                           controller.txtTanggalKembali.text = AFconvert.matDate(picked);
-                          controller.update();
+                          controller.update(['form_cuti']);
                         }
                       },
                     ),
@@ -75,6 +77,7 @@ class CicCutiFormView extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 15, 20, 15),
           child: GetBuilder<CicCutiControl>(
+            id: 'form_cuti',
             builder: (_) {
               bool isSubmittable = controller.canSubmit;
               return Row(
@@ -219,7 +222,7 @@ class CicCutiFormView extends StatelessWidget {
                     value: controller.cekMasal,
                     onChanged: (controller.currentId != '') ? null : (val) {
                       controller.cekMasal = val ?? false;
-                      controller.update();
+                      controller.update(['form_cuti']);
                     },
                   ),
                   const Text('Cuti Masal', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
@@ -255,7 +258,7 @@ class CicCutiFormView extends StatelessWidget {
                                 child: AFwidget.textField(
                                   controller: controller.txtKetMasal,
                                   label: '',
-                                  onchanged: (val) { controller.update(); },
+                                  onchanged: (val) { controller.update(['form_cuti']); },
                                 ),
                             )
                         ]
@@ -294,7 +297,7 @@ class CicCutiFormView extends StatelessWidget {
                     value: controller.cekTahunan,
                     onChanged: (disableCheckbox || controller.currentId != '') ? null : (val) {
                       controller.cekTahunan = val ?? false;
-                      controller.update();
+                      controller.update(['form_cuti']);
                     },
                   ),
                   const Text('1. Cuti Tahunan', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
@@ -313,7 +316,7 @@ class CicCutiFormView extends StatelessWidget {
                       const SizedBox(height: 10),
                       ElevatedButton(
                         onPressed: () {
-                          controller.inputJatahForm('', 
+                          showCicJatahCutiTahunanForm('', 
                             defaultKaryawanId: controller.selectedKaryawan?.id,
                             defaultKaryawanNama: controller.selectedKaryawan?.nama,
                             defaultTahun: controller.filterTahun.value,
@@ -373,7 +376,7 @@ class CicCutiFormView extends StatelessWidget {
                                   child: AFwidget.textField(
                                     controller: controller.txtKetTahunan,
                                     label: '',
-                                  onchanged: (val) { controller.update(); },
+                                  onchanged: (val) { controller.update(['form_cuti']); },
                                   ),
                               )
                           ]
@@ -404,7 +407,7 @@ class CicCutiFormView extends StatelessWidget {
                     value: controller.cekKhusus,
                     onChanged: (controller.currentId != '') ? null : (val) {
                       controller.cekKhusus = val ?? false;
-                      controller.update();
+                      controller.update(['form_cuti']);
                     },
                   ),
                   const Text('2. Cuti Khusus Tanggungan Perusahaan', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
@@ -431,7 +434,7 @@ class CicCutiFormView extends StatelessWidget {
                                       int lama = AFconvert.keInt(dbData?['lama_hari']);
                                       controller.satuanKhusus = AFconvert.keString(dbData?['satuan']);
                                       controller.txtLamaKhusus.text = lama == 0 ? '' : lama.toString();
-                                      controller.update();
+                                      controller.update(['form_cuti']);
                                     }
                                   },
                                 ),
@@ -454,7 +457,7 @@ class CicCutiFormView extends StatelessWidget {
                                     ),
                                   ],
                                   onchanged: (val) {
-                                    controller.update();
+                                    controller.update(['form_cuti']);
                                   }
                                 ),
                             )
@@ -485,7 +488,7 @@ class CicCutiFormView extends StatelessWidget {
                                                                   AFwidget.snackbar('Sebagian tanggal bentrok dengan kategori lain');
                                                               } else {
                                                                   controller.txtTglAwalKhusus.text = AFconvert.matDate(picked);
-                                                                  controller.update();
+                                                                  controller.update(['form_cuti']);
                                                               }
                                                           }
                                                       }
@@ -512,7 +515,7 @@ class CicCutiFormView extends StatelessWidget {
                                                                   AFwidget.snackbar('Sebagian tanggal bentrok dengan kategori lain');
                                                               } else {
                                                                   controller.txtTglAkhirKhusus.text = AFconvert.matDate(picked);
-                                                                  controller.update();
+                                                                  controller.update(['form_cuti']);
                                                               }
                                                           }
                                                       }
@@ -534,7 +537,7 @@ class CicCutiFormView extends StatelessWidget {
                                 child: AFwidget.textField(
                                   controller: controller.txtKetKhusus,
                                   label: '',
-                                  onchanged: (val) { controller.update(); },
+                                  onchanged: (val) { controller.update(['form_cuti']); },
                                 ),
                             )
                         ]
@@ -565,7 +568,7 @@ class CicCutiFormView extends StatelessWidget {
                     value: controller.cekUnpaid,
                     onChanged: (controller.currentId != '') ? null : (val) {
                       controller.cekUnpaid = val ?? false;
-                      controller.update();
+                      controller.update(['form_cuti']);
                     },
                   ),
                   const Text('3. Cuti Diluar Tanggungan Perusahaan', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
@@ -588,7 +591,7 @@ class CicCutiFormView extends StatelessWidget {
                                     var a = await controller.pilihJenisUnpaid(value: controller.jenisUnpaid?.value ?? '');
                                     if(a != null && a.value != controller.jenisUnpaid?.value) {
                                       controller.jenisUnpaid = a;
-                                      controller.update();
+                                      controller.update(['form_cuti']);
                                     }
                                   },
                                 ),
@@ -611,7 +614,7 @@ class CicCutiFormView extends StatelessWidget {
                                     ),
                                   ],
                                   onchanged: (val) {
-                                    controller.update();
+                                    controller.update(['form_cuti']);
                                   }
                                 ),
                             )
@@ -630,7 +633,7 @@ class CicCutiFormView extends StatelessWidget {
                                 child: AFwidget.textField(
                                   controller: controller.txtKetUnpaid,
                                   label: '',
-                                  onchanged: (val) { controller.update(); },
+                                  onchanged: (val) { controller.update(['form_cuti']); },
                                 ),
                             )
                         ]
@@ -661,7 +664,7 @@ class CicCutiFormView extends StatelessWidget {
                     value: controller.cekGantiLibur,
                     onChanged: (controller.currentId != '') ? null : (val) {
                       controller.cekGantiLibur = val ?? false;
-                      controller.update();
+                      controller.update(['form_cuti']);
                     },
                   ),
                   const Text('4. Penggantian Hari Libur', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
@@ -687,7 +690,7 @@ class CicCutiFormView extends StatelessWidget {
                                     ),
                                   ],
                                   onchanged: (val) {
-                                    controller.update();
+                                    controller.update(['form_cuti']);
                                   }
                                 ),
                             )
@@ -706,7 +709,7 @@ class CicCutiFormView extends StatelessWidget {
                                 child: AFwidget.textField(
                                   controller: controller.txtKetGantiLibur,
                                   label: '',
-                                  onchanged: (val) { controller.update(); },
+                                  onchanged: (val) { controller.update(['form_cuti']); },
                                 ),
                             )
                         ]
@@ -756,7 +759,7 @@ class CicCutiFormView extends StatelessWidget {
                     label: Text(AFconvert.matDate(d)),
                     onDeleted: readOnly ? null : () {
                       dates.remove(d);
-                      controller.update();
+                      controller.update(['form_cuti']);
                     },
                   )).toList(),
                 ),
@@ -782,7 +785,7 @@ class CicCutiFormView extends StatelessWidget {
                           AFwidget.snackbar('Tanggal tersebut sudah dipilih (termasuk di kategori lain)');
                         } else {
                           dates.add(picked);
-                          controller.update();
+                          controller.update(['form_cuti']);
                         }
                       }
                     },

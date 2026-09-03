@@ -5,6 +5,7 @@ import 'package:fjghrd/models/jatah_cuti_tahunan.dart';
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:fjghrd/utils/af_widget.dart';
+import 'package:fjghrd/views/cic_jatah_cuti_tahunan_form.dart';
 import 'package:fjghrd/views/cic_cuti_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -51,7 +52,7 @@ class CicJatahCutiTahunanView extends StatelessWidget {
         renderer: (rdrCtx) {
           return IconButton(
             onPressed: () {
-              controller.inputJatahForm(rdrCtx.row.cells['id']!.value);
+              showCicJatahCutiTahunanForm(rdrCtx.row.cells['id']!.value);
             },
             icon: const Icon(Icons.edit_square),
             iconSize: 18,
@@ -153,7 +154,7 @@ class CicJatahCutiTahunanView extends StatelessWidget {
             const Spacer(),
             IconButton(
               onPressed: () {
-                controller.inputJatahForm('');
+                showCicJatahCutiTahunanForm('');
               },
               icon: const Icon(Icons.add_circle),
               iconSize: 30,

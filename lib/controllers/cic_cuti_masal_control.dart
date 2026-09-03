@@ -3,6 +3,7 @@ import 'package:fjghrd/models/cic_karyawan_cuti_masal.dart';
 import 'package:fjghrd/repositories/cic_cuti_repository.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
+import 'package:fjghrd/views/cic_jatah_cuti_tahunan_form.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -348,11 +349,11 @@ class CicCutiMasalControl extends GetxController {
 
   void inputJatahKaryawan(CicKaryawanCutiMasal k) {
     if(Get.isRegistered<CicCutiControl>()) {
-      var cutiCtrl = Get.find<CicCutiControl>();
+      
       // To prefill the Karyawan, we can temporarily set it or just let them pick
       // Wait, we need to pass Karyawan to it. 
       // It's easier to just call inputJatahForm('') and let user pick.
-      cutiCtrl.inputJatahForm('', defaultKaryawanId: k.karyawanId, defaultKaryawanNama: k.nama, defaultTahun: filterTahun.value);
+      showCicJatahCutiTahunanForm('', defaultKaryawanId: k.karyawanId, defaultKaryawanNama: k.nama, defaultTahun: filterTahun.value);
     }
   }
 }

@@ -1,4 +1,6 @@
 import 'package:fjghrd/controllers/cuti_control.dart';
+import 'package:fjghrd/views/jatah_cuti_tahunan_form.dart';
+
 import 'package:fjghrd/models/karyawan_cuti_masal.dart';
 import 'package:fjghrd/repositories/cuti_repository.dart';
 import 'package:fjghrd/utils/af_convert.dart';
@@ -348,11 +350,10 @@ class CutiMasalControl extends GetxController {
 
   void inputJatahKaryawan(KaryawanCutiMasal k) {
     if(Get.isRegistered<CutiControl>()) {
-      var cutiCtrl = Get.find<CutiControl>();
       // To prefill the Karyawan, we can temporarily set it or just let them pick
       // Wait, we need to pass Karyawan to it. 
       // It's easier to just call inputJatahForm('') and let user pick.
-      cutiCtrl.inputJatahForm('', defaultKaryawanId: k.karyawanId, defaultKaryawanNama: k.nama, defaultTahun: filterTahun.value);
+      showJatahCutiTahunanForm('', defaultKaryawanId: k.karyawanId, defaultKaryawanNama: k.nama, defaultTahun: filterTahun.value);
     }
   }
 }

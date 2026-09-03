@@ -31,7 +31,7 @@ class CicCutiView extends StatelessWidget {
           'id': PlutoCell(value: rowData[index].id),
           'cic/karyawan': PlutoCell(value: rowData[index].karyawan?.nama ?? ''),
           'jenis_form': PlutoCell(value: rowData[index].jenisForm),
-          'kategori_display': PlutoCell(value: rowData[index].details.map((e) => e['kategori']?.toString() ?? '').toSet().join(', ')),
+          'kategori_display': PlutoCell(value: rowData[index].details.map((e) => e.kategori).toSet().join(', ')),
           'lama_cuti': PlutoCell(value: _getLamaCuti(rowData[index].details)),
           'tanggal_cuti': PlutoCell(value: _getTanggalCuti(rowData[index].details)),
           'keterangan': PlutoCell(value: _getKeterangan(rowData[index])),
@@ -44,21 +44,21 @@ class CicCutiView extends StatelessWidget {
 
 
   String _getKeterangan(Cuti cuti) {
-    var listKet = cuti.details.map((e) => e['keterangan']?.toString().trim() ?? '').where((e) => e.isNotEmpty).toList();
+    var listKet = cuti.details.map((e) => e.keterangan.trim()).where((e) => e.isNotEmpty).toList();
     return listKet.toSet().join(', ');
   }
 
-  String _getLamaCuti(List<dynamic> details) {
+  String _getLamaCuti(List<CutiDetail> details) {
     int hari = 0;
     int bulan = 0;
     
     for (var det in details) {
       String satuan = 'hari';
-      if (det['jenis_khusus'] != null && det['jenis_khusus']['satuan'] != null) {
-        satuan = det['jenis_khusus']['satuan'].toString().toLowerCase();
+      if (det.jenisKhusus != null && det.jenisKhusus!['satuan'] != null) {
+        satuan = det.jenisKhusus!['satuan'].toString().toLowerCase();
       }
       
-      int lama = AFconvert.keInt(det['lama_hari']);
+      int lama = det.lamaHari;
       if (satuan == 'bulan') {
         bulan += lama;
       } else {
@@ -86,15 +86,15 @@ class CicCutiView extends StatelessWidget {
     return "${dt.day} ${months[dt.month]}";
   }
 
-  String _getTanggalCuti(List<dynamic> details) {
+  String _getTanggalCuti(List<CutiDetail> details) {
     List<String> resultLines = [];
     
     for (var det in details) {
-      if (det['dates'] == null || (det['dates'] as List).isEmpty) continue;
+      if (det.dates.isEmpty) continue;
       
       List<DateTime> parsedDates = [];
-      for (var d in det['dates']) {
-        DateTime? dt = AFconvert.keTanggal(d['tanggal']);
+      for (var d in det.dates) {
+        DateTime? dt = d.tanggal;
         if (dt != null) parsedDates.add(dt);
       }
       if (parsedDates.isEmpty) continue;

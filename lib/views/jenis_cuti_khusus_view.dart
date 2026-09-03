@@ -1,5 +1,6 @@
 import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/controllers/jenis_cuti_khusus_control.dart';
+import 'package:fjghrd/views/jenis_cuti_khusus_form.dart';
 import 'package:fjghrd/models/jenis_cuti_khusus.dart';
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
@@ -47,7 +48,7 @@ class JenisCutiKhususView extends StatelessWidget {
         renderer: (rdrCtx) {
           return IconButton(
             onPressed: () {
-              controller.inputForm(rdrCtx.row.cells['id']!.value);
+              showJenisCutiKhususForm(rdrCtx.row.cells['id']!.value);
             },
             icon: const Icon(Icons.edit_square),
             iconSize: 18,
@@ -102,7 +103,7 @@ class JenisCutiKhususView extends StatelessWidget {
             const Spacer(),
             IconButton(
               onPressed: () {
-                controller.inputForm('');
+                showJenisCutiKhususForm('');
               },
               icon: const Icon(Icons.add_circle),
               iconSize: 30,
@@ -116,8 +117,7 @@ class JenisCutiKhususView extends StatelessWidget {
             decoration: const BoxDecoration(
               image: bgLineBlue,
             ),
-            child: GetBuilder<JenisCutiKhususControl>(
-              builder: (_) {
+            child: Obx(() {
                 return PlutoGrid(
                   key: UniqueKey(),
                   columns: columns,

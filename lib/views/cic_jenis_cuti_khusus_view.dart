@@ -4,6 +4,7 @@ import 'package:fjghrd/models/jenis_cuti_khusus.dart';
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:fjghrd/utils/af_widget.dart';
+import 'package:fjghrd/views/cic_jenis_cuti_khusus_form.dart';
 import 'package:fjghrd/views/cic_cuti_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -47,7 +48,7 @@ class CicJenisCutiKhususView extends StatelessWidget {
         renderer: (rdrCtx) {
           return IconButton(
             onPressed: () {
-              controller.inputForm(rdrCtx.row.cells['id']!.value);
+              showCicJenisCutiKhususForm(rdrCtx.row.cells['id']!.value);
             },
             icon: const Icon(Icons.edit_square),
             iconSize: 18,
@@ -102,7 +103,7 @@ class CicJenisCutiKhususView extends StatelessWidget {
             const Spacer(),
             IconButton(
               onPressed: () {
-                controller.inputForm('');
+                showCicJenisCutiKhususForm('');
               },
               icon: const Icon(Icons.add_circle),
               iconSize: 30,
