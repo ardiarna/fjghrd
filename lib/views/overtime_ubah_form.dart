@@ -52,7 +52,7 @@ class OvertimeUbahForm extends StatelessWidget {
                               onChanged: (a) {
                                 if(a != null && a != controller.jenis) {
                                   controller.jenis = a;
-                                  controller.update();
+                                      controller.update(['form_overtime']);
                                 }
                               },
                               child: Row(
@@ -87,15 +87,16 @@ class OvertimeUbahForm extends StatelessWidget {
                       ),
                       Expanded(
                         child: GetBuilder<OvertimeControl>(
-                          builder: (_) {
-                            return AFwidget.comboField(
-                              value: controller.bulan.label,
+                            id: 'form_overtime',
+                            builder: (_) {
+                              return AFwidget.comboField(
+                                value: controller.bulan.label,
                               label: '',
                               onTap: () async {
                                 var a = await controller.pilihBulan(value: controller.bulan.value);
                                 if(a != null && a.value != controller.bulan.value) {
                                   controller.bulan = a;
-                                  controller.update();
+                                      controller.update(['form_overtime']);
                                 }
                               },
                             );
@@ -105,15 +106,16 @@ class OvertimeUbahForm extends StatelessWidget {
                       const SizedBox(width: 40),
                       Expanded(
                         child: GetBuilder<OvertimeControl>(
-                          builder: (_) {
-                            return AFwidget.comboField(
-                              value: controller.tahun.label,
+                            id: 'form_overtime',
+                            builder: (_) {
+                              return AFwidget.comboField(
+                                value: controller.tahun.label,
                               label: '',
                               onTap: () async {
                                 var a = await controller.pilihTahun(value: controller.tahun.value);
                                 if(a != null && a.value != controller.tahun.value) {
                                   controller.tahun = a;
-                                  controller.update();
+                                      controller.update(['form_overtime']);
                                 }
                               },
                             );

@@ -302,7 +302,7 @@ class KaryawanControl extends GetxController {
         listKeluarga.add(KeluargaKaryawan.fromMap(data));
       }
     }
-    update();
+    update(['detail_karyawan']);
   }
 
   Future<void> loadKontaks() async {
@@ -313,7 +313,7 @@ class KaryawanControl extends GetxController {
         listKontak.add(KeluargaKontak.fromMap(data));
       }
     }
-    update();
+    update(['detail_karyawan']);
   }
 
   Future<void> loadTrainings() async {
@@ -337,7 +337,7 @@ class KaryawanControl extends GetxController {
         listTrainingKaryawan.add(TrainingKaryawan.fromMap(data));
       }
     }
-    update();
+    update(['detail_karyawan']);
   }
 
   Future<void> loadPerjanjianKerjas() async {
@@ -348,7 +348,7 @@ class KaryawanControl extends GetxController {
         listPerjanjianKerja.add(PerjanjianKerja.fromMap(data));
       }
     }
-    update();
+    update(['detail_karyawan']);
   }
 
   Future<void> loadTimelineMasakerja() async {
@@ -359,7 +359,7 @@ class KaryawanControl extends GetxController {
         listTimelineMasakerja.add(TimelineMasakerja.fromMap(data));
       }
     }
-    update();
+    update(['detail_karyawan']);
   }
 
   Future<void> loadPayrolls() async {
@@ -370,7 +370,7 @@ class KaryawanControl extends GetxController {
         listPayroll.add(Payroll.fromMap(data));
       }
     }
-    update();
+    update(['detail_karyawan']);
   }
 
   void ubahForm(String id, String statusAktif) {
@@ -1182,7 +1182,7 @@ class KaryawanControl extends GetxController {
     await loadStatusKerjas();
     await loadStatusPhks();
     await loadPtkps();
-    update();
+    update(['form_karyawan']);
   }
 
   Future<Opsi?> pilihAgama({String value = ''}) async {

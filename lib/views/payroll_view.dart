@@ -104,6 +104,7 @@ class PayrollView extends StatelessWidget {
               SizedBox(
                 width: 200,
                 child: GetBuilder<PayrollControl>(
+                  id: 'filter_payroll',
                   builder: (_) {
                     return AFwidget.comboField(
                       value: controller.filterTahun.label,
@@ -114,7 +115,7 @@ class PayrollView extends StatelessWidget {
                         var a = await controller.pilihTahun(value: controller.filterTahun.value);
                         if(a != null && a.value != controller.filterTahun.value) {
                           controller.filterTahun = a;
-                          controller.update();
+                          controller.update(['filter_payroll']);
                           controller.loadPayrolls();
                         }
                       },

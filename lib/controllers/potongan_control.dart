@@ -73,7 +73,6 @@ class PotonganControl extends GetxController {
           Opsi(value: AFconvert.keString(data['id']), label: data['nama'], data: data),
         );
       }
-      update();
     }
   }
 
@@ -85,7 +84,7 @@ class PotonganControl extends GetxController {
     } else {
       upah = Upah();
     }
-    update();
+    update(['info_upah']);
   }
 
   Future<void> tambahData() async {

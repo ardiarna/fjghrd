@@ -366,7 +366,7 @@ class KaryawanForm extends StatelessWidget {
             icon: Icons.person_outline,
             children: [
               const Spacer(),
-              GetBuilder<KaryawanControl>(
+              GetBuilder<KaryawanControl>(id: 'form_karyawan',
                 builder: (_) {
                   if(controller.current.aktif == 'Y' || controller.current.aktif == 'N') {
                     return AFwidget.tombol(
@@ -382,7 +382,7 @@ class KaryawanForm extends StatelessWidget {
                 }
               ),
               const SizedBox(width: 25),
-              GetBuilder<KaryawanControl>(
+              GetBuilder<KaryawanControl>(id: 'form_karyawan',
                   builder: (_) {
                     if(controller.current.aktif == 'N') {
                       return AFwidget.tombol(
@@ -508,7 +508,7 @@ class KaryawanForm extends StatelessWidget {
                                           child: const Text('Agama'),
                                         ),
                                         Expanded(
-                                          child: GetBuilder<KaryawanControl>(
+                                          child: GetBuilder<KaryawanControl>(id: 'form_karyawan',
                                             builder: (_) {
                                               return AFwidget.comboField(
                                                 value: controller.agama.nama,
@@ -517,7 +517,7 @@ class KaryawanForm extends StatelessWidget {
                                                   var a = await controller.pilihAgama(value: controller.agama.id);
                                                   if(a != null && a.value != controller.agama.id) {
                                                     controller.agama = Agama.fromMap(a.data!);
-                                                    controller.update();
+                                                    controller.update(['form_karyawan']);
                                                   }
                                                 },
                                               );
@@ -537,7 +537,7 @@ class KaryawanForm extends StatelessWidget {
                                           child: const Text('Area'),
                                         ),
                                         Expanded(
-                                          child: GetBuilder<KaryawanControl>(
+                                          child: GetBuilder<KaryawanControl>(id: 'form_karyawan',
                                             builder: (_) {
                                               return AFwidget.comboField(
                                                 value: controller.area.nama,
@@ -546,7 +546,7 @@ class KaryawanForm extends StatelessWidget {
                                                   var a = await controller.pilihArea(value: controller.area.id);
                                                   if(a != null && a.value != controller.area.id) {
                                                     controller.area = Area.fromMap(a.data!);
-                                                    controller.update();
+                                                    controller.update(['form_karyawan']);
                                                   }
                                                 },
                                               );
@@ -566,14 +566,14 @@ class KaryawanForm extends StatelessWidget {
                                           child: const Text('Jenis Karyawan'),
                                         ),
                                         Expanded(
-                                          child: GetBuilder<KaryawanControl>(
+                                          child: GetBuilder<KaryawanControl>(id: 'form_karyawan',
                                             builder: (_) {
                                               return RadioGroup<bool>(
                                                 groupValue: controller.staf,
                                                 onChanged: (a) {
                                                   if(a != null && a != controller.staf) {
                                                     controller.staf = a;
-                                                    controller.update();
+                                                    controller.update(['form_karyawan']);
                                                   }
                                                 },
                                                 child: Row(
@@ -607,14 +607,14 @@ class KaryawanForm extends StatelessWidget {
                                           child: const Text('Manajemen'),
                                         ),
                                         Expanded(
-                                          child: GetBuilder<KaryawanControl>(
+                                          child: GetBuilder<KaryawanControl>(id: 'form_karyawan',
                                             builder: (_) {
                                               return RadioGroup<bool>(
                                                 groupValue: controller.manajemen,
                                                 onChanged: (a) {
                                                   if(a != null && a != controller.manajemen) {
                                                     controller.manajemen = a;
-                                                    controller.update();
+                                                    controller.update(['form_karyawan']);
                                                   }
                                                 },
                                                 child: Row(
@@ -648,14 +648,14 @@ class KaryawanForm extends StatelessWidget {
                                           child: const Text('Status Aktif'),
                                         ),
                                         Expanded(
-                                          child: GetBuilder<KaryawanControl>(
+                                          child: GetBuilder<KaryawanControl>(id: 'form_karyawan',
                                             builder: (_) {
                                               return RadioGroup<String>(
                                                 groupValue: controller.aktif,
                                                 onChanged: (a) {
                                                   if(a != null && a != controller.aktif) {
                                                     controller.aktif = a;
-                                                    controller.update();
+                                                    controller.update(['form_karyawan']);
                                                   }
                                                 },
                                                 child: Row(
@@ -689,7 +689,7 @@ class KaryawanForm extends StatelessWidget {
                                           child: const Text('Divisi'),
                                         ),
                                         Expanded(
-                                          child: GetBuilder<KaryawanControl>(
+                                          child: GetBuilder<KaryawanControl>(id: 'form_karyawan',
                                             builder: (_) {
                                               return AFwidget.comboField(
                                                 value: controller.divisi.nama,
@@ -698,7 +698,7 @@ class KaryawanForm extends StatelessWidget {
                                                   var a = await controller.pilihDivisi(value: controller.divisi.id);
                                                   if(a != null && a.value != controller.divisi.id) {
                                                     controller.divisi = Divisi.fromMap(a.data!);
-                                                    controller.update();
+                                                    controller.update(['form_karyawan']);
                                                   }
                                                 },
                                               );
@@ -718,7 +718,7 @@ class KaryawanForm extends StatelessWidget {
                                           child: const Text('Jabatan'),
                                         ),
                                         Expanded(
-                                          child: GetBuilder<KaryawanControl>(
+                                          child: GetBuilder<KaryawanControl>(id: 'form_karyawan',
                                             builder: (_) {
                                               return AFwidget.comboField(
                                                 value: controller.jabatan.nama,
@@ -727,7 +727,7 @@ class KaryawanForm extends StatelessWidget {
                                                   var a = await controller.pilihJabatan(value: controller.jabatan.id);
                                                   if(a != null && a.value != controller.jabatan.id) {
                                                     controller.jabatan = Jabatan.fromMap(a.data!);
-                                                    controller.update();
+                                                    controller.update(['form_karyawan']);
                                                   }
                                                 },
                                               );
@@ -845,14 +845,14 @@ class KaryawanForm extends StatelessWidget {
                                           child: const Text('Jenis Kelamin'),
                                         ),
                                         Expanded(
-                                          child: GetBuilder<KaryawanControl>(
+                                          child: GetBuilder<KaryawanControl>(id: 'form_karyawan',
                                             builder: (_) {
                                               return RadioGroup<String>(
                                                 groupValue: controller.kelamin,
                                                 onChanged: (a) {
                                                   if(a != null && a != controller.kelamin) {
                                                     controller.kelamin = a;
-                                                    controller.update();
+                                                    controller.update(['form_karyawan']);
                                                   }
                                                 },
                                                 child: Row(
@@ -886,14 +886,14 @@ class KaryawanForm extends StatelessWidget {
                                           child: const Text('Status'),
                                         ),
                                         Expanded(
-                                          child: GetBuilder<KaryawanControl>(
+                                          child: GetBuilder<KaryawanControl>(id: 'form_karyawan',
                                             builder: (_) {
                                               return RadioGroup<String>(
                                                 groupValue: controller.kawin,
                                                 onChanged: (a) {
                                                   if(a != null && a != controller.kawin) {
                                                     controller.kawin = a;
-                                                    controller.update();
+                                                    controller.update(['form_karyawan']);
                                                   }
                                                 },
                                                 child: Row(
@@ -932,7 +932,7 @@ class KaryawanForm extends StatelessWidget {
                                           child: const Text('Pendidikan Terakhir'),
                                         ),
                                         Expanded(
-                                          child: GetBuilder<KaryawanControl>(
+                                          child: GetBuilder<KaryawanControl>(id: 'form_karyawan',
                                             builder: (_) {
                                               return AFwidget.comboField(
                                                 value: controller.pendidikan.nama,
@@ -941,7 +941,7 @@ class KaryawanForm extends StatelessWidget {
                                                   var a = await controller.pilihPendidikan(value: controller.pendidikan.id);
                                                   if(a != null && a.value != controller.pendidikan.id) {
                                                     controller.pendidikan = Pendidikan.fromMap(a.data!);
-                                                    controller.update();
+                                                    controller.update(['form_karyawan']);
                                                   }
                                                 },
                                               );
@@ -1003,7 +1003,7 @@ class KaryawanForm extends StatelessWidget {
                                           child: const Text('Status Karyawan'),
                                         ),
                                         Expanded(
-                                          child: GetBuilder<KaryawanControl>(
+                                          child: GetBuilder<KaryawanControl>(id: 'form_karyawan',
                                             builder: (_) {
                                               return AFwidget.comboField(
                                                 value: controller.statusKerja.nama,
@@ -1012,7 +1012,7 @@ class KaryawanForm extends StatelessWidget {
                                                   var a = await controller.pilihStatusKerja(value: controller.statusKerja.id);
                                                   if(a != null && a.value != controller.statusKerja.id) {
                                                     controller.statusKerja = StatusKerja.fromMap(a.data!);
-                                                    controller.update();
+                                                    controller.update(['form_karyawan']);
                                                   }
                                                 },
                                               );
@@ -1038,7 +1038,7 @@ class KaryawanForm extends StatelessWidget {
                                             child: const Text('PTKP'),
                                           ),
                                           Expanded(
-                                            child: GetBuilder<KaryawanControl>(
+                                            child: GetBuilder<KaryawanControl>(id: 'form_karyawan',
                                               builder: (_) {
                                                 return AFwidget.comboField(
                                                   value: controller.ptkp.kode,
@@ -1047,7 +1047,7 @@ class KaryawanForm extends StatelessWidget {
                                                     var a = await controller.pilihPtkp(value: controller.ptkp.id);
                                                     if(a != null && a.value != controller.ptkp.id) {
                                                       controller.ptkp = Ptkp.fromMap(a.data!);
-                                                      controller.update();
+                                                      controller.update(['form_karyawan']);
                                                     }
                                                   },
                                                 );
@@ -1101,7 +1101,7 @@ class KaryawanForm extends StatelessWidget {
                         controller: _scrollControllerRight,
                         child: Column(
                           children: [
-                            GetBuilder<KaryawanControl>(
+                            GetBuilder<KaryawanControl>(id: 'detail_karyawan',
                               builder: (_) {
                                 // var a = controller.listTimelineMasakerja[0].tanggalAwal;
                                 // var b = controller.listTimelineMasakerja[controller.listTimelineMasakerja.length-1].tanggalAKhir ?? _now;
@@ -1237,7 +1237,7 @@ class KaryawanForm extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            GetBuilder<KaryawanControl>(
+                            GetBuilder<KaryawanControl>(id: 'detail_karyawan',
                               builder: (_) {
                                 if(controller.listKeluarga.isEmpty) {
                                   return Container(
@@ -1298,7 +1298,7 @@ class KaryawanForm extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            GetBuilder<KaryawanControl>(
+                            GetBuilder<KaryawanControl>(id: 'detail_karyawan',
                               builder: (_) {
                                 if(controller.listKontak.isEmpty) {
                                   return Container(
@@ -1359,7 +1359,7 @@ class KaryawanForm extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            GetBuilder<KaryawanControl>(
+                            GetBuilder<KaryawanControl>(id: 'detail_karyawan',
                               builder: (_) {
                                 if(controller.listPerjanjianKerja.isEmpty) {
                                   return Container(
@@ -1421,7 +1421,7 @@ class KaryawanForm extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            GetBuilder<KaryawanControl>(
+                            GetBuilder<KaryawanControl>(id: 'detail_karyawan',
                               builder: (_) {
                                 if(controller.listTrainingKaryawan.isEmpty) {
                                   return Container(

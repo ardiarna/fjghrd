@@ -34,6 +34,7 @@ class PotonganTambahForm extends StatelessWidget {
                     ),
                     Expanded(
                       child: GetBuilder<PotonganControl>(
+                        id: 'form_potongan',
                         builder: (_) {
                           return AFwidget.comboField(
                             value: controller.jenis.label,
@@ -43,7 +44,7 @@ class PotonganTambahForm extends StatelessWidget {
                               if(a != null && a.value != controller.jenis.value) {
                                 controller.jenis = a;
                                 controller.hitungJumlahIdr(controller.txtHari.text);
-                                controller.update();
+                                controller.update(['form_potongan']);
                               }
                             },
                           );
@@ -64,6 +65,7 @@ class PotonganTambahForm extends StatelessWidget {
                     ),
                     Expanded(
                       child: GetBuilder<PotonganControl>(
+                        id: 'form_potongan',
                         builder: (_) {
                           return AFwidget.comboField(
                             value: controller.karyawan.nama,
@@ -72,6 +74,7 @@ class PotonganTambahForm extends StatelessWidget {
                               var a = await controller.pilihKaryawan(value: controller.karyawan.id);
                               if(a != null && a.value != controller.karyawan.id) {
                                 controller.karyawan = Karyawan.fromMap(a.data!);
+                                controller.update(['form_potongan']);
                                 await controller.loadPayroll();
                                 controller.hitungJumlahIdr(controller.txtHari.text);
                               }
@@ -84,6 +87,7 @@ class PotonganTambahForm extends StatelessWidget {
                 ),
               ),
               GetBuilder<PotonganControl>(
+                id: 'info_upah',
                 builder: (_) {
                   if(controller.karyawan.id != '' && (controller.jenis.value == 'TB' || controller.jenis.value == 'UL' || controller.jenis.value == 'KJ')) {
                     return Padding(
@@ -114,6 +118,7 @@ class PotonganTambahForm extends StatelessWidget {
                 },
               ),
               GetBuilder<PotonganControl>(
+                id: 'form_potongan',
                 builder: (_) {
                   if(controller.jenis.value == 'TB' || controller.jenis.value == 'UL') {
                     return AFwidget.barisText(
@@ -154,6 +159,7 @@ class PotonganTambahForm extends StatelessWidget {
                 },
               ),
               GetBuilder<PotonganControl>(
+                id: 'form_potongan',
                 builder: (_) {
                   return AFwidget.barisText(
                     label: 'Jumlah IDR',

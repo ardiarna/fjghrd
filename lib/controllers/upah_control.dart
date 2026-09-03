@@ -45,7 +45,7 @@ class UpahControl extends GetxController {
           totalKaryawanPerArea[k.area.nama] = 1;
         }
       }
-      update();
+      update(['summary_upah']);
     }
   }
 

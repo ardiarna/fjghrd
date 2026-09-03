@@ -1203,6 +1203,7 @@ class RunpayrollView extends StatelessWidget {
     controller.bulan = Opsi(value: '${now.month}', label: mapBulan[now.month]!);
     controller.homeControl.kontener = wgPeriode();
     return GetBuilder<PayrollControl>(
+      id: 'runpayroll_root',
       builder: (_) {
         return controller.homeControl.kontener;
       }
@@ -1247,6 +1248,7 @@ class RunpayrollView extends StatelessWidget {
                       SizedBox(
                         width: 170,
                         child: GetBuilder<PayrollControl>(
+                          id: 'runpayroll_periode',
                           builder: (_) {
                             return AFwidget.comboField(
                               value: controller.bulan.label,
@@ -1259,7 +1261,7 @@ class RunpayrollView extends StatelessWidget {
                                   int vBulan = AFconvert.keInt(a.value);
                                   controller.txtTanggalAwal.text = AFconvert.matDate(DateTime(vBulan == 1 ? vTahun-1 : vTahun, vBulan == 1 ? 12 : vBulan-1, 19));
                                   controller.txtTanggalAkhir.text = AFconvert.matDate(DateTime(vTahun, vBulan, 18));
-                                  controller.update();
+                                  controller.update(['runpayroll_periode']);
                                 }
                               },
                             );
@@ -1270,6 +1272,7 @@ class RunpayrollView extends StatelessWidget {
                       SizedBox(
                         width: 170,
                         child: GetBuilder<PayrollControl>(
+                          id: 'runpayroll_periode',
                           builder: (_) {
                             return AFwidget.comboField(
                               value: controller.tahun.label,
@@ -1282,7 +1285,7 @@ class RunpayrollView extends StatelessWidget {
                                   int vBulan = AFconvert.keInt(controller.bulan.value);
                                   controller.txtTanggalAwal.text = AFconvert.matDate(DateTime(vBulan == 1 ? vTahun-1 : vTahun, vBulan == 1 ? 12 : vBulan-1, 19));
                                   controller.txtTanggalAkhir.text = AFconvert.matDate(DateTime(vTahun, vBulan, 18));
-                                  controller.update();
+                                  controller.update(['runpayroll_periode']);
                                 }
                               },
                             );
@@ -1433,6 +1436,7 @@ class RunpayrollView extends StatelessWidget {
                 const SizedBox(height: 10),
                 Expanded(
                   child: GetBuilder<PayrollControl>(
+                    id: 'payroll_karyawan',
                     builder: (_) {
                       List<Widget> children = [];
                       var no = 1;
@@ -1459,7 +1463,7 @@ class RunpayrollView extends StatelessWidget {
                                     onChanged: (value) {
                                       if(value != null) {
                                         controller.listKaryawan[i].dipilih = value;
-                                        controller.update();
+                                        controller.update(['payroll_karyawan']);
                                       }
                                     },
                                   ),
@@ -1483,7 +1487,7 @@ class RunpayrollView extends StatelessWidget {
                                   onChanged: (value) {
                                     if(value != null) {
                                       controller.listKaryawan[i].dipilih = value;
-                                      controller.update();
+                                        controller.update(['payroll_karyawan']);
                                     }
                                   },
                                 ),
@@ -1591,6 +1595,7 @@ class RunpayrollView extends StatelessWidget {
         ),
         Expanded(
           child: GetBuilder<PayrollControl>(
+            id: 'grid_payroll',
             builder: (_) {
               return PlutoGrid(
                 key: UniqueKey(),

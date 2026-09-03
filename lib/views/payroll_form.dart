@@ -1145,6 +1145,7 @@ class PayrollForm extends StatelessWidget {
     return Column(
       children: [
         GetBuilder<PayrollControl>(
+            id: 'header_detail_payroll',
             builder: (_) {
             return AFwidget.pageHeader(
               onBack: () {

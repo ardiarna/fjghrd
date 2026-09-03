@@ -35,6 +35,7 @@ class UangPhkTambahForm extends StatelessWidget {
                       ),
                       Expanded(
                         child: GetBuilder<UangPhkControl>(
+                          id: 'form_uangphk',
                           builder: (_) {
                             return AFwidget.comboField(
                               value: controller.karyawan.nama,
@@ -43,7 +44,7 @@ class UangPhkTambahForm extends StatelessWidget {
                                 var a = await controller.pilihKaryawan(value: controller.karyawan.id);
                                 if(a != null && a.value != controller.karyawan.id) {
                                   controller.karyawan = Karyawan.fromMap(a.data!);
-                                  controller.update();
+                                  controller.update(['form_uangphk']);
                                 }
                               },
                             );

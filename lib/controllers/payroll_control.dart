@@ -112,7 +112,7 @@ class PayrollControl extends GetxController {
           }
         }
       }
-      update();
+      update(['payroll_karyawan']);
     }
   }
 

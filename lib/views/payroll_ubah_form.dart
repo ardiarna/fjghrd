@@ -34,6 +34,7 @@ class PayrollUbahForm extends StatelessWidget {
                       ),
                       Expanded(
                         child: GetBuilder<PayrollControl>(
+                          id: 'form_ubah_payroll',
                           builder: (_) {
                             return AFwidget.comboField(
                               value: controller.bulan.label,
@@ -42,7 +43,7 @@ class PayrollUbahForm extends StatelessWidget {
                                 var a = await controller.pilihBulan(value: controller.bulan.value);
                                 if(a != null && a.value != controller.bulan.value) {
                                   controller.bulan = a;
-                                  controller.update();
+                                  controller.update(['form_ubah_payroll']);
                                 }
                               },
                             );
@@ -52,6 +53,7 @@ class PayrollUbahForm extends StatelessWidget {
                       const SizedBox(width: 40),
                       Expanded(
                         child: GetBuilder<PayrollControl>(
+                          id: 'form_ubah_payroll',
                           builder: (_) {
                             return AFwidget.comboField(
                               value: controller.tahun.label,
@@ -60,7 +62,7 @@ class PayrollUbahForm extends StatelessWidget {
                                 var a = await controller.pilihTahun(value: controller.tahun.value);
                                 if(a != null && a.value != controller.tahun.value) {
                                   controller.tahun = a;
-                                  controller.update();
+                                  controller.update(['form_ubah_payroll']);
                                 }
                               },
                             );

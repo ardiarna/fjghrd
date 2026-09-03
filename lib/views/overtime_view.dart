@@ -195,6 +195,7 @@ class OvertimeView extends StatelessWidget {
               SizedBox(
                 width: 150,
                 child: GetBuilder<OvertimeControl>(
+                  id: 'filter_overtime',
                   builder: (_) {
                     return AFwidget.comboField(
                       value: controller.filterJenis.label,
@@ -204,7 +205,7 @@ class OvertimeView extends StatelessWidget {
                         var a = await controller.pilihJenis(value: controller.filterJenis.value);
                         if(a != null && a.value != controller.filterJenis.value) {
                           controller.filterJenis = a;
-                          controller.update();
+                          controller.update(['filter_overtime']);
                           controller.loadOvertimes();
                         }
                       },
@@ -217,6 +218,7 @@ class OvertimeView extends StatelessWidget {
               SizedBox(
                 width: 150,
                 child: GetBuilder<OvertimeControl>(
+                  id: 'filter_overtime',
                   builder: (_) {
                     return AFwidget.comboField(
                       value: controller.filterBulan.label,
@@ -226,7 +228,7 @@ class OvertimeView extends StatelessWidget {
                         var a = await controller.pilihBulan(value: controller.filterBulan.value);
                         if(a != null && a.value != controller.filterBulan.value) {
                           controller.filterBulan = a;
-                          controller.update();
+                          controller.update(['filter_overtime']);
                           controller.loadOvertimes();
                         }
                       },
@@ -238,6 +240,7 @@ class OvertimeView extends StatelessWidget {
               SizedBox(
                 width: 100,
                 child: GetBuilder<OvertimeControl>(
+                  id: 'filter_overtime',
                   builder: (_) {
                     return AFwidget.comboField(
                       value: controller.filterTahun.label,
@@ -247,7 +250,7 @@ class OvertimeView extends StatelessWidget {
                         var a = await controller.pilihTahun(value: controller.filterTahun.value);
                         if(a != null && a.value != controller.filterTahun.value) {
                           controller.filterTahun = a;
-                          controller.update();
+                          controller.update(['filter_overtime']);
                           controller.loadOvertimes();
                         }
                       },

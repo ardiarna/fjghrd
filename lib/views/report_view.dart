@@ -46,6 +46,7 @@ class ReportView extends StatelessWidget {
               SizedBox(
                 width: 150,
                 child: GetBuilder<ReportControl>(
+                      id: 'filter_1',
                   builder: (_) {
                     return AFwidget.comboField(
                       value: controller.filterTahun.label,
@@ -56,7 +57,7 @@ class ReportView extends StatelessWidget {
                         var a = await controller.pilihTahun(value: controller.filterTahun.value);
                         if(a != null && a.value != controller.filterTahun.value) {
                           controller.filterTahun = a;
-                          controller.update();
+                          controller.update(['filter_1']);
                         }
                       },
                     );
@@ -209,6 +210,7 @@ class ReportView extends StatelessWidget {
                   ),
                   Expanded(
                     child: GetBuilder<ReportControl>(
+                      id: 'filter_2',
                       builder: (_) {
                         return AFwidget.comboField(
                           value: controller.filterTahunAwal.label,
@@ -217,7 +219,7 @@ class ReportView extends StatelessWidget {
                             var a = await controller.pilihTahun(value: controller.filterTahunAwal.value);
                             if(a != null && a.value != controller.filterTahunAwal.value) {
                               controller.filterTahunAwal = a;
-                              controller.update();
+                              controller.update(['filter_2']);
                             }
                           },
                         );
@@ -238,6 +240,7 @@ class ReportView extends StatelessWidget {
                   ),
                   Expanded(
                     child: GetBuilder<ReportControl>(
+                      id: 'filter_3',
                       builder: (_) {
                         return AFwidget.comboField(
                           value: controller.filterTahunAkhir.label,
@@ -246,7 +249,7 @@ class ReportView extends StatelessWidget {
                             var a = await controller.pilihTahun(value: controller.filterTahunAkhir.value);
                             if(a != null && a.value != controller.filterTahunAkhir.value) {
                               controller.filterTahunAkhir = a;
-                              controller.update();
+                              controller.update(['filter_3']);
                             }
                           },
                         );
@@ -310,6 +313,7 @@ class ReportView extends StatelessWidget {
                   ),
                   Expanded(
                     child: GetBuilder<ReportControl>(
+                      id: 'filter_4',
                       builder: (_) {
                         return AFwidget.comboField(
                           value: controller.filterTahunAwal.label,
@@ -318,7 +322,7 @@ class ReportView extends StatelessWidget {
                             var a = await controller.pilihTahun(value: controller.filterTahunAwal.value);
                             if(a != null && a.value != controller.filterTahunAwal.value) {
                               controller.filterTahunAwal = a;
-                              controller.update();
+                              controller.update(['filter_4']);
                             }
                           }
                         );
@@ -339,6 +343,7 @@ class ReportView extends StatelessWidget {
                   ),
                   Expanded(
                     child: GetBuilder<ReportControl>(
+                      id: 'filter_5',
                       builder: (_) {
                         return AFwidget.comboField(
                           value: controller.filterTahunAkhir.label,
@@ -347,7 +352,7 @@ class ReportView extends StatelessWidget {
                             var a = await controller.pilihTahun(value: controller.filterTahunAkhir.value);
                             if(a != null && a.value != controller.filterTahunAkhir.value) {
                               controller.filterTahunAkhir = a;
-                              controller.update();
+                              controller.update(['filter_5']);
                             }
                           }
                         );
@@ -410,6 +415,7 @@ class ReportView extends StatelessWidget {
                   ),
                   Expanded(
                     child: GetBuilder<ReportControl>(
+                      id: 'filter_6',
                       builder: (_) {
                         return AFwidget.comboField(
                           value: controller.filterTahunAwal.label,
@@ -418,7 +424,7 @@ class ReportView extends StatelessWidget {
                             var a = await controller.pilihTahun(value: controller.filterTahunAwal.value);
                             if(a != null && a.value != controller.filterTahunAwal.value) {
                               controller.filterTahunAwal = a;
-                              controller.update();
+                              controller.update(['filter_6']);
                             }
                           }
                         );
@@ -439,6 +445,7 @@ class ReportView extends StatelessWidget {
                   ),
                   Expanded(
                     child: GetBuilder<ReportControl>(
+                      id: 'filter_7',
                       builder: (_) {
                         return AFwidget.comboField(
                           value: controller.filterTahunAkhir.label,
@@ -447,7 +454,7 @@ class ReportView extends StatelessWidget {
                             var a = await controller.pilihTahun(value: controller.filterTahunAkhir.value);
                             if(a != null && a.value != controller.filterTahunAkhir.value) {
                               controller.filterTahunAkhir = a;
-                              controller.update();
+                              controller.update(['filter_7']);
                             }
                           }
                         );
@@ -510,6 +517,7 @@ class ReportView extends StatelessWidget {
                   ),
                   Expanded(
                     child: GetBuilder<ReportControl>(
+                      id: 'filter_8',
                       builder: (_) {
                         return AFwidget.comboField(
                           value: controller.filterTahunAwal.label,
@@ -518,7 +526,7 @@ class ReportView extends StatelessWidget {
                             var a = await controller.pilihTahun(value: controller.filterTahunAwal.value);
                             if(a != null && a.value != controller.filterTahunAwal.value) {
                               controller.filterTahunAwal = a;
-                              controller.update();
+                              controller.update(['filter_8']);
                             }
                           }
                         );
@@ -539,6 +547,7 @@ class ReportView extends StatelessWidget {
                   ),
                   Expanded(
                     child: GetBuilder<ReportControl>(
+                      id: 'filter_9',
                       builder: (_) {
                         return AFwidget.comboField(
                           value: controller.filterTahunAkhir.label,
@@ -547,7 +556,7 @@ class ReportView extends StatelessWidget {
                             var a = await controller.pilihTahun(value: controller.filterTahunAkhir.value);
                             if(a != null && a.value != controller.filterTahunAkhir.value) {
                               controller.filterTahunAkhir = a;
-                              controller.update();
+                              controller.update(['filter_9']);
                             }
                           }
                         );
@@ -608,6 +617,7 @@ class ReportView extends StatelessWidget {
                   ),
                   Expanded(
                     child: GetBuilder<ReportControl>(
+                      id: 'filter_10',
                       builder: (_) {
                         return AFwidget.comboField(
                           value: controller.filterTahunAwal.label,
@@ -616,7 +626,7 @@ class ReportView extends StatelessWidget {
                             var a = await controller.pilihTahun(value: controller.filterTahunAwal.value);
                             if(a != null && a.value != controller.filterTahunAwal.value) {
                               controller.filterTahunAwal = a;
-                              controller.update();
+                              controller.update(['filter_10']);
                             }
                           },
                         );
@@ -637,6 +647,7 @@ class ReportView extends StatelessWidget {
                   ),
                   Expanded(
                     child: GetBuilder<ReportControl>(
+                      id: 'filter_11',
                       builder: (_) {
                         return AFwidget.comboField(
                           value: controller.filterTahunAkhir.label,
@@ -645,7 +656,7 @@ class ReportView extends StatelessWidget {
                             var a = await controller.pilihTahun(value: controller.filterTahunAkhir.value);
                             if(a != null && a.value != controller.filterTahunAkhir.value) {
                               controller.filterTahunAkhir = a;
-                              controller.update();
+                              controller.update(['filter_11']);
                             }
                           },
                         );
@@ -710,6 +721,7 @@ class ReportView extends StatelessWidget {
                   ),
                   Expanded(
                     child: GetBuilder<ReportControl>(
+                      id: 'filter_12',
                       builder: (_) {
                         return AFwidget.comboField(
                           value: controller.filterArea.label,
@@ -718,7 +730,7 @@ class ReportView extends StatelessWidget {
                             var a = await controller.pilihArea(value: controller.filterArea.value, withSemua: true);
                             if(a != null && a.value != controller.filterArea.value) {
                               controller.filterArea = a;
-                              controller.update();
+                              controller.update(['filter_12']);
                             }
                           },
                         );
@@ -783,6 +795,7 @@ class ReportView extends StatelessWidget {
                   ),
                   Expanded(
                     child: GetBuilder<ReportControl>(
+                      id: 'filter_13',
                       builder: (_) {
                         return AFwidget.comboField(
                           value: controller.filterArea.label,
@@ -791,7 +804,7 @@ class ReportView extends StatelessWidget {
                             var a = await controller.pilihArea(value: controller.filterArea.value, withSemua: true);
                             if(a != null && a.value != controller.filterArea.value) {
                               controller.filterArea = a;
-                              controller.update();
+                              controller.update(['filter_13']);
                             }
                           },
                         );
@@ -855,6 +868,7 @@ class ReportView extends StatelessWidget {
                   ),
                   Expanded(
                     child: GetBuilder<ReportControl>(
+                      id: 'filter_14',
                       builder: (_) {
                         return AFwidget.comboField(
                           value: controller.filterBulan.label,
@@ -863,7 +877,7 @@ class ReportView extends StatelessWidget {
                             var a = await controller.pilihBulan(value: controller.filterBulan.value);
                             if(a != null && a.value != controller.filterBulan.value) {
                               controller.filterBulan = a;
-                              controller.update();
+                              controller.update(['filter_14']);
                             }
                           },
                         );
@@ -885,6 +899,7 @@ class ReportView extends StatelessWidget {
                   ),
                   Expanded(
                     child: GetBuilder<ReportControl>(
+                      id: 'filter_15',
                       builder: (_) {
                         return AFwidget.comboField(
                           value: controller.filterArea.label,
@@ -893,7 +908,7 @@ class ReportView extends StatelessWidget {
                             var a = await controller.pilihArea(value: controller.filterArea.value, withSemua: true);
                             if(a != null && a.value != controller.filterArea.value) {
                               controller.filterArea = a;
-                              controller.update();
+                              controller.update(['filter_15']);
                             }
                           },
                         );
@@ -989,13 +1004,14 @@ class ReportView extends StatelessWidget {
           ),
           Expanded(
             child: GetBuilder<ReportControl>(
+                      id: 'filter_16',
               builder: (_) {
                 return RadioGroup<String>(
                   groupValue: controller.filterJenis,
                   onChanged: (a) {
                     if(a != null && a != controller.filterJenis) {
                       controller.filterJenis = a;
-                      controller.update();
+                      controller.update(['filter_16']);
                     }
                   },
                   child: Column(

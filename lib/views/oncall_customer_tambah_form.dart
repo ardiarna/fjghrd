@@ -35,15 +35,16 @@ class OncallCustomerTambahForm extends StatelessWidget {
                       ),
                       Expanded(
                         child: GetBuilder<OncallCustomerControl>(
-                          builder: (_) {
-                            return AFwidget.comboField(
-                              value: controller.bulan.label,
+                            id: 'form_oncall',
+                            builder: (_) {
+                              return AFwidget.comboField(
+                                value: controller.bulan.label,
                               label: '',
                               onTap: () async {
                                 var a = await controller.pilihBulan(value: controller.bulan.value);
                                 if(a != null && a.value != controller.bulan.value) {
                                   controller.bulan = a;
-                                  controller.update();
+                                      controller.update(['form_oncall']);
                                 }
                               },
                             );
@@ -53,15 +54,16 @@ class OncallCustomerTambahForm extends StatelessWidget {
                       const SizedBox(width: 40),
                       Expanded(
                         child: GetBuilder<OncallCustomerControl>(
-                          builder: (_) {
-                            return AFwidget.comboField(
-                              value: controller.tahun.label,
+                            id: 'form_oncall',
+                            builder: (_) {
+                              return AFwidget.comboField(
+                                value: controller.tahun.label,
                               label: '',
                               onTap: () async {
                                 var a = await controller.pilihTahun(value: controller.tahun.value);
                                 if(a != null && a.value != controller.tahun.value) {
                                   controller.tahun = a;
-                                  controller.update();
+                                      controller.update(['form_oncall']);
                                 }
                               },
                             );
@@ -115,15 +117,16 @@ class OncallCustomerTambahForm extends StatelessWidget {
                     ),
                     Expanded(
                       child: GetBuilder<OncallCustomerControl>(
-                        builder: (_) {
-                          return AFwidget.comboField(
-                            value: controller.customer.nama,
+                            id: 'form_oncall',
+                            builder: (_) {
+                              return AFwidget.comboField(
+                                value: controller.customer.nama,
                             label: '',
                             onTap: () async {
                               var a = await controller.pilihCustomer(value: controller.customer.id);
                               if(a != null && a.value != controller.customer.id) {
                                 controller.customer = Customer.fromMap(a.data!);
-                                controller.update();
+                                      controller.update(['form_oncall']);
                               }
                             },
                           );

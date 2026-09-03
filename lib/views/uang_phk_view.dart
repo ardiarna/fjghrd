@@ -240,6 +240,7 @@ class UangPhkView extends StatelessWidget {
               SizedBox(
                 width: 100,
                 child: GetBuilder<UangPhkControl>(
+                  id: 'filter_uangphk',
                   builder: (_) {
                     return AFwidget.comboField(
                       value: controller.filterTahun.label,
@@ -248,7 +249,7 @@ class UangPhkView extends StatelessWidget {
                         var a = await controller.pilihTahun(value: controller.filterTahun.value);
                         if(a != null && a.value != controller.filterTahun.value) {
                           controller.filterTahun = a;
-                          controller.update();
+                          controller.update(['filter_uangphk']);
                           controller.loadUangPhks();
                         }
                       },

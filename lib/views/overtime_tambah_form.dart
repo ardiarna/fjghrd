@@ -36,6 +36,7 @@ class OvertimeTambahForm extends StatelessWidget {
                         ),
                         Expanded(
                           child: GetBuilder<OvertimeControl>(
+                            id: 'form_overtime',
                             builder: (_) {
                               return AFwidget.comboField(
                                 value: controller.bulan.label,
@@ -44,7 +45,7 @@ class OvertimeTambahForm extends StatelessWidget {
                                   var a = await controller.pilihBulan(value: controller.bulan.value);
                                   if(a != null && a.value != controller.bulan.value) {
                                     controller.bulan = a;
-                                    controller.update();
+                                      controller.update(['form_overtime']);
                                   }
                                 },
                               );
@@ -54,6 +55,7 @@ class OvertimeTambahForm extends StatelessWidget {
                         const SizedBox(width: 40),
                         Expanded(
                           child: GetBuilder<OvertimeControl>(
+                            id: 'form_overtime',
                             builder: (_) {
                               return AFwidget.comboField(
                                 value: controller.tahun.label,
@@ -62,7 +64,7 @@ class OvertimeTambahForm extends StatelessWidget {
                                   var a = await controller.pilihTahun(value: controller.tahun.value);
                                   if(a != null && a.value != controller.tahun.value) {
                                     controller.tahun = a;
-                                    controller.update();
+                                      controller.update(['form_overtime']);
                                   }
                                 },
                               );
@@ -116,15 +118,16 @@ class OvertimeTambahForm extends StatelessWidget {
                       ),
                       Expanded(
                         child: GetBuilder<OvertimeControl>(
-                          builder: (_) {
-                            return AFwidget.comboField(
-                              value: controller.karyawan.nama,
+                            id: 'form_overtime',
+                            builder: (_) {
+                              return AFwidget.comboField(
+                                value: controller.karyawan.nama,
                               label: '',
                               onTap: () async {
                                 var a = await controller.pilihKaryawan(value: controller.karyawan.id);
                                 if(a != null && a.value != controller.karyawan.id) {
                                   controller.karyawan = Karyawan.fromMap(a.data!);
-                                  controller.update();
+                                      controller.update(['form_overtime']);
                                 }
                               },
                             );

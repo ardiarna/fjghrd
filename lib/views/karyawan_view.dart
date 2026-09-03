@@ -386,6 +386,7 @@ class KaryawanView extends StatelessWidget {
               SizedBox(
                 width: 250,
                 child: GetBuilder<KaryawanControl>(
+                  id: 'filter_karyawan',
                   builder: (_) {
                     return AFwidget.comboField(
                       value: controller.filterArea.label,
@@ -396,7 +397,7 @@ class KaryawanView extends StatelessWidget {
                         var a = await controller.pilihArea(value: controller.filterArea.value, withSemua: true);
                         if(a != null && a.value != controller.filterArea.value) {
                           controller.filterArea = a;
-                          controller.update();
+                          controller.update(['filter_karyawan']);
                           controller.loadKaryawans();
                         }
                       },
@@ -413,6 +414,7 @@ class KaryawanView extends StatelessWidget {
               SizedBox(
                 width: 200,
                 child: GetBuilder<KaryawanControl>(
+                  id: 'filter_karyawan',
                   builder: (_) {
                     return AFwidget.comboField(
                       value: controller.filterStatusKerja.label,
@@ -423,6 +425,7 @@ class KaryawanView extends StatelessWidget {
                         var a = await controller.pilihStatusKerja(value: controller.filterStatusKerja.value, withSemua: true);
                         if(a != null && a.value != controller.filterStatusKerja.value) {
                           controller.filterStatusKerja = a;
+                          controller.update(['filter_karyawan']);
                           controller.loadKaryawans();
                         }
                       },

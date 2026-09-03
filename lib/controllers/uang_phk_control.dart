@@ -48,7 +48,6 @@ class UangPhkControl extends GetxController {
           Opsi(value: AFconvert.keString(data['id']), label: data['nama'], data: data),
         );
       }
-      update();
     }
   }  
 

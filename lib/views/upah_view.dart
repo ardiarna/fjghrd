@@ -189,6 +189,7 @@ class UpahView extends StatelessWidget {
               SizedBox(
                 width: 200,
                 child: GetBuilder<UpahControl>(
+                  id: 'filter_staf',
                   builder: (_) {
                     return AFwidget.comboField(
                       value: controller.cariStaf.label,
@@ -197,6 +198,7 @@ class UpahView extends StatelessWidget {
                         var a = await controller.pilihStaf(value: controller.cariStaf.value);
                         if(a != null && a.value != controller.cariStaf.value) {
                           controller.cariStaf = a;
+                          controller.update(['filter_staf']);
                           controller.loadKaryawans();
                         }
                       },

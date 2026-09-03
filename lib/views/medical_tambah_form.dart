@@ -36,6 +36,7 @@ class MedicalTambahForm extends StatelessWidget {
                             ),
                             Expanded(
                               child: GetBuilder<MedicalControl>(
+                                id: 'form_medical',
                                 builder: (_) {
                                   return AFwidget.comboField(
                                     value: controller.jenis.label,
@@ -44,6 +45,7 @@ class MedicalTambahForm extends StatelessWidget {
                                       var a = await controller.pilihJenis(value: controller.jenis.value);
                                       if(a != null && a.value != controller.jenis.value) {
                                         controller.jenis = a;
+                                        controller.update(['form_medical']);
                                         controller.loadInfoMedical();
                                       }
                                     },
@@ -65,6 +67,7 @@ class MedicalTambahForm extends StatelessWidget {
                             ),
                             Expanded(
                               child: GetBuilder<MedicalControl>(
+                                id: 'form_medical',
                                 builder: (_) {
                                   return AFwidget.comboField(
                                     value: controller.karyawan.nama,
@@ -73,6 +76,7 @@ class MedicalTambahForm extends StatelessWidget {
                                       var a = await controller.pilihKaryawan(value: controller.karyawan.id);
                                       if(a != null && a.value != controller.karyawan.id) {
                                         controller.karyawan = Karyawan.fromMap(a.data!);
+                                        controller.update(['form_medical']);
                                         controller.loadInfoMedical();
                                       }
                                     },

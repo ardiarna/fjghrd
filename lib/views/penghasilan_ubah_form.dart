@@ -35,6 +35,7 @@ class PenghasilanUbahForm extends StatelessWidget {
                       ),
                       Expanded(
                         child: GetBuilder<PenghasilanControl>(
+                          id: 'form_penghasilan',
                           builder: (_) {
                             return AFwidget.comboField(
                               value: controller.jenis.label,
@@ -44,7 +45,7 @@ class PenghasilanUbahForm extends StatelessWidget {
                                 if(a != null && a.value != controller.jenis.value) {
                                   controller.jenis = a;
                                   controller.hitungJumlahIdr(controller.txtHari.text);
-                                  controller.update();
+                                  controller.update(['form_penghasilan']);
                                 }
                               },
                             );
@@ -65,6 +66,7 @@ class PenghasilanUbahForm extends StatelessWidget {
                       ),
                       Expanded(
                         child: GetBuilder<PenghasilanControl>(
+                          id: 'form_penghasilan',
                           builder: (_) {
                             return AFwidget.comboField(
                               value: controller.karyawan.nama,
@@ -73,6 +75,7 @@ class PenghasilanUbahForm extends StatelessWidget {
                                 var a = await controller.pilihKaryawan(value: controller.karyawan.id);
                                 if(a != null && a.value != controller.karyawan.id) {
                                   controller.karyawan = Karyawan.fromMap(a.data!);
+                                  controller.update(['form_penghasilan']);
                                   await controller.loadPayroll();
                                   controller.hitungJumlahIdr(controller.txtHari.text);
                                 }
@@ -85,6 +88,7 @@ class PenghasilanUbahForm extends StatelessWidget {
                   ),
                 ),
                 GetBuilder<PenghasilanControl>(
+                  id: 'info_upah',
                   builder: (_) {
                     if(controller.karyawan.id != '' && (controller.jenis.value == 'AB')) {
                       return Padding(
@@ -122,6 +126,7 @@ class PenghasilanUbahForm extends StatelessWidget {
                   },
                 ),
                 GetBuilder<PenghasilanControl>(
+                  id: 'form_penghasilan',
                   builder: (_) {
                     if(controller.jenis.value == 'AB') {
                       return AFwidget.barisText(
@@ -136,6 +141,7 @@ class PenghasilanUbahForm extends StatelessWidget {
                   },
                 ),
                 GetBuilder<PenghasilanControl>(
+                  id: 'form_penghasilan',
                   builder: (_) {
                     return AFwidget.barisText(
                       label: 'Jumlah IDR',

@@ -48,6 +48,7 @@ class UangPhkUbahForm extends StatelessWidget {
                       ),
                       Expanded(
                         child: GetBuilder<UangPhkControl>(
+                          id: 'form_uangphk',
                           builder: (_) {
                             return AFwidget.comboField(
                               value: controller.tahun.label,
@@ -56,7 +57,7 @@ class UangPhkUbahForm extends StatelessWidget {
                                 var a = await controller.pilihTahun(value: controller.tahun.value);
                                 if(a != null && a.value != controller.tahun.value) {
                                   controller.tahun = a;
-                                  controller.update();
+                                  controller.update(['form_uangphk']);
                                 }
                               },
                             );

@@ -37,7 +37,7 @@ class ReportControl extends GetxController {
       if(listArea.isNotEmpty) {
         filterArea = listArea[0];
       }
-      update();
+      update(['filter_12', 'filter_13', 'filter_15']);
     }
   }
 

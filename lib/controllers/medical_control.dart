@@ -69,7 +69,6 @@ class MedicalControl extends GetxController {
           Opsi(value: AFconvert.keString(data['id']), label: data['nama'], data: data),
         );
       }
-      update();
     }
   }
 
@@ -94,9 +93,9 @@ class MedicalControl extends GetxController {
           }
         }
       }
-      update();
+      update(['info_medical']);
     } catch (er) {
-      update();
+      update(['info_medical']);
       AFwidget.formWarning(label: '$er');
     }
   }

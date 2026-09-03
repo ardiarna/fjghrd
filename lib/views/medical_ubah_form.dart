@@ -49,6 +49,7 @@ class MedicalUbahForm extends StatelessWidget {
                             ),
                             Expanded(
                               child: GetBuilder<MedicalControl>(
+                                id: 'form_medical',
                                 builder: (_) {
                                   return AFwidget.comboField(
                                     value: controller.jenis.label,
@@ -57,6 +58,7 @@ class MedicalUbahForm extends StatelessWidget {
                                       var a = await controller.pilihJenis(value: controller.jenis.value);
                                       if(a != null && a.value != controller.jenis.value) {
                                         controller.jenis = a;
+                                        controller.update(['form_medical']);
                                         controller.loadInfoMedical();
                                       }
                                     },
@@ -78,6 +80,7 @@ class MedicalUbahForm extends StatelessWidget {
                             ),
                             Expanded(
                               child: GetBuilder<MedicalControl>(
+                                id: 'form_medical',
                                 builder: (_) {
                                   return AFwidget.comboField(
                                     value: controller.bulan.label,
@@ -86,7 +89,7 @@ class MedicalUbahForm extends StatelessWidget {
                                       var a = await controller.pilihBulan(value: controller.bulan.value);
                                       if(a != null && a.value != controller.bulan.value) {
                                         controller.bulan = a;
-                                        controller.update();
+                                        controller.update(['form_medical']);
                                       }
                                     },
                                   );
@@ -96,6 +99,7 @@ class MedicalUbahForm extends StatelessWidget {
                             const SizedBox(width: 40),
                             Expanded(
                               child: GetBuilder<MedicalControl>(
+                                id: 'form_medical',
                                 builder: (_) {
                                   return AFwidget.comboField(
                                     value: controller.tahun.label,
@@ -107,7 +111,7 @@ class MedicalUbahForm extends StatelessWidget {
                                         if(controller.jenis.value == 'R') {
                                           controller.loadInfoMedical();
                                         } else {
-                                          controller.update();
+                                          controller.update(['form_medical']);
                                         }
                                       }
                                     },

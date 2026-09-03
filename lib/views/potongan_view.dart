@@ -188,6 +188,7 @@ class PotonganView extends StatelessWidget {
               SizedBox(
                 width: 300,
                 child: GetBuilder<PotonganControl>(
+                  id: 'filter_potongan',
                   builder: (_) {
                     return AFwidget.comboField(
                       value: controller.filterJenis.label,
@@ -197,7 +198,7 @@ class PotonganView extends StatelessWidget {
                         var a = await controller.pilihJenis(value: controller.filterJenis.value, withSemua: true);
                         if(a != null && a.value != controller.filterJenis.value) {
                           controller.filterJenis = a;
-                          controller.update();
+                          controller.update(['filter_potongan']);
                           controller.loadPotongans();
                         }
                       },
@@ -210,6 +211,7 @@ class PotonganView extends StatelessWidget {
               SizedBox(
                 width: 150,
                 child: GetBuilder<PotonganControl>(
+                  id: 'filter_potongan',
                   builder: (_) {
                     return AFwidget.comboField(
                       value: controller.filterBulan.label,
@@ -219,7 +221,7 @@ class PotonganView extends StatelessWidget {
                         var a = await controller.pilihBulan(value: controller.filterBulan.value);
                         if(a != null && a.value != controller.filterBulan.value) {
                           controller.filterBulan = a;
-                          controller.update();
+                          controller.update(['filter_potongan']);
                           controller.loadPotongans();
                         }
                       },
@@ -231,6 +233,7 @@ class PotonganView extends StatelessWidget {
               SizedBox(
                 width: 100,
                 child: GetBuilder<PotonganControl>(
+                  id: 'filter_potongan',
                   builder: (_) {
                     return AFwidget.comboField(
                       value: controller.filterTahun.label,
@@ -240,7 +243,7 @@ class PotonganView extends StatelessWidget {
                         var a = await controller.pilihTahun(value: controller.filterTahun.value);
                         if(a != null && a.value != controller.filterTahun.value) {
                           controller.filterTahun = a;
-                          controller.update();
+                          controller.update(['filter_potongan']);
                           controller.loadPotongans();
                         }
                       },
