@@ -760,6 +760,14 @@ abstract class AFwidget {
                   isKonfirmasi ?
                   Row(
                     children: [
+                      IconButton(
+                        onPressed: () {
+                          Clipboard.setData(ClipboardData(text: label));
+                        },
+                        icon: const Icon(Icons.copy, size: 20, color: Colors.grey),
+                        tooltip: 'Copy',
+                      ),
+                      const SizedBox(width: 5),
                       Expanded(
                         child: tombol(
                           label: labelBatal,
@@ -769,7 +777,7 @@ abstract class AFwidget {
                           },
                         ),
                       ),
-                      const Padding(padding: EdgeInsets.only(right: 10)),
+                      const SizedBox(width: 10),
                       Expanded(
                         child: tombol(
                           label: labelYa,
@@ -780,8 +788,15 @@ abstract class AFwidget {
                     ],
                   ) :
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+                      IconButton(
+                        onPressed: () {
+                          Clipboard.setData(ClipboardData(text: label));
+                        },
+                        icon: const Icon(Icons.copy, size: 20, color: Colors.grey),
+                        tooltip: 'Copy',
+                      ),
+                      const Spacer(),
                       tombol(
                         label: 'OK',
                         color: warna,

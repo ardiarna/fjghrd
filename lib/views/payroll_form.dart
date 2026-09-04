@@ -26,12 +26,13 @@ class PayrollForm extends StatelessWidget {
           'id': PlutoCell(value: e.id),
           'payroll_header_id': PlutoCell(value: e.headerId),
           'karyawan_id': PlutoCell(value: e.karyawan.id),
-          'area': PlutoCell(value: e.karyawan.area.nama),
+          'area': PlutoCell(value: e.karyawan.area.kode),
           'nama': PlutoCell(value: e.karyawan.nama),
           'jabatan': PlutoCell(value: e.karyawan.jabatan.nama),
           'gaji': PlutoCell(value: e.gaji),
           'kenaikan_gaji': PlutoCell(value: e.kenaikanGaji),
           'makan_harian': PlutoCell(value: e.makanHarian ? 'Y' : 'N'),
+          'periode_batas': PlutoCell(value: (e.makanTglAwal != '' && e.makanTglAkhir != '') ? '${AFconvert.matDate(AFconvert.keTanggal('${e.makanTglAwal} 00:00:00'))} s/d ${AFconvert.matDate(AFconvert.keTanggal('${e.makanTglAkhir} 00:00:00'))}' : ''),
           'hari_makan': PlutoCell(value: e.hariMakan),
           'uang_makan_harian': PlutoCell(value: e.uangMakanHarian),
           'uang_makan_jumlah': PlutoCell(value: e.uangMakanJumlah),
@@ -216,7 +217,7 @@ class PayrollForm extends StatelessWidget {
         field: 'area',
         type: PlutoColumnType.text(),
         readOnly: true,
-        width: 210,
+        width: 80,
         backgroundColor: Colors.brown.shade100,
         titleTextAlign: PlutoColumnTextAlign.center,
         suppressedAutoSize: true,
@@ -312,6 +313,19 @@ class PayrollForm extends StatelessWidget {
         },
       ),
       PlutoColumn(
+        title: 'PERIODE BATAS',
+        field: 'periode_batas',
+        type: PlutoColumnType.text(),
+        readOnly: true,
+        width: 220,
+        backgroundColor: Colors.brown.shade100,
+        titleTextAlign: PlutoColumnTextAlign.center,
+        suppressedAutoSize: true,
+        enableContextMenu: false,
+        enableSorting: false,
+        enableColumnDrag: false,
+      ),
+      PlutoColumn(
         title: 'HR',
         field: 'hari_makan',
         type: PlutoColumnType.number(),
@@ -324,7 +338,7 @@ class PayrollForm extends StatelessWidget {
         enableColumnDrag: false,
         renderer: (rendererContext) {
           final value = rendererContext.cell.value;
-          if(value == 0) {
+          if(value < 0) {
             return const Text('');
           }
           return Text(

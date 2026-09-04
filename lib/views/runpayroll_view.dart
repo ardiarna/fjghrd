@@ -121,7 +121,7 @@ class RunpayrollView extends StatelessWidget {
       return PlutoRow(
         cells: {
           'karyawan_id': PlutoCell(value: e.id),
-          'area': PlutoCell(value: e.area.nama),
+          'area': PlutoCell(value: e.area.kode),
           'nama': PlutoCell(value: e.nama),
           'jabatan': PlutoCell(value: e.jabatan.nama),
           'gaji': PlutoCell(value: e.upah.gaji),
@@ -280,7 +280,7 @@ class RunpayrollView extends StatelessWidget {
       title: 'AREA',
       field: 'area',
       type: PlutoColumnType.text(),
-      width: 210,
+      width: 80,
       backgroundColor: Colors.brown.shade100,
       titleTextAlign: PlutoColumnTextAlign.center,
       suppressedAutoSize: true,
