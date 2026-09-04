@@ -8,6 +8,7 @@ import 'package:fjghrd/views/customer_view.dart';
 import 'package:fjghrd/views/divisi_view.dart';
 import 'package:fjghrd/views/hari_libur_view.dart';
 import 'package:fjghrd/views/jabatan_view.dart';
+import 'package:fjghrd/views/upah_view.dart';
 import 'package:fjghrd/views/pendidikan_view.dart';
 import 'package:fjghrd/views/ptkp_view.dart';
 import 'package:fjghrd/views/status_kerja_view.dart';
@@ -127,6 +128,17 @@ class HomeView extends StatelessWidget {
                     onTap: () {
                       controller.tabId = 5;
                       controller.kontener = JabatanView();
+                      Get.back();
+                      controller.update();
+                    },
+                  ),
+                  drawItem(
+                    label: 'Upah',
+                    icon: Icons.payments_outlined,
+                    color: Colors.blueGrey,
+                    onTap: () {
+                      controller.tabId = 5;
+                      controller.kontener = UpahView();
                       Get.back();
                       controller.update();
                     },

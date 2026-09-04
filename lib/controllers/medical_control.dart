@@ -76,7 +76,10 @@ class MedicalControl extends GetxController {
     try {
       medicalRekap = MedicalRekap();
       medicalHistory.clear();
-      if(karyawan.id != '') {
+      tunjangan = 0;
+      jumlahKlaim = 0;
+      sisaTunjangan = 0;
+      if(karyawan.id != '' && jenis.value != '') {
         if(jenis.value == 'R') {
           KaryawanRepository repo = KaryawanRepository();
           var hasil = await repo.medicalRekap(karyawan.id, tahun.value);
@@ -100,11 +103,23 @@ class MedicalControl extends GetxController {
             medicalRekap.bln4 + medicalRekap.bln5 + medicalRekap.bln6 +
             medicalRekap.bln7 + medicalRekap.bln8 + medicalRekap.bln9 +
             medicalRekap.bln10 + medicalRekap.bln11 + medicalRekap.bln12;
+            
+        int originalJumlah = 0;
+        if(txtId.text.isNotEmpty) {
+          try {
+            var item = listMedical.firstWhere((element) => element.id == txtId.text);
+            if(item.tahun == AFconvert.keInt(tahun.value)) {
+              originalJumlah = item.jumlah;
+            }
+          } catch(e) { /* ignore exception */ }
+        }
+        
+        jumlahKlaim -= originalJumlah;
         sisaTunjangan = tunjangan - jumlahKlaim;
       }
-      update(['info_medical']);
+      update(['info_medical', 'form_medical']);
     } catch (er) {
-      update(['info_medical']);
+      update(['info_medical', 'form_medical']);
       AFwidget.formWarning(label: '$er');
     }
   }
@@ -119,6 +134,7 @@ class MedicalControl extends GetxController {
     
     int valJumlah = AFconvert.keInt(txtJumlah.text);
     if(valJumlah == 0) return 'Jumlah IDR tidak boleh 0';
+    
     if(jenis.value == 'R' && valJumlah > sisaTunjangan) return 'Jumlah melebihi sisa klaim';
     
     return '';
@@ -287,7 +303,7 @@ class MedicalControl extends GetxController {
   Future<Opsi?> pilihBulan({String value = '', bool withSemua = false}) async {
     List<Opsi> list = [...listBulan];
     if(withSemua) {
-      list.add(Opsi(value: '', label: 'Semua'));
+      list.insert(0, Opsi(value: '', label: 'Semua'));
     }
     var a = await AFcombobox.bottomSheet(
       listOpsi: list,

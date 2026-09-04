@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:fjghrd/controllers/potongan_control.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/utils/af_convert.dart';
+import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/models/opsi.dart';
 import 'package:fjghrd/models/karyawan.dart';
 import 'package:fjghrd/views/gaji_form.dart';
@@ -30,6 +31,57 @@ class PotonganTambahForm extends StatelessWidget {
                     Container(
                       width: 150,
                       padding: const EdgeInsets.only(right: 15),
+                      child: const Text('Periode'),
+                    ),
+                    Expanded(
+                      child: GetBuilder<PotonganControl>(
+                        id: 'form_potongan_periode',
+                        builder: (_) {
+                          return AFwidget.comboField(
+                            value: controller.bulan.label,
+                            label: '',
+                            onTap: () async {
+                              var a = await controller.pilihBulan(value: controller.bulan.value);
+                              if(a != null && a.value != controller.bulan.value) {
+                                controller.bulan = a;
+                                controller.txtTanggal.text = AFconvert.matDate(DateTime(AFconvert.keInt(controller.tahun.value), AFconvert.keInt(controller.bulan.value)));
+                                controller.update(['form_potongan_periode']);
+                              }
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: GetBuilder<PotonganControl>(
+                        id: 'form_potongan_periode',
+                        builder: (_) {
+                          return AFwidget.comboField(
+                            value: controller.tahun.label,
+                            label: '',
+                            onTap: () async {
+                              var a = await controller.pilihTahun(value: controller.tahun.value);
+                              if(a != null && a.value != controller.tahun.value) {
+                                controller.tahun = a;
+                                controller.txtTanggal.text = AFconvert.matDate(DateTime(AFconvert.keInt(controller.tahun.value), AFconvert.keInt(controller.bulan.value)));
+                                controller.update(['form_potongan_periode']);
+                              }
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 150,
+                      padding: const EdgeInsets.only(right: 15),
                       child: const Text('Jenis Potongan'),
                     ),
                     Expanded(
@@ -44,7 +96,7 @@ class PotonganTambahForm extends StatelessWidget {
                               if(a != null && a.value != controller.jenis.value) {
                                 controller.jenis = a;
                                 controller.hitungJumlahIdr(controller.txtHari.text);
-                                controller.update(['form_potongan']);
+                                controller.update(['form_potongan', 'info_upah']);
                               }
                             },
                           );
@@ -165,6 +217,7 @@ class PotonganTambahForm extends StatelessWidget {
                     label: 'Jumlah IDR',
                     controller: controller.txtJumlah,
                     isNumber: true,
+                    onchanged: (_) => controller.update(['form_potongan']),
                   );
                 },
               ),
@@ -173,30 +226,41 @@ class PotonganTambahForm extends StatelessWidget {
                 controller: controller.txtKeterangan,
                 isTextArea: true,
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    AFwidget.tombol(
-                      label: 'Batal',
-                      color: Colors.orange,
-                      onPressed: Get.back,
-                      minimumSize: const Size(120, 40),
+              GetBuilder<PotonganControl>(
+                id: 'form_potongan',
+                builder: (_) {
+                  String msg = controller.pesanValidasi;
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
+                    child: Row(
+                      children: [
+                        if(msg.isNotEmpty)
+                          Expanded(
+                            child: Text(msg, style: const TextStyle(color: Colors.red, fontStyle: FontStyle.italic)),
+                          )
+                        else
+                          const Spacer(),
+                        AFwidget.tombol(
+                          label: 'Batal',
+                          color: Colors.orange,
+                          onPressed: Get.back,
+                          minimumSize: const Size(120, 40),
+                        ),
+                        const SizedBox(width: 20),
+                        AFwidget.tombol(
+                          label: 'Simpan',
+                          color: msg.isEmpty ? Colors.blue : Colors.grey,
+                          onPressed: msg.isEmpty ? controller.tambahData : null,
+                          minimumSize: const Size(120, 40),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 40),
-                    AFwidget.tombol(
-                      label: 'Simpan',
-                      color: Colors.blue,
-                      onPressed: controller.tambahData,
-                      minimumSize: const Size(120, 40),
-                    ),
-                  ],
-                ),
+                  );
+                },
               ),
             ],
           ),
-          AFwidget.formHeader('Form Tambah Potongan - ${controller.bulan.label} ${controller.tahun.label}'),
+          AFwidget.formHeader('Form Tambah Potongan'),
         ],
       ),
     );
@@ -207,8 +271,13 @@ void showPotonganTambahForm(BuildContext context) {
   final controller = Get.find<PotonganControl>();
   controller.txtId.text = '';
   controller.tahun = Opsi(value: controller.filterTahun.value, label: controller.filterTahun.label);
-  controller.bulan = Opsi(value: controller.filterBulan.value, label: controller.filterBulan.label);
-  controller.txtTanggal.text = AFconvert.matDate(DateTime(AFconvert.keInt(controller.filterTahun.value), AFconvert.keInt(controller.filterBulan.value)));
+  if(controller.filterBulan.value == '') {
+    DateTime now = DateTime.now();
+    controller.bulan = Opsi(value: '${now.month}', label: mapBulan[now.month] ?? '');
+  } else {
+    controller.bulan = Opsi(value: controller.filterBulan.value, label: controller.filterBulan.label);
+  }
+  controller.txtTanggal.text = AFconvert.matDate(DateTime(AFconvert.keInt(controller.tahun.value), AFconvert.keInt(controller.bulan.value)));
   controller.txtKeterangan.text = '';
   controller.txtHari.text = '';
   controller.txtJumlah.text = '';

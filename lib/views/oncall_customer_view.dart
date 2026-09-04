@@ -1,4 +1,3 @@
-import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/views/payroll_view.dart';
 import 'package:fjghrd/controllers/oncall_customer_control.dart';
@@ -6,6 +5,7 @@ import 'package:fjghrd/views/oncall_customer_tambah_form.dart';
 import 'package:fjghrd/views/oncall_customer_ubah_form.dart';
 import 'package:fjghrd/models/oncall_customer.dart';
 import 'package:fjghrd/utils/af_convert.dart';
+import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
@@ -27,6 +27,7 @@ class OncallCustomerView extends StatelessWidget {
           'customer_id': PlutoCell(value: rowData[index].customer.id),
           'nama': PlutoCell(value: rowData[index].customer.nama),
           'alamat': PlutoCell(value: rowData[index].customer.alamat),
+          'periode': PlutoCell(value: '${mapBulan[rowData[index].bulan]} ${rowData[index].tahun}'),
           'tanggal': PlutoCell(value: AFconvert.matDate(rowData[index].tanggal)),
           'bulan': PlutoCell(value: rowData[index].bulan),
           'tahun': PlutoCell(value: rowData[index].tahun),
@@ -53,12 +54,12 @@ class OncallCustomerView extends StatelessWidget {
         suppressedAutoSize: true,
         frozen: PlutoColumnFrozen.start,
         renderer: (rdrCtx) {
-          if(rdrCtx.row.cells['id']!.value == null) {
+          if(rdrCtx.cell.value == null || rdrCtx.cell.value == '') {
             return const Text('');
           }
           return IconButton(
             onPressed: () {
-              showOncallCustomerUbahForm(rdrCtx.row.cells['id']!.value, context);
+              showOncallCustomerUbahForm(rdrCtx.cell.value, context);
             },
             icon: const Icon(
               Icons.edit_square,
@@ -127,6 +128,18 @@ class OncallCustomerView extends StatelessWidget {
         },
       ),
       PlutoColumn(
+        title: 'PERIODE',
+        field: 'periode',
+        type: PlutoColumnType.text(),
+        readOnly: true,
+        width: 130,
+        backgroundColor: Colors.brown.shade100,
+        textAlign: PlutoColumnTextAlign.center,
+        titleTextAlign: PlutoColumnTextAlign.center,
+        suppressedAutoSize: true,
+        enableFilterMenuItem: false,
+      ),
+      PlutoColumn(
         title: 'KETERANGAN',
         field: 'keterangan',
         type: PlutoColumnType.text(),
@@ -172,7 +185,7 @@ class OncallCustomerView extends StatelessWidget {
                       label: '',
                       warnaBackground: Colors.white,
                       onTap: () async {
-                        var a = await controller.pilihBulan(value: controller.filterBulan.value);
+                        var a = await controller.pilihBulan(value: controller.filterBulan.value, includeSemua: true);
                         if(a != null && a.value != controller.filterBulan.value) {
                           controller.filterBulan = a;
                           controller.update(['filter_oncall']);

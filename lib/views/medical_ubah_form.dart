@@ -110,35 +110,46 @@ class MedicalUbahForm extends StatelessWidget {
                         controller: controller.txtKeterangan,
                         isTextArea: true,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            AFwidget.tombol(
-                              label: 'Hapus',
-                              color: Colors.red,
-                              onPressed: () {
-                                AFwidget.formHapus(label: 'data medical ini', aksi: () { controller.hapusData(controller.txtId.text); });
-                              },
-                              minimumSize: const Size(120, 40),
+                      GetBuilder<MedicalControl>(
+                        id: 'form_medical',
+                        builder: (_) {
+                          String msg = controller.pesanValidasi;
+                          return Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
+                            child: Row(
+                              children: [
+                                AFwidget.tombol(
+                                  label: 'Hapus',
+                                  color: Colors.red,
+                                  onPressed: () {
+                                    AFwidget.formHapus(label: 'data medical ini', aksi: () { controller.hapusData(controller.txtId.text); });
+                                  },
+                                  minimumSize: const Size(120, 40),
+                                ),
+                                const SizedBox(width: 20),
+                                if(msg.isNotEmpty)
+                                  Expanded(
+                                    child: Text(msg, style: const TextStyle(color: Colors.red, fontStyle: FontStyle.italic)),
+                                  )
+                                else
+                                  const Spacer(),
+                                AFwidget.tombol(
+                                  label: 'Batal',
+                                  color: Colors.orange,
+                                  onPressed: Get.back,
+                                  minimumSize: const Size(120, 40),
+                                ),
+                                const SizedBox(width: 40),
+                                AFwidget.tombol(
+                                  label: 'Simpan',
+                                  color: msg.isEmpty ? Colors.blue : Colors.grey,
+                                  onPressed: msg.isEmpty ? controller.ubahData : null,
+                                  minimumSize: const Size(120, 40),
+                                ),
+                              ],
                             ),
-                            const Spacer(),
-                            AFwidget.tombol(
-                              label: 'Batal',
-                              color: Colors.orange,
-                              onPressed: Get.back,
-                              minimumSize: const Size(120, 40),
-                            ),
-                            const SizedBox(width: 40),
-                            AFwidget.tombol(
-                              label: 'Simpan',
-                              color: Colors.blue,
-                              onPressed: controller.ubahData,
-                              minimumSize: const Size(120, 40),
-                            ),
-                          ],
-                        ),
+                          );
+                        }
                       ),
                     ],
                   ),
@@ -263,7 +274,7 @@ class MedicalUbahForm extends StatelessWidget {
 }
 
 
-void showMedicalUbahForm(String id, BuildContext context) {
+void showMedicalUbahForm(String id, BuildContext context) async {
   final controller = Get.find<MedicalControl>();
   var item = controller.listMedical.where((element) => element.id == id).first;
   controller.txtId.text = item.id;
@@ -273,7 +284,10 @@ void showMedicalUbahForm(String id, BuildContext context) {
   controller.txtJumlah.text = AFconvert.matNumber(item.jumlah);
   controller.karyawan = item.karyawan;
   controller.jenis = controller.listJenis.where((element) => element.value == item.jenis).first;
-  controller.loadInfoMedical();
+  
+  AFwidget.loading();
+  await controller.loadInfoMedical();
+  Get.back();
   
   AFwidget.dialog(
     const MedicalUbahForm(),

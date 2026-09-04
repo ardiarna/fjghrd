@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:fjghrd/controllers/overtime_control.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/utils/af_convert.dart';
+import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/models/karyawan.dart';
 import 'package:fjghrd/models/opsi.dart';
 
@@ -24,9 +25,9 @@ class OvertimeTambahForm extends StatelessWidget {
             ListView(
               children: [
                 Visibility(
-                  visible: false,
+                  visible: true,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
+                    padding: const EdgeInsets.fromLTRB(20, 70, 20, 0),
                     child: Row(
                       children: [
                         Container(
@@ -108,7 +109,7 @@ class OvertimeTambahForm extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 70, 20, 0),
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
@@ -141,41 +142,53 @@ class OvertimeTambahForm extends StatelessWidget {
                   label: 'Fratekindo IDR',
                   controller: controller.txtJumlah,
                   isNumber: true,
+                  onchanged: (_) => controller.update(['form_overtime']),
                 ),
                 AFwidget.barisText(
                   label: 'Customer IDR',
                   controller: controller.txtJum2,
                   isNumber: true,
+                  onchanged: (_) => controller.update(['form_overtime']),
                 ),
                 AFwidget.barisText(
                   label: 'Keterangan',
                   controller: controller.txtKeterangan,
                   isTextArea: true,
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      AFwidget.tombol(
-                        label: 'Batal',
-                        color: Colors.orange,
-                        onPressed: Get.back,
-                        minimumSize: const Size(120, 40),
+                GetBuilder<OvertimeControl>(
+                  id: 'form_overtime',
+                  builder: (_) {
+                    String msg = controller.pesanValidasi;
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
+                      child: Row(
+                        children: [
+                          if(msg.isNotEmpty)
+                            Expanded(
+                              child: Text(msg, style: const TextStyle(color: Colors.red, fontStyle: FontStyle.italic)),
+                            ),
+                          if(msg.isEmpty) const Spacer(),
+                          AFwidget.tombol(
+                            label: 'Batal',
+                            color: Colors.orange,
+                            onPressed: Get.back,
+                            minimumSize: const Size(120, 40),
+                          ),
+                          const SizedBox(width: 40),
+                          AFwidget.tombol(
+                            label: 'Simpan',
+                            color: msg.isEmpty ? Colors.blue : Colors.grey,
+                            onPressed: msg.isEmpty ? controller.tambahData : null,
+                            minimumSize: const Size(120, 40),
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 40),
-                      AFwidget.tombol(
-                        label: 'Simpan',
-                        color: Colors.blue,
-                        onPressed: controller.tambahData,
-                        minimumSize: const Size(120, 40),
-                      ),
-                    ],
-                  ),
+                    );
+                  }
                 ),
               ],
             ),
-            AFwidget.formHeader('Form Tambah Overtime - ${controller.bulan.label} ${controller.tahun.label}'),
+            AFwidget.formHeader('Form Tambah Overtime'),
           ],
         ),
       );
@@ -186,8 +199,13 @@ void showOvertimeTambahForm(BuildContext context) {
   final controller = Get.find<OvertimeControl>();
     controller.txtId.text = '';
     controller.tahun = Opsi(value: controller.filterTahun.value, label: controller.filterTahun.label);
-    controller.bulan = Opsi(value: controller.filterBulan.value, label: controller.filterBulan.label);
-    controller.txtTanggal.text = AFconvert.matDate(DateTime(AFconvert.keInt(controller.filterTahun.value), AFconvert.keInt(controller.filterBulan.value)));
+    if(controller.filterBulan.value == '') {
+      DateTime now = DateTime.now();
+      controller.bulan = Opsi(value: '${now.month}', label: mapBulan[now.month] ?? '');
+    } else {
+      controller.bulan = Opsi(value: controller.filterBulan.value, label: controller.filterBulan.label);
+    }
+    controller.txtTanggal.text = AFconvert.matDate(DateTime(AFconvert.keInt(controller.tahun.value), AFconvert.keInt(controller.bulan.value)));
     controller.txtKeterangan.text = '';
     controller.txtJumlah.text = '';
     controller.txtJum2.text = '';

@@ -5,8 +5,6 @@ import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/models/opsi.dart';
-import 'package:fjghrd/models/karyawan.dart';
-
 import 'package:fjghrd/views/gaji_form.dart';
 
 class PotonganUbahForm extends StatelessWidget {
@@ -14,205 +12,216 @@ class PotonganUbahForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<PotonganControl>();
-    return Container(
-      width: Get.width,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(15)),
-      ),
-      child: Stack(
-        children: [
-          ListView(
-            children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 70, 20, 0),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 150,
-                      padding: const EdgeInsets.only(right: 15),
-                      child: const Text('Jenis Potongan'),
-                    ),
-                    Expanded(
-                      child: GetBuilder<PotonganControl>(
-                        id: 'form_potongan',
-                        builder: (_) {
-                          return AFwidget.comboField(
-                            value: controller.jenis.label,
-                            label: '',
-                            onTap: () async {
-                              var a = await controller.pilihJenis(value: controller.jenis.value);
-                              if(a != null && a.value != controller.jenis.value) {
-                                controller.jenis = a;
-                                controller.hitungJumlahIdr(controller.txtHari.text);
-                                controller.update(['form_potongan']);
-                              }
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
+    return GetBuilder<PotonganControl>(
+      builder: (controller) => Container(
+        width: Get.width,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        child: Stack(
+          children: [
+            ListView(
+              children: [
+                AFwidget.barisInfo(
+                  label: 'Karyawan',
+                  nilai: controller.karyawan.nama,
+                  paddingTop: 70,
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 150,
-                      padding: const EdgeInsets.only(right: 15),
-                      child: const Text('Karyawan'),
-                    ),
-                    Expanded(
-                      child: GetBuilder<PotonganControl>(
-                        id: 'form_potongan',
-                        builder: (_) {
-                          return AFwidget.comboField(
-                            value: controller.karyawan.nama,
-                            label: '',
-                            onTap: () async {
-                              var a = await controller.pilihKaryawan(value: controller.karyawan.id);
-                              if(a != null && a.value != controller.karyawan.id) {
-                                controller.karyawan = Karyawan.fromMap(a.data!);
-                                controller.update(['form_potongan']);
-                                await controller.loadPayroll();
-                                controller.hitungJumlahIdr(controller.txtHari.text);
-                              }
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  ],
+                AFwidget.barisInfo(
+                  label: 'Jabatan',
+                  nilai: controller.karyawan.jabatan.nama,
                 ),
-              ),
-              GetBuilder<PotonganControl>(
-                id: 'info_upah',
-                builder: (_) {
-                  if(controller.karyawan.id != '' && (controller.jenis.value == 'TB' || controller.jenis.value == 'UL' || controller.jenis.value == 'KJ')) {
+                AFwidget.barisInfo(
+                  label: 'Masa Kerja',
+                  nilai: AFconvert.matDate(controller.karyawan.tanggalMasuk),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 150,
+                        padding: const EdgeInsets.only(right: 15),
+                        child: const Text('Periode'),
+                      ),
+                      Expanded(
+                        child: AFwidget.comboField(
+                          value: controller.bulan.label,
+                          label: '',
+                          onTap: null,
+                        ),
+                      ),
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: AFwidget.comboField(
+                          value: controller.tahun.label,
+                          label: '',
+                          onTap: null,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 150,
+                        padding: const EdgeInsets.only(right: 15),
+                        child: const Text('Jenis Potongan'),
+                      ),
+                      Expanded(
+                        child: AFwidget.comboField(
+                          value: controller.jenis.label,
+                          label: '',
+                          onTap: null,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                GetBuilder<PotonganControl>(
+                  id: 'info_upah',
+                  builder: (_) {
+                    if(controller.karyawan.id != '' && (controller.jenis.value == 'TB' || controller.jenis.value == 'UL' || controller.jenis.value == 'KJ')) {
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(170, 15, 25, 10),
+                        child: Row(
+                          children: [
+                            const Text('Gaji: '),
+                            Text(AFconvert.matNumber(controller.upah.gaji),
+                              style: const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(width: 50),
+                            const Text('Uang Makan: '),
+                            Text('${AFconvert.matNumber(controller.upah.uangMakan)}   ${controller.upah.makanHarian ? 'Harian' : 'Tetap'}',
+                              style: const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            const SizedBox(width: 50),
+                            IconButton(
+                              onPressed: () {
+                                showGajiForm(context);
+                              },
+                              icon: const Icon(Icons.edit, color: Colors.green),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                    return Container();
+                  },
+                ),
+                GetBuilder<PotonganControl>(
+                  id: 'form_potongan',
+                  builder: (_) {
+                    if(controller.jenis.value == 'TB' || controller.jenis.value == 'UL') {
+                      return AFwidget.barisText(
+                        label: 'Jumlah Hari',
+                        controller: controller.txtHari,
+                        isNumber: true,
+                        onchanged: controller.hitungJumlahIdr,
+                      );
+                    } else if(controller.jenis.value == 'KJ') {
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          SizedBox(
+                            width: 250,
+                            child: AFwidget.barisText(
+                              label: 'Jumlah Jam',
+                              controller: controller.txtHari,
+                              onchanged: controller.hitungJumlahIdr,
+                              paddingRight: 0,
+                            ),
+                          ),
+                          const Expanded(
+                            child: Padding(
+                              padding: EdgeInsets.fromLTRB(5, 11, 25, 5),
+                              child: Text('*Desimal menggunakan titik, contoh: 3.5',
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontStyle: FontStyle.italic,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                    controller.txtHari.text = '';
+                    return Container();
+                  },
+                ),
+                GetBuilder<PotonganControl>(
+                  id: 'form_potongan',
+                  builder: (_) {
+                    return AFwidget.barisText(
+                      label: 'Jumlah IDR',
+                      controller: controller.txtJumlah,
+                      isNumber: true,
+                      onchanged: (_) => controller.update(['form_potongan']),
+                    );
+                  },
+                ),
+                AFwidget.barisText(
+                  label: 'Keterangan',
+                  controller: controller.txtKeterangan,
+                  isTextArea: true,
+                ),
+                GetBuilder<PotonganControl>(
+                  id: 'form_potongan',
+                  builder: (_) {
+                    String msg = controller.pesanValidasi;
                     return Padding(
-                      padding: const EdgeInsets.fromLTRB(170, 15, 25, 10),
+                      padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
                       child: Row(
                         children: [
-                          const Text('Gaji: '),
-                          Text(AFconvert.matNumber(controller.upah.gaji),
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(width: 50),
-                          const Text('Uang Makan: '),
-                          Text('${AFconvert.matNumber(controller.upah.uangMakan)}   ${controller.upah.makanHarian ? 'Harian' : 'Tetap'}',
-                            style: const TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(width: 50),
-                          IconButton(
+                          AFwidget.tombol(
+                            label: 'Hapus',
+                            color: Colors.red,
                             onPressed: () {
-                              showGajiForm(context);
+                              AFwidget.formHapus(
+                                label: 'data potongan ini',
+                                aksi: () {
+                                  controller.hapusData(controller.txtId.text);
+                                },
+                              );
                             },
-                            icon: const Icon(Icons.edit, color: Colors.green),
+                            minimumSize: const Size(120, 40),
+                          ),
+                          const SizedBox(width: 20),
+                          if(msg.isNotEmpty)
+                            Expanded(
+                              child: Text(msg, style: const TextStyle(color: Colors.red, fontStyle: FontStyle.italic)),
+                            )
+                          else
+                            const Spacer(),
+                          AFwidget.tombol(
+                            label: 'Batal',
+                            color: Colors.orange,
+                            onPressed: Get.back,
+                            minimumSize: const Size(120, 40),
+                          ),
+                          const SizedBox(width: 20),
+                          AFwidget.tombol(
+                            label: 'Simpan',
+                            color: msg.isEmpty ? Colors.blue : Colors.grey,
+                            onPressed: msg.isEmpty ? controller.ubahData : null,
+                            minimumSize: const Size(120, 40),
                           ),
                         ],
                       ),
                     );
                   }
-                  return Container();
-                },
-              ),
-              GetBuilder<PotonganControl>(
-                id: 'form_potongan',
-                builder: (_) {
-                  if(controller.jenis.value == 'TB' || controller.jenis.value == 'UL') {
-                    return AFwidget.barisText(
-                      label: 'Jumlah Hari',
-                      controller: controller.txtHari,
-                      isNumber: true,
-                      onchanged: controller.hitungJumlahIdr,
-                    );
-                  } else if(controller.jenis.value == 'KJ') {
-                    return Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        SizedBox(
-                          width: 250,
-                          child: AFwidget.barisText(
-                            label: 'Jumlah Jam',
-                            controller: controller.txtHari,
-                            onchanged: controller.hitungJumlahIdr,
-                            paddingRight: 0,
-                          ),
-                        ),
-                        const Expanded(
-                          child: Padding(
-                            padding: EdgeInsets.fromLTRB(5, 11, 25, 5),
-                            child: Text('*Desimal menggunakan titik, contoh: 3.5',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontStyle: FontStyle.italic,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    );
-                  }
-                  controller.txtHari.text = '';
-                  return Container();
-                },
-              ),
-              GetBuilder<PotonganControl>(
-                id: 'form_potongan',
-                builder: (_) {
-                  return AFwidget.barisText(
-                    label: 'Jumlah IDR',
-                    controller: controller.txtJumlah,
-                    isNumber: true,
-                  );
-                },
-              ),
-              AFwidget.barisText(
-                label: 'Keterangan',
-                controller: controller.txtKeterangan,
-                isTextArea: true,
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
-                child: Row(
-                  children: [
-                    AFwidget.tombol(
-                      label: 'Hapus',
-                      color: Colors.red,
-                      onPressed: () {
-                        AFwidget.formHapus(
-                          label: 'data potongan ini',
-                          aksi: () {
-                            controller.hapusData(controller.txtId.text);
-                          },
-                        );
-                      },
-                      minimumSize: const Size(120, 40),
-                    ),
-                    const Spacer(),
-                    AFwidget.tombol(
-                      label: 'Batal',
-                      color: Colors.orange,
-                      onPressed: Get.back,
-                      minimumSize: const Size(120, 40),
-                    ),
-                    const SizedBox(width: 40),
-                    AFwidget.tombol(
-                      label: 'Simpan',
-                      color: Colors.blue,
-                      onPressed: controller.ubahData,
-                      minimumSize: const Size(120, 40),
-                    ),
-                  ],
                 ),
-              ),
-            ],
-          ),
-          AFwidget.formHeader('Form Ubah Potongan'),
-        ],
+              ],
+            ),
+            AFwidget.formHeader('Form Ubah Potongan'),
+          ],
+        ),
       ),
     );
   }

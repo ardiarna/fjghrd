@@ -5,7 +5,6 @@ import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/models/opsi.dart';
-import 'package:fjghrd/models/customer.dart';
 
 class OncallCustomerUbahForm extends StatelessWidget {
   const OncallCustomerUbahForm({super.key});
@@ -41,13 +40,7 @@ class OncallCustomerUbahForm extends StatelessWidget {
                               return AFwidget.comboField(
                                 value: controller.bulan.label,
                               label: '',
-                              onTap: () async {
-                                var a = await controller.pilihBulan(value: controller.bulan.value);
-                                if(a != null && a.value != controller.bulan.value) {
-                                  controller.bulan = a;
-                                      controller.update(['form_oncall']);
-                                }
-                              },
+                              onTap: null,
                             );
                           },
                         ),
@@ -60,13 +53,7 @@ class OncallCustomerUbahForm extends StatelessWidget {
                               return AFwidget.comboField(
                                 value: controller.tahun.label,
                               label: '',
-                              onTap: () async {
-                                var a = await controller.pilihTahun(value: controller.tahun.value);
-                                if(a != null && a.value != controller.tahun.value) {
-                                  controller.tahun = a;
-                                      controller.update(['form_oncall']);
-                                }
-                              },
+                              onTap: null,
                             );
                           },
                         ),
@@ -92,15 +79,7 @@ class OncallCustomerUbahForm extends StatelessWidget {
                           controller: controller.txtTanggal,
                           readOnly: true,
                           prefixIcon: const Icon(Icons.calendar_month),
-                          ontap: () async {
-                            var a = await AFwidget.pickDate(
-                              context: context,
-                              initialDate: AFconvert.keTanggal(AFconvert.matDMYtoYMD(controller.txtTanggal.text)),
-                            );
-                            if(a != null) {
-                              controller.txtTanggal.text = AFconvert.matDate(a);
-                            }
-                          },
+                          ontap: null,
                         ),
                       )
                     ],
@@ -123,13 +102,7 @@ class OncallCustomerUbahForm extends StatelessWidget {
                               return AFwidget.comboField(
                                 value: controller.customer.nama,
                             label: '',
-                            onTap: () async {
-                              var a = await controller.pilihCustomer(value: controller.customer.id);
-                              if(a != null && a.value != controller.customer.id) {
-                                controller.customer = Customer.fromMap(a.data!);
-                                      controller.update(['form_oncall']);
-                              }
-                            },
+                            onTap: null,
                           );
                         },
                       ),
@@ -141,45 +114,58 @@ class OncallCustomerUbahForm extends StatelessWidget {
                 label: 'Jumlah',
                 controller: controller.txtJumlah,
                 isNumber: true,
+                onchanged: (_) => controller.update(['form_oncall']),
               ),
               AFwidget.barisText(
                 label: 'Keterangan',
                 controller: controller.txtKeterangan,
                 isTextArea: true,
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
-                child: Row(
-                  children: [
-                    AFwidget.tombol(
-                      label: 'Hapus',
-                      color: Colors.red,
-                      onPressed: () {
-                        AFwidget.formHapus(
-                          label: 'data oncall customer ini',
-                          aksi: () {
-                            controller.hapusData(controller.txtId.text);
+              GetBuilder<OncallCustomerControl>(
+                id: 'form_oncall',
+                builder: (_) {
+                  String msg = controller.pesanValidasi;
+                  return Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
+                    child: Row(
+                      children: [
+                        AFwidget.tombol(
+                          label: 'Hapus',
+                          color: Colors.red,
+                          onPressed: () {
+                            AFwidget.formHapus(
+                              label: 'data oncall customer ini',
+                              aksi: () {
+                                controller.hapusData(controller.txtId.text);
+                              },
+                            );
                           },
-                        );
-                      },
-                      minimumSize: const Size(120, 40),
+                          minimumSize: const Size(120, 40),
+                        ),
+                        const SizedBox(width: 20),
+                        if(msg.isNotEmpty)
+                          Expanded(
+                            child: Text(msg, style: const TextStyle(color: Colors.red, fontStyle: FontStyle.italic)),
+                          )
+                        else
+                          const Spacer(),
+                        AFwidget.tombol(
+                          label: 'Batal',
+                          color: Colors.orange,
+                          onPressed: Get.back,
+                          minimumSize: const Size(120, 40),
+                        ),
+                        const SizedBox(width: 20),
+                        AFwidget.tombol(
+                          label: 'Simpan',
+                          color: msg.isEmpty ? Colors.blue : Colors.grey,
+                          onPressed: msg.isEmpty ? controller.ubahData : null,
+                          minimumSize: const Size(120, 40),
+                        ),
+                      ],
                     ),
-                    const Spacer(),
-                    AFwidget.tombol(
-                      label: 'Batal',
-                      color: Colors.orange,
-                      onPressed: Get.back,
-                      minimumSize: const Size(120, 40),
-                    ),
-                    const SizedBox(width: 40),
-                    AFwidget.tombol(
-                      label: 'Simpan',
-                      color: Colors.blue,
-                      onPressed: controller.ubahData,
-                      minimumSize: const Size(120, 40),
-                    ),
-                  ],
-                ),
+                  );
+                },
               ),
             ],
           ),

@@ -59,6 +59,16 @@ class OncallCustomerControl extends GetxController {
     }
   }
 
+  String get pesanValidasi {
+    if(bulan.value.isEmpty || tahun.value.isEmpty) return 'Periode harus diisi';
+    if(customer.id.isEmpty) return 'Silakan pilih customer';
+    if(txtJumlah.text.isEmpty) return 'Jumlah harus diisi';
+    
+    int valJumlah = AFconvert.keInt(txtJumlah.text);
+    if(valJumlah == 0) return 'Jumlah tidak boleh 0';
+    return '';
+  }
+
   Future<void> tambahData() async {
     try {
       if(bulan.value.isEmpty || tahun.value.isEmpty) {
@@ -199,9 +209,13 @@ class OncallCustomerControl extends GetxController {
     return a;
   }
 
-  Future<Opsi?> pilihBulan({String value = ''}) async {
+  Future<Opsi?> pilihBulan({String value = '', bool includeSemua = false}) async {
+    List<Opsi> options = List.from(listBulan);
+    if (includeSemua) {
+      options.insert(0, Opsi(value: '', label: 'Semua'));
+    }
     var a = await AFcombobox.bottomSheet(
-      listOpsi: listBulan,
+      listOpsi: options,
       valueSelected: value,
       judul: 'Pilih Bulan',
       withCari: false,

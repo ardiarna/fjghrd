@@ -40,6 +40,7 @@ class PenghasilanView extends StatelessWidget {
             'jenis': PlutoCell(value:  jenis.label),
             'nama': PlutoCell(value: rowData[index].karyawan.nama),
             'area': PlutoCell(value: rowData[index].karyawan.area.kode),
+            'periode': PlutoCell(value: '${mapBulan[rowData[index].bulan]} ${rowData[index].tahun}'),
             'jabatan': PlutoCell(value: rowData[index].karyawan.jabatan.nama),
             'tanggal': PlutoCell(value: AFconvert.matDate(rowData[index].tanggal)),
             'tahun': PlutoCell(value: rowData[index].tahun),
@@ -68,12 +69,12 @@ class PenghasilanView extends StatelessWidget {
         suppressedAutoSize: true,
         frozen: PlutoColumnFrozen.start,
         renderer: (rdrCtx) {
-          if(rdrCtx.row.cells['id']!.value == null) {
+          if(rdrCtx.cell.value == null || rdrCtx.cell.value == '') {
             return const Text('');
           }
           return IconButton(
             onPressed: () {
-              showPenghasilanUbahForm(rdrCtx.row.cells['id']!.value, context);
+              showPenghasilanUbahForm(rdrCtx.cell.value, context);
             },
             icon: const Icon(
               Icons.edit_square,
@@ -172,6 +173,18 @@ class PenghasilanView extends StatelessWidget {
         },
       ),
       PlutoColumn(
+        title: 'PERIODE',
+        field: 'periode',
+        type: PlutoColumnType.text(),
+        readOnly: true,
+        width: 130,
+        backgroundColor: Colors.brown.shade100,
+        textAlign: PlutoColumnTextAlign.center,
+        titleTextAlign: PlutoColumnTextAlign.center,
+        suppressedAutoSize: true,
+        enableFilterMenuItem: false,
+      ),
+      PlutoColumn(
         title: 'KETERANGAN',
         field: 'keterangan',
         type: PlutoColumnType.text(),
@@ -240,7 +253,7 @@ class PenghasilanView extends StatelessWidget {
                       label: '',
                       warnaBackground: Colors.white,
                       onTap: () async {
-                        var a = await controller.pilihBulan(value: controller.filterBulan.value);
+                        var a = await controller.pilihBulan(value: controller.filterBulan.value, includeSemua: true);
                         if(a != null && a.value != controller.filterBulan.value) {
                           controller.filterBulan = a;
                           controller.update(['filter_penghasilan']);

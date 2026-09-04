@@ -86,6 +86,18 @@ class PenghasilanControl extends GetxController {
     update(['info_upah']);
   }  
 
+  String get pesanValidasi {
+    if(bulan.value.isEmpty || tahun.value.isEmpty) return 'Periode harus diisi';
+    if(jenis.value.isEmpty) return 'Silakan pilih jenis penghasilan';
+    if(karyawan.id.isEmpty) return 'Silakan pilih karyawan';
+    if(jenis.value == 'AB' && txtHari.text.isEmpty) return 'Jumlah hari harus diisi';
+    if(txtJumlah.text.isEmpty) return 'Jumlah IDR harus diisi';
+    
+    int valJumlah = AFconvert.keInt(txtJumlah.text);
+    if(valJumlah == 0) return 'Jumlah IDR tidak boleh 0';
+    return '';
+  }
+
   Future<void> tambahData() async {
     try {
       if(jenis.value.isEmpty) {
@@ -280,9 +292,13 @@ class PenghasilanControl extends GetxController {
     return a;
   }
 
-  Future<Opsi?> pilihBulan({String value = ''}) async {
+  Future<Opsi?> pilihBulan({String value = '', bool includeSemua = false}) async {
+    List<Opsi> options = List.from(listBulan);
+    if (includeSemua) {
+      options.insert(0, Opsi(value: '', label: 'Semua'));
+    }
     var a = await AFcombobox.bottomSheet(
-      listOpsi: listBulan,
+      listOpsi: options,
       valueSelected: value,
       judul: 'Pilih Bulan',
       withCari: false,
@@ -301,6 +317,7 @@ class PenghasilanControl extends GetxController {
     } else {
       txtHari.text = '';
     }
+    update(['form_penghasilan']);
   }
 
   @override

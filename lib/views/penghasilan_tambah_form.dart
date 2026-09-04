@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:fjghrd/controllers/penghasilan_control.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/utils/af_convert.dart';
+import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/models/karyawan.dart';
 import 'package:fjghrd/models/opsi.dart';
 import 'package:fjghrd/views/uang_makan_form.dart';
@@ -96,7 +97,7 @@ class PenghasilanTambahForm extends StatelessWidget {
                                 if(a != null && a.value != controller.jenis.value) {
                                   controller.jenis = a;
                                   controller.hitungJumlahIdr(controller.txtHari.text);
-                                  controller.update(['form_penghasilan']);
+                                  controller.update(['form_penghasilan', 'info_upah']);
                                 }
                               },
                             );
@@ -249,6 +250,7 @@ class PenghasilanTambahForm extends StatelessWidget {
                       label: 'Jumlah IDR',
                       controller: controller.txtJumlah,
                       isNumber: true,
+                      onchanged: (_) => controller.update(['form_penghasilan']),
                     );
                   },
                 ),
@@ -257,33 +259,43 @@ class PenghasilanTambahForm extends StatelessWidget {
                   controller: controller.txtKeterangan,
                   isTextArea: true,
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      AFwidget.tombol(
-                        label: 'Batal',
-                        color: Colors.orange,
-                        onPressed: Get.back,
-                        minimumSize: const Size(120, 40),
+                GetBuilder<PenghasilanControl>(
+                  id: 'form_penghasilan',
+                  builder: (_) {
+                    String msg = controller.pesanValidasi;
+                    return Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
+                      child: Row(
+                        children: [
+                          if(msg.isNotEmpty)
+                            Expanded(
+                              child: Text(msg, style: const TextStyle(color: Colors.red, fontStyle: FontStyle.italic)),
+                            ),
+                          if(msg.isEmpty) const Spacer(),
+                          AFwidget.tombol(
+                            label: 'Batal',
+                            color: Colors.orange,
+                            onPressed: Get.back,
+                            minimumSize: const Size(120, 40),
+                          ),
+                          const SizedBox(width: 40),
+                          AFwidget.tombol(
+                            label: 'Simpan',
+                            color: msg.isEmpty ? Colors.blue : Colors.grey,
+                            onPressed: msg.isEmpty ? controller.tambahData : null,
+                            minimumSize: const Size(120, 40),
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 40),
-                      AFwidget.tombol(
-                        label: 'Simpan',
-                        color: Colors.blue,
-                        onPressed: controller.tambahData,
-                        minimumSize: const Size(120, 40),
-                      ),
-                    ],
-                  ),
+                    );
+                  }
                 ),
               ],
             ),
             GetBuilder<PenghasilanControl>(
               id: 'form_penghasilan_periode',
               builder: (_) {
-                return AFwidget.formHeader('Form Tambah Penghasilan - ${controller.bulan.label} ${controller.tahun.label}');
+                return AFwidget.formHeader('Form Tambah Penghasilan');
               }
             ),
           ],
@@ -296,8 +308,13 @@ void showPenghasilanTambahForm(BuildContext context) {
   final controller = Get.find<PenghasilanControl>();
   controller.txtId.text = '';
   controller.tahun = Opsi(value: controller.filterTahun.value, label: controller.filterTahun.label);
-  controller.bulan = Opsi(value: controller.filterBulan.value, label: controller.filterBulan.label);
-  controller.txtTanggal.text = AFconvert.matDate(DateTime(AFconvert.keInt(controller.filterTahun.value), AFconvert.keInt(controller.filterBulan.value)));
+  if(controller.filterBulan.value == '') {
+    DateTime now = DateTime.now();
+    controller.bulan = Opsi(value: '${now.month}', label: mapBulan[now.month] ?? '');
+  } else {
+    controller.bulan = Opsi(value: controller.filterBulan.value, label: controller.filterBulan.label);
+  }
+  controller.txtTanggal.text = AFconvert.matDate(DateTime(AFconvert.keInt(controller.tahun.value), AFconvert.keInt(controller.bulan.value)));
   controller.txtKeterangan.text = '';
   controller.txtHari.text = '';
   controller.txtTglAwal.text = '';

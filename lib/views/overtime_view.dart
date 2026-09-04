@@ -1,4 +1,3 @@
-import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/views/payroll_view.dart';
 import 'package:fjghrd/controllers/overtime_control.dart';
@@ -6,6 +5,7 @@ import 'package:fjghrd/views/overtime_tambah_form.dart';
 import 'package:fjghrd/views/overtime_ubah_form.dart';
 import 'package:fjghrd/models/overtime.dart';
 import 'package:fjghrd/utils/af_convert.dart';
+import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +27,8 @@ class OvertimeView extends StatelessWidget {
           'karyawan_id': PlutoCell(value: rowData[index].karyawan.id),
           'jenis': PlutoCell(value: rowData[index].jenis == 'F' ? 'Fratekindo' : 'Customer'),
           'nama': PlutoCell(value: rowData[index].karyawan.nama),
-          'area': PlutoCell(value: rowData[index].karyawan.area.nama),
+          'area': PlutoCell(value: rowData[index].karyawan.area.kode),
+          'periode': PlutoCell(value: '${mapBulan[rowData[index].bulan]} ${rowData[index].tahun}'),
           'jabatan': PlutoCell(value: rowData[index].karyawan.jabatan.nama),
           'tanggal': PlutoCell(value: AFconvert.matDate(rowData[index].tanggal)),
           'bulan': PlutoCell(value: rowData[index].bulan),
@@ -87,8 +88,11 @@ class OvertimeView extends StatelessWidget {
         field: 'area',
         type: PlutoColumnType.text(),
         readOnly: true,
-        minWidth: 230,
+        width: 80,
         backgroundColor: Colors.brown.shade100,
+        textAlign: PlutoColumnTextAlign.center,
+        titleTextAlign: PlutoColumnTextAlign.center,
+        suppressedAutoSize: true,
       ),
       PlutoColumn(
         title: 'JABATAN',
@@ -155,6 +159,18 @@ class OvertimeView extends StatelessWidget {
             },
           );
         },
+      ),
+      PlutoColumn(
+        title: 'PERIODE',
+        field: 'periode',
+        type: PlutoColumnType.text(),
+        readOnly: true,
+        width: 130,
+        backgroundColor: Colors.brown.shade100,
+        textAlign: PlutoColumnTextAlign.center,
+        titleTextAlign: PlutoColumnTextAlign.center,
+        suppressedAutoSize: true,
+        enableFilterMenuItem: false,
       ),
       PlutoColumn(
         title: 'KETERANGAN',
@@ -225,7 +241,7 @@ class OvertimeView extends StatelessWidget {
                       label: '',
                       warnaBackground: Colors.white,
                       onTap: () async {
-                        var a = await controller.pilihBulan(value: controller.filterBulan.value);
+                        var a = await controller.pilihBulan(value: controller.filterBulan.value, includeSemua: true);
                         if(a != null && a.value != controller.filterBulan.value) {
                           controller.filterBulan = a;
                           controller.update(['filter_overtime']);

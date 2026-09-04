@@ -135,7 +135,7 @@ class _GajiFormState extends State<GajiForm> {
                       controller.upah.uangMakan = a.uangMakan;
                       controller.upah.makanHarian = a.makanHarian;
                       controller.hitungJumlahIdr(controller.txtHari.text);
-                      controller.update();
+                      controller.update(['info_upah', 'form_potongan']);
                     } else {
                       AFwidget.formWarning(label: hasil.message);
                     }

@@ -327,6 +327,9 @@ void showMedicalTambahForm(BuildContext context) {
   controller.txtKeterangan.text = '';
   controller.txtJumlah.text = '';
   controller.karyawan = Karyawan();
+  controller.tunjangan = 0;
+  controller.jumlahKlaim = 0;
+  controller.sisaTunjangan = 0;
   if(controller.filterJenis.value == '') {
     controller.jenis = Opsi(value: '', label: '');
   } else {

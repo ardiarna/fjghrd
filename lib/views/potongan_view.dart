@@ -1,4 +1,3 @@
-import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/views/payroll_view.dart';
 import 'package:fjghrd/controllers/potongan_control.dart';
@@ -6,6 +5,7 @@ import 'package:fjghrd/views/potongan_tambah_form.dart';
 import 'package:fjghrd/views/potongan_ubah_form.dart';
 import 'package:fjghrd/models/potongan.dart';
 import 'package:fjghrd/utils/af_convert.dart';
+import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +30,8 @@ class PotonganView extends StatelessWidget {
             'karyawan_id': PlutoCell(value: rowData[index].karyawan.id),
             'jenis': PlutoCell(value:  jenis.label),
             'nama': PlutoCell(value: rowData[index].karyawan.nama),
-            'area': PlutoCell(value: rowData[index].karyawan.area.nama),
+            'area': PlutoCell(value: rowData[index].karyawan.area.kode),
+          'periode': PlutoCell(value: '${mapBulan[rowData[index].bulan]} ${rowData[index].tahun}'),
             'jabatan': PlutoCell(value: rowData[index].karyawan.jabatan.nama),
             'tanggal': PlutoCell(value: AFconvert.matDate(rowData[index].tanggal)),
             'tahun': PlutoCell(value: rowData[index].tahun),
@@ -60,12 +61,12 @@ class PotonganView extends StatelessWidget {
         suppressedAutoSize: true,
         frozen: PlutoColumnFrozen.start,
         renderer: (rdrCtx) {
-          if(rdrCtx.row.cells['id']!.value == null) {
+          if(rdrCtx.cell.value == null || rdrCtx.cell.value == '') {
             return const Text('');
           }
           return IconButton(
             onPressed: () {
-              showPotonganUbahForm(rdrCtx.row.cells['id']!.value, context);
+              showPotonganUbahForm(rdrCtx.cell.value, context);
             },
             icon: const Icon(
               Icons.edit_square,
@@ -92,8 +93,11 @@ class PotonganView extends StatelessWidget {
         field: 'area',
         type: PlutoColumnType.text(),
         readOnly: true,
-        minWidth: 230,
+        width: 80,
         backgroundColor: Colors.brown.shade100,
+        textAlign: PlutoColumnTextAlign.center,
+        titleTextAlign: PlutoColumnTextAlign.center,
+        suppressedAutoSize: true,
       ),
       PlutoColumn(
         title: 'JABATAN',
@@ -148,6 +152,18 @@ class PotonganView extends StatelessWidget {
             },
           );
         },
+      ),
+      PlutoColumn(
+        title: 'PERIODE',
+        field: 'periode',
+        type: PlutoColumnType.text(),
+        readOnly: true,
+        width: 130,
+        backgroundColor: Colors.brown.shade100,
+        textAlign: PlutoColumnTextAlign.center,
+        titleTextAlign: PlutoColumnTextAlign.center,
+        suppressedAutoSize: true,
+        enableFilterMenuItem: false,
       ),
       PlutoColumn(
         title: 'KETERANGAN',
@@ -218,7 +234,7 @@ class PotonganView extends StatelessWidget {
                       label: '',
                       warnaBackground: Colors.white,
                       onTap: () async {
-                        var a = await controller.pilihBulan(value: controller.filterBulan.value);
+                        var a = await controller.pilihBulan(value: controller.filterBulan.value, includeSemua: true);
                         if(a != null && a.value != controller.filterBulan.value) {
                           controller.filterBulan = a;
                           controller.update(['filter_potongan']);

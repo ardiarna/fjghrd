@@ -68,6 +68,25 @@ class OvertimeControl extends GetxController {
     }
   }
 
+  String get pesanValidasi {
+    if(bulan.value.isEmpty || tahun.value.isEmpty) return 'Periode harus diisi';
+    if(karyawan.id.isEmpty) return 'Silakan pilih karyawan';
+    
+    if(txtId.text.isEmpty) {
+      if(txtJumlah.text.isEmpty && txtJum2.text.isEmpty) return 'Isi jumlah Fratekindo atau Customer';
+      int v1 = AFconvert.keInt(txtJumlah.text);
+      int v2 = AFconvert.keInt(txtJum2.text);
+      if(v1 == 0 && v2 == 0) return 'Jumlah tidak boleh 0 semua';
+    } else {
+      if(jenis.isEmpty) return 'Pilih jenis overtime';
+      if(txtJumlah.text.isEmpty) return 'Jumlah harus diisi';
+      int valJumlah = AFconvert.keInt(txtJumlah.text);
+      if(valJumlah == 0) return 'Jumlah IDR tidak boleh 0';
+    }
+    
+    return '';
+  }
+
   Future<void> tambahData() async {
     try {
       if(bulan.value.isEmpty || tahun.value.isEmpty) {
@@ -248,9 +267,13 @@ class OvertimeControl extends GetxController {
     return a;
   }
 
-  Future<Opsi?> pilihBulan({String value = ''}) async {
+  Future<Opsi?> pilihBulan({String value = '', bool includeSemua = false}) async {
+    List<Opsi> options = List.from(listBulan);
+    if (includeSemua) {
+      options.insert(0, Opsi(value: '', label: 'Semua'));
+    }
     var a = await AFcombobox.bottomSheet(
-      listOpsi: listBulan,
+      listOpsi: options,
       valueSelected: value,
       judul: 'Pilih Bulan',
       withCari: false,
