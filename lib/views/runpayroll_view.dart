@@ -105,8 +105,12 @@ class RunpayrollView extends StatelessWidget {
       var potLain = controller.listPotongan
           .where((element) => element.karyawan.id == e.id && element.jenis == 'LL')
           .fold(0, (sum, element) => sum + element.jumlah);
+      var potCutiKeterangan = controller.listPotongan
+          .where((element) => element.karyawan.id == e.id && element.jenis == 'UL' && element.keterangan != '')
+          .map((el) => el.keterangan)
+          .join(', ');
       var keteranganPot = controller.listPotongan
-          .where((element) => element.karyawan.id == e.id && element.keterangan != '')
+          .where((element) => element.karyawan.id == e.id && element.jenis != 'UL' && element.keterangan != '')
           .map((el) => el.keterangan)
           .join(', ');
       var keteranganPen = controller.listPenghasilan
@@ -150,6 +154,7 @@ class RunpayrollView extends StatelessWidget {
           'pot_bpjs': PlutoCell(value: potBpjs),
           'pot_cuti_hari': PlutoCell(value: potCutiHari),
           'pot_cuti_jumlah': PlutoCell(value: potCutiJumlah),
+          'pot_cuti_keterangan': PlutoCell(value: potCutiKeterangan),
           'pot_kompensasi_jam': PlutoCell(value: potKompensasiJam),
           'pot_kompensasi_jumlah': PlutoCell(value: potKompensasiJumlah),
           'pot_lain': PlutoCell(value: potLain),
@@ -244,7 +249,7 @@ class RunpayrollView extends StatelessWidget {
         ),
         PlutoColumnGroup(
           title: 'UNPAID LEAVE',
-          fields: ['pot_cuti_hari', 'pot_cuti_jumlah'],
+          fields: ['pot_cuti_hari', 'pot_cuti_jumlah', 'pot_cuti_keterangan'],
           backgroundColor: Colors.red.shade100,
         ),
         PlutoColumnGroup(
@@ -1065,6 +1070,17 @@ class RunpayrollView extends StatelessWidget {
       },
     ),
     PlutoColumn(
+      title: 'KETERANGAN',
+      field: 'pot_cuti_keterangan',
+      type: PlutoColumnType.text(),
+      width: 150,
+      backgroundColor: Colors.red.shade100,
+      enableContextMenu: false,
+      enableSorting: false,
+      enableColumnDrag: false,
+      readOnly: true,
+    ),
+    PlutoColumn(
       title: 'JAM',
       field: 'pot_kompensasi_jam',
       type: PlutoColumnType.number(format: '#,##0.0'),
@@ -1632,7 +1648,7 @@ class RunpayrollView extends StatelessWidget {
                     if(ev.row.cells['makan_harian']!.value == 'Y') {
                       ev.row.cells['uang_makan_jumlah']!.value = ev.row.cells['hari_makan']!.value * ev.row.cells['uang_makan_harian']!.value;
                     }
-                  } else if(ev.columnIdx == 6) { // uang_makan_harian
+                  } else if(ev.column.field == 'hari_makan') { // uang_makan_harian
                     if(ev.row.cells['makan_harian']!.value == 'Y') {
                       ev.row.cells['uang_makan_jumlah']!.value = ev.row.cells['hari_makan']!.value * ev.row.cells['uang_makan_harian']!.value;
                       double a = ev.row.cells['pot_25_hari']!.value * (ev.row.cells['uang_makan_harian']!.value/4);
@@ -1643,10 +1659,10 @@ class RunpayrollView extends StatelessWidget {
                       double a = ev.row.cells['pot_25_hari']!.value * (ev.row.cells['uang_makan_harian']!.value/4);
                       ev.row.cells['pot_25_jumlah']!.value = a.toInt();
                     }
-                  } else if(ev.columnIdx == 23) { // pot_cuti_hari
+                  } else if(ev.column.field == 'pot_cuti_hari') { // pot_cuti_hari
                     double a = ev.row.cells['pot_cuti_hari']!.value * ((ev.row.cells['gaji']!.value + ev.row.cells['kenaikan_gaji']!.value)/21);
                     ev.row.cells['pot_cuti_jumlah']!.value = a.toInt();
-                  } else if(ev.columnIdx == 25) { // pot_kompensasi_jam
+                  } else if(ev.column.field == 'pot_kompensasi_jam') { // pot_kompensasi_jam
                     double a = ev.row.cells['pot_kompensasi_jam']!.value * ((ev.row.cells['gaji']!.value + ev.row.cells['kenaikan_gaji']!.value)/168);
                     ev.row.cells['pot_kompensasi_jumlah']!.value = a.toInt();
                   }

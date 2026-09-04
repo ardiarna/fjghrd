@@ -53,6 +53,7 @@ class PayrollForm extends StatelessWidget {
           'pot_bpjs': PlutoCell(value: e.potBpjs),
           'pot_cuti_hari': PlutoCell(value: e.potCutiHari),
           'pot_cuti_jumlah': PlutoCell(value: e.potCutiJumlah),
+          'pot_cuti_keterangan': PlutoCell(value: e.potCutiKeterangan),
           'pot_kompensasi_jam': PlutoCell(value: e.potKompensasiJam),
           'pot_kompensasi_jumlah': PlutoCell(value: e.potKompensasiJumlah),
           'pot_lain': PlutoCell(value: e.potLain),
@@ -147,7 +148,7 @@ class PayrollForm extends StatelessWidget {
         ),
         PlutoColumnGroup(
           title: 'UNPAID LEAVE',
-          fields: ['pot_cuti_hari', 'pot_cuti_jumlah'],
+          fields: ['pot_cuti_hari', 'pot_cuti_jumlah', 'pot_cuti_keterangan'],
           backgroundColor: Colors.red.shade100,
         ),
         PlutoColumnGroup(
@@ -1000,8 +1001,19 @@ class PayrollForm extends StatelessWidget {
         },
       ),
       PlutoColumn(
-        title: 'JAM',
-        field: 'pot_kompensasi_jam',
+      title: 'KETERANGAN',
+      field: 'pot_cuti_keterangan',
+      type: PlutoColumnType.text(),
+      width: 150,
+      backgroundColor: Colors.red.shade100,
+      enableContextMenu: false,
+      enableSorting: false,
+      enableColumnDrag: false,
+      readOnly: true,
+    ),
+    PlutoColumn(
+      title: 'JAM',
+      field: 'pot_kompensasi_jam',
         type: PlutoColumnType.number(format: '#,##0.0'),
         readOnly: true,
         width: 70,

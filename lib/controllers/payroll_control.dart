@@ -353,6 +353,7 @@ class PayrollControl extends GetxController {
         potBpjs: AFconvert.keInt(txtPotBpjs.text),
         potCutiHari: AFconvert.keInt(txtPotCutiHari.text),
         potCutiJumlah: AFconvert.keInt(txtPotCutiJumlah.text),
+        potCutiKeterangan: currentDetilPayroll.potCutiKeterangan,
         potKompensasiJam: AFconvert.keDouble(txtPotKompensasiJam.text),
         potKompensasiJumlah: AFconvert.keInt(txtPotKompensasiJumlah.text),
         potLain: AFconvert.keInt(txtPotLain.text),
