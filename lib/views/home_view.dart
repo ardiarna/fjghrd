@@ -133,7 +133,7 @@ class HomeView extends StatelessWidget {
                     },
                   ),
                   drawItem(
-                    label: 'Upah',
+                    label: 'Salary',
                     icon: Icons.payments_outlined,
                     color: Colors.blueGrey,
                     onTap: () {

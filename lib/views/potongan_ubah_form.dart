@@ -86,21 +86,22 @@ class PotonganUbahForm extends StatelessWidget {
                 GetBuilder<PotonganControl>(
                   id: 'info_upah',
                   builder: (_) {
-                    if(controller.karyawan.id != '' && (controller.jenis.value == 'TB' || controller.jenis.value == 'UL' || controller.jenis.value == 'KJ')) {
+                                        if(controller.karyawan.id != '' && (controller.jenis.value == 'TB' || controller.jenis.value == 'UL' || controller.jenis.value == 'KJ')) {
+                      bool isTB = controller.jenis.value == 'TB';
+                      bool isULKJ = controller.jenis.value == 'UL' || controller.jenis.value == 'KJ';
                       return Padding(
                         padding: const EdgeInsets.fromLTRB(170, 15, 25, 10),
                         child: Row(
                           children: [
-                            const Text('Gaji: '),
-                            Text(AFconvert.matNumber(controller.upah.gaji),
+                            if (isULKJ) const Text('Master Gaji Pokok: '),
+                            if (isULKJ) Text(AFconvert.matNumber(controller.upah.gaji),
                               style: const TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            const SizedBox(width: 50),
-                            const Text('Uang Makan: '),
-                            Text('${AFconvert.matNumber(controller.upah.uangMakan)}   ${controller.upah.makanHarian ? 'Harian' : 'Tetap'}',
+                            if (isTB) const Text('Master Uang Makan: '),
+                            if (isTB) Text('${AFconvert.matNumber(controller.upah.uangMakan)}   ${controller.upah.makanHarian ? 'Harian' : 'Tetap'}',
                               style: const TextStyle(fontWeight: FontWeight.bold),
                             ),
-                            const SizedBox(width: 50),
+                            const SizedBox(width: 15),
                             IconButton(
                               onPressed: () {
                                 showGajiForm(context);

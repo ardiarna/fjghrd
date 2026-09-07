@@ -17,7 +17,7 @@ class UpahView extends StatelessWidget {
       rowData.length,
           (index) => PlutoRow(
         cells: {
-          'area': PlutoCell(value: rowData[index].area.nama),
+          'area': PlutoCell(value: rowData[index].area.kode),
           'id': PlutoCell(value: rowData[index].id),
           'nama': PlutoCell(value: rowData[index].nama),
           'jabatan': PlutoCell(value: rowData[index].jabatan.nama),
@@ -87,8 +87,12 @@ class UpahView extends StatelessWidget {
         field: 'area',
         type: PlutoColumnType.text(),
         readOnly: true,
-        minWidth: 230,
+        width: 110,
+        minWidth: 110,
         backgroundColor: Colors.brown.shade100,
+        titleTextAlign: PlutoColumnTextAlign.center,
+        textAlign: PlutoColumnTextAlign.center,
+        suppressedAutoSize: true,
       ),
       PlutoColumn(
         title: 'JABATAN',
@@ -167,6 +171,7 @@ class UpahView extends StatelessWidget {
         backgroundColor: Colors.brown.shade100,
         textAlign: PlutoColumnTextAlign.center,
         titleTextAlign: PlutoColumnTextAlign.center,
+        suppressedAutoSize: true,
         footerRenderer: (rendererContext) {
           return PlutoAggregateColumnFooter(
             rendererContext: rendererContext,
@@ -184,7 +189,6 @@ class UpahView extends StatelessWidget {
           title: 'LIST SALARY',
           icon: Icons.list_alt_outlined,
           children: [
-            const Spacer(),
             const SizedBox(width: 20),
               SizedBox(
                 width: 200,
@@ -219,7 +223,7 @@ class UpahView extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 13,
                             fontWeight: e.key == 'TOTAL KARYAWAN' ? FontWeight.bold : FontWeight.normal,
-                            color: e.key == 'TOTAL KARYAWAN' ? Colors.blue : Colors.black54,
+                            color: Colors.white,
                           ),
                         );
                       }).toList(),

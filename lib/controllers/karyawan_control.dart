@@ -24,6 +24,7 @@ import 'package:fjghrd/repositories/agama_repository.dart';
 import 'package:fjghrd/repositories/area_repository.dart';
 import 'package:fjghrd/repositories/divisi_repository.dart';
 import 'package:fjghrd/repositories/jabatan_repository.dart';
+import 'package:fjghrd/repositories/upah_repository.dart';
 import 'package:fjghrd/repositories/karyawan_repository.dart';
 import 'package:fjghrd/repositories/pendidikan_repository.dart';
 import 'package:fjghrd/repositories/ptkp_repository.dart';
@@ -75,6 +76,11 @@ class KaryawanControl extends GetxController {
   Map<String, Map<String, int>> totalKaryawanPerAgama = {};
   Map<String, Map<String, int>> totalKaryawanPerPendidikan = {};
   Map<String, Map<String, int>> totalKaryawanPerUsia = {};
+
+  
+  late TextEditingController txtGaji, txtUangMakan;
+  bool? upahMakanHarian = true;
+  bool? upahOvertime = false;
 
   late TextEditingController txtId, txtNama, txtNik, txtTanggalMasuk, txtTanggalKeluar, txtNomorKk,
       txtNomorKtp, txtNomorPaspor, txtNomorPwp, txtTempatLahir, txtTanggalLahir, txtAlamatKtp,
@@ -319,7 +325,9 @@ class KaryawanControl extends GetxController {
   Future<void> loadTrainings() async {
     TrainingRepository repo = TrainingRepository();
     var hasil = await repo.findAll();
-    if(hasil.success) {
+    
+      if(hasil.success) {
+
       listTraining.clear();
       for (var data in hasil.daftar) {
         listTraining.add(
@@ -496,6 +504,20 @@ class KaryawanControl extends GetxController {
       var hasil = await _repo.create(a.toMap());
       Get.back();
       if(hasil.success) {
+        try {
+          String newKaryawanId = AFconvert.keString(hasil.data['id']);
+          UpahRepository upahRepo = UpahRepository();
+          await upahRepo.create(newKaryawanId, {
+            'id': '',
+            'karyawan_id': newKaryawanId,
+            'gaji': AFconvert.keString(AFconvert.keInt(txtGaji.text)),
+            'uang_makan': AFconvert.keString(AFconvert.keInt(txtUangMakan.text)),
+            'makan_harian': upahMakanHarian == true ? 'Y' : 'N',
+            'overtime': upahOvertime == true ? 'Y' : 'N',
+          });
+        } catch (e) {
+          debugPrint('Gagal inisialisasi upah: $e');
+        }
         loadKaryawans();
         authControl.karyawanUpdateTrigger.value++;
         loadCalonKaryawans();
@@ -1403,6 +1425,9 @@ class KaryawanControl extends GetxController {
     listTahun = List.generate(_now.year-2019, (index) => Opsi(value: '${_now.year-index}', label: '${_now.year-index}'));
     payrollTahunAwal = Opsi(value: '${_now.year}', label: '${_now.year}');
     payrollTahunAkhir = Opsi(value: '${_now.year}', label: '${_now.year}');
+    
+    txtGaji = TextEditingController();
+    txtUangMakan = TextEditingController();
     txtId = TextEditingController();
     txtNama = TextEditingController();
     txtNik = TextEditingController();
@@ -1490,6 +1515,9 @@ class KaryawanControl extends GetxController {
 
   @override
   void onClose() {
+    
+    txtGaji.dispose();
+    txtUangMakan.dispose();
     txtId.dispose();
     txtNama.dispose();
     txtNik.dispose();

@@ -164,12 +164,18 @@ class PenghasilanTambahForm extends StatelessWidget {
                     } else if(controller.karyawan.id != '' && (controller.jenis.value == 'GP')) {
                       return Padding(
                         padding: const EdgeInsets.fromLTRB(170, 15, 25, 10),
-                        child: Row(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('Gaji Pokok Sebelumnya: '),
-                            Text(AFconvert.matNumber(controller.upah.gaji),
-                              style: const TextStyle(fontWeight: FontWeight.bold),
+                            Row(
+                              children: [
+                                const Text('Master Gaji Pokok: '),
+                                Text(AFconvert.matNumber(controller.upah.gaji),
+                                  style: const TextStyle(fontWeight: FontWeight.bold),
+                                ),
+                              ],
                             ),
+
                           ],
                         ),
                       );
@@ -262,6 +268,34 @@ class PenghasilanTambahForm extends StatelessWidget {
                 GetBuilder<PenghasilanControl>(
                   id: 'form_penghasilan',
                   builder: (_) {
+                    if(controller.karyawan.id != '' && controller.jenis.value == 'GP') {
+                      return Padding(
+                        padding: const EdgeInsets.fromLTRB(170, 15, 25, 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Apakah anda ingin mengupdate Master Gaji Pokok karyawan ini ?'),
+                            Row(
+                              children: [
+                                Checkbox(
+                                  value: controller.updateMasterGaji,
+                                  onChanged: (val) {
+                                    if(val != null) controller.setUpdateMasterGaji(val);
+                                  },
+                                ),
+                                const Text('Ya, Update Master Gaji Pokok'),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                    return Container();
+                  }
+                ),
+                GetBuilder<PenghasilanControl>(
+                  id: 'form_penghasilan',
+                  builder: (_) {
                     String msg = controller.pesanValidasi;
                     return Padding(
                       padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
@@ -307,6 +341,7 @@ class PenghasilanTambahForm extends StatelessWidget {
 void showPenghasilanTambahForm(BuildContext context) {
   final controller = Get.find<PenghasilanControl>();
   controller.txtId.text = '';
+  controller.updateMasterGaji = false;
   controller.tahun = Opsi(value: controller.filterTahun.value, label: controller.filterTahun.label);
   if(controller.filterBulan.value == '') {
     DateTime now = DateTime.now();

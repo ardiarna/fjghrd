@@ -36,14 +36,16 @@ class UpahUbahForm extends StatelessWidget {
                   nilai: AFconvert.matDate(controller.current.tanggalMasuk),
                   labelWidth: 200,
                 ),
-                AFwidget.barisInfo(
-                  label: 'Gaji Pokok Terakhir',
-                  nilai: AFconvert.matNumber(controller.current.upah.gaji),
+                AFwidget.barisText(
+                  label: 'Master Gaji Pokok',
+                  controller: controller.txtGaji,
+                  isNumber: true,
                   labelWidth: 200,
                 ),
                 AFwidget.barisText(
                   label: 'Jumlah Uang Makan',
                   controller: controller.txtUangMakan,
+                  isNumber: true,
                   labelWidth: 200,
                 ),
                 Padding(
@@ -161,6 +163,7 @@ void showUpahUbahForm(String karyawanId, BuildContext context) {
   final controller = Get.find<UpahControl>();
   controller.current = controller.listKaryawan.where((element) => element.id == karyawanId).first;
   controller.txtUangMakan.text = AFconvert.matNumber(controller.current.upah.uangMakan);
+  controller.txtGaji.text = AFconvert.matNumber(controller.current.upah.gaji);
   controller.makanHarian = controller.current.upah.id.isEmpty ? null : controller.current.upah.makanHarian;
   controller.overtime = controller.current.upah.id.isEmpty ? null : controller.current.upah.overtime;
   

@@ -43,6 +43,14 @@ class _UangMakanFormState extends State<UangMakanForm> {
       padding: const EdgeInsets.only(top: 20),
       child: Column(
         children: [
+          const Padding(
+            padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
+            child: Text(
+              'Ini adalah form pintasan untuk mengubah master uang makan',
+              style: TextStyle(color: Colors.blue, fontStyle: FontStyle.italic),
+              textAlign: TextAlign.center,
+            ),
+          ),
           AFwidget.barisText(
             label: 'Jumlah Uang Makan',
             controller: txtUangMakan,
@@ -125,6 +133,7 @@ class _UangMakanFormState extends State<UangMakanForm> {
                       controller.upah.uangMakan = a.uangMakan;
                       controller.upah.makanHarian = a.makanHarian;
                       controller.hitungJumlahIdr(controller.txtHari.text);
+                      controller.authControl.karyawanUpdateTrigger.value++;
                       controller.update(['info_upah', 'form_penghasilan']);
                     } else {
                       AFwidget.formWarning(label: hasil.message);

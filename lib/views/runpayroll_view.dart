@@ -120,7 +120,15 @@ class RunpayrollView extends StatelessWidget {
       List<String> keteranganAll = [];
       if(keteranganPen.isNotEmpty) keteranganAll.add(keteranganPen);
       if(keteranganPot.isNotEmpty) keteranganAll.add(keteranganPot);
-      int totalDiterima = (e.upah.gaji + kenaikanGaji + uangMakanJumlah + overtimeFjg + overtimeCus + medical + thr + bonus + insentif + telkomsel + lain) -
+      
+      var listGP = controller.listPenghasilan
+          .where((element) => element.karyawan.id == e.id && element.jenis == 'GP')
+          .toList();
+      var gajiPokok = listGP.isNotEmpty 
+          ? listGP.fold(0, (sum, element) => sum + element.jumlah)
+          : e.upah.gaji;
+
+      int totalDiterima = (gajiPokok + kenaikanGaji + uangMakanJumlah + overtimeFjg + overtimeCus + medical + thr + bonus + insentif + telkomsel + lain) -
           (pot25HJumlah + potTelepon + potBensin + potKas + potCicilan + potBpjs + potCutiJumlah + potKompensasiJumlah + potLain);
       return PlutoRow(
         cells: {
@@ -128,7 +136,7 @@ class RunpayrollView extends StatelessWidget {
           'area': PlutoCell(value: e.area.kode),
           'nama': PlutoCell(value: e.nama),
           'jabatan': PlutoCell(value: e.jabatan.nama),
-          'gaji': PlutoCell(value: e.upah.gaji),
+          'gaji': PlutoCell(value: gajiPokok),
           'kenaikan_gaji': PlutoCell(value: kenaikanGaji),
           'makan_harian': PlutoCell(value: e.upah.makanHarian ? 'Y' : 'N'),
           'periode_batas': PlutoCell(value: periodeBatas),

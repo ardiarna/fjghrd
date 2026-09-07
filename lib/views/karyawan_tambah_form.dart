@@ -19,7 +19,7 @@ class KaryawanTambahForm extends StatelessWidget {
     final controller = Get.find<KaryawanControl>();
     return Container(
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
-        width: 700,
+        width: 800,
         decoration: const BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -33,7 +33,7 @@ class KaryawanTambahForm extends StatelessWidget {
                   child: Row(
                     children: [
                       Container(
-                        width: 150,
+                        width: 200,
                         padding: const EdgeInsets.only(right: 15),
                         child: const Text('Area'),
                       ),
@@ -62,7 +62,7 @@ class KaryawanTambahForm extends StatelessWidget {
                   child: Row(
                     children: [
                       Container(
-                        width: 150,
+                        width: 200,
                         padding: const EdgeInsets.only(right: 15),
                         child: const Text('Jenis Karyawan'),
                       ),
@@ -103,7 +103,7 @@ class KaryawanTambahForm extends StatelessWidget {
                   child: Row(
                     children: [
                       Container(
-                        width: 150,
+                        width: 200,
                         padding: const EdgeInsets.only(right: 15),
                         child: const Text('Manajemen'),
                       ),
@@ -144,7 +144,7 @@ class KaryawanTambahForm extends StatelessWidget {
                   child: Row(
                     children: [
                       Container(
-                        width: 150,
+                        width: 200,
                         padding: const EdgeInsets.only(right: 15),
                         child: const Text('Status Aktif'),
                       ),
@@ -183,17 +183,19 @@ class KaryawanTambahForm extends StatelessWidget {
                 AFwidget.barisText(
                   label: 'Nama',
                   controller: controller.txtNama,
+                  labelWidth: 200,
                 ),
                 AFwidget.barisText(
                   label: 'NIK',
                   controller: controller.txtNik,
+                  labelWidth: 200,
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
-                        width: 150,
+                        width: 200,
                         padding: const EdgeInsets.only(right: 15),
                         child: const Text('Masa Kerja'),
                       ),
@@ -222,7 +224,7 @@ class KaryawanTambahForm extends StatelessWidget {
                   child: Row(
                     children: [
                       Container(
-                        width: 150,
+                        width: 200,
                         padding: const EdgeInsets.only(right: 15),
                         child: const Text('Agama'),
                       ),
@@ -251,7 +253,7 @@ class KaryawanTambahForm extends StatelessWidget {
                   child: Row(
                     children: [
                       Container(
-                        width: 150,
+                        width: 200,
                         padding: const EdgeInsets.only(right: 15),
                         child: const Text('Divisi'),
                       ),
@@ -280,7 +282,7 @@ class KaryawanTambahForm extends StatelessWidget {
                   child: Row(
                     children: [
                       Container(
-                        width: 150,
+                        width: 200,
                         padding: const EdgeInsets.only(right: 15),
                         child: const Text('Jabatan'),
                       ),
@@ -307,21 +309,24 @@ class KaryawanTambahForm extends StatelessWidget {
                 AFwidget.barisText(
                   label: 'Nomor KK',
                   controller: controller.txtNomorKk,
+                  labelWidth: 200,
                 ),
                 AFwidget.barisText(
                   label: 'Nomor KTP',
                   controller: controller.txtNomorKtp,
+                  labelWidth: 200,
                 ),
                 AFwidget.barisText(
                   label: 'Nomor Paspor',
                   controller: controller.txtNomorPaspor,
+                  labelWidth: 200,
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
-                        width: 150,
+                        width: 200,
                         padding: const EdgeInsets.only(right: 15),
                         child: const Text('Tempat & Tgl Lahir'),
                       ),
@@ -356,23 +361,26 @@ class KaryawanTambahForm extends StatelessWidget {
                 AFwidget.barisText(
                   label: 'Alamat KTP',
                   controller: controller.txtAlamatKtp,
+                  labelWidth: 200,
                   isTextArea: true,
                 ),
                 AFwidget.barisText(
                   label: 'Alamat Tinggal Sekarang',
                   controller: controller.txtAlamatTinggal,
+                  labelWidth: 200,
                   isTextArea: true,
                 ),
                 AFwidget.barisText(
                   label: 'No. Telepon',
                   controller: controller.txtTelepon,
+                  labelWidth: 200,
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
-                        width: 150,
+                        width: 200,
                         padding: const EdgeInsets.only(right: 15),
                         child: const Text('Jenis Kelamin'),
                       ),
@@ -413,7 +421,7 @@ class KaryawanTambahForm extends StatelessWidget {
                   child: Row(
                     children: [
                       Container(
-                        width: 150,
+                        width: 200,
                         padding: const EdgeInsets.only(right: 15),
                         child: const Text('Status'),
                       ),
@@ -460,7 +468,7 @@ class KaryawanTambahForm extends StatelessWidget {
                   child: Row(
                     children: [
                       Container(
-                        width: 150,
+                        width: 200,
                         padding: const EdgeInsets.only(right: 15),
                         child: const Text('Pendidikan Terakhir'),
                       ),
@@ -488,7 +496,7 @@ class KaryawanTambahForm extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
-                      const SizedBox(width: 150),
+                      const SizedBox(width: 200),
                       Container(
                         width: 100,
                         padding: const EdgeInsets.only(right: 15),
@@ -507,7 +515,7 @@ class KaryawanTambahForm extends StatelessWidget {
                   padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
-                      const SizedBox(width: 150),
+                      const SizedBox(width: 200),
                       Container(
                         width: 100,
                         padding: const EdgeInsets.only(right: 15),
@@ -525,13 +533,14 @@ class KaryawanTambahForm extends StatelessWidget {
                 AFwidget.barisText(
                   label: 'Email Pribadi',
                   controller: controller.txtEmail,
+                  labelWidth: 200,
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
                     children: [
                       Container(
-                        width: 150,
+                        width: 200,
                         padding: const EdgeInsets.only(right: 15),
                         child: const Text('Status Karyawan'),
                       ),
@@ -558,6 +567,7 @@ class KaryawanTambahForm extends StatelessWidget {
                 AFwidget.barisText(
                   label: 'NPWP',
                   controller: controller.txtNomorPwp,
+                  labelWidth: 200,
                 ),
                 Visibility(
                   visible: false,
@@ -566,7 +576,7 @@ class KaryawanTambahForm extends StatelessWidget {
                     child: Row(
                       children: [
                         Container(
-                          width: 150,
+                          width: 200,
                           padding: const EdgeInsets.only(right: 15),
                           child: const Text('PTKP'),
                         ),
@@ -591,6 +601,121 @@ class KaryawanTambahForm extends StatelessWidget {
                     ),
                   ),
                 ),
+
+                Container(
+                  margin: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+                  padding: const EdgeInsets.only(bottom: 20),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF0F8FF),
+                    border: Border.all(color: const Color(0xFFBBDEFB)),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                const Padding(
+                  padding: EdgeInsets.fromLTRB(10, 30, 10, 10),
+                  child: Text('FORM SALARY', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.blue)),
+                ),
+                AFwidget.barisText(
+                  label: 'Master Gaji Pokok',
+                  controller: controller.txtGaji,
+                  isNumber: true,
+                  labelWidth: 200,
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                ),
+                AFwidget.barisText(
+                  label: 'Jumlah Uang Makan',
+                  controller: controller.txtUangMakan,
+                  isNumber: true,
+                  labelWidth: 200,
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 11, 10, 0),
+                  child: Row(
+                    children: [
+                      const SizedBox(
+                        width: 200,
+                        child: Text('Jenis Uang Makan'),
+                      ),
+                      Expanded(
+                        child: GetBuilder<KaryawanControl>(
+                          builder: (_) {
+                            return RadioGroup<bool>(
+                              groupValue: controller.upahMakanHarian,
+                              onChanged: (a) {
+                                if(a != null && a != controller.upahMakanHarian) {
+                                  controller.upahMakanHarian = a;
+                                  controller.update();
+                                }
+                              },
+                              child: Row(
+                                children: const [
+                                  Radio<bool>(value: true),
+                                  SizedBox(
+                                    width: 90,
+                                    child: Text('Harian'),
+                                  ),
+                                  Radio<bool>(value: false),
+                                  SizedBox(
+                                    width: 110,
+                                    child: Text('Tetap'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 11, 10, 0),
+                  child: Row(
+                    children: [
+                      const SizedBox(
+                        width: 200,
+                        child: Text('Status Overtime'),
+                      ),
+                      Expanded(
+                        child: GetBuilder<KaryawanControl>(
+                          builder: (_) {
+                            return RadioGroup<bool>(
+                              groupValue: controller.upahOvertime,
+                              onChanged: (a) {
+                                if(a != null && a != controller.upahOvertime) {
+                                  controller.upahOvertime = a;
+                                  controller.update();
+                                }
+                              },
+                              child: Row(
+                                children: const [
+                                  Radio<bool>(value: true),
+                                  SizedBox(
+                                    width: 90,
+                                    child: Text('Ya'),
+                                  ),
+                                  Radio<bool>(value: false),
+                                  SizedBox(
+                                    width: 110,
+                                    child: Text('Tidak'),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                      ],
+                    ),
+                  ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 25, 20, 0),
                   child: Row(
@@ -639,6 +764,11 @@ void showKaryawanTambahForm(BuildContext context) {
   final controller = Get.find<KaryawanControl>();
 
     controller.txtId.text = '';
+
+    controller.txtGaji.text = '';
+    controller.txtUangMakan.text = '';
+    controller.upahMakanHarian = true;
+    controller.upahOvertime = false;
     controller.txtNama.text = '';
     controller.txtNik.text = '';
     controller.txtTanggalMasuk.text = AFconvert.matYMD(DateTime.now());

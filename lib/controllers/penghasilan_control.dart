@@ -46,6 +46,13 @@ class PenghasilanControl extends GetxController {
   late Opsi tahun;
   late Opsi bulan;
   Upah upah = Upah();
+  bool updateMasterGaji = false;
+
+  
+  void setUpdateMasterGaji(bool val) {
+    updateMasterGaji = val;
+    update(['form_penghasilan']);
+  }
 
   Future<void> loadPenghasilans() async {
     var hasil = await _repo.findAll(
@@ -136,7 +143,7 @@ class PenghasilanControl extends GetxController {
       var hasil = await _repo.create(a.toMap());
       Get.back();
       if(hasil.success) {
-        if(a.jenis == 'GP') {
+        if(a.jenis == 'GP' && updateMasterGaji) {
           UpahRepository repo = UpahRepository();
           AFwidget.loading();
           await repo.create(a.karyawan.id, {
@@ -145,6 +152,7 @@ class PenghasilanControl extends GetxController {
             'gaji': AFconvert.keString(a.jumlah),
           });
           Get.back();
+          authControl.karyawanUpdateTrigger.value++;
         }
         loadPenghasilans();
         Get.back();
@@ -197,7 +205,7 @@ class PenghasilanControl extends GetxController {
       var hasil = await _repo.update(txtId.text, a.toMap());
       Get.back();
       if(hasil.success) {
-        if(a.jenis == 'GP') {
+        if(a.jenis == 'GP' && updateMasterGaji) {
           UpahRepository repo = UpahRepository();
           AFwidget.loading();
           await repo.create(a.karyawan.id, {
@@ -206,6 +214,7 @@ class PenghasilanControl extends GetxController {
             'gaji': AFconvert.keString(a.jumlah),
           });
           Get.back();
+          authControl.karyawanUpdateTrigger.value++;
         }
         loadPenghasilans();
         Get.back();

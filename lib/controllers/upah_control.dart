@@ -21,7 +21,7 @@ class UpahControl extends GetxController {
   Opsi cariStaf = Opsi(value: 'Y', label: 'Staf');
   Map<String, int> totalKaryawanPerArea = {};
 
-  late TextEditingController txtUangMakan;
+  late TextEditingController txtUangMakan, txtGaji;
 
   bool? makanHarian = false;
   bool? overtime = true;
@@ -66,6 +66,7 @@ class UpahControl extends GetxController {
       var a = Upah(
         id: current.upah.id,
         karyawanId: current.id,
+        gaji: AFconvert.keInt(txtGaji.text),
         uangMakan: AFconvert.keInt(txtUangMakan.text),
         makanHarian: makanHarian ?? true,
         overtime: overtime ?? false,
@@ -80,6 +81,7 @@ class UpahControl extends GetxController {
       Get.back();
       if(hasil.success) {
         loadKaryawans();
+        authControl.karyawanUpdateTrigger.value++;
         Get.back();
         AFwidget.snackbar(hasil.message);
       } else {
@@ -109,12 +111,14 @@ class UpahControl extends GetxController {
     loadKaryawans();
     ever(authControl.karyawanUpdateTrigger, (_) => loadKaryawans());
     txtUangMakan = TextEditingController();
+    txtGaji = TextEditingController();
     super.onInit();
   }
 
   @override
   void onClose() {
     txtUangMakan.dispose();
+    txtGaji.dispose();
     super.onClose();
   }
 }

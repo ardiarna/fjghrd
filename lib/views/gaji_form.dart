@@ -37,6 +37,9 @@ class _GajiFormState extends State<GajiForm> {
 
   @override
   Widget build(BuildContext context) {
+    bool isTB = controller.jenis.value == 'TB';
+    bool isULKJ = controller.jenis.value == 'UL' || controller.jenis.value == 'KJ';
+
     return Container(
       width: 500,
       decoration: const BoxDecoration(
@@ -46,55 +49,76 @@ class _GajiFormState extends State<GajiForm> {
       padding: const EdgeInsets.only(top: 20),
       child: Column(
         children: [
-          AFwidget.barisText(
-            label: 'Jumlah Gaji',
-            controller: txtGaji,
-            isNumber: true,
-            labelWidth: 200,
-          ),
-          AFwidget.barisText(
-            label: 'Jumlah Uang Makan',
-            controller: txtUangMakan,
-            isNumber: true,
-            labelWidth: 200,
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
-            child: Row(
-              children: [
-                const SizedBox(
-                  width: 200,
-                  child: Text('Jenis Uang Makan'),
-                ),
-                Expanded(
-                  child: RadioGroup<bool>(
-                    groupValue: makanHarian,
-                    onChanged: (a) {
-                      if(a != null && a != makanHarian) {
-                        setState(() {
-                          makanHarian = a;
-                        });
-                      }
-                    },
-                    child: Row(
-                      children: const [
-                        Radio<bool>(value: true),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
-                          child: Text('Harian'),
-                        ),
-                        Radio<bool>(value: false),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
-                          child: Text('Tetap'),
-                        ),
-                      ],
+          if (isTB)
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
+              child: Text(
+                'Ini adalah form pintasan untuk mengubah master uang makan',
+                style: TextStyle(color: Colors.blue, fontStyle: FontStyle.italic),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          if (isULKJ)
+            const Padding(
+              padding: EdgeInsets.fromLTRB(20, 10, 20, 20),
+              child: Text(
+                'Ini adalah form pintasan untuk mengubah master gaji pokok',
+                style: TextStyle(color: Colors.blue, fontStyle: FontStyle.italic),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          if (isULKJ)
+            AFwidget.barisText(
+              label: 'Master Gaji Pokok',
+              controller: txtGaji,
+              isNumber: true,
+              labelWidth: 200,
+            ),
+          if (isTB)
+            AFwidget.barisText(
+              label: 'Jumlah Uang Makan',
+              controller: txtUangMakan,
+              isNumber: true,
+              labelWidth: 200,
+            ),
+          if (isTB)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
+              child: Row(
+                children: [
+                  const SizedBox(
+                    width: 200,
+                    child: Text('Jenis Uang Makan'),
+                  ),
+                  Expanded(
+                    child: RadioGroup<bool>(
+                      groupValue: makanHarian,
+                      onChanged: (a) {
+                        if (a != null && a != makanHarian) {
+                          setState(() {
+                            makanHarian = a;
+                          });
+                        }
+                      },
+                      child: Row(
+                        children: const [
+                          Radio<bool>(value: true),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                            child: Text('Harian'),
+                          ),
+                          Radio<bool>(value: false),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                            child: Text('Tetap'),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 30, 20, 25),
             child: Row(
@@ -111,30 +135,31 @@ class _GajiFormState extends State<GajiForm> {
                   label: 'Simpan',
                   color: Colors.blue,
                   onPressed: () async {
-                    if(txtGaji.text.isEmpty) {
+                    if (isULKJ && txtGaji.text.isEmpty) {
                       AFwidget.formWarning(label: 'Gaji harus diisi');
                       return;
                     }
-                    if(txtUangMakan.text.isEmpty) {
+                    if (isTB && txtUangMakan.text.isEmpty) {
                       AFwidget.formWarning(label: 'Uang Makan harus diisi');
                       return;
                     }
                     var a = Upah(
                       karyawanId: controller.karyawan.id,
-                      gaji: AFconvert.keInt(txtGaji.text),
-                      uangMakan: AFconvert.keInt(txtUangMakan.text),
-                      makanHarian: makanHarian,
+                      gaji: isULKJ ? AFconvert.keInt(txtGaji.text) : controller.upah.gaji,
+                      uangMakan: isTB ? AFconvert.keInt(txtUangMakan.text) : controller.upah.uangMakan,
+                      makanHarian: isTB ? makanHarian : controller.upah.makanHarian,
                     );
                     AFwidget.loading();
                     var hasil = await repo.create(a.karyawanId, a.toMap());
                     Get.back();
-                    if(hasil.success) {
+                    if (hasil.success) {
                       Get.back();
                       AFwidget.snackbar(hasil.message);
                       controller.upah.gaji = a.gaji;
                       controller.upah.uangMakan = a.uangMakan;
                       controller.upah.makanHarian = a.makanHarian;
                       controller.hitungJumlahIdr(controller.txtHari.text);
+                      controller.authControl.karyawanUpdateTrigger.value++;
                       controller.update(['info_upah', 'form_potongan']);
                     } else {
                       AFwidget.formWarning(label: hasil.message);
