@@ -1,3 +1,4 @@
+import 'package:fjghrd/utils/af_database.dart';
 import 'package:fjghrd/controllers/upah_control.dart';
 import 'package:fjghrd/views/upah_ubah_form.dart';
 import 'package:fjghrd/models/karyawan.dart';
@@ -230,6 +231,21 @@ class UpahView extends StatelessWidget {
                     );
                   },
                 ),
+              ),
+              const SizedBox(width: 20),
+              IconButton(
+                onPressed: () async {
+                  AFwidget.loading();
+                  var hasil = await AFdatabase.download(url: 'excel/list-salary');
+                  Get.back();
+                  if(hasil.success) {
+                    AFwidget.snackbar('Berhasil mengunduh excel LIST_SALARY. Silakan periksa folder Download Anda.');
+                  } else {
+                    AFwidget.formWarning(label: hasil.message);
+                  }
+                },
+                icon: const Icon(Icons.download, color: Colors.white),
+                tooltip: 'Download Excel',
               ),
           ],
         ),

@@ -119,6 +119,21 @@ class ReportControl extends GetxController {
     }
   }
 
+  Future<void> dowloadListSalary() async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/list-salary');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'laporan excel list salary telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
   Future<void> dowloadListDataKaryawan() async {
     AFwidget.loading();
     var hasil = await AFdatabase.download(url: 'excel/list-karyawan');
