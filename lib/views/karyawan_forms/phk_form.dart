@@ -115,28 +115,7 @@ class PhkForm extends StatelessWidget {
                   controller: controller.txtPhkKeterangan,
                   isTextArea: true,
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
-                  child: Row(
-                    children: [
-                      const SizedBox(width: 150),
-                      GetBuilder<KaryawanControl>(
-                        id: 'payroll_phk_button',
-                        builder: (_) {
-                          String label = 'Payroll PHK';
-                          if (controller.payrollPhk.id.isNotEmpty) {
-                            label = 'Payroll PHK : Rp. ${AFconvert.matNumber(controller.payrollPhk.totalDiterima)}';
-                          }
-                          return AFwidget.tombol(
-                            label: label,
-                            onPressed: () => showPayrollPhkForm(context),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 IntrinsicHeight(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,6 +139,7 @@ class PhkForm extends StatelessWidget {
                                 label: 'Kompensasi',
                                 controller: controller.txtKompensasi,
                                 isNumber: true,
+                                onchanged: (val) => controller.hitungTotalPhk(),
                                 labelWidth: 130,
                                 paddingLeft: 40,
                               ),
@@ -167,6 +147,7 @@ class PhkForm extends StatelessWidget {
                                 label: 'Pesangon',
                                 controller: controller.txtPesangon,
                                 isNumber: true,
+                                onchanged: (val) => controller.hitungTotalPhk(),
                                 labelWidth: 130,
                                 paddingLeft: 40,
                               ),
@@ -174,6 +155,7 @@ class PhkForm extends StatelessWidget {
                                 label: 'Masa Kerja',
                                 controller: controller.txtMasaKerja,
                                 isNumber: true,
+                                onchanged: (val) => controller.hitungTotalPhk(),
                                 labelWidth: 130,
                                 paddingLeft: 40,
                               ),
@@ -181,6 +163,7 @@ class PhkForm extends StatelessWidget {
                                 label: 'Uang Pisah',
                                 controller: controller.txtUangPisah,
                                 isNumber: true,
+                                onchanged: (val) => controller.hitungTotalPhk(),
                                 labelWidth: 130,
                                 paddingLeft: 40,
                               ),
@@ -223,6 +206,7 @@ class PhkForm extends StatelessWidget {
                                           AFwidget.textField(
                                             marginTop: 0,
                                             controller: controller.txtSisaCutiJumlah,
+                                            onchanged: (val) => controller.hitungTotalPhk(),
                                             inputformatters: [
                                               CurrencyTextInputFormatter.currency(
                                                 symbol: '',
@@ -241,6 +225,14 @@ class PhkForm extends StatelessWidget {
                                 label: 'Lain-lain',
                                 controller: controller.txtLain,
                                 isNumber: true,
+                                onchanged: (val) => controller.hitungTotalPhk(),
+                                labelWidth: 130,
+                                paddingLeft: 40,
+                              ),
+                              AFwidget.barisText(
+                                label: 'Ket Lain-lain',
+                                controller: controller.txtKetLain,
+                                isTextArea: true,
                                 labelWidth: 130,
                                 paddingLeft: 40,
                               ),
@@ -267,6 +259,7 @@ class PhkForm extends StatelessWidget {
                                 label: 'Kas / Cicilan',
                                 controller: controller.txtPotKas,
                                 isNumber: true,
+                                onchanged: (val) => controller.hitungTotalPhk(),
                                 labelWidth: 130,
                                 paddingLeft: 40,
                               ),
@@ -309,6 +302,7 @@ class PhkForm extends StatelessWidget {
                                           AFwidget.textField(
                                             marginTop: 0,
                                             controller: controller.txtPotCutiJumlah,
+                                            onchanged: (val) => controller.hitungTotalPhk(),
                                             inputformatters: [
                                               CurrencyTextInputFormatter.currency(
                                                 symbol: '',
@@ -327,6 +321,14 @@ class PhkForm extends StatelessWidget {
                                 label: 'Lain-lain',
                                 controller: controller.txtPotLain,
                                 isNumber: true,
+                                onchanged: (val) => controller.hitungTotalPhk(),
+                                labelWidth: 130,
+                                paddingLeft: 40,
+                              ),
+                              AFwidget.barisText(
+                                label: 'Ket Lain-lain',
+                                controller: controller.txtKetPotLain,
+                                isTextArea: true,
                                 labelWidth: 130,
                                 paddingLeft: 40,
                               ),
@@ -337,11 +339,61 @@ class PhkForm extends StatelessWidget {
                     ],
                   ),
                 ),
+                Obx(() => Container(
+                  margin: const EdgeInsets.fromLTRB(10, 20, 10, 0),
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.shade50,
+                    borderRadius: BorderRadius.circular(5),
+                    border: Border.all(color: Colors.orange.shade200),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Column(
+                        children: [
+                          const Text('Total Kalkulasi', style: TextStyle(fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 5),
+                          Text('Rp ${AFconvert.matNumber(controller.totalPhkKalkulasi.value)}', style: const TextStyle(color: Colors.blue, fontSize: 16, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          const Text('Total Potongan', style: TextStyle(fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 5),
+                          Text('Rp ${AFconvert.matNumber(controller.totalPhkPotongan.value)}', style: const TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                      Column(
+                        children: [
+                          const Text('Total Diterima', style: TextStyle(fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 5),
+                          Text('Rp ${AFconvert.matNumber(controller.totalPhkDiterima.value)}', style: const TextStyle(color: Colors.green, fontSize: 18, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                    ],
+                  ),
+                )),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 30, 20, 0),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+                      GetBuilder<KaryawanControl>(
+                        id: 'payroll_phk_button',
+                        builder: (_) {
+                          String label = 'Payroll PHK';
+                          if (controller.payrollPhk.id.isNotEmpty) {
+                            label = 'Payroll PHK : Rp. ${AFconvert.matNumber(controller.payrollPhk.totalDiterima)}';
+                          }
+                          return AFwidget.tombol(
+                            label: label,
+                            color: Colors.teal,
+                            minimumSize: const Size(120, 40),
+                            onPressed: () => showPayrollPhkForm(context),
+                          );
+                        },
+                      ),
+                      const Spacer(),
                       AFwidget.tombol(
                         label: 'Batal',
                         color: Colors.orange,
@@ -385,6 +437,9 @@ void showPhkForm(BuildContext context) {
     controller.txtPotCutiHari.text = AFconvert.matNumber(controller.current.uangPhk.potCutiHari);
     controller.txtPotCutiJumlah.text = AFconvert.matNumber(controller.current.uangPhk.potCutiJumlah);
     controller.txtPotLain.text = AFconvert.matNumber(controller.current.uangPhk.potLain);
+    controller.txtKetLain.text = controller.current.uangPhk.ketLain;
+    controller.txtKetPotLain.text = controller.current.uangPhk.ketPotLain;
+    controller.hitungTotalPhk();
   AFwidget.dialog(
       const PhkForm(),
       barrierDismissible: false,

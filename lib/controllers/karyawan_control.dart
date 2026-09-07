@@ -91,7 +91,28 @@ class KaryawanControl extends GetxController {
   late TextEditingController txtPerjanjianId, txtPerjanjianNomor, txtPerjanjianTglAwal, txtPerjanjianTglAkhir, txtPhkKeterangan;
   late TextEditingController txtTrainingKaryawanId, txtTrainingKaryawanTanggal, txtTrainingKaryawanKeterangan;
   late TextEditingController txtKompensasi, txtPesangon, txtMasaKerja, txtUangPisah, txtSisaCutiHari, txtSisaCutiJumlah, txtLain,
-      txtPotKas, txtPotCutiHari, txtPotCutiJumlah, txtPotLain;
+      txtPotKas, txtPotCutiHari, txtPotCutiJumlah, txtPotLain, txtKetLain, txtKetPotLain;
+  var totalPhkKalkulasi = 0.obs;
+  var totalPhkPotongan = 0.obs;
+  var totalPhkDiterima = 0.obs;
+
+  void hitungTotalPhk() {
+    int kalkulasi = AFconvert.keInt(txtKompensasi.text) +
+                    AFconvert.keInt(txtPesangon.text) +
+                    AFconvert.keInt(txtMasaKerja.text) +
+                    AFconvert.keInt(txtUangPisah.text) +
+                    AFconvert.keInt(txtSisaCutiJumlah.text) +
+                    AFconvert.keInt(txtLain.text);
+    
+    int potongan = AFconvert.keInt(txtPotKas.text) +
+                   AFconvert.keInt(txtPotCutiJumlah.text) +
+                   AFconvert.keInt(txtPotLain.text);
+                   
+    totalPhkKalkulasi.value = kalkulasi;
+    totalPhkPotongan.value = potongan;
+    totalPhkDiterima.value = kalkulasi - potongan;
+  }
+
   late TextEditingController txtPayrollPhkTglAwal, txtPayrollPhkTglAkhir, txtPayrollPhkGaji, txtPayrollPhkKenaikanGaji, txtPayrollPhkHariMakan, txtPayrollPhkUangMakanHarian,
       txtPayrollPhkUangMakanJumlah, txtPayrollPhkOvertimeFjg, txtPayrollPhkOvertimeCus, txtPayrollPhkMedical, txtPayrollPhkThr,
       txtPayrollPhkBonus, txtPayrollPhkInsentif, txtPayrollPhkTelkomsel, txtPayrollPhkLain, txtPayrollPhkPot25hari,
@@ -952,6 +973,8 @@ class KaryawanControl extends GetxController {
         potCutiJumlah: AFconvert.keInt(txtPotCutiJumlah.text),
         potLain: AFconvert.keInt(txtPotLain.text),
         keterangan: txtPhkKeterangan.text,
+        ketLain: txtKetLain.text,
+        ketPotLain: txtKetPotLain.text,
       );
       UangPhkRepository repoUang = UangPhkRepository();
 
@@ -1475,6 +1498,8 @@ class KaryawanControl extends GetxController {
     txtPotCutiHari = TextEditingController();
     txtPotCutiJumlah = TextEditingController();
     txtPotLain = TextEditingController();
+    txtKetLain = TextEditingController();
+    txtKetPotLain = TextEditingController();
     txtPayrollPhkGaji = TextEditingController();
     txtPayrollPhkKenaikanGaji = TextEditingController();
     txtPayrollPhkHariMakan = TextEditingController();
@@ -1565,6 +1590,8 @@ class KaryawanControl extends GetxController {
     txtPotCutiHari.dispose();
     txtPotCutiJumlah.dispose();
     txtPotLain.dispose();
+    txtKetLain.dispose();
+    txtKetPotLain.dispose();
     txtPayrollPhkGaji.dispose();
     txtPayrollPhkKenaikanGaji.dispose();
     txtPayrollPhkHariMakan.dispose();
