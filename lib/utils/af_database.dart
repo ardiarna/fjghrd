@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:fjghrd/controllers/auth_control.dart';
 import 'package:fjghrd/utils/hasil.dart';
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
 import 'package:get/get.dart' hide MultipartFile, FormData, Response;
 import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -65,7 +65,7 @@ abstract class AFdatabase {
               );
               return handler.resolve(retryResponse);
             } catch (retryError) {
-              debugPrint('--- RETRY ERROR: $retryError');
+              // debugPrint('--- RETRY ERROR: $retryError');
               return handler.next(e);
             }
           } else {
@@ -132,14 +132,14 @@ abstract class AFdatabase {
         options: options.copyWith(method: methodString),
       );
 
-      debugPrint('--- API REQUEST (Dio) ---');
-      debugPrint('URL: $rute');
-      debugPrint('Method: $methodString');
-      if (body != null) debugPrint('Body: $body');
-      debugPrint('--- API RESPONSE ---');
-      debugPrint('Status: ${response.statusCode}');
-      debugPrint('Response: ${response.data}');
-      debugPrint('--------------------');
+      // debugPrint('--- API REQUEST (Dio) ---');
+      // debugPrint('URL: $rute');
+      // debugPrint('Method: $methodString');
+      // if (body != null) debugPrint('Body: $body');
+      // debugPrint('--- API RESPONSE ---');
+      // debugPrint('Status: ${response.statusCode}');
+      // debugPrint('Response: ${response.data}');
+      // debugPrint('--------------------');
 
       int statusCode = response.statusCode ?? 0;
       if (statusCode >= 200 && statusCode <= 206) {
@@ -167,12 +167,12 @@ abstract class AFdatabase {
       }
 
     } on DioException catch (e) {
-      debugPrint('--- API ERROR (Dio) ---');
-      debugPrint('URL: $url');
-      debugPrint('Error: ${e.message}');
+      // debugPrint('--- API ERROR (Dio) ---');
+      // debugPrint('URL: $url');
+      // debugPrint('Error: ${e.message}');
       
       if (e.response != null) {
-          debugPrint('Response: ${e.response?.data}');
+          // debugPrint('Response: ${e.response?.data}');
           var a = e.response?.data;
           if (a is String) {
               try { a = jsonDecode(a); } catch(_) {}
@@ -216,9 +216,9 @@ abstract class AFdatabase {
           )
       );
 
-      debugPrint('--- API DOWNLOAD REQUEST ---');
-      debugPrint('URL: $rute');
-      debugPrint('Status: ${response.statusCode}');
+      // debugPrint('--- API DOWNLOAD REQUEST ---');
+      // debugPrint('URL: $rute');
+      // debugPrint('Status: ${response.statusCode}');
       
       if (response.statusCode == 200) {
         final disposition = response.headers.value('content-disposition');
