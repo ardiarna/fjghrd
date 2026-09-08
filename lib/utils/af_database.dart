@@ -55,6 +55,12 @@ abstract class AFdatabase {
                 options: Options(
                   method: e.requestOptions.method,
                   headers: e.requestOptions.headers..['Authorization'] = 'Bearer ${_authControl.user.tokenJWT}',
+                  responseType: e.requestOptions.responseType,
+                  contentType: e.requestOptions.contentType,
+                  extra: e.requestOptions.extra,
+                  validateStatus: e.requestOptions.validateStatus,
+                  receiveTimeout: e.requestOptions.receiveTimeout,
+                  sendTimeout: e.requestOptions.sendTimeout,
                 ),
               );
               return handler.resolve(retryResponse);

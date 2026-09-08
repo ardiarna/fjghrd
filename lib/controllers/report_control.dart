@@ -20,6 +20,7 @@ class ReportControl extends GetxController {
   late Opsi filterTahun;
   late Opsi filterTahunAwal;
   late Opsi filterTahunAkhir;
+  bool includeExKaryawanJoint = false;
   late Opsi filterBulan;
   Opsi filterArea = Opsi(value: '', label: '');
   String filterJenis = '';
@@ -134,8 +135,98 @@ class ReportControl extends GetxController {
     }
   }
 
-  Future<void> dowloadListDataKaryawan() async {
+  Future<void> dowloadDataKaryawanPerJoint() async {
+    Get.back();
     AFwidget.loading();
+    String incEx = includeExKaryawanJoint ? '1' : '0';
+    var hasil = await AFdatabase.download(url: 'excel/data-karyawan-per-joint/${filterTahunAwal.value}/${filterTahunAkhir.value}/$incEx');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'laporan excel Data Karyawan Per Joint telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+  Future<void> dowloadAlamatEngineeringDept() async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/alamat-engineering-dept');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'laporan excel Alamat Engineering Dept telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+  Future<void> dowloadNikTlpKaryawan() async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/nik-tlp-karyawan');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'laporan excel NIK & TLP Karyawan telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+  Future<void> dowloadDataEngineeringDept() async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/data-engineering-dept');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'laporan excel Data Engineering Dept telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+  Future<void> dowloadDataJabatanKaryawan() async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/data-jabatan-karyawan');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'laporan excel Data Jabatan Karyawan telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+  Future<void> dowloadDataStatusKaryawan() async {    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/data-status-karyawan');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'laporan excel Data Status Karyawan telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+  Future<void> dowloadListDataKaryawan() async {    AFwidget.loading();
     var hasil = await AFdatabase.download(url: 'excel/list-karyawan');
     Get.back();
     if(hasil.success) {

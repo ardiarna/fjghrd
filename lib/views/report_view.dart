@@ -80,7 +80,7 @@ class ReportView extends StatelessWidget {
                   List<Widget> items = [
                     barisBox(
                       label: 'List Data Karyawan',
-                      onPressed: controller.dowloadListDataKaryawan,
+                      onPressed: dialogListDataKaryawan,
                     ),
                     barisBox(
                       label: 'List Data Ex Karyawan',
@@ -593,6 +593,203 @@ class ReportView extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void dialogDataKaryawanPerJoint() {
+    AFwidget.dialog(
+      contentPadding: EdgeInsets.zero,
+      backgroundColor: Colors.transparent,
+      Container(
+        width: 500,
+        height: 350,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        child: Column(
+          children: [
+            AFwidget.formHeader('Excel Data Karyawan Per Joint'),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 100,
+                    padding: const EdgeInsets.only(right: 15),
+                    child: const Text('Tahun Awal'),
+                  ),
+                  Expanded(
+                    child: GetBuilder<ReportControl>(
+                      id: 'filter_10',
+                      builder: (_) {
+                        return AFwidget.comboField(
+                          value: controller.filterTahunAwal.label,
+                          label: '',
+                          onTap: () async {
+                            var a = await controller.pilihTahun(value: controller.filterTahunAwal.value);
+                            if(a != null && a.value != controller.filterTahunAwal.value) {
+                              controller.filterTahunAwal = a;
+                              controller.update(['filter_10']);
+                            }
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 100,
+                    padding: const EdgeInsets.only(right: 15),
+                    child: const Text('Tahun Akhir'),
+                  ),
+                  Expanded(
+                    child: GetBuilder<ReportControl>(
+                      id: 'filter_11',
+                      builder: (_) {
+                        return AFwidget.comboField(
+                          value: controller.filterTahunAkhir.label,
+                          label: '',
+                          onTap: () async {
+                            var a = await controller.pilihTahun(value: controller.filterTahunAkhir.value);
+                            if(a != null && a.value != controller.filterTahunAkhir.value) {
+                              controller.filterTahunAkhir = a;
+                              controller.update(['filter_11']);
+                            }
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+              child: Row(
+                children: [
+                  const SizedBox(width: 115),
+                  GetBuilder<ReportControl>(
+                    id: 'filter_joint_ex',
+                    builder: (_) {
+                      return Row(
+                        children: [
+                          Checkbox(
+                            value: controller.includeExKaryawanJoint,
+                            onChanged: (val) {
+                              controller.includeExKaryawanJoint = val ?? false;
+                              controller.update(['filter_joint_ex']);
+                            },
+                          ),
+                          const Text('Termasuk Ex Karyawan'),
+                        ],
+                      );
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  AFwidget.tombol(
+                    label: 'Batal',
+                    color: Colors.orange,
+                    onPressed: Get.back,
+                    minimumSize: const Size(120, 40),
+                  ),
+                  const SizedBox(width: 40),
+                  AFwidget.tombol(
+                    label: 'Download',
+                    color: Colors.blueGrey,
+                    onPressed: controller.dowloadDataKaryawanPerJoint,
+                    minimumSize: const Size(120, 40),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      scrollable: false,
+    );
+  }
+
+  void dialogListDataKaryawan() {
+    AFwidget.dialog(
+      contentPadding: EdgeInsets.zero,
+      backgroundColor: Colors.transparent,
+      Container(
+        width: 500,
+        height: Get.height * 0.9,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        child: Column(
+          children: [
+            AFwidget.formHeader('Menu Data Karyawan'),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.all(20),
+                children: [
+                  barisBox(label: 'Data General Karyawan', onPressed: () {
+                    Get.back();
+                    controller.dowloadListDataKaryawan();
+                  }),
+                  barisBox(label: 'NIK & TLP Karyawan', onPressed: () {
+                    Get.back();
+                    controller.dowloadNikTlpKaryawan();
+                  }),
+                  barisBox(label: 'Data Status Karyawan', onPressed: () {
+                    Get.back();
+                    controller.dowloadDataStatusKaryawan();
+                  }),
+                  barisBox(label: 'Data Jabatan Karyawan', onPressed: () {
+                    Get.back();
+                    controller.dowloadDataJabatanKaryawan();
+                  }),
+                  barisBox(label: 'Data Karyawan Per Joint', onPressed: () {
+                    Get.back();
+                    dialogDataKaryawanPerJoint();
+                  }),
+                  barisBox(label: 'Data Engineering Dept', onPressed: () {
+                    Get.back();
+                    controller.dowloadDataEngineeringDept();
+                  }),
+                  barisBox(label: 'Alamat Engineering Dept', onPressed: () {
+                    Get.back();
+                    controller.dowloadAlamatEngineeringDept();
+                  }),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 10, 20, 25),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  AFwidget.tombol(
+                    label: 'Tutup',
+                    color: Colors.orange,
+                    onPressed: Get.back,
+                    minimumSize: const Size(120, 40),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      scrollable: false,
     );
   }
 
