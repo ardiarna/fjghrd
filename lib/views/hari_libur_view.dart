@@ -22,6 +22,7 @@ class HariLiburView extends StatelessWidget {
           'id': PlutoCell(value: rowData[index].id),
           'nama': PlutoCell(value: rowData[index].nama),
           'tanggal': PlutoCell(value: AFconvert.matDate(rowData[index].tanggal)),
+          'iscutber': PlutoCell(value: rowData[index].iscutber),
         },
       ),
     );
@@ -127,6 +128,12 @@ class HariLiburView extends StatelessWidget {
                   onLoaded: (PlutoGridOnLoadedEvent event) {
                     event.stateManager.setShowColumnFilter(true);
                     event.stateManager.autoFitColumn(context, columns[2]);
+                  },
+                  rowColorCallback: (rowColorContext) {
+                    if (rowColorContext.row.cells['iscutber']?.value == 'Y') {
+                      return Colors.lightGreen.withAlpha(75);
+                    }
+                    return Colors.white;
                   },
                   configuration: AFplutogridConfig.configSatu(),
                 );

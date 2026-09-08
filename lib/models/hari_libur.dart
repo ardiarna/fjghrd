@@ -4,6 +4,7 @@ class HariLibur {
   String id;
   String nama;
   DateTime? tanggal;
+  String iscutber;
   DateTime? createdAt;
   DateTime? updatedAt;
 
@@ -11,6 +12,7 @@ class HariLibur {
     this.id = '',
     this.nama = '',
     this.tanggal,
+    this.iscutber = 'N',
     this.createdAt,
     this.updatedAt,
   });
@@ -20,6 +22,7 @@ class HariLibur {
       id: AFconvert.keString(data['id']),
       nama: AFconvert.keString(data['nama']),
       tanggal: AFconvert.keTanggal(data['tanggal']),
+      iscutber: AFconvert.keString(data['iscutber']),
       createdAt: AFconvert.keTanggal(data['created_at']),
       updatedAt: AFconvert.keTanggal(data['updated_at']),
     );
@@ -30,6 +33,7 @@ class HariLibur {
       'id' : id,
       'nama' : nama,
       'tanggal': AFconvert.matYMDTime(tanggal),
+      'iscutber': iscutber,
     };
     return data;
   }

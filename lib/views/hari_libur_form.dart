@@ -17,6 +17,7 @@ class HariLiburForm extends StatelessWidget {
     controller.txtId.text = item.id;
     controller.txtNama.text = item.nama;
     controller.txtTanggal.text = AFconvert.matYMD(item.tanggal);
+    controller.isCutber.value = item.iscutber == 'Y';
     return Container(
         width: 700,
         decoration: const BoxDecoration(
@@ -58,6 +59,32 @@ class HariLiburForm extends StatelessWidget {
             AFwidget.barisText(
               label: 'Nama',
               controller: controller.txtNama,
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 150,
+                    padding: const EdgeInsets.only(right: 15),
+                    child: const Text('Cuti Bersama'),
+                  ),
+                  Expanded(
+                    child: Obx(() => Row(
+                      children: [
+                        Switch(
+                          value: controller.isCutber.value,
+                          onChanged: (val) {
+                            controller.isCutber.value = val;
+                          },
+                        ),
+                        const SizedBox(width: 10),
+                        Text(controller.isCutber.value ? 'Ya' : 'Tidak'),
+                      ],
+                    )),
+                  )
+                ],
+              ),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),

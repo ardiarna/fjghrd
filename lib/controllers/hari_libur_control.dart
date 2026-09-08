@@ -16,6 +16,7 @@ class HariLiburControl extends GetxController {
   Rx<Opsi> filterTahun = Opsi(value: '${DateTime.now().year}', label: '${DateTime.now().year}').obs;
 
   late TextEditingController txtId, txtNama, txtTanggal;
+  RxBool isCutber = false.obs;
 
   Future<void> loadHariLiburs() async {
     var hasil = await _repo.findAll(tahun: filterTahun.value.value);
@@ -41,6 +42,7 @@ class HariLiburControl extends GetxController {
         id: txtId.text,
         nama: txtNama.text,
         tanggal: AFconvert.keTanggal('${txtTanggal.text} 08:00:00'),
+        iscutber: isCutber.value ? 'Y' : 'N',
       );
 
       AFwidget.loading();
