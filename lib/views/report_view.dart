@@ -720,91 +720,109 @@ class ReportView extends StatelessWidget {
     );
   }
 
-    void dialogListDataKaryawan() async {
+      void dialogListDataKaryawan() async {
     if (controller.listDivisi.isEmpty) {
       AFwidget.loading();
       await controller.loadDivisis();
       Get.back();
     }
+    
+    List<Map<String, dynamic>> allMenus = [
+      {'label': 'Data General Karyawan', 'onPressed': () { Get.back(); controller.dowloadListDataKaryawan(); }},
+      {'label': 'Data Ex Karyawan', 'onPressed': () { Get.back(); dialogListExKaryawan(); }},
+      {'label': 'NIK & TLP Karyawan', 'onPressed': () { Get.back(); controller.dowloadNikTlpKaryawan(); }},
+      {'label': 'Data Status Karyawan', 'onPressed': () { Get.back(); controller.dowloadDataStatusKaryawan(); }},
+      {'label': 'Data Jabatan Karyawan', 'onPressed': () { Get.back(); controller.dowloadDataJabatanKaryawan(); }},
+      {'label': 'Data Karyawan Per Joint', 'onPressed': () { Get.back(); dialogDataKaryawanPerJoint(); }},
+    ];
+    
+    for (var div in controller.listDivisi) {
+      allMenus.add({'label': 'Data ${div.label}', 'onPressed': () { Get.back(); controller.dowloadDataDivisi(div.value, div.label); }});
+      allMenus.add({'label': 'Alamat ${div.label}', 'onPressed': () { Get.back(); controller.dowloadAlamatDivisi(div.value, div.label); }});
+    }
+    
+    allMenus.add({'label': 'Data PROFESSIONAL SERVICE', 'onPressed': () { Get.back(); controller.dowloadDataProfessionalService(); }});
+    allMenus.add({'label': 'Alamat PROFESSIONAL SERVICE', 'onPressed': () { Get.back(); controller.dowloadAlamatProfessionalService(); }});
+
+    TextEditingController txtCari = TextEditingController();
+
     AFwidget.dialog(
       contentPadding: EdgeInsets.zero,
       backgroundColor: Colors.transparent,
-      Container(
-        width: 1000,
-        height: Get.height * 0.9,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-        ),
-        child: Column(
-          children: [
-            AFwidget.formHeader('Menu Data Karyawan'),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(20),
-                child: Wrap(
-                  children: [
-                  barisBox(label: 'Data General Karyawan', onPressed: () {
-                    Get.back();
-                    controller.dowloadListDataKaryawan();
-                  }),
-                  barisBox(label: 'Data Ex Karyawan', onPressed: () {
-                    Get.back();
-                    dialogListExKaryawan();
-                  }),
-                  barisBox(label: 'NIK & TLP Karyawan', onPressed: () {
-                    Get.back();
-                    controller.dowloadNikTlpKaryawan();
-                  }),
-                  barisBox(label: 'Data Status Karyawan', onPressed: () {
-                    Get.back();
-                    controller.dowloadDataStatusKaryawan();
-                  }),
-                  barisBox(label: 'Data Jabatan Karyawan', onPressed: () {
-                    Get.back();
-                    controller.dowloadDataJabatanKaryawan();
-                  }),
-                  barisBox(label: 'Data Karyawan Per Joint', onPressed: () {
-                    Get.back();
-                    dialogDataKaryawanPerJoint();
-                  }),
-                  ...controller.listDivisi.expand((div) => [
-                    barisBox(label: 'Data ${div.label}', onPressed: () {
-                      Get.back();
-                      controller.dowloadDataDivisi(div.value, div.label);
-                    }),
-                    barisBox(label: 'Alamat ${div.label}', onPressed: () {
-                      Get.back();
-                      controller.dowloadAlamatDivisi(div.value, div.label);
-                    }),
-                  ]),
-                  barisBox(label: 'Data PROFESSIONAL SERVICE', onPressed: () {
-                    Get.back();
-                    controller.dowloadDataProfessionalService();
-                  }),
-                  barisBox(label: 'Alamat PROFESSIONAL SERVICE', onPressed: () {
-                    Get.back();
-                    controller.dowloadAlamatProfessionalService();
-                  }),
-                ].map((e) => SizedBox(width: (1000 - 40) / 2, child: e)).toList(),
-              ),
-            )),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 10, 20, 25),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  AFwidget.tombol(
-                    label: 'Tutup',
-                    color: Colors.orange,
-                    onPressed: Get.back,
-                    minimumSize: const Size(120, 40),
-                  ),
-                ],
-              ),
+      StatefulBuilder(
+        builder: (context, setState) {
+          var filteredMenus = allMenus.where((m) => m['label'].toLowerCase().contains(txtCari.text.toLowerCase())).toList();
+          
+          return Container(
+            width: 1000,
+            height: Get.height * 0.9,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(15)),
             ),
-          ],
-        ),
+            child: Column(
+              children: [
+                AFwidget.formHeader('Menu Data Karyawan'),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                  child: SizedBox(
+                    height: 35,
+                    child: TextField(
+                      controller: txtCari,
+                      onChanged: (val) => setState(() {}),
+                      style: const TextStyle(fontSize: 13),
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Colors.white,
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                        hintText: 'Cari laporan...',
+                        hintStyle: const TextStyle(color: Colors.black38, fontSize: 13),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(5), borderSide: const BorderSide(color: Colors.black26)),
+                        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(5), borderSide: const BorderSide(color: Colors.black26)),
+                        focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(5), borderSide: const BorderSide(color: Colors.orange)),
+                        suffixIconConstraints: const BoxConstraints(minWidth: 35, minHeight: 35),
+                        suffixIcon: txtCari.text.isNotEmpty 
+                          ? InkWell(
+                              onTap: () {
+                                txtCari.clear();
+                                setState(() {});
+                              },
+                              child: const Icon(Icons.close, size: 16, color: Colors.black54),
+                            )
+                          : const SizedBox(width: 35, height: 35),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(20),
+                    child: Wrap(
+                      children: filteredMenus.map((m) => SizedBox(
+                        width: (1000 - 40) / 2,
+                        child: barisBox(label: m['label'], onPressed: m['onPressed']),
+                      )).toList(),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 10, 20, 25),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      AFwidget.tombol(
+                        label: 'Tutup',
+                        color: Colors.orange,
+                        onPressed: Get.back,
+                        minimumSize: const Size(120, 40),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
       ),
       scrollable: false,
     );
