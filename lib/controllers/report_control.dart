@@ -14,6 +14,7 @@ class ReportControl extends GetxController {
   final DateTime _now = DateTime.now();
 
   List<Opsi> listArea = [];
+  List<Opsi> listDivisi = [];
   List<Opsi> listBulan = mapBulan.entries.map((e) => Opsi(value: e.key.toString(), label: e.value)).toList();
   late List<Opsi> listTahun;
 
@@ -24,6 +25,14 @@ class ReportControl extends GetxController {
   late Opsi filterBulan;
   Opsi filterArea = Opsi(value: '', label: '');
   String filterJenis = '';
+
+  Future<void> loadDivisis() async {
+    var hasil = await AFdatabase.send(url: 'divisi');
+    if (hasil.success) {
+      listDivisi = hasil.daftar.map<Opsi>((e) => Opsi(value: e['id'].toString(), label: e['nama'].toString())).toList();
+      update();
+    }
+  }
 
   Future<void> loadAreas() async {
     AreaRepository repo = AreaRepository();
@@ -152,13 +161,43 @@ class ReportControl extends GetxController {
     }
   }
 
-  Future<void> dowloadAlamatEngineeringDept() async {
+  Future<void> dowloadDataProfessionalService() async {
     AFwidget.loading();
-    var hasil = await AFdatabase.download(url: 'excel/alamat-engineering-dept');
+    var hasil = await AFdatabase.download(url: 'excel/data-divisi/PS');
     Get.back();
     if(hasil.success) {
       AFwidget.formWarning(
-        label: 'laporan excel Alamat Engineering Dept telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        label: 'laporan excel Data PROFESSIONAL SERVICE telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+  Future<void> dowloadAlamatProfessionalService() async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/alamat-divisi/PS');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'laporan excel Alamat PROFESSIONAL SERVICE telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+  Future<void> dowloadAlamatDivisi(String id, String nama) async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/alamat-divisi/$id');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'laporan excel Alamat $nama telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
         warna: Colors.green,
         ikon: Icons.info,
       );
@@ -182,13 +221,13 @@ class ReportControl extends GetxController {
     }
   }
 
-  Future<void> dowloadDataEngineeringDept() async {
+  Future<void> dowloadDataDivisi(String id, String nama) async {
     AFwidget.loading();
-    var hasil = await AFdatabase.download(url: 'excel/data-engineering-dept');
+    var hasil = await AFdatabase.download(url: 'excel/data-divisi/$id');
     Get.back();
     if(hasil.success) {
       AFwidget.formWarning(
-        label: 'laporan excel Data Engineering Dept telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        label: 'laporan excel Data $nama telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
         warna: Colors.green,
         ikon: Icons.info,
       );
@@ -457,6 +496,7 @@ class ReportControl extends GetxController {
   @override
   void onInit() {
     loadAreas();
+    loadDivisis();
     filterTahun = Opsi(value: '${_now.year}', label: '${_now.year}');
     filterTahunAwal = Opsi(value: '${_now.year - 4}', label: '${_now.year - 4}');
     filterTahunAkhir = Opsi(value: '${_now.year}', label: '${_now.year}');

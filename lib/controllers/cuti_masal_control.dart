@@ -20,6 +20,7 @@ class CutiMasalControl extends GetxController {
   TextEditingController txtKeperluan = TextEditingController();
   TextEditingController txtTglKembali = TextEditingController();
   TextEditingController txtLamaHariGlobal = TextEditingController();
+  TextEditingController txtCari = TextEditingController();
   
   List<DateTime> listTanggalGlobal = [];
   List<KaryawanCutiMasal> listKaryawan = [];
@@ -35,6 +36,7 @@ class CutiMasalControl extends GetxController {
     txtKeperluan.addListener(update);
     txtTglKembali.addListener(update);
     txtLamaHariGlobal.addListener(update);
+    txtCari.addListener(update);
     
     int startTahun = 2024;
     for (int i = 0; i < 10; i++) {

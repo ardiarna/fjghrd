@@ -249,7 +249,7 @@ class CutiFormView extends StatelessWidget {
                       const SizedBox(height: 10),
                       (() {
                           int mx = AFconvert.keInt(controller.txtLamaMasal.text);
-                          return _buildDateSelector(context, 'Tanggal Cuti', controller.tglMasal, max: mx, readOnly: controller.currentId != '');
+                          return _buildDateSelector(context, (controller.formType == 'IJIN' ? 'Tanggal Ijin' : 'Tanggal Cuti'), controller.tglMasal, max: mx, readOnly: controller.currentId != '');
                       })(),
                       const SizedBox(height: 10),
                       Row(
@@ -342,7 +342,7 @@ class CutiFormView extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(vertical: 5),
                         child: Row(
                           children: [
-                            const Expanded(child: Text('Cuti Yang Akan Diambil')),
+                            Expanded(child: Text(controller.formType == 'IJIN' ? 'Ijin Yang Akan Diambil' : 'Cuti Yang Akan Diambil')),
                             SizedBox(
                               width: 100,
                               child: AFwidget.textField(
@@ -367,7 +367,7 @@ class CutiFormView extends StatelessWidget {
                       const SizedBox(height: 10),
                       (() {
                         int mx = AFconvert.keInt(controller.txtAkanDiambil.text);
-                        return _buildDateSelector(context, 'Tanggal Cuti', controller.tglTahunan, max: mx, readOnly: controller.currentId != '');
+                        return _buildDateSelector(context, (controller.formType == 'IJIN' ? 'Tanggal Ijin' : 'Tanggal Cuti'), controller.tglTahunan, max: mx, readOnly: controller.currentId != '');
                       })(),
                       const SizedBox(height: 10),
                       Row(
@@ -527,7 +527,7 @@ class CutiFormView extends StatelessWidget {
                                   ]
                               );
                           } else {
-                              return _buildDateSelector(context, 'Tanggal Cuti', controller.tglKhusus, max: lm, readOnly: controller.currentId != '');
+                              return _buildDateSelector(context, (controller.formType == 'IJIN' ? 'Tanggal Ijin' : 'Tanggal Cuti'), controller.tglKhusus, max: lm, readOnly: controller.currentId != '');
                           }
                       })(),
                       const SizedBox(height: 10),
@@ -624,7 +624,7 @@ class CutiFormView extends StatelessWidget {
                       const SizedBox(height: 10),
                       (() {
                           int mx = AFconvert.keInt(controller.txtLamaUnpaid.text);
-                          return _buildDateSelector(context, 'Tanggal Cuti', controller.tglUnpaid, max: mx, readOnly: controller.currentId != '');
+                          return _buildDateSelector(context, (controller.formType == 'IJIN' ? 'Tanggal Ijin' : 'Tanggal Cuti'), controller.tglUnpaid, max: mx, readOnly: controller.currentId != '');
                       })(),
                       const SizedBox(height: 10),
                       Row(

@@ -197,7 +197,42 @@ class CutiMasalView extends StatelessWidget {
                           onChanged: controller.toggleCheckSemua,
                         ),
                       ),
-                      SizedBox(width: namaWidth, child: Text('${controller.listKaryawan.where((e) => e.isChecked).length} / ${controller.listKaryawan.length} Karyawan', style: const TextStyle(fontWeight: FontWeight.bold))),
+                      SizedBox(
+                        width: namaWidth, 
+                        child: Row(
+                          children: [
+                            Text('${controller.listKaryawan.where((e) => e.isChecked).length} / ${controller.listKaryawan.length} Karyawan', style: const TextStyle(fontWeight: FontWeight.bold)),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: SizedBox(
+                                height: 30,
+                                child: TextField(
+                                  controller: controller.txtCari,
+                                  style: const TextStyle(fontSize: 13),
+                                  decoration: InputDecoration(
+                                    isDense: true,
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                                    hintText: 'Cari karyawan...',
+                                    border: const OutlineInputBorder(),
+                                    suffixIconConstraints: const BoxConstraints(minWidth: 30, minHeight: 30),
+                                    suffixIcon: controller.txtCari.text.isNotEmpty
+                                        ? InkWell(
+                                            onTap: () {
+                                              controller.txtCari.clear();
+                                            },
+                                            child: const Icon(Icons.close, size: 16),
+                                          )
+                                        : const SizedBox(width: 30, height: 30),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                          ],
+                        )
+                      ),
                       const SizedBox(width: 130, child: Text('Jabatan', style: TextStyle(fontWeight: FontWeight.bold))),
                       const SizedBox(width: 150, child: Text('Kuota Info', style: TextStyle(fontWeight: FontWeight.bold))),
                       const SizedBox(width: 80, child: Text('Lama Hari', style: TextStyle(fontWeight: FontWeight.bold))),
@@ -212,7 +247,7 @@ class CutiMasalView extends StatelessWidget {
                   child: SingleChildScrollView(
                     scrollDirection: Axis.vertical,
                     child: Column(
-                      children: controller.listKaryawan.map((k) {
+                      children: controller.listKaryawan.where((k) => k.nama.toLowerCase().contains(controller.txtCari.text.toLowerCase())).map((k) {
                         return Container(
                           decoration: BoxDecoration(
                             color: !k.isChecked ? Colors.grey.withValues(alpha: 0.1) : null,

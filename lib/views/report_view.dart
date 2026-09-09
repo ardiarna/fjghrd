@@ -82,10 +82,7 @@ class ReportView extends StatelessWidget {
                       label: 'List Data Karyawan',
                       onPressed: dialogListDataKaryawan,
                     ),
-                    barisBox(
-                      label: 'List Data Ex Karyawan',
-                      onPressed: dialogListExKaryawan,
-                    ),
+
                     barisBox(
                       label: 'List Salary',
                       onPressed: controller.dowloadListSalary,
@@ -723,12 +720,17 @@ class ReportView extends StatelessWidget {
     );
   }
 
-  void dialogListDataKaryawan() {
+    void dialogListDataKaryawan() async {
+    if (controller.listDivisi.isEmpty) {
+      AFwidget.loading();
+      await controller.loadDivisis();
+      Get.back();
+    }
     AFwidget.dialog(
       contentPadding: EdgeInsets.zero,
       backgroundColor: Colors.transparent,
       Container(
-        width: 500,
+        width: 1000,
         height: Get.height * 0.9,
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -738,12 +740,17 @@ class ReportView extends StatelessWidget {
           children: [
             AFwidget.formHeader('Menu Data Karyawan'),
             Expanded(
-              child: ListView(
+              child: SingleChildScrollView(
                 padding: const EdgeInsets.all(20),
-                children: [
+                child: Wrap(
+                  children: [
                   barisBox(label: 'Data General Karyawan', onPressed: () {
                     Get.back();
                     controller.dowloadListDataKaryawan();
+                  }),
+                  barisBox(label: 'Data Ex Karyawan', onPressed: () {
+                    Get.back();
+                    dialogListExKaryawan();
                   }),
                   barisBox(label: 'NIK & TLP Karyawan', onPressed: () {
                     Get.back();
@@ -761,17 +768,27 @@ class ReportView extends StatelessWidget {
                     Get.back();
                     dialogDataKaryawanPerJoint();
                   }),
-                  barisBox(label: 'Data Engineering Dept', onPressed: () {
+                  ...controller.listDivisi.expand((div) => [
+                    barisBox(label: 'Data ${div.label}', onPressed: () {
+                      Get.back();
+                      controller.dowloadDataDivisi(div.value, div.label);
+                    }),
+                    barisBox(label: 'Alamat ${div.label}', onPressed: () {
+                      Get.back();
+                      controller.dowloadAlamatDivisi(div.value, div.label);
+                    }),
+                  ]),
+                  barisBox(label: 'Data PROFESSIONAL SERVICE', onPressed: () {
                     Get.back();
-                    controller.dowloadDataEngineeringDept();
+                    controller.dowloadDataProfessionalService();
                   }),
-                  barisBox(label: 'Alamat Engineering Dept', onPressed: () {
+                  barisBox(label: 'Alamat PROFESSIONAL SERVICE', onPressed: () {
                     Get.back();
-                    controller.dowloadAlamatEngineeringDept();
+                    controller.dowloadAlamatProfessionalService();
                   }),
-                ],
+                ].map((e) => SizedBox(width: (1000 - 40) / 2, child: e)).toList(),
               ),
-            ),
+            )),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 10, 20, 25),
               child: Row(
