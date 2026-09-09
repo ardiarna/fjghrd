@@ -55,6 +55,7 @@ class PtkpControl extends GetxController {
       if(hasil.success) {
         loadPtkps();
         Get.back();
+        authControl.masterDataUpdateTrigger.value++;
         AFwidget.snackbar(hasil.message);
       } else {
         AFwidget.formWarning(label: hasil.message);
@@ -76,6 +77,7 @@ class PtkpControl extends GetxController {
         loadPtkps();
         Get.back();
         Get.back();
+        authControl.masterDataUpdateTrigger.value++;
         AFwidget.snackbar(hasil.message);
       } else {
         AFwidget.formWarning(label: hasil.message);

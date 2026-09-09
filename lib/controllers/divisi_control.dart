@@ -54,6 +54,7 @@ class DivisiControl extends GetxController {
       if(hasil.success) {
         loadDivisis();
         Get.back();
+        authControl.masterDataUpdateTrigger.value++;
         AFwidget.snackbar(hasil.message);
       } else {
         AFwidget.formWarning(label: hasil.message);
@@ -75,6 +76,7 @@ class DivisiControl extends GetxController {
         loadDivisis();
         Get.back();
         Get.back();
+        authControl.masterDataUpdateTrigger.value++;
         AFwidget.snackbar(hasil.message);
       } else {
         AFwidget.formWarning(label: hasil.message);

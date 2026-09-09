@@ -1069,17 +1069,7 @@ class KaryawanForm extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              IconButton(
-                                onPressed: () async {
-                                  AFwidget.loading();
-                                  await controller.loadAllData();
-                                  Get.back();
-                                },
-                                icon: const Icon(
-                                  Icons.refresh,
-                                ),
-                                padding: const EdgeInsets.all(0),
-                              ),
+                              const SizedBox(width: 48), // replaced refresh button
                               controller.current.aktif != 'N' ?
                               AFwidget.tombol(
                                 label: 'Simpan Perubahan',

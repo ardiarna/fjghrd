@@ -11,7 +11,10 @@ class AuthControl extends GetxController {
   
   User user = User();
   RxInt karyawanUpdateTrigger = 0.obs;
+  RxInt masterDataUpdateTrigger = 0.obs;
   RxInt customerUpdateTrigger = 0.obs;
+  RxInt cicKaryawanUpdateTrigger = 0.obs;
+  RxInt cicMasterDataUpdateTrigger = 0.obs;
   final UserRepository _userRepository = UserRepository();
 
   Future<void> getSession() async {

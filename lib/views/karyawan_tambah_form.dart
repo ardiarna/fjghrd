@@ -741,17 +741,7 @@ class KaryawanTambahForm extends StatelessWidget {
             ),
             AFwidget.formHeader(
               'Form Tambah Karyawan',
-              actions: [
-                IconButton(
-                  onPressed: () async {
-                    AFwidget.loading();
-                    await controller.loadAllData();
-                    Get.back();
-                  },
-                  icon: const Icon(Icons.refresh),
-                  padding: EdgeInsets.zero,
-                ),
-              ],
+              actions: const [],
             ),
           ],
         ),

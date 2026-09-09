@@ -50,6 +50,7 @@ class StatusKerjaControl extends GetxController {
       if(hasil.success) {
         loadStatusKerjas();
         Get.back();
+        authControl.masterDataUpdateTrigger.value++;
         AFwidget.snackbar(hasil.message);
       } else {
         AFwidget.formWarning(label: hasil.message);
@@ -71,6 +72,7 @@ class StatusKerjaControl extends GetxController {
         loadStatusKerjas();
         Get.back();
         Get.back();
+        authControl.masterDataUpdateTrigger.value++;
         AFwidget.snackbar(hasil.message);
       } else {
         AFwidget.formWarning(label: hasil.message);

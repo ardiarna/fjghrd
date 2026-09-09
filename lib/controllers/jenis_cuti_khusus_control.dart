@@ -4,9 +4,11 @@ import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:fjghrd/controllers/auth_control.dart';
 import 'package:fjghrd/utils/validation_exception.dart';
 
 class JenisCutiKhususControl extends GetxController {
+  final AuthControl authControl = Get.find<AuthControl>();
   final JenisCutiKhususRepository _repo = JenisCutiKhususRepository();
 
   RxList<JenisCutiKhusus> listJenisCuti = <JenisCutiKhusus>[].obs;
@@ -54,6 +56,7 @@ class JenisCutiKhususControl extends GetxController {
       if (hasil.success) {
         loadJenisCuti();
         Get.back();
+        authControl.masterDataUpdateTrigger.value++;
         AFwidget.snackbar(hasil.message);
       } else {
         AFwidget.formWarning(label: hasil.message);
@@ -75,6 +78,7 @@ class JenisCutiKhususControl extends GetxController {
             loadJenisCuti();
             Get.back();
             Get.back();
+            authControl.masterDataUpdateTrigger.value++;
             AFwidget.snackbar(hasil.message);
           } else {
             AFwidget.formWarning(label: hasil.message);

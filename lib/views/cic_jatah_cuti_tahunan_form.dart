@@ -129,12 +129,7 @@ class CicJatahCutiTahunanForm extends StatelessWidget {
                 controller.txtJatahId.text == '' ? Container() : AFwidget.tombol(
                   label: 'Hapus Data', color: Colors.red,
                   onPressed: () { 
-                    AFwidget.formHapus(
-                      label: 'data jatah cuti tahunan CIC ini',
-                      aksi: () {
-                        controller.hapusJatah(controller.txtJatahId.text);
-                      },
-                    );
+                    controller.hapusJatah(controller.txtJatahId.text);
                   },
                   minimumSize: const Size(120, 40),
                 ),

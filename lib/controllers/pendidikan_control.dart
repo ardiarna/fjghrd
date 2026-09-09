@@ -50,6 +50,7 @@ class PendidikanControl extends GetxController {
       if(hasil.success) {
         loadPendidikans();
         Get.back();
+        authControl.masterDataUpdateTrigger.value++;
         AFwidget.snackbar(hasil.message);
       } else {
         AFwidget.formWarning(label: hasil.message);
@@ -71,6 +72,7 @@ class PendidikanControl extends GetxController {
         loadPendidikans();
         Get.back();
         Get.back();
+        authControl.masterDataUpdateTrigger.value++;
         AFwidget.snackbar(hasil.message);
       } else {
         AFwidget.formWarning(label: hasil.message);

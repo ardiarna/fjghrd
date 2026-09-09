@@ -50,6 +50,7 @@ class AgamaControl extends GetxController {
       if(hasil.success) {
         loadAgamas();
         Get.back();
+        authControl.masterDataUpdateTrigger.value++;
         AFwidget.snackbar(hasil.message);
       } else {
         AFwidget.formWarning(label: hasil.message);
@@ -71,6 +72,7 @@ class AgamaControl extends GetxController {
         loadAgamas();
         Get.back();
         Get.back();
+        authControl.masterDataUpdateTrigger.value++;
         AFwidget.snackbar(hasil.message);
       } else {
         AFwidget.formWarning(label: hasil.message);

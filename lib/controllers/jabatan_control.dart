@@ -50,6 +50,7 @@ class JabatanControl extends GetxController {
       if(hasil.success) {
         loadJabatans();
         Get.back();
+        authControl.masterDataUpdateTrigger.value++;
         AFwidget.snackbar(hasil.message);
       } else {
         AFwidget.formWarning(label: hasil.message);
@@ -71,6 +72,7 @@ class JabatanControl extends GetxController {
         loadJabatans();
         Get.back();
         Get.back();
+        authControl.masterDataUpdateTrigger.value++;
         AFwidget.snackbar(hasil.message);
       } else {
         AFwidget.formWarning(label: hasil.message);

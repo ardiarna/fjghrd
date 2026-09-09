@@ -117,8 +117,7 @@ class CicJenisCutiKhususView extends StatelessWidget {
             decoration: const BoxDecoration(
               image: bgLineBlue,
             ),
-            child: GetBuilder<CicJenisCutiKhususControl>(
-              builder: (_) {
+            child: Obx(() {
                 return PlutoGrid(
                   key: UniqueKey(),
                   columns: columns,

@@ -4,9 +4,11 @@ import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:fjghrd/controllers/auth_control.dart';
 import 'package:fjghrd/utils/validation_exception.dart';
 
 class CicJenisCutiKhususControl extends GetxController {
+  final AuthControl authControl = Get.find<AuthControl>();
   final CicJenisCutiKhususRepository _repo = CicJenisCutiKhususRepository();
 
   RxList<JenisCutiKhusus> listJenisCuti = <JenisCutiKhusus>[].obs;
@@ -52,6 +54,7 @@ class CicJenisCutiKhususControl extends GetxController {
       if (hasil.success) {
         loadJenisCuti();
         Get.back();
+        authControl.cicMasterDataUpdateTrigger.value++;
         AFwidget.snackbar(hasil.message);
       } else {
         AFwidget.formWarning(label: hasil.message);
@@ -73,7 +76,8 @@ class CicJenisCutiKhususControl extends GetxController {
             loadJenisCuti();
             Get.back();
             Get.back();
-            AFwidget.snackbar(hasil.message);
+            authControl.cicMasterDataUpdateTrigger.value++;
+        AFwidget.snackbar(hasil.message);
           } else {
             AFwidget.formWarning(label: hasil.message);
           }

@@ -54,6 +54,7 @@ class AreaControl extends GetxController {
       if(hasil.success) {
         loadAreas();
         Get.back();
+        authControl.masterDataUpdateTrigger.value++;
         AFwidget.snackbar(hasil.message);
       } else {
         AFwidget.formWarning(label: hasil.message);
@@ -75,6 +76,7 @@ class AreaControl extends GetxController {
         loadAreas();
         Get.back();
         Get.back();
+        authControl.masterDataUpdateTrigger.value++;
         AFwidget.snackbar(hasil.message);
       } else {
         AFwidget.formWarning(label: hasil.message);

@@ -50,6 +50,7 @@ class StatusPhkControl extends GetxController {
       if(hasil.success) {
         loadStatusPhks();
         Get.back();
+        authControl.masterDataUpdateTrigger.value++;
         AFwidget.snackbar(hasil.message);
       } else {
         AFwidget.formWarning(label: hasil.message);
@@ -71,6 +72,7 @@ class StatusPhkControl extends GetxController {
         loadStatusPhks();
         Get.back();
         Get.back();
+        authControl.masterDataUpdateTrigger.value++;
         AFwidget.snackbar(hasil.message);
       } else {
         AFwidget.formWarning(label: hasil.message);

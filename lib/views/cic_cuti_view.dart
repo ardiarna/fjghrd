@@ -348,8 +348,7 @@ class CicCutiView extends StatelessWidget {
             decoration: const BoxDecoration(
               image: bgLineBlue,
             ),
-            child: GetBuilder<CicCutiControl>(
-              builder: (_) {
+            child: Obx(() {
                 return PlutoGrid(
                   key: UniqueKey(),
                   columns: columns,

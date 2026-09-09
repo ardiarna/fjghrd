@@ -74,12 +74,7 @@ class CicJenisCutiKhususForm extends StatelessWidget {
                           label: 'Hapus Data',
                           color: Colors.red,
                           onPressed: () {
-                            AFwidget.formHapus(
-                              label: 'data jenis cuti khusus CIC ini',
-                              aksi: () {
-                                controller.hapusData(controller.txtId.text);
-                              },
-                            );
+                            controller.hapusData(controller.txtId.text);
                           },
                           minimumSize: const Size(120, 40),
                         ),

@@ -91,7 +91,8 @@ class CicCutiControl extends GetxController {
 
   @override
   void onInit() {
-    ever(authControl.karyawanUpdateTrigger, (_) => loadKaryawan());
+    ever(authControl.cicKaryawanUpdateTrigger, (_) => loadKaryawan());
+    ever(authControl.cicMasterDataUpdateTrigger, (_) => loadJenisKhusus());
     super.onInit();
     txtJatahId = TextEditingController();
     txtJatahJumlahCuti = TextEditingController();

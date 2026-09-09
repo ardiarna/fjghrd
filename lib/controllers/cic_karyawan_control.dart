@@ -12,9 +12,11 @@ import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/utils/af_combobox.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:fjghrd/controllers/auth_control.dart';
 import 'package:fjghrd/utils/validation_exception.dart';
 
 class CicKaryawanControl extends GetxController {
+  final AuthControl authControl = Get.find<AuthControl>();
   List<Karyawan> listData = [];
   String filterNama = '';
   final DateTime _now = DateTime.now();
@@ -776,6 +778,7 @@ AFwidget.dialog(
       Get.back();
       if(hasil.success) {
         Get.back();
+        authControl.cicKaryawanUpdateTrigger.value++;
         AFwidget.snackbar(hasil.message);
         loadData();
       } else {
@@ -792,6 +795,7 @@ AFwidget.dialog(
     Get.back();
     if(hasil.success) {
       Get.back();
+      authControl.cicKaryawanUpdateTrigger.value++;
       AFwidget.snackbar(hasil.message);
       loadData();
     } else {

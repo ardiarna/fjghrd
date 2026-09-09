@@ -1535,6 +1535,7 @@ class KaryawanControl extends GetxController {
     loadCalonKaryawans();
     loadMantanKaryawans();
     loadAllData();
+    ever(authControl.masterDataUpdateTrigger, (_) => loadAllData());
     super.onInit();
   }
 

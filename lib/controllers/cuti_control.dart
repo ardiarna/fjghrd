@@ -92,6 +92,7 @@ class CutiControl extends GetxController {
   @override
   void onInit() {
     ever(authControl.karyawanUpdateTrigger, (_) => loadKaryawan());
+    ever(authControl.masterDataUpdateTrigger, (_) => loadJenisKhusus());
     super.onInit();
     txtJatahId = TextEditingController();
     txtJatahJumlahCuti = TextEditingController();
