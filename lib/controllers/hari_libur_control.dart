@@ -1,3 +1,4 @@
+import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/controllers/auth_control.dart';
 import 'package:fjghrd/models/hari_libur.dart';
 import 'package:fjghrd/repositories/hari_libur_repository.dart';
@@ -84,12 +85,10 @@ class HariLiburControl extends GetxController {
   }
 
   Future<Opsi?> pilihTahun({String value = ''}) async {
-    int tahunNow = DateTime.now().year;
     var a = await AFcombobox.bottomSheet(
-      listOpsi: List.generate(tahunNow-2019, (index) => Opsi(value: '${tahunNow-index}', label: '${tahunNow-index}')),
+      listOpsi: getListTahun(),
       valueSelected: value,
       judul: 'Pilih Tahun',
-      withCari: false,
     );
     return a;
   }

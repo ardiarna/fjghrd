@@ -1,3 +1,4 @@
+import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/controllers/auth_control.dart';
 import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/models/karyawan.dart';
@@ -159,7 +160,6 @@ class UangPhkControl extends GetxController {
       listOpsi: listTahun,
       valueSelected: value,
       judul: 'Pilih Tahun',
-      withCari: false,
     );
     return a;
   }
@@ -170,7 +170,7 @@ class UangPhkControl extends GetxController {
     loadKaryawans();
     filterTahun = Opsi(value: '${_now.year}', label: '${_now.year}');
     tahun = Opsi(value: '${_now.year}', label: '${_now.year}');
-    listTahun = List.generate(_now.year-2019, (index) => Opsi(value: '${_now.year-index}', label: '${_now.year-index}'));
+    listTahun = getListTahun();
     txtId = TextEditingController();
     txtKompensasi = TextEditingController();
     txtUangPisah = TextEditingController();

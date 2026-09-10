@@ -144,6 +144,22 @@ class ReportControl extends GetxController {
     }
   }
 
+  Future<void> dowloadListSalaryPdf() async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/pdf-list-salary');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'laporan pdf list salary telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat pdf. [${hasil.message}]');
+    }
+  }
+
+
   Future<void> dowloadDataKaryawanPerJoint() async {
     Get.back();
     AFwidget.loading();
@@ -465,7 +481,6 @@ class ReportControl extends GetxController {
       listOpsi: listTahun,
       valueSelected: value,
       judul: 'Pilih Tahun',
-      withCari: false,
     );
     return a;
   }
@@ -501,7 +516,7 @@ class ReportControl extends GetxController {
     filterTahunAwal = Opsi(value: '${_now.year - 4}', label: '${_now.year - 4}');
     filterTahunAkhir = Opsi(value: '${_now.year}', label: '${_now.year}');
     filterBulan = Opsi(value: '${_now.month}', label: mapBulan[_now.month]!);
-    listTahun = List.generate(_now.year-2019, (index) => Opsi(value: '${_now.year-index}', label: '${_now.year-index}'));
+    listTahun = getListTahun();
     super.onInit();
   }
 

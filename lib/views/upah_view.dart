@@ -236,6 +236,21 @@ class UpahView extends StatelessWidget {
               IconButton(
                 onPressed: () async {
                   AFwidget.loading();
+                  var hasil = await AFdatabase.download(url: 'excel/pdf-list-salary');
+                  Get.back();
+                  if(hasil.success) {
+                    AFwidget.snackbar('Berhasil mengunduh pdf LIST_SALARY. Silakan periksa folder Download Anda.');
+                  } else {
+                    AFwidget.formWarning(label: hasil.message);
+                  }
+                },
+                icon: const Icon(Icons.picture_as_pdf, color: Colors.white),
+                tooltip: 'Download PDF',
+              ),
+              const SizedBox(width: 10),
+              IconButton(
+                onPressed: () async {
+                  AFwidget.loading();
                   var hasil = await AFdatabase.download(url: 'excel/list-salary');
                   Get.back();
                   if(hasil.success) {
@@ -244,7 +259,7 @@ class UpahView extends StatelessWidget {
                     AFwidget.formWarning(label: hasil.message);
                   }
                 },
-                icon: const Icon(Icons.download, color: Colors.white),
+                icon: const Icon(Icons.table_view, color: Colors.white),
                 tooltip: 'Download Excel',
               ),
           ],

@@ -295,7 +295,6 @@ class MedicalControl extends GetxController {
       listOpsi: listTahun,
       valueSelected: value,
       judul: 'Pilih Tahun',
-      withCari: false,
     );
     return a;
   }
@@ -322,7 +321,7 @@ class MedicalControl extends GetxController {
     filterBulan = Opsi(value: '${_now.month}', label: mapBulan[_now.month]!);
     tahun = Opsi(value: '${_now.year}', label: '${_now.year}');
     bulan = Opsi(value: '${_now.month}', label: mapBulan[_now.month]!);
-    listTahun = List.generate(_now.year-2019, (index) => Opsi(value: '${_now.year-index}', label: '${_now.year-index}'));
+    listTahun = getListTahun();
     txtId = TextEditingController();
     txtJumlah = TextEditingController();
     txtKeterangan = TextEditingController();

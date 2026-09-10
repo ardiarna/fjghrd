@@ -80,60 +80,61 @@ class ReportView extends StatelessWidget {
                   List<Widget> items = [
                     barisBox(
                       label: 'List Data Karyawan',
-                      onPressed: dialogListDataKaryawan,
+                      onModalTap: dialogListDataKaryawan,
                     ),
 
                     barisBox(
                       label: 'List Salary',
-                      onPressed: controller.dowloadListSalary,
+                      onDownloadExcel: controller.dowloadListSalary,
+                      onDownloadPdf: controller.dowloadListSalaryPdf,
                     ),
                     barisBox(
                       label: 'List Payroll',
-                      onPressed: controller.dowloadListpayroll,
+                      onDownloadExcel: controller.dowloadListpayroll,
                     ),
                     barisBox(
                       label: 'List PHK',
-                      onPressed: dialogListPHK,
+                      onModalTap: dialogListPHK,
                     ),
                     barisBox(
                       label: 'Rekap Gaji',
-                      onPressed: controller.dowloadRekapPayroll,
+                      onDownloadExcel: controller.dowloadRekapPayroll,
                     ),
                     barisBox(
                       label: 'Rekap Medical',
-                      onPressed: controller.dowloadRekapMedical,
+                      onDownloadExcel: controller.dowloadRekapMedical,
                     ),
                     barisBox(
                       label: 'Rekap Overtime',
-                      onPressed: controller.dowloadRekapOvertime,
+                      onDownloadExcel: controller.dowloadRekapOvertime,
                     ),
                     barisBox(
                       label: 'Rekap Payroll Per Karyawan',
-                      onPressed: dialogRekapPayroll,
+                      onModalTap: dialogRekapPayroll,
                     ),
                     barisBox(
                       label: 'Rekap PPh 21',
-                      onPressed: dialogRekapPPh21,
+                      onModalTap: dialogRekapPPh21,
                     ),
                     barisBox(
                       label: 'Slip Gaji',
-                      onPressed: dialogSlipGaji,
+                      onModalTap: dialogSlipGaji,
                     ),
                     barisBox(
                       label: 'Jadwal Cuti',
-                      onPressed: controller.downloadJadwalCuti,
+                      onDownloadExcel: controller.downloadJadwalCuti,
                     ),
                     barisBox(
                       label: 'List Cuti',
-                      onPressed: dialogListCuti,
+                      onModalTap: dialogListCuti,
                     ),
                     barisBox(
                       label: 'Cuti Tanpa Potongan',
-                      onPressed: dialogCutiTanpaPotongan,
+                      onModalTap: dialogCutiTanpaPotongan,
                     ),
                     barisBox(
                       label: 'Cuti Unpaid Leave & Ganti Hari Libur',
-                      onPressed: dialogUnpaidLeave,
+                      onModalTap: dialogUnpaidLeave,
                     ),
                   ].animate(interval: 50.ms).fadeIn(duration: 400.ms).slideY(begin: 0.1, end: 0, curve: Curves.easeOut).toList();
 
@@ -267,16 +268,27 @@ class ReportView extends StatelessWidget {
                 children: [
                   AFwidget.tombol(
                     label: 'Batal',
-                    color: Colors.orange,
+                    color: Colors.grey,
                     onPressed: Get.back,
-                    minimumSize: const Size(120, 40),
+                    minimumSize: const Size(110, 40),
                   ),
-                  const SizedBox(width: 40),
-                  AFwidget.tombol(
-                    label: 'Download',
-                    color: Colors.blueGrey,
-                    onPressed: controller.dowloadListExKaryawan,
-                    minimumSize: const Size(120, 40),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download PDF',
+                      color: Colors.red,
+                      onPressed: () { AFwidget.snackbar('BELUM_DIBUAT'); },
+                      minimumSize: const Size(0, 40),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download Excel',
+                      color: Colors.green,
+                      onPressed: controller.dowloadListExKaryawan,
+                      minimumSize: const Size(0, 40),
+                    ),
                   ),
                 ],
               ),
@@ -370,15 +382,27 @@ class ReportView extends StatelessWidget {
                 children: [
                   AFwidget.tombol(
                     label: 'Batal',
-                    color: Colors.orange,
+                    color: Colors.grey,
                     onPressed: Get.back,
-                    minimumSize: const Size(120, 40),
+                    minimumSize: const Size(110, 40),
                   ),
-                  const SizedBox(width: 40),
-                  AFwidget.tombol(
-                    label: 'Download',
-                    color: Colors.blue,
-                    onPressed: controller.downloadCutiTanpaPotongan,
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download PDF',
+                      color: Colors.red,
+                      onPressed: () { AFwidget.snackbar('BELUM_DIBUAT'); },
+                      minimumSize: const Size(0, 40),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download Excel',
+                      color: Colors.green,
+                      onPressed: controller.downloadCutiTanpaPotongan,
+                      minimumSize: const Size(0, 40),
+                    ),
                   ),
                 ],
               ),
@@ -472,15 +496,27 @@ class ReportView extends StatelessWidget {
                 children: [
                   AFwidget.tombol(
                     label: 'Batal',
-                    color: Colors.orange,
+                    color: Colors.grey,
                     onPressed: Get.back,
-                    minimumSize: const Size(120, 40),
+                    minimumSize: const Size(110, 40),
                   ),
-                  const SizedBox(width: 40),
-                  AFwidget.tombol(
-                    label: 'Download',
-                    color: Colors.blue,
-                    onPressed: controller.downloadUnpaidLeave,
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download PDF',
+                      color: Colors.red,
+                      onPressed: () { AFwidget.snackbar('BELUM_DIBUAT'); },
+                      minimumSize: const Size(0, 40),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download Excel',
+                      color: Colors.green,
+                      onPressed: controller.downloadUnpaidLeave,
+                      minimumSize: const Size(0, 40),
+                    ),
                   ),
                 ],
               ),
@@ -574,15 +610,27 @@ class ReportView extends StatelessWidget {
                 children: [
                   AFwidget.tombol(
                     label: 'Batal',
-                    color: Colors.orange,
+                    color: Colors.grey,
                     onPressed: Get.back,
-                    minimumSize: const Size(120, 40),
+                    minimumSize: const Size(110, 40),
                   ),
-                  const SizedBox(width: 40),
-                  AFwidget.tombol(
-                    label: 'Download',
-                    color: Colors.blue,
-                    onPressed: controller.downloadListCuti,
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download PDF',
+                      color: Colors.red,
+                      onPressed: () { AFwidget.snackbar('BELUM_DIBUAT'); },
+                      minimumSize: const Size(0, 40),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download Excel',
+                      color: Colors.green,
+                      onPressed: controller.downloadListCuti,
+                      minimumSize: const Size(0, 40),
+                    ),
                   ),
                 ],
               ),
@@ -699,16 +747,27 @@ class ReportView extends StatelessWidget {
                 children: [
                   AFwidget.tombol(
                     label: 'Batal',
-                    color: Colors.orange,
+                    color: Colors.grey,
                     onPressed: Get.back,
-                    minimumSize: const Size(120, 40),
+                    minimumSize: const Size(110, 40),
                   ),
-                  const SizedBox(width: 40),
-                  AFwidget.tombol(
-                    label: 'Download',
-                    color: Colors.blueGrey,
-                    onPressed: controller.dowloadDataKaryawanPerJoint,
-                    minimumSize: const Size(120, 40),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download PDF',
+                      color: Colors.red,
+                      onPressed: () { AFwidget.snackbar('BELUM_DIBUAT'); },
+                      minimumSize: const Size(0, 40),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download Excel',
+                      color: Colors.green,
+                      onPressed: controller.dowloadDataKaryawanPerJoint,
+                      minimumSize: const Size(0, 40),
+                    ),
                   ),
                 ],
               ),
@@ -728,21 +787,21 @@ class ReportView extends StatelessWidget {
     }
     
     List<Map<String, dynamic>> allMenus = [
-      {'label': 'Data General Karyawan', 'onPressed': () { Get.back(); controller.dowloadListDataKaryawan(); }},
-      {'label': 'Data Ex Karyawan', 'onPressed': () { Get.back(); dialogListExKaryawan(); }},
-      {'label': 'NIK & TLP Karyawan', 'onPressed': () { Get.back(); controller.dowloadNikTlpKaryawan(); }},
-      {'label': 'Data Status Karyawan', 'onPressed': () { Get.back(); controller.dowloadDataStatusKaryawan(); }},
-      {'label': 'Data Jabatan Karyawan', 'onPressed': () { Get.back(); controller.dowloadDataJabatanKaryawan(); }},
-      {'label': 'Data Karyawan Per Joint', 'onPressed': () { Get.back(); dialogDataKaryawanPerJoint(); }},
+      {'label': 'Data General Karyawan', 'onDownloadExcel': () { Get.back(); controller.dowloadListDataKaryawan(); }},
+      {'label': 'Data Ex Karyawan', 'onModalTap': () { Get.back(); dialogListExKaryawan(); }},
+      {'label': 'NIK & TLP Karyawan', 'onDownloadExcel': () { Get.back(); controller.dowloadNikTlpKaryawan(); }},
+      {'label': 'Data Status Karyawan', 'onDownloadExcel': () { Get.back(); controller.dowloadDataStatusKaryawan(); }},
+      {'label': 'Data Jabatan Karyawan', 'onDownloadExcel': () { Get.back(); controller.dowloadDataJabatanKaryawan(); }},
+      {'label': 'Data Karyawan Per Joint', 'onModalTap': () { Get.back(); dialogDataKaryawanPerJoint(); }},
     ];
     
     for (var div in controller.listDivisi) {
-      allMenus.add({'label': 'Data ${div.label}', 'onPressed': () { Get.back(); controller.dowloadDataDivisi(div.value, div.label); }});
-      allMenus.add({'label': 'Alamat ${div.label}', 'onPressed': () { Get.back(); controller.dowloadAlamatDivisi(div.value, div.label); }});
+      allMenus.add({'label': 'Data ${div.label}', 'onDownloadExcel': () { Get.back(); controller.dowloadDataDivisi(div.value, div.label); }});
+      allMenus.add({'label': 'Alamat ${div.label}', 'onDownloadExcel': () { Get.back(); controller.dowloadAlamatDivisi(div.value, div.label); }});
     }
     
-    allMenus.add({'label': 'Data PROFESSIONAL SERVICE', 'onPressed': () { Get.back(); controller.dowloadDataProfessionalService(); }});
-    allMenus.add({'label': 'Alamat PROFESSIONAL SERVICE', 'onPressed': () { Get.back(); controller.dowloadAlamatProfessionalService(); }});
+    allMenus.add({'label': 'Data PROFESSIONAL SERVICE', 'onDownloadExcel': () { Get.back(); controller.dowloadDataProfessionalService(); }});
+    allMenus.add({'label': 'Alamat PROFESSIONAL SERVICE', 'onDownloadExcel': () { Get.back(); controller.dowloadAlamatProfessionalService(); }});
 
     TextEditingController txtCari = TextEditingController();
 
@@ -800,7 +859,7 @@ class ReportView extends StatelessWidget {
                     child: Wrap(
                       children: filteredMenus.map((m) => SizedBox(
                         width: (1000 - 40) / 2,
-                        child: barisBox(label: m['label'], onPressed: m['onPressed']),
+                        child: barisBox(label: m['label'], onModalTap: m['onModalTap'], onDownloadExcel: m['onDownloadExcel'], onDownloadPdf: m['onDownloadPdf']),
                       )).toList(),
                     ),
                   ),
@@ -909,16 +968,27 @@ class ReportView extends StatelessWidget {
                 children: [
                   AFwidget.tombol(
                     label: 'Batal',
-                    color: Colors.orange,
+                    color: Colors.grey,
                     onPressed: Get.back,
-                    minimumSize: const Size(120, 40),
+                    minimumSize: const Size(110, 40),
                   ),
-                  const SizedBox(width: 40),
-                  AFwidget.tombol(
-                    label: 'Download',
-                    color: Colors.blueGrey,
-                    onPressed: controller.dowloadListPHK,
-                    minimumSize: const Size(120, 40),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download PDF',
+                      color: Colors.red,
+                      onPressed: () { AFwidget.snackbar('BELUM_DIBUAT'); },
+                      minimumSize: const Size(0, 40),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download Excel',
+                      color: Colors.green,
+                      onPressed: controller.dowloadListPHK,
+                      minimumSize: const Size(0, 40),
+                    ),
                   ),
                 ],
               ),
@@ -983,16 +1053,27 @@ class ReportView extends StatelessWidget {
                 children: [
                   AFwidget.tombol(
                     label: 'Batal',
-                    color: Colors.orange,
+                    color: Colors.grey,
                     onPressed: Get.back,
-                    minimumSize: const Size(120, 40),
+                    minimumSize: const Size(110, 40),
                   ),
-                  const SizedBox(width: 40),
-                  AFwidget.tombol(
-                    label: 'Download',
-                    color: Colors.blueGrey,
-                    onPressed: controller.dowloadRekapPayrollPerKaryawan,
-                    minimumSize: const Size(120, 40),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download PDF',
+                      color: Colors.red,
+                      onPressed: () { AFwidget.snackbar('BELUM_DIBUAT'); },
+                      minimumSize: const Size(0, 40),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download Excel',
+                      color: Colors.green,
+                      onPressed: controller.dowloadRekapPayrollPerKaryawan,
+                      minimumSize: const Size(0, 40),
+                    ),
                   ),
                 ],
               ),
@@ -1051,22 +1132,33 @@ class ReportView extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(0, 25, 20, 25),
+              padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   AFwidget.tombol(
                     label: 'Batal',
-                    color: Colors.orange,
+                    color: Colors.grey,
                     onPressed: Get.back,
-                    minimumSize: const Size(120, 40),
+                    minimumSize: const Size(110, 40),
                   ),
-                  const SizedBox(width: 40),
-                  AFwidget.tombol(
-                    label: 'Download',
-                    color: Colors.blueGrey,
-                    onPressed: controller.dowloadRekapPPh21,
-                    minimumSize: const Size(120, 40),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download PDF',
+                      color: Colors.red,
+                      onPressed: () { AFwidget.snackbar('BELUM_DIBUAT'); },
+                      minimumSize: const Size(0, 40),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download Excel',
+                      color: Colors.green,
+                      onPressed: controller.dowloadRekapPPh21,
+                      minimumSize: const Size(0, 40),
+                    ),
                   ),
                 ],
               ),
@@ -1161,27 +1253,31 @@ class ReportView extends StatelessWidget {
                 children: [
                   AFwidget.tombol(
                     label: 'Batal',
-                    color: Colors.orange,
+                    color: Colors.grey,
                     onPressed: Get.back,
-                    minimumSize: const Size(120, 40),
+                    minimumSize: const Size(110, 40),
                   ),
-                  const Spacer(),
-                  AFwidget.tombol(
-                    label: 'Download PDF',
-                    color: Colors.red,
-                    onPressed: () {
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download PDF',
+                      color: Colors.red,
+                      onPressed: () {
                       controller.downloadSlipGajiPdf();
                     },
-                    minimumSize: const Size(120, 40),
+                      minimumSize: const Size(0, 40),
+                    ),
                   ),
                   const SizedBox(width: 10),
-                  AFwidget.tombol(
-                    label: 'Download Excel',
-                    color: Colors.blueGrey,
-                    onPressed: () {
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download Excel',
+                      color: Colors.green,
+                      onPressed: () {
                       controller.downloadSlipGaji();
                     },
-                    minimumSize: const Size(120, 40),
+                      minimumSize: const Size(0, 40),
+                    ),
                   ),
                 ],
               ),
@@ -1195,7 +1291,9 @@ class ReportView extends StatelessWidget {
 
   Widget barisBox({
     required String label,
-    required Function()? onPressed,
+    Function()? onModalTap,
+    Function()? onDownloadExcel,
+    Function()? onDownloadPdf,
   }) {
     return Container(
       margin: const EdgeInsets.fromLTRB(20, 0, 20, 12),
@@ -1212,18 +1310,26 @@ class ReportView extends StatelessWidget {
       ),
       child: ListTile(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        onTap: onPressed,
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-        leading: Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF1F5F9),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: const Icon(Icons.description_outlined, color: Color(0xFF64748B)),
-        ),
         title: Text(label, style: const TextStyle(fontWeight: FontWeight.w600, color: Color(0xFF334155), fontSize: 15)),
-        trailing: const Icon(Icons.download_rounded, color: Color(0xFF94A3B8), size: 22),
+        trailing: onModalTap != null 
+          ? IconButton(
+              icon: const Icon(Icons.download_rounded, color: Color(0xFF94A3B8), size: 22),
+              onPressed: onModalTap,
+            )
+          : Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.picture_as_pdf, color: Colors.red),
+                  onPressed: onDownloadPdf ?? () { AFwidget.snackbar('BELUM_DIBUAT'); },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.table_view, color: Colors.green),
+                  onPressed: onDownloadExcel ?? () { AFwidget.snackbar('BELUM_DIBUAT'); },
+                ),
+              ],
+            ),
       ),
     );
   }

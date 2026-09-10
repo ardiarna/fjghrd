@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_database.dart';
 import 'package:fjghrd/models/cuti.dart';
 import 'package:fjghrd/models/karyawan.dart';
@@ -196,11 +197,7 @@ class CicCutiControl extends GetxController {
   }
 
 Future<Opsi?> pilihTahun({String value = ''}) async {
-    List<Opsi> listTahun = [];
-    int startTahun = 2024;
-    for (int i = 0; i < 10; i++) {
-      listTahun.add(Opsi(value: (startTahun + i).toString(), label: (startTahun + i).toString()));
-    }
+    List<Opsi> listTahun = getListTahun();
     var a = await AFcombobox.bottomSheet(
       listOpsi: listTahun,
       valueSelected: value,

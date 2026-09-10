@@ -1329,7 +1329,6 @@ class KaryawanControl extends GetxController {
       listOpsi: listTahun,
       valueSelected: value,
       judul: 'Pilih Tahun',
-      withCari: false,
     );
     return a;
   }
@@ -1445,7 +1444,7 @@ class KaryawanControl extends GetxController {
   @override
   void onInit() {
     filterTahun = Opsi(value: '${_now.year}', label: '${_now.year}');
-    listTahun = List.generate(_now.year-2019, (index) => Opsi(value: '${_now.year-index}', label: '${_now.year-index}'));
+    listTahun = getListTahun();
     payrollTahunAwal = Opsi(value: '${_now.year}', label: '${_now.year}');
     payrollTahunAkhir = Opsi(value: '${_now.year}', label: '${_now.year}');
     

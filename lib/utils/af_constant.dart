@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fjghrd/models/opsi.dart';
 
 abstract class Rute {
   static const home = '/';
@@ -107,3 +108,17 @@ const bgLineBlue = DecorationImage(
   fit: BoxFit.fitWidth,
   opacity: 0.1,
 );
+
+List<Opsi> getListTahun() {
+  int tahunSekarang = DateTime.now().year;
+  int startTahun = 2010; // Ubah tahun awal di sini
+  int count = (tahunSekarang - startTahun) + 1;
+  // Generate list dari tahunSekarang menurun ke startTahun
+  if (count <= 0) {
+    return [Opsi(value: tahunSekarang.toString(), label: tahunSekarang.toString())];
+  }
+  return List.generate(count, (index) {
+    String thn = (tahunSekarang - index).toString();
+    return Opsi(value: thn, label: thn);
+  });
+}
