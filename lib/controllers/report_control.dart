@@ -9,6 +9,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ReportControl extends GetxController {
+
+  Map<int, bool> bulanTerpilih = {
+    1: false, 2: false, 3: false, 4: false, 5: false, 6: false,
+    7: false, 8: false, 9: false, 10: false, 11: false, 12: false,
+  };
+
   final authControl = Get.find<AuthControl>();
 
   final DateTime _now = DateTime.now();
@@ -51,6 +57,21 @@ class ReportControl extends GetxController {
     }
   }
 
+  Future<void> downloadJadwalCutiPdf() async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'cuti/excel/pdf-jadwal-cuti/${filterTahun.value}');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan PDF Jadwal Cuti telah berhasil dibuat. Silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat PDF. [${hasil.message}]');
+    }
+  }
+
   Future<void> downloadJadwalCuti() async {
     AFwidget.loading();
     var hasil = await AFdatabase.download(url: 'cuti/excel/jadwal/${filterTahun.value}');
@@ -63,6 +84,22 @@ class ReportControl extends GetxController {
       );
     } else {
       AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+  Future<void> downloadCutiTanpaPotonganPdf() async {
+    Get.back();
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'cuti/excel/pdf-tanpa-potongan/${filterTahunAwal.value}/${filterTahunAkhir.value}');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan PDF Cuti Tanpa Potongan telah berhasil dibuat. Silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat PDF. [${hasil.message}]');
     }
   }
 
@@ -82,6 +119,22 @@ class ReportControl extends GetxController {
     }
   }
 
+  Future<void> downloadUnpaidLeavePdf() async {
+    Get.back();
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'cuti/excel/pdf-unpaid/${filterTahunAwal.value}/${filterTahunAkhir.value}');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan PDF Cuti Unpaid Leave & Ganti Hari Libur telah berhasil dibuat. Silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat PDF. [${hasil.message}]');
+    }
+  }
+
   Future<void> downloadUnpaidLeave() async {
     Get.back();
     AFwidget.loading();
@@ -95,6 +148,22 @@ class ReportControl extends GetxController {
       );
     } else {
       AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+  Future<void> downloadListCutiPdf() async {
+    Get.back();
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'cuti/excel/pdf-list/${filterTahunAwal.value}/${filterTahunAkhir.value}');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan PDF List Cuti telah berhasil dibuat. Silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat PDF. [${hasil.message}]');
     }
   }
 
@@ -114,9 +183,44 @@ class ReportControl extends GetxController {
     }
   }
 
-  Future<void> dowloadListpayroll() async {
+  Future<void> dowloadListpayrollPdf() async {
+    List<int> selected = bulanTerpilih.entries
+        .where((entry) => entry.value)
+        .map((entry) => entry.key)
+        .toList();
+    if(selected.isEmpty) {
+        AFwidget.formWarning(label: 'Silakan pilih minimal 1 bulan');
+        return;
+    }
+    var bulans = selected.join('-');
+    Get.back();
     AFwidget.loading();
-    var hasil = await AFdatabase.download(url: 'excel/list-payroll/${filterTahun.value}');
+    var hasil = await AFdatabase.download(url: 'excel/pdf-list-payroll/${filterTahun.value}/$bulans');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'laporan pdf list payroll telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat pdf. [${hasil.message}]');
+    }
+  }
+
+  Future<void> dowloadListpayroll() async {
+    List<int> selected = bulanTerpilih.entries
+        .where((entry) => entry.value)
+        .map((entry) => entry.key)
+        .toList();
+    if(selected.isEmpty) {
+        AFwidget.formWarning(label: 'Silakan pilih minimal 1 bulan');
+        return;
+    }
+    var bulans = selected.join('-');
+    Get.back();
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/list-payroll/${filterTahun.value}/$bulans');
     Get.back();
     if(hasil.success) {
       AFwidget.formWarning(
@@ -177,6 +281,23 @@ class ReportControl extends GetxController {
     }
   }
 
+  Future<void> dowloadDataKaryawanPerJointPdf() async {
+    Get.back();
+    AFwidget.loading();
+    String incEx = includeExKaryawanJoint ? '1' : '0';
+    var hasil = await AFdatabase.download(url: 'excel/pdf-data-karyawan-per-joint/${filterTahunAwal.value}/${filterTahunAkhir.value}/$incEx');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan PDF Data Karyawan Per Joint telah berhasil dibuat. Silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat pdf. [${hasil.message}]');
+    }
+  }
+
   Future<void> dowloadDataProfessionalService() async {
     AFwidget.loading();
     var hasil = await AFdatabase.download(url: 'excel/data-divisi/PS');
@@ -189,6 +310,21 @@ class ReportControl extends GetxController {
       );
     } else {
       AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+  Future<void> dowloadDataProfessionalServicePdf() async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/pdf-data-divisi/PS');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan PDF Data PROFESSIONAL SERVICE telah berhasil dibuat. Silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat pdf. [${hasil.message}]');
     }
   }
 
@@ -222,6 +358,36 @@ class ReportControl extends GetxController {
     }
   }
 
+  Future<void> dowloadAlamatProfessionalServicePdf() async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/pdf-alamat-divisi/PS');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan PDF Alamat PROFESSIONAL SERVICE telah berhasil dibuat. Silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat pdf. [${hasil.message}]');
+    }
+  }
+
+  Future<void> dowloadAlamatDivisiPdf(String id, String nama) async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/pdf-alamat-divisi/$id');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan PDF Alamat $nama telah berhasil dibuat. Silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat pdf. [${hasil.message}]');
+    }
+  }
+
   Future<void> dowloadNikTlpKaryawan() async {
     AFwidget.loading();
     var hasil = await AFdatabase.download(url: 'excel/nik-tlp-karyawan');
@@ -234,6 +400,21 @@ class ReportControl extends GetxController {
       );
     } else {
       AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+  Future<void> dowloadNikTlpKaryawanPdf() async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/pdf-nik-tlp-karyawan');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'laporan PDF NIK & TLP Karyawan telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat pdf. [${hasil.message}]');
     }
   }
 
@@ -252,6 +433,21 @@ class ReportControl extends GetxController {
     }
   }
 
+  Future<void> dowloadDataDivisiPdf(String id, String nama) async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/pdf-data-divisi/$id');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan PDF Data $nama telah berhasil dibuat. Silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat pdf. [${hasil.message}]');
+    }
+  }
+
   Future<void> dowloadDataJabatanKaryawan() async {
     AFwidget.loading();
     var hasil = await AFdatabase.download(url: 'excel/data-jabatan-karyawan');
@@ -264,6 +460,21 @@ class ReportControl extends GetxController {
       );
     } else {
       AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+  Future<void> dowloadDataJabatanKaryawanPdf() async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/pdf-data-jabatan-karyawan');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan PDF Data Jabatan Karyawan telah berhasil dibuat. Silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat pdf. [${hasil.message}]');
     }
   }
 
@@ -281,6 +492,21 @@ class ReportControl extends GetxController {
     }
   }
 
+  Future<void> dowloadDataStatusKaryawanPdf() async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/pdf-data-status-karyawan');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan PDF Data Status Karyawan telah berhasil dibuat. Silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat pdf. [${hasil.message}]');
+    }
+  }
+
   Future<void> dowloadListDataKaryawan() async {    AFwidget.loading();
     var hasil = await AFdatabase.download(url: 'excel/list-karyawan');
     Get.back();
@@ -292,6 +518,21 @@ class ReportControl extends GetxController {
       );
     } else {
       AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+  Future<void> dowloadListDataKaryawanPdf() async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/pdf-list-karyawan');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan PDF Data General Karyawan telah berhasil dibuat. Silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat pdf. [${hasil.message}]');
     }
   }
 
@@ -311,6 +552,36 @@ class ReportControl extends GetxController {
     }
   }
 
+  Future<void> dowloadListExKaryawanPdf() async {
+    Get.back();
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/pdf-list-ex-karyawan/${filterTahunAwal.value}/${filterTahunAkhir.value}');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan PDF list ex karyawan telah berhasil dibuat. Silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat pdf. [${hasil.message}]');
+    }
+  }
+
+  Future<void> dowloadListPHKPdf() async {
+    Get.back();
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/pdf-list-phk/${filterTahunAwal.value}/${filterTahunAkhir.value}');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan pdf list phk telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    }
+  }
+
   Future<void> dowloadListPHK() async {
     Get.back();
     AFwidget.loading();
@@ -324,6 +595,21 @@ class ReportControl extends GetxController {
       );
     } else {
       AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+  Future<void> dowloadRekapPayrollPdf() async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/pdf-rekap-gaji/${filterTahun.value}');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan PDF rekap gaji telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat PDF. [${hasil.message}]');
     }
   }
 
@@ -342,6 +628,21 @@ class ReportControl extends GetxController {
     }
   }
 
+  Future<void> dowloadRekapMedicalPdf() async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/pdf-rekap-medical/${filterTahun.value}');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan PDF rekap medical telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat PDF. [${hasil.message}]');
+    }
+  }
+
   Future<void> dowloadRekapMedical() async {
     AFwidget.loading();
     var hasil = await AFdatabase.download(url: 'excel/rekap-medical/${filterTahun.value}');
@@ -357,6 +658,21 @@ class ReportControl extends GetxController {
     }
   }
 
+  Future<void> dowloadRekapOvertimePdf() async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/pdf-rekap-overtime/${filterTahun.value}');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan PDF rekap overtime telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat PDF. [${hasil.message}]');
+    }
+  }
+
   Future<void> dowloadRekapOvertime() async {
     AFwidget.loading();
     var hasil = await AFdatabase.download(url: 'excel/rekap-overtime/${filterTahun.value}');
@@ -369,6 +685,30 @@ class ReportControl extends GetxController {
       );
     } else {
       AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+  Future<void> dowloadRekapPayrollPerKaryawanPdf() async {
+    if(filterJenis == '') {
+      AFwidget.formWarning(label: 'Silakan pilih divisi terlebih dahulu');
+      return;
+    }
+    if(filterArea.value == '') {
+      AFwidget.formWarning(label: 'Silakan pilih area terlebih dahulu');
+      return;
+    }
+    Get.back();
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/pdf-rekap-payroll-perkaryawan/$filterJenis/${filterTahun.value}/${filterArea.value}');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan PDF Rekap Payroll Per Karyawan telah berhasil dibuat. Silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat PDF. [${hasil.message}]');
     }
   }
 
@@ -444,6 +784,30 @@ class ReportControl extends GetxController {
     if(hasil.success) {
       AFwidget.formWarning(
         label: 'pdf slip gaji telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat pdf. [${hasil.message}]');
+    }
+  }
+
+  Future<void> dowloadRekapPPh21Pdf() async {
+    if(filterJenis == '') {
+      AFwidget.formWarning(label: 'Silakan pilih divisi terlebih dahulu');
+      return;
+    }
+    if(filterArea.value == '') {
+      AFwidget.formWarning(label: 'Silakan pilih area terlebih dahulu');
+      return;
+    }
+    Get.back();
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/pdf-rekap-pph21/$filterJenis/${filterTahun.value}/${filterArea.value}');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan PDF Rekap PPh 21 telah berhasil dibuat. Silakan periksa directory Download anda (${hasil.message})',
         warna: Colors.green,
         ikon: Icons.info,
       );
