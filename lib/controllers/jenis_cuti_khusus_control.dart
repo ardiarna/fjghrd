@@ -1,6 +1,7 @@
 import 'package:fjghrd/models/jenis_cuti_khusus.dart';
 import 'package:fjghrd/repositories/jenis_cuti_khusus_repository.dart';
 import 'package:fjghrd/utils/af_convert.dart';
+import 'package:fjghrd/utils/af_combobox.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,7 +14,9 @@ class JenisCutiKhususControl extends GetxController {
 
   RxList<JenisCutiKhusus> listJenisCuti = <JenisCutiKhusus>[].obs;
 
-  late TextEditingController txtId, txtNama, txtLamaHari, txtSatuan, txtUrutan;
+  Opsi satuan = Opsi(value: 'hari', label: 'Hari');
+
+  late TextEditingController txtId, txtNama, txtLamaHari, txtUrutan;
 
   Future<void> loadJenisCuti() async {
     var hasil = await _repo.findAll();
@@ -44,7 +47,7 @@ class JenisCutiKhususControl extends GetxController {
         id: txtId.text,
         nama: txtNama.text,
         lamaHari: AFconvert.keInt(txtLamaHari.text),
-        satuan: txtSatuan.text,
+        satuan: satuan.value,
         urutan: AFconvert.keInt(txtUrutan.text),
       );
 
@@ -90,12 +93,23 @@ class JenisCutiKhususControl extends GetxController {
     );
   }
 
+  Future<Opsi?> pilihSatuan({String value = ''}) async {
+    return await AFcombobox.bottomSheet(
+      listOpsi: [
+        Opsi(value: 'hari', label: 'Hari'),
+        Opsi(value: 'bulan', label: 'Bulan'),
+      ],
+      valueSelected: value,
+      judul: 'Pilih Satuan',
+      withCari: false,
+    );
+  }
+
   @override
   void onInit() {
     txtId = TextEditingController();
     txtNama = TextEditingController();
     txtLamaHari = TextEditingController();
-    txtSatuan = TextEditingController();
     txtUrutan = TextEditingController();
     super.onInit();
     loadJenisCuti();
@@ -106,7 +120,6 @@ class JenisCutiKhususControl extends GetxController {
     txtId.dispose();
     txtNama.dispose();
     txtLamaHari.dispose();
-    txtSatuan.dispose();
     txtUrutan.dispose();
     super.onClose();
   }

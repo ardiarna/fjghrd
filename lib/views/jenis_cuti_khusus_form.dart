@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fjghrd/utils/af_combobox.dart';
 import 'package:get/get.dart';
 import 'package:fjghrd/controllers/jenis_cuti_khusus_control.dart';
 import 'package:fjghrd/utils/af_widget.dart';
@@ -36,23 +37,20 @@ class JenisCutiKhususForm extends StatelessWidget {
                 children: [
                   const SizedBox(width: 150, child: Text('Satuan')),
                   Expanded(
-                    child: DropdownButtonFormField<String>(
-                      initialValue: controller.txtSatuan.text == '' ? 'hari' : controller.txtSatuan.text,
-                      items: const [
-                        DropdownMenuItem(value: 'hari', child: Text('Hari')),
-                        DropdownMenuItem(value: 'bulan', child: Text('Bulan')),
-                      ],
-                      onChanged: (val) {
-                        controller.txtSatuan.text = val ?? 'hari';
-                        controller.update();
-                      },
-                      decoration: const InputDecoration(
-                        isDense: true,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(5)),
-                        ),
-                      ),
+                    child: GetBuilder<JenisCutiKhususControl>(
+                      builder: (_) {
+                        return AFwidget.comboField(
+                          value: controller.satuan.label,
+                          label: '',
+                          onTap: () async {
+                            var res = await controller.pilihSatuan(value: controller.satuan.value);
+                            if (res != null) {
+                              controller.satuan = res;
+                              controller.update();
+                            }
+                          }
+                        );
+                      }
                     ),
                   ),
                 ],
@@ -111,7 +109,8 @@ void showJenisCutiKhususForm(String id) {
   controller.txtId.text = item.id;
   controller.txtNama.text = item.nama;
   controller.txtLamaHari.text = item.lamaHari == 0 ? '' : item.lamaHari.toString();
-  controller.txtSatuan.text = item.satuan;
+  String sat = item.satuan == '' ? 'hari' : item.satuan;
+  controller.satuan = Opsi(value: sat, label: sat == 'hari' ? 'Hari' : 'Bulan');
   controller.txtUrutan.text = item.urutan == 0 ? '' : item.urutan.toString();
 
   AFwidget.dialog(

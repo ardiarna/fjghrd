@@ -618,7 +618,7 @@ class CutiMasalControl extends GetxController {
         'kategori': 'UNPAID',
         'lama_hari': kcmTambah!.splitUnpaid,
         'jenis_unpaid': kcmTambah!.hasJatah ? 'SUDAH_HABIS' : 'SEBELUM_TIMBUL',
-        'keterangan': 'UNPAID (Cuti Masal) : ${txtKeteranganTambah.text}',
+        'keterangan': txtKeteranganTambah.text,
         'dates': <String>[]
       });
     }

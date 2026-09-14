@@ -18,8 +18,8 @@ class CicCutiFormView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     controller.formType = formType;
-    String title = 'Form Cuti CIC';
-    if(formType == 'IJIN') title = 'Form Ijin CIC';
+    String title = 'Form Cuti CIC ${controller.filterTahun.label}';
+    if(formType == 'IJIN') title = 'Form Ijin CIC ${controller.filterTahun.label}';
 
 
     return Column(
@@ -41,7 +41,7 @@ class CicCutiFormView extends StatelessWidget {
                       controller: controller.txtTanggalKembali,
                       label: 'Tgl Masuk Kembali',
                       readOnly: true,
-                      ontap: () async {
+                      ontap: (controller.formType == 'CUTI_MASAL') ? null : () async {
                         DateTime? picked = await AFwidget.pickDate(
                           context: context,
                           initialDate: controller.txtTanggalKembali.text.isNotEmpty ? DateFormat('dd-MM-yyyy').parse(controller.txtTanggalKembali.text) : DateTime.now(),
@@ -233,17 +233,31 @@ class CicCutiFormView extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 35, top: 10),
                   child: Column(
                     children: [
-                      Row(
-                        children: [
-                            SizedBox(width: 150, child: Text('Lama Cuti (Hari)')),
-                            Expanded(
-                                child: AFwidget.textField(
-                                  controller: controller.txtLamaMasal, readOnly: controller.currentId != '',
-                                  label: '',
-                                  keyboard: TextInputType.number,
-                                ),
+                      _infoRow('Hak cuti tahunan periode ${controller.filterTahun.label}', '${controller.totalHakCuti} Hari'),
+                      _infoRow('Cuti Yang Sudah Diambil', '${controller.sudahDiambil} Hari'),
+                      _infoRow('Cuti Masal; Idul Fitri/Natal/Bersama', '${controller.cutiMasal} Hari'),
+                      _infoRow('Cuti Yang Belum Diambil', '${controller.belumDiambil} Hari'),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 5),
+                        child: Row(
+                          children: [
+                            const Expanded(child: Text('Cuti Masal Yang Akan Diambil')),
+                            SizedBox(
+                              width: 100,
+                              child: AFwidget.textField(
+                                controller: controller.txtLamaMasal, readOnly: controller.currentId != '',
+                                keyboard: TextInputType.number,
+                                suffix: const Padding(padding: EdgeInsets.only(top: 15), child: Text('Hari')),
+                                inputformatters: [
+                                  CurrencyTextInputFormatter.currency(
+                                    symbol: '',
+                                    decimalDigits: 0,
+                                  ),
+                                ],
+                              ),
                             )
-                        ]
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 10),
                       (() {
@@ -571,7 +585,7 @@ class CicCutiFormView extends StatelessWidget {
                       controller.update(['form_cuti']);
                     },
                   ),
-                  const Text('3. Cuti Diluar Tanggungan Perusahaan', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  const Text('Cuti Diluar Tanggungan Perusahaan', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                 ],
               ),
               if(controller.cekUnpaid) ...[

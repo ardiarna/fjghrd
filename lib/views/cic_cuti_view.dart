@@ -10,6 +10,7 @@ import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/views/cic_cuti_form_view.dart';
+import 'package:fjghrd/views/cic_cuti_masal_edit_view.dart';
 import 'package:fjghrd/views/cic_cuti_masal_view.dart' as cuti_masal;
 
 import 'package:fjghrd/views/cic_jatah_cuti_tahunan_view.dart';
@@ -150,8 +151,12 @@ class CicCutiView extends StatelessWidget {
                 onPressed: () {
                   String id = rdrCtx.row.cells['id']!.value;
                   String jenisForm = rdrCtx.row.cells['jenis_form']!.value;
-                  controller.editForm(id);
-                  _openForm(jenisForm);
+                  if (jenisForm == 'CUTI_MASAL_GLOBAL') {
+                    Get.to(() => CicCutiMasalEditView(id: id));
+                  } else {
+                    controller.editForm(id);
+                    _openForm(jenisForm);
+                  }
                 },
                 icon: const Icon(Icons.edit_square),
                 iconSize: 18,
