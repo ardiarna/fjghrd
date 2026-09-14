@@ -103,6 +103,7 @@ class CutiControl extends GetxController {
     txtPlusTahunLalu.addListener(() => update(['form_cuti', 'total_jatah']));
     txtMinTahunLalu.addListener(() => update(['form_cuti', 'total_jatah']));
     txtAkanDiambil.addListener(() { hitungSisa(); update(['form_cuti']); });
+    txtLamaMasal.addListener(() { hitungSisa(); update(['form_cuti']); });
     txtLamaUnpaid = TextEditingController();
     txtLamaGantiLibur = TextEditingController();
     txtTglAwalKhusus = TextEditingController();
@@ -260,7 +261,8 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
 
   void hitungSisa() {
     int akanDiambil = AFconvert.keInt(txtAkanDiambil.text);
-    sisaHakCuti = belumDiambil - akanDiambil;
+    int masalAkanDiambil = AFconvert.keInt(txtLamaMasal.text);
+    sisaHakCuti = belumDiambil - (cekTahunan ? akanDiambil : 0) - (cekMasal ? masalAkanDiambil : 0);
     update(['form_cuti']);
   }
 
@@ -351,9 +353,9 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
     );
   }
 
-  void editForm(String id) {
+  void editForm(String id, {Cuti? cutiObj}) {
     clearForm();
-    Cuti? cuti = listCuti.firstWhereOrNull((element) => element.id == id);
+    Cuti? cuti = cutiObj ?? listCuti.firstWhereOrNull((element) => element.id == id);
     if(cuti != null) {
       currentId = cuti.id;
       formType = cuti.jenisForm;
@@ -667,6 +669,9 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
     if(hasil.success) {
         clearForm();
         loadCutis();
+        if (Get.isRegistered<cuti_masal.CutiMasalControl>()) {
+            Get.find<cuti_masal.CutiMasalControl>().loadDataEdit();
+        }
         Get.back(); // close dialog/form
         AFwidget.snackbar('Form berhasil disimpan');
     } else {
@@ -683,6 +688,9 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
         Get.back();
         if(hasil.success) {
           loadCutis();
+          if (Get.isRegistered<cuti_masal.CutiMasalControl>()) {
+              Get.find<cuti_masal.CutiMasalControl>().loadDataEdit();
+          }
           Get.back();
           Get.back();
           AFwidget.snackbar('Data berhasil dihapus');

@@ -103,6 +103,7 @@ class Cuti {
   String tahun;
   Karyawan? karyawan;
   List<CutiDetail> details;
+  String tanggalCutiStr;
 
   Cuti({
     this.id = '',
@@ -112,6 +113,7 @@ class Cuti {
     this.tahun = '',
     this.karyawan,
     this.details = const [],
+    this.tanggalCutiStr = '',
   });
 
   factory Cuti.fromMap(Map<String, dynamic> map) {
@@ -125,6 +127,7 @@ class Cuti {
       details: map['details'] != null
           ? List<CutiDetail>.from((map['details'] as List).map((x) => CutiDetail.fromMap(x)))
           : [],
+      tanggalCutiStr: map['tanggal_cuti_str']?.toString() ?? '',
     );
   }
 

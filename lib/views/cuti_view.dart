@@ -13,6 +13,7 @@ import 'package:fjghrd/views/cuti_masal_view.dart' as cuti_masal;
 
 import 'package:fjghrd/views/jatah_cuti_tahunan_view.dart';
 import 'package:fjghrd/views/jenis_cuti_khusus_view.dart';
+import 'package:fjghrd/views/cuti_masal_edit_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
@@ -31,9 +32,9 @@ class CutiView extends StatelessWidget {
           'karyawan': PlutoCell(value: rowData[index].karyawan?.nama ?? ''),
           'jenis_form': PlutoCell(value: rowData[index].jenisForm),
           'kategori_display': PlutoCell(value: rowData[index].details.map((e) => e.kategori).toSet().join(', ')),
-          'lama_cuti': PlutoCell(value: _getLamaCuti(rowData[index].details)),
-          'tanggal_cuti': PlutoCell(value: _getTanggalCuti(rowData[index].details)),
-          'keterangan': PlutoCell(value: _getKeterangan(rowData[index])),
+          'lama_cuti': PlutoCell(value: rowData[index].jenisForm == 'CUTI_MASAL_GLOBAL' ? rowData[index].details.first.lamaHari : _getLamaCuti(rowData[index].details)),
+          'tanggal_cuti': PlutoCell(value: rowData[index].tanggalCutiStr.isNotEmpty ? rowData[index].tanggalCutiStr : _getTanggalCuti(rowData[index].details)),
+          'keterangan': PlutoCell(value: rowData[index].jenisForm == 'CUTI_MASAL_GLOBAL' ? rowData[index].details.first.keterangan : _getKeterangan(rowData[index])),
           'tanggal_kembali': PlutoCell(value: AFconvert.matDate(rowData[index].tanggalKembali)),
         },
       ),
@@ -149,8 +150,12 @@ class CutiView extends StatelessWidget {
                 onPressed: () {
                   String id = rdrCtx.row.cells['id']!.value;
                   String jenisForm = rdrCtx.row.cells['jenis_form']!.value;
-                  controller.editForm(id);
-                  _openForm(jenisForm);
+                  if (jenisForm == 'CUTI_MASAL_GLOBAL') {
+                    Get.to(() => CutiMasalEditView(id: id));
+                  } else {
+                    controller.editForm(id);
+                    _openForm(jenisForm);
+                  }
                 },
                 icon: const Icon(Icons.edit_square),
                 iconSize: 18,

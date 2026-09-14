@@ -12,6 +12,9 @@ import 'package:fjghrd/utils/af_combobox.dart';
 import 'package:fjghrd/utils/af_database.dart';
 
 class CutiMasalControl extends GetxController {
+  String? editId;
+  CutiMasalControl({this.editId});
+
   final CutiRepository repo = CutiRepository();
   
   late Opsi filterTahun;
@@ -51,7 +54,11 @@ class CutiMasalControl extends GetxController {
     }
     
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      loadInfoMasal();
+      if (editId != null) {
+        loadDataEdit();
+      } else {
+        loadInfoMasal();
+      }
     });
   }
 
@@ -145,8 +152,41 @@ class CutiMasalControl extends GetxController {
     filterTahun = opt;
     update();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      loadInfoMasal();
+      if (editId != null) {
+        loadDataEdit();
+      } else {
+        loadInfoMasal();
+      }
     });
+  }
+
+  String get tanggalCutiStrGlobal {
+    String str = "";
+    if (listTanggalGlobal.isNotEmpty) {
+        List<DateTime> parsedDates = List.from(listTanggalGlobal);
+        parsedDates.sort((a, b) => a.compareTo(b));
+        if (parsedDates.length == 1) {
+            str = DateFormat('dd MMM').format(parsedDates.first);
+        } else if (parsedDates.length > 5) {
+            str = "${DateFormat('dd MMM').format(parsedDates.first)} s/d ${DateFormat('dd MMM').format(parsedDates.last)}";
+        } else {
+            Map<int, List<int>> grouped = {};
+            for (var dt in parsedDates) {
+                if (!grouped.containsKey(dt.month)) {
+                    grouped[dt.month] = [];
+                }
+                grouped[dt.month]!.add(dt.day);
+            }
+            
+            List<String> monthStrings = [];
+            const months = ['', 'Jan', 'Peb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nop', 'Des'];
+            grouped.forEach((m, days) {
+                monthStrings.add("${days.join(', ')} ${months[m]}");
+            });
+            str = monthStrings.join(', ');
+        }
+    }
+    return str;
   }
 
   void toggleCheckSemua(bool? val) {
@@ -268,13 +308,42 @@ class CutiMasalControl extends GetxController {
         return;
       }
     }
+    // List<String> globalDatesStr = listTanggalGlobal.map((e) => AFconvert.matYMD(e)).toList();
+    
+    // format string tanggal_cuti for backend
+    String tanggalCutiStr = "";
+    if (listTanggalGlobal.isNotEmpty) {
+        List<DateTime> parsedDates = List.from(listTanggalGlobal);
+        parsedDates.sort((a, b) => a.compareTo(b));
+        if (parsedDates.length == 1) {
+            tanggalCutiStr = DateFormat('dd MMM').format(parsedDates.first);
+        } else if (parsedDates.length > 5) {
+            tanggalCutiStr = "${DateFormat('dd MMM').format(parsedDates.first)} s/d ${DateFormat('dd MMM').format(parsedDates.last)}";
+        } else {
+            Map<int, List<int>> grouped = {};
+            for (var dt in parsedDates) {
+                if (!grouped.containsKey(dt.month)) grouped[dt.month] = [];
+                grouped[dt.month]!.add(dt.day);
+            }
+            List<String> monthStrings = [];
+            const months = ['', 'Jan', 'Peb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nop', 'Des'];
+            grouped.forEach((m, days) {
+                monthStrings.add("${days.join(', ')} ${months[m]}");
+            });
+            tanggalCutiStr = monthStrings.join(', ');
+        }
+    }
 
     var body = {
       'tahun': filterTahun.value,
       'keterangan': txtKeperluan.text,
       'tanggal_kembali': txtTglKembali.text != '' ? AFconvert.matYMD(DateFormat('dd-MM-yyyy').parse(txtTglKembali.text)) : null,
+      'lama_hari': AFconvert.keInt(txtLamaHariGlobal.text),
+      'tanggal_cuti': tanggalCutiStr,
+      'global_dates': listTanggalGlobal.map((e) => AFconvert.matYMD(e)).toList(),
       'karyawans': [],
     };
+
 
     List<Map<String, dynamic>> kList = [];
     for(var k in checkedList) {
@@ -333,11 +402,7 @@ class CutiMasalControl extends GetxController {
       Get.back();
       if(hasil.success) {
         Get.back(); // Close the page
-        AFwidget.formWarning(
-          label: hasil.message, 
-          ikon: Icons.check_circle, 
-          warna: Colors.green
-        );
+        AFwidget.snackbar(hasil.message);
         if(Get.isRegistered<CutiControl>()) {
           Get.find<CutiControl>().loadCutis();
         }
@@ -356,6 +421,244 @@ class CutiMasalControl extends GetxController {
       // Wait, we need to pass Karyawan to it. 
       // It's easier to just call inputJatahForm('') and let user pick.
       showJatahCutiTahunanForm('', defaultKaryawanId: k.karyawanId, defaultKaryawanNama: k.nama, defaultTahun: filterTahun.value);
+    }
+  }
+
+  // --- MERGED FROM EDIT CONTROL ---
+  Map<String, dynamic>? dataMasal;
+  List<dynamic> listCutiEdit = [];
+  bool isLoadingEdit = true;
+
+  Future<void> loadDataEdit() async {
+    isLoadingEdit = true;
+    update();
+    var hasil = await AFdatabase.send(url: 'cuti/masal/$editId');
+    if (hasil.success) {
+      dataMasal = hasil.data;
+      listCutiEdit = dataMasal?['cutis'] ?? [];
+      txtKeperluan.text = dataMasal?['keterangan'] ?? '';
+      
+      listTanggalGlobal.clear();
+      if (dataMasal?['dates'] != null) {
+          for (var d in dataMasal!['dates']) {
+              if (d['tanggal'] != null) {
+                  listTanggalGlobal.add(DateTime.parse(d['tanggal']));
+              }
+          }
+      }
+    } else {
+      AFwidget.snackbar(hasil.message);
+    }
+    isLoadingEdit = false;
+    update();
+  }
+
+  Future<void> updateKeteranganMasal(String newKeterangan) async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.send(
+      url: 'cuti/masal/$editId/keterangan',
+      methodeRequest: MethodeRequest.put,
+      body: {'keterangan': newKeterangan},
+    );
+    Get.back();
+    if (hasil.success) {
+      AFwidget.snackbar('Berhasil diupdate');
+      loadDataEdit();
+    } else {
+      AFwidget.snackbar(hasil.message);
+    }
+  }
+
+  Future<void> updateKeteranganDetail(String detailId, String newKeterangan) async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.send(
+      url: 'cuti/detail/$detailId/keterangan',
+      methodeRequest: MethodeRequest.put,
+      body: {'keterangan': newKeterangan},
+    );
+    Get.back();
+    if (hasil.success) {
+      AFwidget.snackbar('Berhasil diupdate');
+      loadDataEdit();
+    } else {
+      AFwidget.snackbar(hasil.message);
+    }
+  }
+
+  Future<void> hapusCutiKaryawan(String cutiId) async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.send(
+      url: 'cuti/$cutiId',
+      methodeRequest: MethodeRequest.delete,
+    );
+    Get.back();
+    if (hasil.success) {
+      AFwidget.snackbar('Berhasil dihapus');
+      loadDataEdit();
+    } else {
+      AFwidget.snackbar(hasil.message);
+    }
+  }
+
+  Future<void> hapusCutiMasal() async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.send(
+      url: 'cuti/masal/$editId',
+      methodeRequest: MethodeRequest.delete,
+    );
+    Get.back();
+    if (hasil.success) {
+      Get.back(); // close page
+      AFwidget.snackbar('Berhasil dihapus');
+      if (Get.isRegistered<CutiControl>()) {
+          Get.find<CutiControl>().loadCutis();
+      }
+    } else {
+      AFwidget.snackbar(hasil.message);
+    }
+  }
+
+  // --- MERGED FROM TAMBAH KARYAWAN CONTROL ---
+  KaryawanCutiMasal? kcmTambah;
+  TextEditingController txtKeteranganTambah = TextEditingController();
+  bool loadingJatah = false;
+
+  void initTambahKaryawan() {
+    kcmTambah = null;
+    txtKeteranganTambah.text = dataMasal?['keterangan'] ?? '';
+    loadingJatah = false;
+  }
+
+  Future<void> fetchJatahKaryawan(String karyawanId, String nama) async {
+    loadingJatah = true;
+    if (kcmTambah == null) {
+      kcmTambah = KaryawanCutiMasal(
+        karyawanId: karyawanId,
+        nama: nama,
+        jabatan: '',
+        hasJatah: false,
+        totalHakCuti: 0,
+        sudahDiambil: 0,
+        cutiMasalLama: 0,
+        belumDiambil: 0,
+        bolehMinus: false,
+      );
+    } else {
+      kcmTambah!.nama = nama;
+      kcmTambah!.karyawanId = karyawanId;
+    }
+    update();
+    try {
+      var tahun = dataMasal?['tahun'];
+      var hasil = await AFdatabase.send(url: 'cuti/info-masal?tahun=$tahun&karyawan_id=$karyawanId');
+      if (hasil.success) {
+        if (hasil.daftar.isNotEmpty) {
+          var dt = hasil.daftar.first as Map<String, dynamic>;
+          kcmTambah = KaryawanCutiMasal.fromMap(dt);
+          kcmTambah!.nama = nama;
+        } else {
+          kcmTambah = KaryawanCutiMasal(
+            karyawanId: karyawanId,
+            nama: nama,
+            jabatan: '',
+            hasJatah: false,
+            totalHakCuti: 0,
+            sudahDiambil: 0,
+            cutiMasalLama: 0,
+            belumDiambil: 0,
+            bolehMinus: false,
+          );
+        }
+        kcmTambah!.txtLamaHari.text = dataMasal?['lama_hari']?.toString() ?? '1';
+        kcmTambah!.txtLamaHari.addListener(() {
+          update();
+        });
+      } else {
+        AFwidget.snackbar(hasil.message);
+      }
+    } catch (e) {
+      AFwidget.snackbar('Error parsing data: $e');
+    } finally {
+      loadingJatah = false;
+      update();
+    }
+  }
+
+  String get debugCanSaveReasonTambah {
+    if (kcmTambah == null) return 'Pilih Karyawan terlebih dahulu.';
+    if (kcmTambah!.txtLamaHari.text.isEmpty || AFconvert.keInt(kcmTambah!.txtLamaHari.text) <= 0) return 'Lama Hari harus > 0.';
+    if (AFconvert.keInt(kcmTambah!.txtLamaHari.text) > AFconvert.keInt(dataMasal?['lama_hari'])) return 'Lama Hari tidak boleh lebih dari ${dataMasal?['lama_hari']}.';
+    if (kcmTambah!.inputDates.length != AFconvert.keInt(kcmTambah!.txtLamaHari.text)) return 'Jumlah Tanggal Cuti yang dipilih (${kcmTambah!.inputDates.length}) tidak sesuai dengan Lama Hari (${kcmTambah!.txtLamaHari.text}).';
+    return '';
+  }
+
+  bool get canSaveTambah => debugCanSaveReasonTambah == '';
+
+  Future<void> submitTambahKaryawan() async {
+    if (!canSaveTambah) {
+      AFwidget.formWarning(label: debugCanSaveReasonTambah);
+      return;
+    }
+
+    AFwidget.loading();
+
+    List<Map<String, dynamic>> details = [];
+    
+    if (kcmTambah!.splitCutiMasal > 0) {
+      details.add({
+        'kategori': 'CUTI_MASAL',
+        'lama_hari': kcmTambah!.splitCutiMasal,
+        'keterangan': txtKeteranganTambah.text,
+        'dates': <String>[]
+      });
+    }
+
+    if (kcmTambah!.splitUnpaid > 0) {
+      details.add({
+        'kategori': 'UNPAID',
+        'lama_hari': kcmTambah!.splitUnpaid,
+        'jenis_unpaid': kcmTambah!.hasJatah ? 'SUDAH_HABIS' : 'SEBELUM_TIMBUL',
+        'keterangan': 'UNPAID (Cuti Masal) : ${txtKeteranganTambah.text}',
+        'dates': <String>[]
+      });
+    }
+
+    int assigned = 0;
+    List<DateTime> sorted = List.from(kcmTambah!.inputDates);
+    sorted.sort();
+
+    for (var d in details) {
+      int lama = d['lama_hari'];
+      for (int i = 0; i < lama; i++) {
+        d['dates'].add(DateFormat('yyyy-MM-dd').format(sorted[assigned]));
+        assigned++;
+      }
+    }
+
+    var body = {
+      'karyawans': [
+        {
+          'karyawan_id': kcmTambah!.karyawanId,
+          'details': details
+        }
+      ]
+    };
+
+    var hasil = await AFdatabase.send(
+      url: 'cuti/masal/$editId/karyawan',
+      methodeRequest: MethodeRequest.post,
+      body: body,
+      contentIsJson: true,
+    );
+
+    Get.back(); // close loading
+
+    if (hasil.success) {
+      Get.back(); // close modal
+      AFwidget.snackbar('Berhasil menambah karyawan');
+      loadDataEdit();
+    } else {
+      AFwidget.formWarning(label: hasil.message);
     }
   }
 }
