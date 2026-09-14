@@ -1379,6 +1379,72 @@ class KaryawanControl extends GetxController {
     }
   }
 
+  Future<void> dowloadPayrollPdf() async {
+    AFwidget.loading();
+    var hasil = await _repo.pdfPayroll(id: current.id, tahun: filterTahun.label);
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan PDF payroll ${current.nama} berhasil dibuat. Silakan periksa directory Download anda (${hasil.message})',
+        warna:  Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat pdf. [${hasil.message}]');
+    }
+  }
+
+  Future<void> dowloadPayrollPeriodePdf() async {
+    AFwidget.loading();
+    var hasil = await _repo.pdfPayrollPeriode(
+      id: current.id,
+      tahunAwal: payrollTahunAwal.value,
+      bulanAwal: payrollBulanAwal.value,
+      tahunAkhir: payrollTahunAkhir.value,
+      bulanAkhir: payrollBulanAkhir.value,
+    );
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan PDF payroll ${current.nama} berhasil dibuat. Silakan periksa directory Download anda (${hasil.message})',
+        warna:  Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat pdf. [${hasil.message}]');
+    }
+  }
+
+  Future<void> downloadListCuti() async {
+    AFwidget.loading();
+    var hasil = await _repo.excelListCuti(id: current.id, tahun: filterTahun.label);
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan excel list cuti ${current.nama} berhasil dibuat. Silakan periksa directory Download anda (${hasil.message})',
+        warna:  Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+  Future<void> downloadPdfListCuti() async {
+    AFwidget.loading();
+    var hasil = await _repo.pdfListCuti(id: current.id, tahun: filterTahun.label);
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan pdf list cuti ${current.nama} berhasil dibuat. Silakan periksa directory Download anda (${hasil.message})',
+        warna:  Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat pdf. [${hasil.message}]');
+    }
+  }
+
   Future<void> downloadSlipGaji() async {
     AFwidget.loading();
     List<int> selected = bulanTerpilih.entries

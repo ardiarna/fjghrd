@@ -19,7 +19,7 @@ class KaryawanPayrollView extends StatelessWidget {
         children: [
           AFwidget.pageHeader(
           onBack: Get.back,
-          title: 'PAYROLL',
+          title: 'PAYROLL & CUTI',
           icon: Icons.list_alt_outlined,
           children: [
             const Spacer(),
@@ -42,22 +42,22 @@ class KaryawanPayrollView extends StatelessWidget {
                 ),
                 const Spacer(),
                 tombol(
-                  label: 'PDF Slip Gaji',
-                  icon: Icons.picture_as_pdf,
-                  color: Colors.red,
-                  onPressed: dialogPdfSlipGaji,
-                ),
-                tombol(
-                  label: 'Excel Slip Gaji',
-                  icon: Icons.receipt_long,
-                  color: Colors.greenAccent,
+                  label: 'Slip Gaji',
+                  icon: Icons.download,
+                  color: Colors.white,
                   onPressed: dialogSlipGaji,
                 ),
                 tombol(
-                  label: 'Excel Payroll',
-                  icon: Icons.file_open,
-                  color: Colors.greenAccent,
+                  label: 'Payroll',
+                  icon: Icons.download,
+                  color: Colors.white,
                   onPressed: dialogExcelPayroll,
+                ),
+                tombol(
+                  label: 'List Cuti',
+                  icon: Icons.download,
+                  color: Colors.white,
+                  onPressed: dialogListCuti,
                 ),
                 const SizedBox(width: 20),
                 SizedBox(
@@ -393,6 +393,66 @@ class KaryawanPayrollView extends StatelessWidget {
     );
   }
 
+  void dialogListCuti() {
+    AFwidget.dialog(
+      Container(
+        width: 500,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AFwidget.formHeader('List Cuti ${controller.filterTahun.label}'),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  AFwidget.tombol(
+                    label: 'Batal',
+                    color: Colors.grey,
+                    onPressed: Get.back,
+                    minimumSize: const Size(100, 40),
+                  ),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download PDF',
+                      color: Colors.red,
+                      onPressed: () {
+                        Get.back();
+                        controller.downloadPdfListCuti();
+                      },
+                      minimumSize: const Size(0, 40),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download Excel',
+                      color: Colors.green,
+                      onPressed: () {
+                        Get.back();
+                        controller.downloadListCuti();
+                      },
+                      minimumSize: const Size(0, 40),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      scrollable: false,
+      backgroundColor: Colors.white,
+      contentPadding: const EdgeInsets.all(0),
+    );
+  }
+
   void dialogExcelPayroll() {
     // Default ke pertahun
     String modePilihan = 'tahun'; // 'tahun' atau 'periode'
@@ -568,23 +628,41 @@ class KaryawanPayrollView extends StatelessWidget {
                         children: [
                           AFwidget.tombol(
                             label: 'Batal',
-                            color: Colors.orange,
+                            color: Colors.grey,
                             onPressed: Get.back,
-                            minimumSize: const Size(120, 40),
+                            minimumSize: const Size(110, 40),
                           ),
-                          const SizedBox(width: 30),
-                          AFwidget.tombol(
-                            label: 'Download',
-                            color: Colors.green,
-                            onPressed: () {
-                              Get.back();
-                              if(modePilihan == 'tahun') {
-                                controller.dowloadPayroll();
-                              } else {
-                                controller.dowloadPayrollPeriode();
-                              }
-                            },
-                            minimumSize: const Size(120, 40),
+                          const SizedBox(width: 15),
+                          Expanded(
+                            child: AFwidget.tombol(
+                              label: 'Download PDF',
+                              color: Colors.red,
+                              onPressed: () {
+                                Get.back();
+                                if(modePilihan == 'tahun') {
+                                  controller.dowloadPayrollPdf();
+                                } else {
+                                  controller.dowloadPayrollPeriodePdf();
+                                }
+                              },
+                              minimumSize: const Size(0, 40),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: AFwidget.tombol(
+                              label: 'Download Excel',
+                              color: Colors.green,
+                              onPressed: () {
+                                Get.back();
+                                if(modePilihan == 'tahun') {
+                                  controller.dowloadPayroll();
+                                } else {
+                                  controller.dowloadPayrollPeriode();
+                                }
+                              },
+                              minimumSize: const Size(0, 40),
+                            ),
                           ),
                         ],
                       ),
@@ -615,7 +693,7 @@ class KaryawanPayrollView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AFwidget.formHeader('Excel Slip Gaji ${controller.filterTahun.label}'),
+            AFwidget.formHeader('Slip Gaji ${controller.filterTahun.label}'),
             Padding(
               padding: EdgeInsets.fromLTRB(20, 15, 42, 20),
               child: Row(
@@ -671,126 +749,39 @@ class KaryawanPayrollView extends StatelessWidget {
               }
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(10, 25, 30, 0),
+              padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   AFwidget.tombol(
                     label: 'Batal',
-                    color: Colors.orange,
+                    color: Colors.grey,
                     onPressed: Get.back,
-                    minimumSize: const Size(120, 40),
+                    minimumSize: const Size(110, 40),
                   ),
-                  const SizedBox(width: 40),
-                  AFwidget.tombol(
-                    label: 'Download',
-                    color: Colors.green,
-                    onPressed: () {
-                      Get.back();
-                      controller.downloadSlipGaji();
-                    },
-                    minimumSize: const Size(120, 40),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download PDF',
+                      color: Colors.red,
+                      onPressed: () {
+                        Get.back();
+                        controller.downloadPdfSlipGaji();
+                      },
+                      minimumSize: const Size(0, 40),
+                    ),
                   ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-      scrollable: false,
-      backgroundColor: Colors.white,
-      contentPadding: const EdgeInsets.all(0),
-    );
-  }
-
-  void dialogPdfSlipGaji() {
-    AFwidget.dialog(
-      Container(
-        width: 500,
-        height: 370,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            AFwidget.formHeader('PDF Slip Gaji ${controller.filterTahun.label}'),
-            Padding(
-              padding: EdgeInsets.fromLTRB(20, 15, 42, 20),
-              child: Row(
-                children: [
-                  Text('Silakan pilih bulan :'),
-                  const Spacer(),
-                  GetBuilder<KaryawanControl>(
-                    builder: (_) {
-                      return Checkbox(
-                        value: controller.bulanTerpilih.values.every((v) => v),
-                        onChanged: (value) {
-                          if (value != null) {
-                            controller.bulanTerpilih.updateAll((key, val) => value);
-                            controller.update();
-                          }
-                        },
-                      );
-                    },
-                  ),
-                  const Text("pilih semua"),
-                ],
-              ),
-            ),
-            GetBuilder<KaryawanControl>(
-              builder: (_) {
-                return SizedBox(
-                  height: 150,
-                  width: 500,
-                  child: GridView.count(
-                    crossAxisCount: 3,
-                    childAspectRatio: 5,
-                    mainAxisSpacing: 5,
-                    crossAxisSpacing: 5,
-                    padding: const EdgeInsets.only(left: 10),
-                    children: controller.bulanTerpilih.entries.map((el) {
-                      return Row(
-                        children: [
-                          Checkbox(
-                            value: el.value,
-                            onChanged: (value) {
-                              if(value != null) {
-                                controller.bulanTerpilih[el.key] = value;
-                                controller.update();
-                              }
-                            },
-                          ),
-                          Text(mapBulan[el.key]!),
-                        ],
-                      );
-                    }).toList(),
-                  ),
-                );
-              }
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(10, 25, 30, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  AFwidget.tombol(
-                    label: 'Batal',
-                    color: Colors.orange,
-                    onPressed: Get.back,
-                    minimumSize: const Size(120, 40),
-                  ),
-                  const SizedBox(width: 40),
-                  AFwidget.tombol(
-                    label: 'Download PDF',
-                    color: Colors.red,
-                    onPressed: () {
-                      Get.back();
-                      controller.downloadPdfSlipGaji();
-                    },
-                    minimumSize: const Size(140, 40),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download Excel',
+                      color: Colors.green,
+                      onPressed: () {
+                        Get.back();
+                        controller.downloadSlipGaji();
+                      },
+                      minimumSize: const Size(0, 40),
+                    ),
                   ),
                 ],
               ),
