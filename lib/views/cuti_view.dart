@@ -32,7 +32,7 @@ class CutiView extends StatelessWidget {
           'karyawan': PlutoCell(value: rowData[index].karyawan?.nama ?? ''),
           'jenis_form': PlutoCell(value: rowData[index].jenisForm),
           'kategori_display': PlutoCell(value: rowData[index].details.map((e) => e.kategori).toSet().join(', ')),
-          'lama_cuti': PlutoCell(value: rowData[index].jenisForm == 'CUTI_MASAL_GLOBAL' ? rowData[index].details.first.lamaHari : _getLamaCuti(rowData[index].details)),
+          'lama_cuti': PlutoCell(value: rowData[index].jenisForm == 'CUTI_MASAL_GLOBAL' ? (rowData[index].details.first.lamaHari == rowData[index].details.first.lamaHari.toInt() ? rowData[index].details.first.lamaHari.toInt().toString() : rowData[index].details.first.lamaHari.toString()) : _getLamaCuti(rowData[index].details)),
           'tanggal_cuti': PlutoCell(value: rowData[index].tanggalCutiStr.isNotEmpty ? rowData[index].tanggalCutiStr : _getTanggalCuti(rowData[index].details)),
           'keterangan': PlutoCell(value: rowData[index].jenisForm == 'CUTI_MASAL_GLOBAL' ? rowData[index].details.first.keterangan : _getKeterangan(rowData[index])),
           'tanggal_kembali': PlutoCell(value: AFconvert.matDate(rowData[index].tanggalKembali)),
@@ -49,8 +49,8 @@ class CutiView extends StatelessWidget {
   }
 
   String _getLamaCuti(List<CutiDetail> details) {
-    int hari = 0;
-    int bulan = 0;
+    double hari = 0;
+    double bulan = 0;
     
     for (var det in details) {
       String satuan = 'hari';
@@ -58,7 +58,7 @@ class CutiView extends StatelessWidget {
         satuan = det.jenisKhusus!['satuan'].toString().toLowerCase();
       }
       
-      int lama = det.lamaHari;
+      double lama = det.lamaHari;
       if (satuan == 'bulan') {
         bulan += lama;
       } else {
@@ -67,13 +67,16 @@ class CutiView extends StatelessWidget {
     }
     
     List<String> parts = [];
+    String hStr = hari == hari.toInt() ? hari.toInt().toString() : hari.toString();
+    String bStr = bulan == bulan.toInt() ? bulan.toInt().toString() : bulan.toString();
+    
     if (hari > 0 && bulan > 0) {
-      parts.add("$hari");
-      parts.add("$bulan Bulan");
+      parts.add(hStr);
+      parts.add(bStr);
     } else if (bulan > 0) {
-      parts.add("$bulan Bulan");
+      parts.add(bStr);
     } else if (hari > 0) {
-      parts.add("$hari");
+      parts.add(hStr);
     } else {
       parts.add("0");
     }

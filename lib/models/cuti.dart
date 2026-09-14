@@ -36,7 +36,7 @@ class CutiDetail {
   int? snapTotalHakCuti;
   int? snapCutiTerambil;
   int? snapCutiMasal;
-  int lamaHari;
+  double lamaHari;
   String keterangan;
   String? jenisCutiKhususId;
   String? jenisUnpaid;
@@ -66,7 +66,7 @@ class CutiDetail {
       snapTotalHakCuti: AFconvert.keInt(map['snap_total_hak_cuti']),
       snapCutiTerambil: AFconvert.keInt(map['snap_sudah_diambil'] ?? map['snap_cuti_terambil']),
       snapCutiMasal: AFconvert.keInt(map['snap_cuti_masal']),
-      lamaHari: AFconvert.keInt(map['lama_hari']),
+      lamaHari: AFconvert.keDouble(map['lama_hari']),
       keterangan: map['keterangan'] ?? '',
       jenisCutiKhususId: map['jenis_cuti_khusus_id']?.toString(),
       jenisUnpaid: map['jenis_unpaid']?.toString(),

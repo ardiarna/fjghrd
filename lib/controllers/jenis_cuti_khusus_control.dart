@@ -46,7 +46,7 @@ class JenisCutiKhususControl extends GetxController {
       var item = JenisCutiKhusus(
         id: txtId.text,
         nama: txtNama.text,
-        lamaHari: AFconvert.keInt(txtLamaHari.text),
+        lamaHari: AFconvert.keDouble(txtLamaHari.text),
         satuan: satuan.value,
         urutan: AFconvert.keInt(txtUrutan.text),
       );

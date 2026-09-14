@@ -4,7 +4,7 @@ class JenisCutiKhusus {
   String id;
   String nama;
   String satuan;
-  int lamaHari;
+  double lamaHari;
   int urutan;
 
   JenisCutiKhusus({
@@ -20,7 +20,7 @@ class JenisCutiKhusus {
       id: AFconvert.keString(data['id']),
       nama: AFconvert.keString(data['nama']),
       satuan: AFconvert.keString(data['satuan']),
-      lamaHari: AFconvert.keInt(data['lama_hari']),
+      lamaHari: AFconvert.keDouble(data['lama_hari']),
       urutan: AFconvert.keInt(data['urutan']),
     );
   }

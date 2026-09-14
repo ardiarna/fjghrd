@@ -17,28 +17,28 @@ abstract class AFconvert {
   }
 
   static int keInt(dynamic nilai) {
-    if (nilai is int) {
-      return nilai;
+    if (nilai is num) {
+      return nilai.toInt();
     } else if (nilai != null && nilai != '') {
-      if(nilai is String) {
-        nilai = nilai.replaceAll(',', '').replaceAll('.', '');
+      String strVal = nilai.toString();
+      strVal = strVal.replaceAll(',', '').replaceAll('.', '');
+      if(int.tryParse(strVal) != null) {
+        return int.parse(strVal);
       }
-      if(int.tryParse(nilai) != null) {
-        return int.parse(nilai);
-      }
-      if (double.tryParse(nilai) != null) {
-        return double.parse(nilai).toInt();
+      if (double.tryParse(strVal) != null) {
+        return double.parse(strVal).toInt();
       }
     }
     return 0;
   }
 
   static double keDouble(dynamic nilai) {
-    if (nilai is double) {
-      return nilai;
+    if (nilai is num) {
+      return nilai.toDouble();
     } else if (nilai != null) {
-      if(double.tryParse(nilai) != null) {
-        return double.parse(nilai);
+      String strVal = nilai.toString();
+      if(double.tryParse(strVal) != null) {
+        return double.parse(strVal);
       }
     }
     return 0;

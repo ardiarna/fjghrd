@@ -26,10 +26,15 @@ class CicJenisCutiKhususForm extends StatelessWidget {
               label: 'Nama',
               controller: controller.txtNama,
             ),
-            AFwidget.barisText(
-              label: 'Lama Hari',
-              controller: controller.txtLamaHari,
-              isNumber: true,
+            GetBuilder<CicJenisCutiKhususControl>(
+              builder: (controller) {
+                return AFwidget.barisText(
+                  label: 'Lama Hari',
+                  controller: controller.txtLamaHari,
+                  isNumber: true,
+                  decimalDigits: controller.satuan.value == 'bulan' ? 2 : 0,
+                );
+              }
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
@@ -108,7 +113,7 @@ void showCicJenisCutiKhususForm(String id) {
 
   controller.txtId.text = item.id;
   controller.txtNama.text = item.nama;
-  controller.txtLamaHari.text = item.lamaHari == 0 ? '' : item.lamaHari.toString();
+  controller.txtLamaHari.text = item.lamaHari == 0 ? '' : (item.lamaHari == item.lamaHari.toInt() ? item.lamaHari.toInt().toString() : item.lamaHari.toString());
   String sat = item.satuan == '' ? 'hari' : item.satuan;
   controller.satuan = Opsi(value: sat, label: sat == 'hari' ? 'Hari' : 'Bulan');
   controller.txtUrutan.text = item.urutan == 0 ? '' : item.urutan.toString();

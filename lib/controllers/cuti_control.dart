@@ -378,7 +378,7 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
           if(kat == 'TAHUNAN') {
               idDetailTahunan = det.id;
               cekTahunan = true;
-              txtAkanDiambil.text = det.lamaHari > 0 ? det.lamaHari.toString() : '';
+              txtAkanDiambil.text = det.lamaHari > 0 ? (det.lamaHari == det.lamaHari.toInt() ? det.lamaHari.toInt().toString() : det.lamaHari.toString()) : '';
               txtKetTahunan.text = det.keterangan;
               if(det.dates.isNotEmpty) {
                   for(var dt in det.dates) {
@@ -394,7 +394,7 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
               if(dJenis != null) {
                   jenisKhusus = listJenisKhusus.firstWhereOrNull((e) => e.value == dJenis.toString());
               }
-              txtLamaKhusus.text = det.lamaHari > 0 ? det.lamaHari.toString() : '';
+              txtLamaKhusus.text = det.lamaHari > 0 ? (det.lamaHari == det.lamaHari.toInt() ? det.lamaHari.toInt().toString() : det.lamaHari.toString()) : '';
               txtKetKhusus.text = det.keterangan;
               if(det.dates.isNotEmpty) {
                   for(var dt in det.dates) {
@@ -405,7 +405,7 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
           } else if(kat == 'CUTI_MASAL') {
               idDetailMasal = det.id;
               cekMasal = true;
-              txtLamaMasal.text = det.lamaHari > 0 ? det.lamaHari.toString() : '';
+              txtLamaMasal.text = det.lamaHari > 0 ? (det.lamaHari == det.lamaHari.toInt() ? det.lamaHari.toInt().toString() : det.lamaHari.toString()) : '';
               txtKetMasal.text = det.keterangan;
               if(det.dates.isNotEmpty) {
                   for(var dt in det.dates) {
@@ -441,7 +441,7 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
               // Ijin form uses TAHUNAN variables under the hood in CutiFormView (it checks formType == 'IJIN' and displays Tahunan checklist)
               idDetailTahunan = det.id;
               cekTahunan = true;
-              txtAkanDiambil.text = det.lamaHari > 0 ? det.lamaHari.toString() : '';
+              txtAkanDiambil.text = det.lamaHari > 0 ? (det.lamaHari == det.lamaHari.toInt() ? det.lamaHari.toInt().toString() : det.lamaHari.toString()) : '';
               txtKetTahunan.text = det.keterangan;
               if(det.dates.isNotEmpty) {
                   for(var dt in det.dates) {
@@ -466,12 +466,12 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
 
       var detUnpaid = cuti.details.firstWhereOrNull((d) => d.kategori == 'UNPAID');
       if(detUnpaid != null) {
-          txtLamaUnpaid.text = detUnpaid.lamaHari > 0 ? detUnpaid.lamaHari.toString() : '';
+          txtLamaUnpaid.text = detUnpaid.lamaHari > 0 ? (detUnpaid.lamaHari == detUnpaid.lamaHari.toInt() ? detUnpaid.lamaHari.toInt().toString() : detUnpaid.lamaHari.toString()) : '';
       }
       
       var detLibur = cuti.details.firstWhereOrNull((d) => d.kategori == 'GANTI_HARI_LIBUR');
       if(detLibur != null) {
-          txtLamaGantiLibur.text = detLibur.lamaHari > 0 ? detLibur.lamaHari.toString() : '';
+          txtLamaGantiLibur.text = detLibur.lamaHari > 0 ? (detLibur.lamaHari == detLibur.lamaHari.toInt() ? detLibur.lamaHari.toInt().toString() : detLibur.lamaHari.toString()) : '';
       }
       
       update(['form_cuti']);
@@ -485,7 +485,7 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
     if (skipKategori != 'GANTI_LIBUR' && tglGantiLibur.any((d) => AFconvert.matYMD(d) == strDate)) return true;
     
     if (skipKategori != 'KHUSUS') {
-        int lm = AFconvert.keInt(txtLamaKhusus.text);
+        double lm = AFconvert.keDouble(txtLamaKhusus.text);
         if (lm > 5 || satuanKhusus == 'bulan') {
             if (txtTglAwalKhusus.text.isNotEmpty && txtTglAkhirKhusus.text.isNotEmpty) {
                 DateTime start = DateFormat('dd-MM-yyyy').parse(txtTglAwalKhusus.text);
@@ -549,12 +549,12 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
     
     if (cekKhusus) {
       if (jenisKhusus == null) { debugCanSubmitReason = 'Jenis cuti khusus belum dipilih'; return false; }
-      int lm = AFconvert.keInt(txtLamaKhusus.text);
+      double lm = AFconvert.keDouble(txtLamaKhusus.text);
       if (lm <= 0) { debugCanSubmitReason = 'Lama cuti khusus belum diisi'; return false; }
       if (lm > 5 || satuanKhusus == 'bulan') {
         if (txtTglAwalKhusus.text.isEmpty || txtTglAkhirKhusus.text.isEmpty) { debugCanSubmitReason = 'Tanggal mulai/akhir cuti khusus belum dipilih'; return false; }
       } else {
-        if (tglKhusus.length != lm) { debugCanSubmitReason = 'Jumlah tanggal cuti khusus tidak sesuai dengan lama cuti'; return false; }
+        if (tglKhusus.length != lm.toInt()) { debugCanSubmitReason = 'Jumlah tanggal cuti khusus tidak sesuai dengan lama cuti'; return false; }
       }
       if (txtKetKhusus.text.isEmpty) { debugCanSubmitReason = 'Keterangan cuti khusus belum diisi'; return false; }
     }
@@ -601,7 +601,7 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
     }
     if(cekKhusus) {
         List<DateTime> finalTglKhusus = [...tglKhusus];
-        int lm = AFconvert.keInt(txtLamaKhusus.text);
+        double lm = AFconvert.keDouble(txtLamaKhusus.text);
         if ((lm > 5 || satuanKhusus == 'bulan') && txtTglAwalKhusus.text.isNotEmpty && txtTglAkhirKhusus.text.isNotEmpty) {
             finalTglKhusus.clear();
             DateTime start = DateFormat('dd-MM-yyyy').parse(txtTglAwalKhusus.text);

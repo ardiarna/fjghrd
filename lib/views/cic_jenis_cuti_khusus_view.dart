@@ -68,7 +68,7 @@ class CicJenisCutiKhususView extends StatelessWidget {
       PlutoColumn(
         title: 'Lama Hari',
         field: 'lama_hari',
-        type: PlutoColumnType.number(),
+        type: PlutoColumnType.number(format: '#,##0.##'),
         readOnly: true,
         width: 120,
         backgroundColor: Colors.brown.shade100,

@@ -247,7 +247,7 @@ class CutiFormView extends StatelessWidget {
                               width: 100,
                               child: AFwidget.textField(
                                 controller: controller.txtLamaMasal, readOnly: controller.currentId != '',
-                                keyboard: TextInputType.number,
+                                keyboard: const TextInputType.numberWithOptions(decimal: true),
                                 suffix: const Padding(padding: EdgeInsets.only(top: 15), child: Text('Hari')),
                                 inputformatters: [
                                   CurrencyTextInputFormatter.currency(
@@ -361,7 +361,7 @@ class CutiFormView extends StatelessWidget {
                               width: 100,
                               child: AFwidget.textField(
                                 controller: controller.txtAkanDiambil, readOnly: controller.currentId != '',
-                                keyboard: TextInputType.number,
+                                keyboard: const TextInputType.numberWithOptions(decimal: true),
                                 suffix: const Padding(padding: EdgeInsets.only(top: 15), child: Text('Hari')),
                                 inputformatters: [
                                   CurrencyTextInputFormatter.currency(
@@ -446,9 +446,9 @@ class CutiFormView extends StatelessWidget {
                                     if(a != null && a.value != controller.jenisKhusus?.value) {
                                       controller.jenisKhusus = a;
                                       var dbData = a.data;
-                                      int lama = AFconvert.keInt(dbData?['lama_hari']);
+                                      double lama = AFconvert.keDouble(dbData?['lama_hari']);
                                       controller.satuanKhusus = AFconvert.keString(dbData?['satuan']);
-                                      controller.txtLamaKhusus.text = lama == 0 ? '' : lama.toString();
+                                      controller.txtLamaKhusus.text = lama == 0 ? '' : (lama == lama.toInt() ? lama.toInt().toString() : lama.toString());
                                       controller.update(['form_cuti']);
                                     }
                                   },
@@ -464,11 +464,11 @@ class CutiFormView extends StatelessWidget {
                                 child: AFwidget.textField(
                                   controller: controller.txtLamaKhusus, readOnly: controller.currentId != '',
                                   label: '',
-                                  keyboard: TextInputType.number,
+                                  keyboard: const TextInputType.numberWithOptions(decimal: true),
                                   inputformatters: [
                                     CurrencyTextInputFormatter.currency(
                                       symbol: '',
-                                      decimalDigits: 0,
+                                      decimalDigits: controller.satuanKhusus == 'bulan' ? 2 : 0,
                                     ),
                                   ],
                                   onchanged: (val) {
@@ -480,7 +480,7 @@ class CutiFormView extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       (() {
-                          int lm = AFconvert.keInt(controller.txtLamaKhusus.text);
+                          double lm = AFconvert.keDouble(controller.txtLamaKhusus.text);
                           bool isRange = lm > 5 || controller.satuanKhusus == 'bulan';
                           if (isRange) {
                               return Column(
@@ -541,7 +541,7 @@ class CutiFormView extends StatelessWidget {
                                   ]
                               );
                           } else {
-                              return _buildDateSelector(context, (controller.formType == 'IJIN' ? 'Tanggal Ijin' : 'Tanggal Cuti'), controller.tglKhusus, max: lm, readOnly: controller.currentId != '');
+                              return _buildDateSelector(context, (controller.formType == 'IJIN' ? 'Tanggal Ijin' : 'Tanggal Cuti'), controller.tglKhusus, max: lm.toInt(), readOnly: controller.currentId != '');
                           }
                       })(),
                       const SizedBox(height: 10),
@@ -621,11 +621,11 @@ class CutiFormView extends StatelessWidget {
                                 child: AFwidget.textField(
                                   controller: controller.txtLamaUnpaid, readOnly: controller.currentId != '',
                                   label: '',
-                                  keyboard: TextInputType.number,
+                                  keyboard: const TextInputType.numberWithOptions(decimal: true),
                                   inputformatters: [
                                     CurrencyTextInputFormatter.currency(
                                       symbol: '',
-                                      decimalDigits: 0,
+                                      decimalDigits: controller.satuanKhusus == 'bulan' ? 2 : 0,
                                     ),
                                   ],
                                   onchanged: (val) {
@@ -697,7 +697,7 @@ class CutiFormView extends StatelessWidget {
                                 child: AFwidget.textField(
                                   controller: controller.txtLamaGantiLibur, readOnly: controller.currentId != '',
                                   label: '',
-                                  keyboard: TextInputType.number,
+                                  keyboard: const TextInputType.numberWithOptions(decimal: true),
                                   inputformatters: [
                                     CurrencyTextInputFormatter.currency(
                                       symbol: '',

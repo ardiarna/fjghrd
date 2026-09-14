@@ -50,8 +50,8 @@ class CicCutiView extends StatelessWidget {
   }
 
   String _getLamaCuti(List<CutiDetail> details) {
-    int hari = 0;
-    int bulan = 0;
+    double hari = 0;
+    double bulan = 0;
     
     for (var det in details) {
       String satuan = 'hari';
@@ -59,7 +59,7 @@ class CicCutiView extends StatelessWidget {
         satuan = det.jenisKhusus!['satuan'].toString().toLowerCase();
       }
       
-      int lama = det.lamaHari;
+      double lama = det.lamaHari;
       if (satuan == 'bulan') {
         bulan += lama;
       } else {
@@ -68,13 +68,16 @@ class CicCutiView extends StatelessWidget {
     }
     
     List<String> parts = [];
+    String hStr = hari == hari.toInt() ? hari.toInt().toString() : hari.toString();
+    String bStr = bulan == bulan.toInt() ? bulan.toInt().toString() : bulan.toString();
+    
     if (hari > 0 && bulan > 0) {
-      parts.add("$hari");
-      parts.add("$bulan Bulan");
+      parts.add(hStr);
+      parts.add(bStr);
     } else if (bulan > 0) {
-      parts.add("$bulan Bulan");
+      parts.add(bStr);
     } else if (hari > 0) {
-      parts.add("$hari");
+      parts.add(hStr);
     } else {
       parts.add("0");
     }

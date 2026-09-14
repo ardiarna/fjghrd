@@ -1030,7 +1030,7 @@ abstract class AFwidget {
               ontap: ontap,
               maxLines: isTextArea ? 4 : 1,
               minLines: isTextArea ? 2 : 1,
-              keyboard: isTextArea ? TextInputType.multiline : TextInputType.text,
+              keyboard: isNumber ? const TextInputType.numberWithOptions(decimal: true) : (isTextArea ? TextInputType.multiline : TextInputType.text),
               inputformatters: !isNumber ? null : [
                 CurrencyTextInputFormatter.currency(
                   symbol: '',
