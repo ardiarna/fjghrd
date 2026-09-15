@@ -1,4 +1,5 @@
 import 'package:fjghrd/views/training_view.dart';
+import 'package:fjghrd/controllers/auth_control.dart';
 import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/views/agama_view.dart';
@@ -48,41 +49,45 @@ class HomeView extends StatelessWidget {
       bottomNavigationBar: GetBuilder<HomeControl>(
         builder: (_) {
           return NavigationBar(
-            selectedIndex: controller.tabId > 5 ? 0 : controller.tabId,
+            selectedIndex: controller.availableTabs.contains(controller.tabId) 
+               ? controller.availableTabs.indexOf(controller.tabId) 
+               : 0,
             onDestinationSelected: (idx) {
-              if (idx == 5) {
+              int actualIdx = controller.availableTabs[idx];
+              if (actualIdx == 5) {
                  controller.scaffoldKey.currentState?.openEndDrawer();
               } else {
-                 controller.pindahTab(idx);
+                 controller.pindahTab(actualIdx);
               }
             },
-            destinations: const [
-              NavigationDestination(
+            destinations: [
+              const NavigationDestination(
                 icon: Icon(Icons.home_outlined),
                 selectedIcon: Icon(Icons.home),
                 label: 'Beranda',
               ),
-              NavigationDestination(
+              const NavigationDestination(
                 icon: Icon(Icons.supervisor_account_outlined),
                 selectedIcon: Icon(Icons.supervisor_account),
                 label: 'Karyawan',
               ),
-              NavigationDestination(
-                icon: Icon(Icons.assignment_outlined),
-                selectedIcon: Icon(Icons.assignment),
-                label: 'Payroll',
-              ),
-              NavigationDestination(
+              if (controller.authControl.user.role != 'user')
+                const NavigationDestination(
+                  icon: Icon(Icons.assignment_outlined),
+                  selectedIcon: Icon(Icons.assignment),
+                  label: 'Payroll',
+                ),
+              const NavigationDestination(
                 icon: Icon(Icons.beach_access_outlined),
                 selectedIcon: Icon(Icons.beach_access),
                 label: 'Cuti / Ijin',
               ),
-              NavigationDestination(
+              const NavigationDestination(
                 icon: Icon(Icons.analytics_outlined),
                 selectedIcon: Icon(Icons.analytics),
                 label: 'Laporan',
               ),
-              NavigationDestination(
+              const NavigationDestination(
                 icon: Icon(Icons.dehaze),
                 label: 'Menu',
               ),
@@ -94,11 +99,38 @@ class HomeView extends StatelessWidget {
         width: 250,
         child: Column(
           children: [
+            Container(
+              width: double.infinity,
+              color: Colors.blue,
+              child: SafeArea(
+                bottom: false,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                  child: GetBuilder<AuthControl>(
+                    builder: (auth) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            auth.user.nama,
+                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            auth.user.email,
+                            style: const TextStyle(fontSize: 13, color: Colors.white70),
+                          ),
+                        ],
+                      );
+                    }
+                  ),
+                ),
+              ),
+            ),
             Expanded(
               child: ListView(
-                padding: EdgeInsets.zero,
+                padding: const EdgeInsets.only(top: 10),
                 children: [
-                  const SizedBox(height: 20),
                   drawItem(
                     label: 'Area',
                     icon: Icons.maps_home_work_outlined,
@@ -132,17 +164,18 @@ class HomeView extends StatelessWidget {
                       controller.update();
                     },
                   ),
-                  drawItem(
-                    label: 'Salary',
-                    icon: Icons.payments_outlined,
-                    color: Colors.blueGrey,
-                    onTap: () {
-                      controller.tabId = 5;
-                      controller.kontener = UpahView();
-                      Get.back();
-                      controller.update();
-                    },
-                  ),
+                  if (controller.authControl.user.role != 'user')
+                    drawItem(
+                      label: 'Salary',
+                      icon: Icons.payments_outlined,
+                      color: Colors.blueGrey,
+                      onTap: () {
+                        controller.tabId = 5;
+                        controller.kontener = UpahView();
+                        Get.back();
+                        controller.update();
+                      },
+                    ),
                   drawItem(
                     label: 'Agama',
                     icon: Icons.mosque_outlined,

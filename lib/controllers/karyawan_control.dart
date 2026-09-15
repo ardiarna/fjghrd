@@ -4,6 +4,8 @@ import 'package:fjghrd/models/area.dart';
 import 'package:fjghrd/models/divisi.dart';
 import 'package:fjghrd/models/jabatan.dart';
 import 'package:fjghrd/models/karyawan.dart';
+import 'package:fjghrd/models/cuti.dart';
+import 'package:fjghrd/repositories/cuti_repository.dart';
 import 'package:fjghrd/models/keluarga_karyawan.dart';
 import 'package:fjghrd/models/keluarga_kontak.dart';
 import 'package:fjghrd/models/payroll.dart';
@@ -64,6 +66,8 @@ class KaryawanControl extends GetxController {
   List<TrainingKaryawan> listTrainingKaryawan = [];
   List<TimelineMasakerja> listTimelineMasakerja = [];
   RxList<Payroll> listPayroll = <Payroll>[].obs;
+  RxList<Cuti> listCutiKaryawan = <Cuti>[].obs;
+  int totalHakCuti = 0;
   PayrollPhk payrollPhk = PayrollPhk();
   Opsi filterStaf = Opsi(value: 'Y', label: 'STAF');
   Opsi filterArea = Opsi(value: '', label: 'SEMUA');
@@ -399,6 +403,25 @@ class KaryawanControl extends GetxController {
         listPayroll.add(Payroll.fromMap(data));
       }
     }
+    
+    // Load cuti for this user too
+    listCutiKaryawan.clear();
+    totalHakCuti = 0;
+    var cutiRepo = CutiRepository();
+    
+    var hasilInfo = await cutiRepo.fetchInfo(karyawanId: current.id, tahun: filterTahun.value);
+    if(hasilInfo.success && hasilInfo.data['kuota'] != null) {
+      totalHakCuti = hasilInfo.data['kuota']['total_hak_cuti'] ?? 0;
+    }
+
+    var hasilCuti = await cutiRepo.findAll(tahun: filterTahun.value, karyawanId: current.id);
+    if (hasilCuti.success) {
+      for (var data in hasilCuti.daftar) {
+        var c = Cuti.fromMap(data);
+        listCutiKaryawan.add(c);
+      }
+    }
+    
     update(['detail_karyawan']);
   }
 

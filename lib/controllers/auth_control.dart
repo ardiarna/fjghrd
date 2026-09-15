@@ -55,6 +55,7 @@ class AuthControl extends GetxController {
     user.email = email;
     SharedPreferences pref = await SharedPreferences.getInstance();
     await pref.setString('email', email);
+    update();
   }
 
   Future<void> updatePassword(String password) async {

@@ -24,6 +24,13 @@ class HomeControl extends GetxController {
 
   late TextEditingController txtEmail, txtPassword, txtPassConfirm, txtPassOld;
 
+  List<int> get availableTabs {
+    if (authControl.user.role == 'user') {
+      return [0, 1, 3, 4, 5];
+    }
+    return [0, 1, 2, 3, 4, 5];
+  }
+
   void pindahTab(int idx) {
     if(idx == 0) {
       tabId = idx;
@@ -73,6 +80,7 @@ class HomeControl extends GetxController {
       Get.back();
       if(hasil.success) {
         await authControl.updateEmail(txtEmail.text);
+        update();
         Get.back();
         AFwidget.snackbar(hasil.message);
       } else {

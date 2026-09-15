@@ -2,9 +2,13 @@ import 'package:fjghrd/utils/af_database.dart';
 import 'package:fjghrd/utils/hasil.dart';
 
 class CutiRepository {
-  Future<Hasil> findAll({String tahun = ''}) async {
+  Future<Hasil> findAll({String tahun = '', String karyawanId = ''}) async {
+    String url = 'cuti?tahun=$tahun';
+    if (karyawanId.isNotEmpty) {
+      url += '&karyawan_id=$karyawanId';
+    }
     return await AFdatabase.send(
-      url: 'cuti?tahun=$tahun',
+      url: url,
     );
   }
 

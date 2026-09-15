@@ -83,46 +83,49 @@ class ReportView extends StatelessWidget {
                       onModalTap: dialogListDataKaryawan,
                     ),
 
-                    barisBox(
-                      label: 'List Salary',
-                      onDownloadExcel: controller.dowloadListSalary,
-                      onDownloadPdf: controller.dowloadListSalaryPdf,
-                    ),
-                    barisBox(
-                      label: 'List Payroll',
-                      onModalTap: dialogListPayroll,
-                    ),
-                    barisBox(
-                      label: 'List PHK',
-                      onModalTap: dialogListPHK,
-                    ),
-                    barisBox(
-                      label: 'Rekap Gaji',
-                      onDownloadExcel: controller.dowloadRekapPayroll,
-                      onDownloadPdf: controller.dowloadRekapPayrollPdf,
-                    ),
-                    barisBox(
-                      label: 'Rekap Medical',
-                      onDownloadExcel: controller.dowloadRekapMedical,
-                      onDownloadPdf: controller.dowloadRekapMedicalPdf,
-                    ),
-                    barisBox(
-                      label: 'Rekap Overtime',
-                      onDownloadExcel: controller.dowloadRekapOvertime,
-                      onDownloadPdf: controller.dowloadRekapOvertimePdf,
-                    ),
-                    barisBox(
-                      label: 'Rekap Payroll Per Karyawan',
-                      onModalTap: dialogRekapPayroll,
-                    ),
-                    barisBox(
-                      label: 'Rekap PPh 21',
-                      onModalTap: dialogRekapPPh21,
-                    ),
-                    barisBox(
-                      label: 'Slip Gaji',
-                      onModalTap: dialogSlipGaji,
-                    ),
+                    if (controller.authControl.user.role != 'user') ...[
+                      barisBox(
+                        label: 'List Salary',
+                        onDownloadExcel: controller.dowloadListSalary,
+                        onDownloadPdf: controller.dowloadListSalaryPdf,
+                      ),
+                      barisBox(
+                        label: 'List Payroll',
+                        onModalTap: dialogListPayroll,
+                      ),
+                      barisBox(
+                        label: 'List PHK',
+                        onModalTap: dialogListPHK,
+                      ),
+                      barisBox(
+                        label: 'Rekap Gaji',
+                        onDownloadExcel: controller.dowloadRekapPayroll,
+                        onDownloadPdf: controller.dowloadRekapPayrollPdf,
+                      ),
+                      barisBox(
+                        label: 'Rekap Medical',
+                        onDownloadExcel: controller.dowloadRekapMedical,
+                        onDownloadPdf: controller.dowloadRekapMedicalPdf,
+                      ),
+                      barisBox(
+                        label: 'Rekap Overtime',
+                        onDownloadExcel: controller.dowloadRekapOvertime,
+                        onDownloadPdf: controller.dowloadRekapOvertimePdf,
+                      ),
+                      barisBox(
+                        label: 'Rekap Payroll Per Karyawan',
+                        onModalTap: dialogRekapPayroll,
+                      ),
+                      barisBox(
+                        label: 'Rekap PPh 21',
+                        onModalTap: dialogRekapPPh21,
+                      ),
+                      barisBox(
+                        label: 'Slip Gaji',
+                        onModalTap: dialogSlipGaji,
+                      ),
+                    ],
+
                     barisBox(
                       label: 'Jadwal Cuti',
                       onDownloadExcel: controller.downloadJadwalCuti,

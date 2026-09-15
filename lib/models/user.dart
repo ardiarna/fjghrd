@@ -9,6 +9,7 @@ class User {
   String status;
   String tokenPush;
   String tokenJWT;
+  String role;
   DateTime? createdAt;
   DateTime? updatedAt;
 
@@ -21,6 +22,7 @@ class User {
     this.status = '',
     this.tokenPush = '',
     this.tokenJWT = '',
+    this.role = '',
     this.createdAt,
     this.updatedAt,
   }) ;
@@ -32,6 +34,7 @@ class User {
       nama: AFconvert.keString(data['nama']),
       foto: AFconvert.keString(data['foto']),
       status: AFconvert.keString(data['status']),
+      role: AFconvert.keString(data['role']),
       tokenPush: AFconvert.keString(data['token_push']),
       createdAt: AFconvert.keTanggal(data['created_at']),
       updatedAt: AFconvert.keTanggal(data['updated_at']),
@@ -46,6 +49,7 @@ class User {
       'password_confirmation': passwordConfirmation,
       'nama': nama,
       'status': status,
+      'role': role,
       'token_push': tokenPush,
     };
     return data;

@@ -41,18 +41,20 @@ class KaryawanPayrollView extends StatelessWidget {
                   ],
                 ),
                 const Spacer(),
-                tombol(
-                  label: 'Slip Gaji',
-                  icon: Icons.download,
-                  color: Colors.white,
-                  onPressed: dialogSlipGaji,
-                ),
-                tombol(
-                  label: 'Payroll',
-                  icon: Icons.download,
-                  color: Colors.white,
-                  onPressed: dialogExcelPayroll,
-                ),
+                if (controller.authControl.user.role != 'user') ...[
+                  tombol(
+                    label: 'Slip Gaji',
+                    icon: Icons.download,
+                    color: Colors.white,
+                    onPressed: dialogSlipGaji,
+                  ),
+                  tombol(
+                    label: 'Payroll',
+                    icon: Icons.download,
+                    color: Colors.white,
+                    onPressed: dialogExcelPayroll,
+                  ),
+                ],
                 tombol(
                   label: 'List Cuti',
                   icon: Icons.download,
@@ -96,6 +98,9 @@ class KaryawanPayrollView extends StatelessWidget {
                         image: bgLineBlue,
                       ),
                       child: Obx(() {
+                          if (controller.authControl.user.role == 'user') {
+                            return _buildListCutiPerTanggal();
+                          }
                           return Wrap(
                             spacing: 10,
                             runSpacing: 10,
@@ -113,6 +118,140 @@ class KaryawanPayrollView extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildListCutiPerTanggal() {
+    List<Map<String, dynamic>> allDates = [];
+
+    for (var cuti in controller.listCutiKaryawan) {
+      for (var det in cuti.details) {
+        String baseKet = det.keterangan.trim();
+        String ket = baseKet;
+        
+        if (det.kategori == 'UNPAID') {
+          ket = 'UNPAID LEAVE $baseKet'.trim();
+        } else if (det.kategori == 'KHUSUS') {
+          ket = 'CUTI KHUSUS $baseKet'.trim();
+        } else if (det.kategori == 'GANTI_HARI_LIBUR') {
+          ket = 'GANTI HARI LIBUR $baseKet'.trim();
+        } else {
+          if (baseKet.isEmpty) {
+            if (det.kategori == 'CUTI_MASAL') {
+              ket = 'Cuti Bersama';
+            } else if (det.kategori == 'TAHUNAN') {
+              ket = 'Cuti Tahunan';
+            } else {
+              ket = 'Ijin';
+            }
+          }
+        }
+
+        for (var d in det.dates) {
+          if (d.tanggal != null) {
+            allDates.add({
+              'tanggal': d.tanggal!,
+              'kategori': det.kategori,
+              'keterangan': ket,
+            });
+          }
+        }
+      }
+    }
+
+    allDates.sort((a, b) => (a['tanggal'] as DateTime).compareTo(b['tanggal'] as DateTime));
+
+    int currentSisa = controller.totalHakCuti;
+    List<Widget> children = [];
+
+    for (var item in allDates) {
+      DateTime dt = item['tanggal'];
+      String kategori = item['kategori'];
+      String keterangan = item['keterangan'];
+
+      String? sisaStr;
+      if (kategori == 'TAHUNAN' || kategori == 'CUTI_MASAL' || kategori == 'IJIN') {
+        currentSisa -= 1;
+        sisaStr = currentSisa.toString();
+      }
+
+      children.add(
+        Container(
+          width: 430,
+          height: 135,
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.7),
+            borderRadius: const BorderRadius.all(Radius.circular(15)),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.blue,
+                blurRadius: 1,
+                blurStyle: BlurStyle.outer,
+                offset: Offset(1, 1),
+              ),
+            ],
+          ),
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Icon(Icons.calendar_month, color: Colors.blue, size: 18),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      AFconvert.matDate(dt),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Expanded(
+                child: Text(
+                  keterangan,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.black87,
+                  ),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              if (sisaStr != null) ...[
+                const SizedBox(height: 8),
+                Text(
+                  'Sisa Cuti : $sisaStr',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+      );
+    }
+
+    if (children.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.all(20),
+        child: Text('Belum ada data cuti.', style: TextStyle(fontSize: 16)),
+      );
+    }
+
+    return Wrap(
+      spacing: 10,
+      runSpacing: 10,
+      children: children,
     );
   }
 
