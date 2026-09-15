@@ -569,7 +569,8 @@ class CutiMasalControl extends GetxController {
             bolehMinus: false,
           );
         }
-        kcmTambah!.txtLamaHari.text = dataMasal?['lama_hari']?.toString() ?? '1';
+                double lh = AFconvert.keDouble(dataMasal?['lama_hari'] ?? 1);
+        kcmTambah!.txtLamaHari.text = lh == lh.toInt() ? lh.toInt().toString() : lh.toString();
         kcmTambah!.txtLamaHari.addListener(() {
           update();
         });
@@ -587,7 +588,12 @@ class CutiMasalControl extends GetxController {
   String get debugCanSaveReasonTambah {
     if (kcmTambah == null) return 'Pilih Karyawan terlebih dahulu.';
     if (kcmTambah!.txtLamaHari.text.isEmpty || AFconvert.keInt(kcmTambah!.txtLamaHari.text) <= 0) return 'Lama Hari harus > 0.';
-    if (AFconvert.keInt(kcmTambah!.txtLamaHari.text) > AFconvert.keInt(dataMasal?['lama_hari'])) return 'Lama Hari tidak boleh lebih dari ${dataMasal?['lama_hari']}.';
+        double inputLama = AFconvert.keDouble(kcmTambah!.txtLamaHari.text);
+    double maxLama = AFconvert.keDouble(dataMasal?['lama_hari']);
+    if (inputLama > maxLama) {
+      String maxLamaStr = maxLama == maxLama.toInt() ? maxLama.toInt().toString() : maxLama.toString();
+      return 'Lama Hari tidak boleh lebih dari $maxLamaStr.';
+    }
     if (kcmTambah!.inputDates.length != AFconvert.keInt(kcmTambah!.txtLamaHari.text)) return 'Jumlah Tanggal Cuti yang dipilih (${kcmTambah!.inputDates.length}) tidak sesuai dengan Lama Hari (${kcmTambah!.txtLamaHari.text}).';
     return '';
   }
@@ -628,7 +634,7 @@ class CutiMasalControl extends GetxController {
     sorted.sort();
 
     for (var d in details) {
-      int lama = d['lama_hari'];
+      int lama = AFconvert.keInt(d['lama_hari']);
       for (int i = 0; i < lama; i++) {
         d['dates'].add(DateFormat('yyyy-MM-dd').format(sorted[assigned]));
         assigned++;
