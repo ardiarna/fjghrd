@@ -175,7 +175,11 @@ class OncallCustomerView extends StatelessWidget {
               ),
               const Spacer(),
               const Text('Periode:  ', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-              SizedBox(
+              Padding(
+
+                padding: const EdgeInsets.symmetric(vertical: 10),
+
+                child: SizedBox(
                 width: 150,
                 child: GetBuilder<OncallCustomerControl>(
                   id: 'filter_oncall',
@@ -183,7 +187,8 @@ class OncallCustomerView extends StatelessWidget {
                     return AFwidget.comboField(
                       value: controller.filterBulan.label,
                       label: '',
-                      warnaBackground: Colors.white,
+                      warna: Colors.white,
+                      warnaBackground: Colors.white.withValues(alpha: 0.1),
                       onTap: () async {
                         var a = await controller.pilihBulan(value: controller.filterBulan.value, includeSemua: true);
                         if(a != null && a.value != controller.filterBulan.value) {
@@ -196,8 +201,14 @@ class OncallCustomerView extends StatelessWidget {
                   },
                 ),
               ),
+
+              ),
               const SizedBox(width: 10),
-              SizedBox(
+              Padding(
+
+                padding: const EdgeInsets.symmetric(vertical: 10),
+
+                child: SizedBox(
                 width: 100,
                 child: GetBuilder<OncallCustomerControl>(
                   id: 'filter_oncall',
@@ -205,7 +216,8 @@ class OncallCustomerView extends StatelessWidget {
                     return AFwidget.comboField(
                       value: controller.filterTahun.label,
                       label: '',
-                      warnaBackground: Colors.white,
+                      warna: Colors.white,
+                      warnaBackground: Colors.white.withValues(alpha: 0.1),
                       onTap: () async {
                         var a = await controller.pilihTahun(value: controller.filterTahun.value);
                         if(a != null && a.value != controller.filterTahun.value) {
@@ -217,6 +229,8 @@ class OncallCustomerView extends StatelessWidget {
                     );
                   },
                 ),
+              ),
+
               ),
               const SizedBox(width: 100),
               IconButton(

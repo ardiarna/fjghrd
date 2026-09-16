@@ -220,7 +220,11 @@ class PenghasilanView extends StatelessWidget {
               ),
               const Spacer(),
               const Text('Jenis Penghasilan:  ', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-              SizedBox(
+              Padding(
+
+                padding: const EdgeInsets.symmetric(vertical: 10),
+
+                child: SizedBox(
                 width: 300,
                 child: GetBuilder<PenghasilanControl>(
                   id: 'filter_penghasilan',
@@ -228,7 +232,8 @@ class PenghasilanView extends StatelessWidget {
                     return AFwidget.comboField(
                       value: controller.filterJenis.label,
                       label: '',
-                      warnaBackground: Colors.white,
+                      warna: Colors.white,
+                      warnaBackground: Colors.white.withValues(alpha: 0.1),
                       onTap: () async {
                         var a = await controller.pilihJenis(value: controller.filterJenis.value, withSemua: true);
                         if(a != null && a.value != controller.filterJenis.value) {
@@ -241,9 +246,15 @@ class PenghasilanView extends StatelessWidget {
                   },
                 ),
               ),
+
+              ),
               const SizedBox(width: 20),
               const Text('Periode:  ', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-              SizedBox(
+              Padding(
+
+                padding: const EdgeInsets.symmetric(vertical: 10),
+
+                child: SizedBox(
                 width: 150,
                 child: GetBuilder<PenghasilanControl>(
                   id: 'filter_penghasilan',
@@ -251,7 +262,8 @@ class PenghasilanView extends StatelessWidget {
                     return AFwidget.comboField(
                       value: controller.filterBulan.label,
                       label: '',
-                      warnaBackground: Colors.white,
+                      warna: Colors.white,
+                      warnaBackground: Colors.white.withValues(alpha: 0.1),
                       onTap: () async {
                         var a = await controller.pilihBulan(value: controller.filterBulan.value, includeSemua: true);
                         if(a != null && a.value != controller.filterBulan.value) {
@@ -264,8 +276,14 @@ class PenghasilanView extends StatelessWidget {
                   },
                 ),
               ),
+
+              ),
               const SizedBox(width: 10),
-              SizedBox(
+              Padding(
+
+                padding: const EdgeInsets.symmetric(vertical: 10),
+
+                child: SizedBox(
                 width: 100,
                 child: GetBuilder<PenghasilanControl>(
                   id: 'filter_penghasilan',
@@ -273,7 +291,8 @@ class PenghasilanView extends StatelessWidget {
                     return AFwidget.comboField(
                       value: controller.filterTahun.label,
                       label: '',
-                      warnaBackground: Colors.white,
+                      warna: Colors.white,
+                      warnaBackground: Colors.white.withValues(alpha: 0.1),
                       onTap: () async {
                         var a = await controller.pilihTahun(value: controller.filterTahun.value);
                         if(a != null && a.value != controller.filterTahun.value) {
@@ -285,6 +304,8 @@ class PenghasilanView extends StatelessWidget {
                     );
                   },
                 ),
+              ),
+
               ),
               const SizedBox(width: 100),
               IconButton(

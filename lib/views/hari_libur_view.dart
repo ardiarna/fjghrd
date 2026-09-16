@@ -83,12 +83,16 @@ class HariLiburView extends StatelessWidget {
           children: [
             const Spacer(),
             const SizedBox(width: 20),
-              SizedBox(
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: SizedBox(
                 width: 200,
                 child: Obx(() {
                     return AFwidget.comboField(
                       value: controller.filterTahun.value.label,
                       label: '',
+                      warna: Colors.white,
+                      warnaBackground: Colors.white.withValues(alpha: 0.1),
                       onTap: () async {
                         var a = await controller.pilihTahun(value: controller.filterTahun.value.value);
                         if(a != null && a.value != controller.filterTahun.value.value) {
@@ -100,6 +104,7 @@ class HariLiburView extends StatelessWidget {
                   },
                 ),
               ),
+            ),
               const SizedBox(width: 40),
               IconButton(
                 onPressed: () {

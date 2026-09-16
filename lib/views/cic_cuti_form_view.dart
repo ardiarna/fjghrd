@@ -225,7 +225,7 @@ class CicCutiFormView extends StatelessWidget {
                       controller.update(['form_cuti']);
                     },
                   ),
-                  const Text('Cuti Masal', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  const Text('1. Cuti Masal', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                 ],
               ),
               if (controller.cekMasal) ...[
@@ -585,7 +585,7 @@ class CicCutiFormView extends StatelessWidget {
                       controller.update(['form_cuti']);
                     },
                   ),
-                  const Text('Cuti Diluar Tanggungan Perusahaan', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  const Text('3. Cuti Diluar Tanggungan Perusahaan', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                 ],
               ),
               if(controller.cekUnpaid) ...[

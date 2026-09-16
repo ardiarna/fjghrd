@@ -1,7 +1,7 @@
 import 'package:fjghrd/controllers/home_control.dart' as fjghrd;
 import 'package:fjghrd/views/cuti_view.dart' as fjghrd3;
 import 'package:fjghrd/views/cic_karyawan_view.dart';
-import 'package:fjghrd/utils/af_database.dart';
+
 import 'package:fjghrd/controllers/cic_cuti_control.dart';
 import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/models/cuti.dart';
@@ -21,6 +21,405 @@ import 'package:pluto_grid/pluto_grid.dart';
 
 class CicCutiView extends StatelessWidget {
   CicCutiView({super.key});
+
+  void dialogJadwalCuti(BuildContext context) {
+    final controller = Get.find<CicCutiControl>();
+    AFwidget.dialog(
+      contentPadding: EdgeInsets.zero,
+      backgroundColor: Colors.transparent,
+      Container(
+        width: 500,
+        height: 150,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        child: Column(
+          children: [
+            AFwidget.formHeader('Jadwal Cuti CIC'),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  AFwidget.tombol(
+                    label: 'Batal',
+                    color: Colors.orange,
+                    onPressed: () => Get.back(),
+                    minimumSize: const Size(100, 40),
+                  ),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download PDF',
+                      color: Colors.red,
+                      onPressed: controller.downloadJadwalCutiPdf,
+                      minimumSize: const Size(0, 40),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download Excel',
+                      color: Colors.green,
+                      onPressed: controller.downloadJadwalCuti,
+                      minimumSize: const Size(0, 40),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void dialogListCuti(BuildContext context) {
+    final controller = Get.find<CicCutiControl>();
+    controller.filterTahunAwal = controller.filterTahun;
+    controller.filterTahunAkhir = controller.filterTahun;
+    AFwidget.dialog(
+      contentPadding: EdgeInsets.zero,
+      backgroundColor: Colors.transparent,
+      Container(
+        width: 500,
+        height: 300,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        child: Column(
+          children: [
+            AFwidget.formHeader('List Cuti CIC'),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 100,
+                    padding: const EdgeInsets.only(right: 15),
+                    child: const Text('Tahun Awal'),
+                  ),
+                  Expanded(
+                    child: GetBuilder<CicCutiControl>(
+                      id: 'filter_awal',
+                      builder: (_) {
+                        return AFwidget.comboField(
+                          value: controller.filterTahunAwal.label,
+                          label: '',
+                          onTap: () async {
+                            var a = await controller.pilihTahun(value: controller.filterTahunAwal.value);
+                            if(a != null && a.value != controller.filterTahunAwal.value) {
+                              controller.filterTahunAwal = a;
+                              controller.update(['filter_awal']);
+                            }
+                          }
+                        );
+                      }
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 100,
+                    padding: const EdgeInsets.only(right: 15),
+                    child: const Text('Tahun Akhir'),
+                  ),
+                  Expanded(
+                    child: GetBuilder<CicCutiControl>(
+                      id: 'filter_akhir',
+                      builder: (_) {
+                        return AFwidget.comboField(
+                          value: controller.filterTahunAkhir.label,
+                          label: '',
+                          onTap: () async {
+                            var a = await controller.pilihTahun(value: controller.filterTahunAkhir.value);
+                            if(a != null && a.value != controller.filterTahunAkhir.value) {
+                              controller.filterTahunAkhir = a;
+                              controller.update(['filter_akhir']);
+                            }
+                          }
+                        );
+                      }
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  AFwidget.tombol(
+                    label: 'Batal',
+                    color: Colors.orange,
+                    onPressed: () => Get.back(),
+                    minimumSize: const Size(100, 40),
+                  ),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download PDF',
+                      color: Colors.red,
+                      onPressed: controller.downloadListCutiPdf,
+                      minimumSize: const Size(0, 40),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download Excel',
+                      color: Colors.green,
+                      onPressed: controller.downloadListCuti,
+                      minimumSize: const Size(0, 40),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void dialogCutiTanpaPotongan(BuildContext context) {
+    final controller = Get.find<CicCutiControl>();
+    controller.filterTahunAwal = controller.filterTahun;
+    controller.filterTahunAkhir = controller.filterTahun;
+    AFwidget.dialog(
+      contentPadding: EdgeInsets.zero,
+      backgroundColor: Colors.transparent,
+      Container(
+        width: 500,
+        height: 300,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        child: Column(
+          children: [
+            AFwidget.formHeader('Cuti Tanpa Potongan CIC'),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 100,
+                    padding: const EdgeInsets.only(right: 15),
+                    child: const Text('Tahun Awal'),
+                  ),
+                  Expanded(
+                    child: GetBuilder<CicCutiControl>(
+                      id: 'filter_awal2',
+                      builder: (_) {
+                        return AFwidget.comboField(
+                          value: controller.filterTahunAwal.label,
+                          label: '',
+                          onTap: () async {
+                            var a = await controller.pilihTahun(value: controller.filterTahunAwal.value);
+                            if(a != null && a.value != controller.filterTahunAwal.value) {
+                              controller.filterTahunAwal = a;
+                              controller.update(['filter_awal2']);
+                            }
+                          }
+                        );
+                      }
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 100,
+                    padding: const EdgeInsets.only(right: 15),
+                    child: const Text('Tahun Akhir'),
+                  ),
+                  Expanded(
+                    child: GetBuilder<CicCutiControl>(
+                      id: 'filter_akhir2',
+                      builder: (_) {
+                        return AFwidget.comboField(
+                          value: controller.filterTahunAkhir.label,
+                          label: '',
+                          onTap: () async {
+                            var a = await controller.pilihTahun(value: controller.filterTahunAkhir.value);
+                            if(a != null && a.value != controller.filterTahunAkhir.value) {
+                              controller.filterTahunAkhir = a;
+                              controller.update(['filter_akhir2']);
+                            }
+                          }
+                        );
+                      }
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  AFwidget.tombol(
+                    label: 'Batal',
+                    color: Colors.orange,
+                    onPressed: () => Get.back(),
+                    minimumSize: const Size(100, 40),
+                  ),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download PDF',
+                      color: Colors.red,
+                      onPressed: controller.downloadCutiTanpaPotonganPdf,
+                      minimumSize: const Size(0, 40),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download Excel',
+                      color: Colors.green,
+                      onPressed: controller.downloadCutiTanpaPotongan,
+                      minimumSize: const Size(0, 40),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void dialogUnpaidLeave(BuildContext context) {
+    final controller = Get.find<CicCutiControl>();
+    controller.filterTahunAwal = controller.filterTahun;
+    controller.filterTahunAkhir = controller.filterTahun;
+    AFwidget.dialog(
+      contentPadding: EdgeInsets.zero,
+      backgroundColor: Colors.transparent,
+      Container(
+        width: 500,
+        height: 300,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        child: Column(
+          children: [
+            AFwidget.formHeader('Cuti Unpaid Leave & Ganti Hari Libur CIC'),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 100,
+                    padding: const EdgeInsets.only(right: 15),
+                    child: const Text('Tahun Awal'),
+                  ),
+                  Expanded(
+                    child: GetBuilder<CicCutiControl>(
+                      id: 'filter_awal3',
+                      builder: (_) {
+                        return AFwidget.comboField(
+                          value: controller.filterTahunAwal.label,
+                          label: '',
+                          onTap: () async {
+                            var a = await controller.pilihTahun(value: controller.filterTahunAwal.value);
+                            if(a != null && a.value != controller.filterTahunAwal.value) {
+                              controller.filterTahunAwal = a;
+                              controller.update(['filter_awal3']);
+                            }
+                          }
+                        );
+                      }
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 100,
+                    padding: const EdgeInsets.only(right: 15),
+                    child: const Text('Tahun Akhir'),
+                  ),
+                  Expanded(
+                    child: GetBuilder<CicCutiControl>(
+                      id: 'filter_akhir3',
+                      builder: (_) {
+                        return AFwidget.comboField(
+                          value: controller.filterTahunAkhir.label,
+                          label: '',
+                          onTap: () async {
+                            var a = await controller.pilihTahun(value: controller.filterTahunAkhir.value);
+                            if(a != null && a.value != controller.filterTahunAkhir.value) {
+                              controller.filterTahunAkhir = a;
+                              controller.update(['filter_akhir3']);
+                            }
+                          }
+                        );
+                      }
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 25, 20, 25),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  AFwidget.tombol(
+                    label: 'Batal',
+                    color: Colors.orange,
+                    onPressed: () => Get.back(),
+                    minimumSize: const Size(100, 40),
+                  ),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download PDF',
+                      color: Colors.red,
+                      onPressed: controller.downloadUnpaidLeavePdf,
+                      minimumSize: const Size(0, 40),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download Excel',
+                      color: Colors.green,
+                      onPressed: controller.downloadUnpaidLeave,
+                      minimumSize: const Size(0, 40),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
 
   final CicCutiControl controller = Get.put(CicCutiControl());
 
@@ -157,7 +556,7 @@ class CicCutiView extends StatelessWidget {
                   if (jenisForm == 'CUTI_MASAL_GLOBAL') {
                     Get.to(() => CicCutiMasalEditView(id: id));
                   } else {
-                    controller.editForm(id);
+                    controller.editForm(id, jenisFormRow: jenisForm);
                     _openForm(jenisForm);
                   }
                 },
@@ -282,64 +681,43 @@ class CicCutiView extends StatelessWidget {
               },
             ),
             const SizedBox(width: 20),
-            SizedBox(
-              width: 120,
-              child: GetBuilder<CicCutiControl>(
-                builder: (_) {
-                  return AFwidget.comboField(
-                    value: controller.filterTahun.label,
-                    label: '',
-                    warna: Colors.white,
-                    warnaBackground: Colors.white.withValues(alpha: 0.1),
-                    onTap: () async {
-                      var a = await controller.pilihTahun(value: controller.filterTahun.value);
-                      if(a != null && a.value != controller.filterTahun.value) {
-                        controller.filterTahun = a;
-                        controller.loadCutis();
-                      }
-                    },
-                  );
-                },
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: SizedBox(
+                width: 120,
+                child: GetBuilder<CicCutiControl>(
+                  builder: (_) {
+                    return AFwidget.comboField(
+                      value: controller.filterTahun.label,
+                      label: '',
+                      warna: Colors.white,
+                      warnaBackground: Colors.white.withValues(alpha: 0.1),
+                      onTap: () async {
+                        var a = await controller.pilihTahun(value: controller.filterTahun.value);
+                        if(a != null && a.value != controller.filterTahun.value) {
+                          controller.filterTahun = a;
+                          controller.loadCutis();
+                        }
+                      },
+                    );
+                  },
+                ),
               ),
             ),
             const SizedBox(width: 10),
             PopupMenuButton<String>(
-              icon: const Icon(Icons.download, color: Colors.green),
-              tooltip: 'Download Laporan Excel',
+              icon: const Icon(Icons.download, color: Colors.white),
+              tooltip: 'Download Laporan',
               constraints: const BoxConstraints(minWidth: 350, maxWidth: 400),
-              onSelected: (value) async {
-                final tahun = controller.filterTahun.value;
-                AFwidget.loading();
-                dynamic hasil;
-                String reportName = '';
-                
+              onSelected: (value) {
                 if(value == 'jadwal') {
-                  reportName = 'Jadwal Cuti CIC';
-                  hasil = await AFdatabase.download(url: 'cic/cuti/excel/jadwal/$tahun');
+                  dialogJadwalCuti(context);
                 } else if(value == 'list') {
-                  reportName = 'List Cuti CIC';
-                  hasil = await AFdatabase.download(url: 'cic/cuti/excel/list/$tahun');
+                  dialogListCuti(context);
                 } else if(value == 'tanpa_potongan') {
-                  reportName = 'Cuti Tanpa Potongan CIC';
-                  hasil = await AFdatabase.download(url: 'cic/cuti/excel/tanpa-potongan/$tahun');
+                  dialogCutiTanpaPotongan(context);
                 } else if(value == 'unpaid') {
-                  reportName = 'Cuti Unpaid Leave & Ganti Hari Libur CIC';
-                  hasil = await AFdatabase.download(url: 'cic/cuti/excel/unpaid/$tahun');
-                } else {
-                  Get.back();
-                  return;
-                }
-                
-                Get.back();
-                
-                if(hasil.success) {
-                  AFwidget.formWarning(
-                    label: 'Laporan $reportName telah berhasil di-download. Silakan periksa direktori Download Anda (${hasil.message})',
-                    warna: Colors.green,
-                    ikon: Icons.info,
-                  );
-                } else {
-                  AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+                  dialogUnpaidLeave(context);
                 }
               },
               itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[

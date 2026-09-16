@@ -31,6 +31,106 @@ class CicCutiControl extends GetxController {
 
   String formType = 'CUTI';
   String currentId = '';
+
+  Opsi filterTahunAwal = Opsi(value: DateTime.now().year.toString(), label: DateTime.now().year.toString());
+  Opsi filterTahunAkhir = Opsi(value: DateTime.now().year.toString(), label: DateTime.now().year.toString());
+
+  Future<void> downloadJadwalCutiPdf() async {
+    Get.back();
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'cic/cuti/excel/pdf-jadwal-cuti/${filterTahun.value}');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(label: 'Laporan PDF Jadwal Cuti CIC berhasil didownload (${hasil.message})', warna: Colors.green, ikon: Icons.info);
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat PDF. [${hasil.message}]');
+    }
+  }
+
+  Future<void> downloadJadwalCuti() async {
+    Get.back();
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'cic/cuti/excel/jadwal/${filterTahun.value}');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(label: 'Laporan Excel Jadwal Cuti CIC berhasil didownload (${hasil.message})', warna: Colors.green, ikon: Icons.info);
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+  Future<void> downloadListCutiPdf() async {
+    Get.back();
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'cic/cuti/excel/pdf-list/${filterTahunAwal.value}/${filterTahunAkhir.value}');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(label: 'Laporan PDF List Cuti CIC berhasil didownload (${hasil.message})', warna: Colors.green, ikon: Icons.info);
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat PDF. [${hasil.message}]');
+    }
+  }
+
+  Future<void> downloadListCuti() async {
+    Get.back();
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'cic/cuti/excel/list/${filterTahunAwal.value}/${filterTahunAkhir.value}');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(label: 'Laporan Excel List Cuti CIC berhasil didownload (${hasil.message})', warna: Colors.green, ikon: Icons.info);
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+  Future<void> downloadCutiTanpaPotonganPdf() async {
+    Get.back();
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'cic/cuti/excel/pdf-tanpa-potongan/${filterTahunAwal.value}/${filterTahunAkhir.value}');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(label: 'Laporan PDF Cuti Tanpa Potongan CIC berhasil didownload (${hasil.message})', warna: Colors.green, ikon: Icons.info);
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat PDF. [${hasil.message}]');
+    }
+  }
+
+  Future<void> downloadCutiTanpaPotongan() async {
+    Get.back();
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'cic/cuti/excel/tanpa-potongan/${filterTahunAwal.value}/${filterTahunAkhir.value}');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(label: 'Laporan Excel Cuti Tanpa Potongan CIC berhasil didownload (${hasil.message})', warna: Colors.green, ikon: Icons.info);
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+  Future<void> downloadUnpaidLeavePdf() async {
+    Get.back();
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'cic/cuti/excel/pdf-unpaid/${filterTahunAwal.value}/${filterTahunAkhir.value}');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(label: 'Laporan PDF Cuti Unpaid Leave CIC berhasil didownload (${hasil.message})', warna: Colors.green, ikon: Icons.info);
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat PDF. [${hasil.message}]');
+    }
+  }
+
+  Future<void> downloadUnpaidLeave() async {
+    Get.back();
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'cic/cuti/excel/unpaid/${filterTahunAwal.value}/${filterTahunAkhir.value}');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(label: 'Laporan Excel Cuti Unpaid Leave CIC berhasil didownload (${hasil.message})', warna: Colors.green, ikon: Icons.info);
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
   Opsi filterTahun = Opsi(value: DateTime.now().year.toString(), label: DateTime.now().year.toString());
 
   
@@ -39,7 +139,6 @@ class CicCutiControl extends GetxController {
 
     TextEditingController txtTanggalKembali = TextEditingController();
 
-  // Cuti Tahunan
   String idDetailTahunan = '';
   String idDetailKhusus = '';
   String idDetailUnpaid = '';
@@ -355,9 +454,9 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
     );
   }
 
-  void editForm(String id, {Cuti? cutiObj}) {
+  void editForm(String id, {Cuti? cutiObj, String? jenisFormRow}) {
     clearForm();
-    Cuti? cuti = cutiObj ?? listCuti.firstWhereOrNull((element) => element.id == id);
+    Cuti? cuti = cutiObj ?? listCuti.firstWhereOrNull((element) => element.id == id && (jenisFormRow == null || element.jenisForm == jenisFormRow));
     if(cuti != null) {
       currentId = cuti.id;
       formType = cuti.jenisForm;

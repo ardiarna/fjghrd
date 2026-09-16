@@ -101,21 +101,36 @@ class HomeView extends StatelessWidget {
           children: [
             Container(
               width: double.infinity,
-              color: Colors.blue,
+              height: 65,
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF334155), Color(0xFF475569)],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.1),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
               child: SafeArea(
                 bottom: false,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: GetBuilder<AuthControl>(
                     builder: (auth) {
                       return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             auth.user.nama,
                             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
                           ),
-                          const SizedBox(height: 5),
+                          const SizedBox(height: 2),
                           Text(
                             auth.user.email,
                             style: const TextStyle(fontSize: 13, color: Colors.white70),

@@ -317,7 +317,8 @@ class KaryawanView extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
+          height: 65,
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           decoration: BoxDecoration(
             gradient: const LinearGradient(
               colors: [Color(0xFF334155), Color(0xFF475569)],
@@ -356,25 +357,28 @@ class KaryawanView extends StatelessWidget {
                 padding: const EdgeInsets.all(0),
               ),
               const SizedBox(width: 20),
-              SizedBox(
-                width: 190,
-                child: GetBuilder<KaryawanControl>(
-                  builder: (_) {
-                    return AFwidget.comboField(
-                      value: controller.filterStaf.label,
-                      label: '',
-                      warna: Colors.white,
-                      warnaBackground: Colors.white.withValues(alpha: 0.1),
-                      onTap: () async {
-                        var a = await controller.pilihStaf(value: controller.filterStaf.value);
-                        if(a != null && a.value != controller.filterStaf.value) {
-                          controller.filterStaf = a;
-                          controller.update();
-                          controller.loadKaryawans();
-                        }
-                      },
-                    );
-                  },
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: SizedBox(
+                  width: 190,
+                  child: GetBuilder<KaryawanControl>(
+                    builder: (_) {
+                      return AFwidget.comboField(
+                        value: controller.filterStaf.label,
+                        label: '',
+                        warna: Colors.white,
+                        warnaBackground: Colors.white.withValues(alpha: 0.1),
+                        onTap: () async {
+                          var a = await controller.pilihStaf(value: controller.filterStaf.value);
+                          if(a != null && a.value != controller.filterStaf.value) {
+                            controller.filterStaf = a;
+                            controller.update();
+                            controller.loadKaryawans();
+                          }
+                        },
+                      );
+                    },
+                  ),
                 ),
               ),
               const Padding(
@@ -383,26 +387,29 @@ class KaryawanView extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                 ),
               ),
-              SizedBox(
-                width: 250,
-                child: GetBuilder<KaryawanControl>(
-                  id: 'filter_karyawan',
-                  builder: (_) {
-                    return AFwidget.comboField(
-                      value: controller.filterArea.label,
-                      label: '',
-                      warna: Colors.white,
-                      warnaBackground: Colors.white.withValues(alpha: 0.1),
-                      onTap: () async {
-                        var a = await controller.pilihArea(value: controller.filterArea.value, withSemua: true);
-                        if(a != null && a.value != controller.filterArea.value) {
-                          controller.filterArea = a;
-                          controller.update(['filter_karyawan']);
-                          controller.loadKaryawans();
-                        }
-                      },
-                    );
-                  },
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: SizedBox(
+                  width: 250,
+                  child: GetBuilder<KaryawanControl>(
+                    id: 'filter_karyawan',
+                    builder: (_) {
+                      return AFwidget.comboField(
+                        value: controller.filterArea.label,
+                        label: '',
+                        warna: Colors.white,
+                        warnaBackground: Colors.white.withValues(alpha: 0.1),
+                        onTap: () async {
+                          var a = await controller.pilihArea(value: controller.filterArea.value, withSemua: true);
+                          if(a != null && a.value != controller.filterArea.value) {
+                            controller.filterArea = a;
+                            controller.update(['filter_karyawan']);
+                            controller.loadKaryawans();
+                          }
+                        },
+                      );
+                    },
+                  ),
                 ),
               ),
               const Padding(
@@ -411,26 +418,29 @@ class KaryawanView extends StatelessWidget {
                   style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                 ),
               ),
-              SizedBox(
-                width: 200,
-                child: GetBuilder<KaryawanControl>(
-                  id: 'filter_karyawan',
-                  builder: (_) {
-                    return AFwidget.comboField(
-                      value: controller.filterStatusKerja.label,
-                      label: '',
-                      warna: Colors.white,
-                      warnaBackground: Colors.white.withValues(alpha: 0.1),
-                      onTap: () async {
-                        var a = await controller.pilihStatusKerja(value: controller.filterStatusKerja.value, withSemua: true);
-                        if(a != null && a.value != controller.filterStatusKerja.value) {
-                          controller.filterStatusKerja = a;
-                          controller.update(['filter_karyawan']);
-                          controller.loadKaryawans();
-                        }
-                      },
-                    );
-                  },
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: SizedBox(
+                  width: 200,
+                  child: GetBuilder<KaryawanControl>(
+                    id: 'filter_karyawan',
+                    builder: (_) {
+                      return AFwidget.comboField(
+                        value: controller.filterStatusKerja.label,
+                        label: '',
+                        warna: Colors.white,
+                        warnaBackground: Colors.white.withValues(alpha: 0.1),
+                        onTap: () async {
+                          var a = await controller.pilihStatusKerja(value: controller.filterStatusKerja.value, withSemua: true);
+                          if(a != null && a.value != controller.filterStatusKerja.value) {
+                            controller.filterStatusKerja = a;
+                            controller.update(['filter_karyawan']);
+                            controller.loadKaryawans();
+                          }
+                        },
+                      );
+                    },
+                  ),
                 ),
               ),
               const Spacer(),

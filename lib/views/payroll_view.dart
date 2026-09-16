@@ -25,7 +25,8 @@ class PayrollView extends StatelessWidget {
     return Column(
       children: [
         Container(
-          padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+          height: 65,
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           decoration: BoxDecoration(
             gradient: const LinearGradient(
               colors: [Color(0xFF334155), Color(0xFF475569)],
@@ -101,26 +102,29 @@ class PayrollView extends StatelessWidget {
                 },
               ),
               const Spacer(),
-              SizedBox(
-                width: 200,
-                child: GetBuilder<PayrollControl>(
-                  id: 'filter_payroll',
-                  builder: (_) {
-                    return AFwidget.comboField(
-                      value: controller.filterTahun.label,
-                      label: '',
-                      warna: Colors.white,
-                      warnaBackground: Colors.white.withValues(alpha: 0.1),
-                      onTap: () async {
-                        var a = await controller.pilihTahun(value: controller.filterTahun.value);
-                        if(a != null && a.value != controller.filterTahun.value) {
-                          controller.filterTahun = a;
-                          controller.update(['filter_payroll']);
-                          controller.loadPayrolls();
-                        }
-                      },
-                    );
-                  },
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: SizedBox(
+                  width: 200,
+                  child: GetBuilder<PayrollControl>(
+                    id: 'filter_payroll',
+                    builder: (_) {
+                      return AFwidget.comboField(
+                        value: controller.filterTahun.label,
+                        label: '',
+                        warna: Colors.white,
+                        warnaBackground: Colors.white.withValues(alpha: 0.1),
+                        onTap: () async {
+                          var a = await controller.pilihTahun(value: controller.filterTahun.value);
+                          if(a != null && a.value != controller.filterTahun.value) {
+                            controller.filterTahun = a;
+                            controller.update(['filter_payroll']);
+                            controller.loadPayrolls();
+                          }
+                        },
+                      );
+                    },
+                  ),
                 ),
               ),
             ],

@@ -64,7 +64,8 @@ class BerandaView extends StatelessWidget {
 
         children: [
           Container(
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+            height: 65,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             decoration: BoxDecoration(
               gradient: const LinearGradient(
                 colors: [Color(0xFF334155), Color(0xFF475569)],

@@ -191,7 +191,9 @@ class UpahView extends StatelessWidget {
           icon: Icons.list_alt_outlined,
           children: [
             const SizedBox(width: 20),
-              SizedBox(
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: SizedBox(
                 width: 200,
                 child: GetBuilder<UpahControl>(
                   id: 'filter_staf',
@@ -199,6 +201,8 @@ class UpahView extends StatelessWidget {
                     return AFwidget.comboField(
                       value: controller.cariStaf.label,
                       label: '',
+                      warna: Colors.white,
+                      warnaBackground: Colors.white.withValues(alpha: 0.1),
                       onTap: () async {
                         var a = await controller.pilihStaf(value: controller.cariStaf.value);
                         if(a != null && a.value != controller.cariStaf.value) {
@@ -211,6 +215,7 @@ class UpahView extends StatelessWidget {
                   },
                 ),
               ),
+            ),
               const SizedBox(width: 20),
               Expanded(
                 child: GetBuilder<UpahControl>(

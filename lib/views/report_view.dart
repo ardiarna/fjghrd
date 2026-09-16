@@ -16,7 +16,8 @@ class ReportView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+          height: 65,
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           decoration: BoxDecoration(
             gradient: const LinearGradient(
               colors: [Color(0xFF334155), Color(0xFF475569)],
@@ -43,25 +44,28 @@ class ReportView extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              SizedBox(
-                width: 150,
-                child: GetBuilder<ReportControl>(
-                      id: 'filter_1',
-                  builder: (_) {
-                    return AFwidget.comboField(
-                      value: controller.filterTahun.label,
-                      label: '',
-                      warna: Colors.white,
-                      warnaBackground: Colors.white.withValues(alpha: 0.1),
-                      onTap: () async {
-                        var a = await controller.pilihTahun(value: controller.filterTahun.value);
-                        if(a != null && a.value != controller.filterTahun.value) {
-                          controller.filterTahun = a;
-                          controller.update(['filter_1']);
-                        }
-                      },
-                    );
-                  },
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: SizedBox(
+                  width: 150,
+                  child: GetBuilder<ReportControl>(
+                        id: 'filter_1',
+                    builder: (_) {
+                      return AFwidget.comboField(
+                        value: controller.filterTahun.label,
+                        label: '',
+                        warna: Colors.white,
+                        warnaBackground: Colors.white.withValues(alpha: 0.1),
+                        onTap: () async {
+                          var a = await controller.pilihTahun(value: controller.filterTahun.value);
+                          if(a != null && a.value != controller.filterTahun.value) {
+                            controller.filterTahun = a;
+                            controller.update(['filter_1']);
+                          }
+                        },
+                      );
+                    },
+                  ),
                 ),
               ),
             ],
@@ -207,7 +211,7 @@ class ReportView extends StatelessWidget {
         ),
         child: Column(
           children: [
-            AFwidget.formHeader('Excel List Data Ex Karyawan'),
+            AFwidget.formHeader('List Data Ex Karyawan'),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Row(
@@ -321,7 +325,7 @@ class ReportView extends StatelessWidget {
         ),
         child: Column(
           children: [
-            AFwidget.formHeader('Excel Cuti Tanpa Potongan'),
+            AFwidget.formHeader('Cuti Tanpa Potongan'),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Row(
@@ -435,7 +439,7 @@ class ReportView extends StatelessWidget {
         ),
         child: Column(
           children: [
-            AFwidget.formHeader('Excel Cuti Unpaid Leave & Ganti Hari Libur'),
+            AFwidget.formHeader('Cuti Unpaid Leave & Ganti Hari Libur'),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Row(
@@ -549,7 +553,7 @@ class ReportView extends StatelessWidget {
         ),
         child: Column(
           children: [
-            AFwidget.formHeader('Excel List Cuti Karyawan'),
+            AFwidget.formHeader('List Cuti'),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Row(
@@ -661,7 +665,7 @@ class ReportView extends StatelessWidget {
         ),
         child: Column(
           children: [
-            AFwidget.formHeader('Excel Data Karyawan Per Joint'),
+            AFwidget.formHeader('Data Karyawan Per Joint'),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Row(
@@ -828,7 +832,7 @@ class ReportView extends StatelessWidget {
             ),
             child: Column(
               children: [
-                AFwidget.formHeader('Menu Data Karyawan'),
+                AFwidget.formHeader('List Data Karyawan'),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                   child: SizedBox(
@@ -909,7 +913,7 @@ class ReportView extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AFwidget.formHeader('Excel List Payroll ${controller.filterTahun.label}'),
+            AFwidget.formHeader('List Payroll ${controller.filterTahun.label}'),
             Padding(
               padding: EdgeInsets.fromLTRB(20, 15, 42, 20),
               child: Row(
@@ -1016,7 +1020,7 @@ class ReportView extends StatelessWidget {
         ),
         child: Column(
           children: [
-            AFwidget.formHeader('Excel List PHK'),
+            AFwidget.formHeader('List PHK'),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Row(
@@ -1130,7 +1134,7 @@ class ReportView extends StatelessWidget {
         ),
         child: Column(
           children: [
-            AFwidget.formHeader('Excel Rekap Payroll Per Karyawan ${controller.filterTahun.label}'),
+            AFwidget.formHeader('Rekap Payroll Per Karyawan ${controller.filterTahun.label}'),
             pilihDivisi(),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
@@ -1215,7 +1219,7 @@ class ReportView extends StatelessWidget {
         ),
         child: Column(
           children: [
-            AFwidget.formHeader('Excel Rekap PPh21 Tahun ${controller.filterTahun.label}'),
+            AFwidget.formHeader('Rekap PPh21 Tahun ${controller.filterTahun.label}'),
             pilihDivisi(),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),

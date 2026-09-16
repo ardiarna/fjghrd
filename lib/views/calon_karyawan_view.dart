@@ -306,48 +306,56 @@ class CalonKaryawanView extends StatelessWidget {
           children: [
             const Spacer(),
             const SizedBox(width: 20),
-              SizedBox(
-                width: 200,
-                child: GetBuilder<KaryawanControl>(
-                  builder: (_) {
-                    return AFwidget.comboField(
-                      value: controller.filterStaf.label,
-                      label: '',
-                      warnaBackground: Colors.white,
-                      onTap: () async {
-                        var a = await controller.pilihStaf(value: controller.filterStaf.value);
-                        if(a != null && a.value != controller.filterStaf.value) {
-                          controller.filterStaf = a;
-                          controller.loadCalonKaryawans();
-                        }
-                      },
-                    );
-                  },
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: SizedBox(
+                  width: 200,
+                  child: GetBuilder<KaryawanControl>(
+                    builder: (_) {
+                      return AFwidget.comboField(
+                        value: controller.filterStaf.label,
+                        label: '',
+                      warna: Colors.white,
+                      warnaBackground: Colors.white.withValues(alpha: 0.1),
+                        onTap: () async {
+                          var a = await controller.pilihStaf(value: controller.filterStaf.value);
+                          if(a != null && a.value != controller.filterStaf.value) {
+                            controller.filterStaf = a;
+                            controller.loadCalonKaryawans();
+                          }
+                        },
+                      );
+                    },
+                  ),
                 ),
               ),
               const Padding(
                 padding: EdgeInsets.fromLTRB(20, 0, 10, 0),
                 child: Text('Area: ',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
                 ),
               ),
-              SizedBox(
-                width: 300,
-                child: GetBuilder<KaryawanControl>(
-                  builder: (_) {
-                    return AFwidget.comboField(
-                      value: controller.filterArea.label,
-                      label: '',
-                      warnaBackground: Colors.white,
-                      onTap: () async {
-                        var a = await controller.pilihArea(value: controller.filterArea.value, withSemua: true);
-                        if(a != null && a.value != controller.filterArea.value) {
-                          controller.filterArea = a;
-                          controller.loadCalonKaryawans();
-                        }
-                      },
-                    );
-                  },
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: SizedBox(
+                  width: 300,
+                  child: GetBuilder<KaryawanControl>(
+                    builder: (_) {
+                      return AFwidget.comboField(
+                        value: controller.filterArea.label,
+                        label: '',
+                      warna: Colors.white,
+                      warnaBackground: Colors.white.withValues(alpha: 0.1),
+                        onTap: () async {
+                          var a = await controller.pilihArea(value: controller.filterArea.value, withSemua: true);
+                          if(a != null && a.value != controller.filterArea.value) {
+                            controller.filterArea = a;
+                            controller.loadCalonKaryawans();
+                          }
+                        },
+                      );
+                    },
+                  ),
                 ),
               ),
           ],

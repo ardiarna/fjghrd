@@ -129,26 +129,29 @@ class JatahCutiTahunanView extends StatelessWidget {
           icon: Icons.date_range,
           children: [
             const SizedBox(width: 20),
-            SizedBox(
-              width: 120,
-              child: GetBuilder<CutiControl>(
-                builder: (_) {
-                  return AFwidget.comboField(
-                    value: controller.filterTahun.label,
-                    label: '',
-                    warna: Colors.white,
-                    warnaBackground: Colors.white.withValues(alpha: 0.1),
-                    onTap: () async {
-                      var a = await controller.pilihTahun(
-                          value: controller.filterTahun.value);
-                      if (a != null &&
-                          a.value != controller.filterTahun.value) {
-                        controller.filterTahun = a;
-                        controller.loadCutis();
-                      }
-                    },
-                  );
-                },
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: SizedBox(
+                width: 120,
+                child: GetBuilder<CutiControl>(
+                  builder: (_) {
+                    return AFwidget.comboField(
+                      value: controller.filterTahun.label,
+                      label: '',
+                      warna: Colors.white,
+                      warnaBackground: Colors.white.withValues(alpha: 0.1),
+                      onTap: () async {
+                        var a = await controller.pilihTahun(
+                            value: controller.filterTahun.value);
+                        if (a != null &&
+                            a.value != controller.filterTahun.value) {
+                          controller.filterTahun = a;
+                          controller.loadCutis();
+                        }
+                      },
+                    );
+                  },
+                ),
               ),
             ),
             const Spacer(),

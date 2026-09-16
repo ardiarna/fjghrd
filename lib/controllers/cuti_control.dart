@@ -39,7 +39,6 @@ class CutiControl extends GetxController {
 
   TextEditingController txtTanggalKembali = TextEditingController();
 
-  // Cuti Tahunan
   String idDetailTahunan = '';
   String idDetailKhusus = '';
   String idDetailUnpaid = '';
@@ -353,9 +352,9 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
     );
   }
 
-  void editForm(String id, {Cuti? cutiObj}) {
+  void editForm(String id, {Cuti? cutiObj, String? jenisFormRow}) {
     clearForm();
-    Cuti? cuti = cutiObj ?? listCuti.firstWhereOrNull((element) => element.id == id);
+    Cuti? cuti = cutiObj ?? listCuti.firstWhereOrNull((element) => element.id == id && (jenisFormRow == null || element.jenisForm == jenisFormRow));
     if(cuti != null) {
       currentId = cuti.id;
       formType = cuti.jenisForm;

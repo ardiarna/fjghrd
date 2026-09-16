@@ -25,6 +25,7 @@ class KaryawanPayrollView extends StatelessWidget {
             const Spacer(),
             const SizedBox(width: 50),
                 Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(controller.current.nama,
@@ -62,9 +63,11 @@ class KaryawanPayrollView extends StatelessWidget {
                   onPressed: dialogListCuti,
                 ),
                 const SizedBox(width: 20),
-                SizedBox(
-                  width: 200,
-                  child: GetBuilder<KaryawanControl>(
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: SizedBox(
+                    width: 200,
+                    child: GetBuilder<KaryawanControl>(
                     builder: (_) {
                       return AFwidget.comboField(
                         value: controller.filterTahun.label,
@@ -80,6 +83,7 @@ class KaryawanPayrollView extends StatelessWidget {
                       );
                     },
                   ),
+                ),
                 ),
           ],
         ),
@@ -609,7 +613,7 @@ class KaryawanPayrollView extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                AFwidget.formHeader('Excel Payroll ${controller.current.nama}'),
+                AFwidget.formHeader('Payroll ${controller.current.nama}'),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
                   child: Column(

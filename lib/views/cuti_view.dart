@@ -1,6 +1,6 @@
 import 'package:fjghrd/controllers/home_control.dart' as fjghrd;
 import 'package:fjghrd/views/cic_cuti_view.dart' as fjghrd2;
-import 'package:fjghrd/utils/af_database.dart';
+
 import 'package:fjghrd/controllers/cuti_control.dart';
 import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/models/cuti.dart';
@@ -156,7 +156,7 @@ class CutiView extends StatelessWidget {
                   if (jenisForm == 'CUTI_MASAL_GLOBAL') {
                     Get.to(() => CutiMasalEditView(id: id));
                   } else {
-                    controller.editForm(id);
+                    controller.editForm(id, jenisFormRow: jenisForm);
                     _openForm(jenisForm);
                   }
                 },
@@ -269,73 +269,31 @@ class CutiView extends StatelessWidget {
               },
             ),
             const SizedBox(width: 20),
-            SizedBox(
-              width: 120,
-              child: GetBuilder<CutiControl>(
-                builder: (_) {
-                  return AFwidget.comboField(
-                    value: controller.filterTahun.label,
-                    label: '',
-                    warna: Colors.white,
-                    warnaBackground: Colors.white.withValues(alpha: 0.1),
-                    onTap: () async {
-                      var a = await controller.pilihTahun(value: controller.filterTahun.value);
-                      if(a != null && a.value != controller.filterTahun.value) {
-                        controller.filterTahun = a;
-                        controller.update();
-                        controller.loadCutis();
-                      }
-                    },
-                  );
-                },
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              child: SizedBox(
+                width: 120,
+                child: GetBuilder<CutiControl>(
+                  builder: (_) {
+                    return AFwidget.comboField(
+                      value: controller.filterTahun.label,
+                      label: '',
+                      warna: Colors.white,
+                      warnaBackground: Colors.white.withValues(alpha: 0.1),
+                      onTap: () async {
+                        var a = await controller.pilihTahun(value: controller.filterTahun.value);
+                        if(a != null && a.value != controller.filterTahun.value) {
+                          controller.filterTahun = a;
+                          controller.update();
+                          controller.loadCutis();
+                        }
+                      },
+                    );
+                  },
+                ),
               ),
             ),
-            const SizedBox(width: 10),
-            PopupMenuButton<String>(
-              icon: const Icon(Icons.download, color: Colors.green),
-              tooltip: 'Download Laporan Excel',
-              onSelected: (value) async {
-                final tahun = controller.filterTahun.value;
-                AFwidget.loading();
-                dynamic hasil;
-                String reportName = '';
-                
-                if(value == 'jadwal') {
-                  reportName = 'Jadwal Cuti';
-                  hasil = await AFdatabase.download(url: 'cuti/excel/jadwal/$tahun');
-                } else if(value == 'list') {
-                  reportName = 'List Cuti';
-                  hasil = await AFdatabase.download(url: 'cuti/excel/list/$tahun');
-                } else if(value == 'tanpa_potongan') {
-                  reportName = 'Cuti Tanpa Potongan';
-                  hasil = await AFdatabase.download(url: 'cuti/excel/tanpa-potongan/$tahun');
-                } else if(value == 'unpaid') {
-                  reportName = 'Cuti Unpaid Leave & Ganti Hari Libur';
-                  hasil = await AFdatabase.download(url: 'cuti/excel/unpaid/$tahun');
-                } else {
-                  Get.back();
-                  return;
-                }
-                
-                Get.back();
-                
-                if(hasil.success) {
-                  AFwidget.formWarning(
-                    label: 'Laporan $reportName telah berhasil di-download. Silakan periksa direktori Download Anda (${hasil.message})',
-                    warna: Colors.green,
-                    ikon: Icons.info,
-                  );
-                } else {
-                  AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
-                }
-              },
-              itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-                const PopupMenuItem<String>(value: 'jadwal', child: Text('Jadwal Cuti')),
-                const PopupMenuItem<String>(value: 'list', child: Text('List Cuti')),
-                const PopupMenuItem<String>(value: 'tanpa_potongan', child: Text('Cuti Tanpa Potongan')),
-                const PopupMenuItem<String>(value: 'unpaid', child: Text('Cuti Unpaid Leave & Ganti Hari Libur')),
-              ],
-            ),
+
             const Spacer(),
             _tombol(
               label: 'CIC',

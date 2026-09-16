@@ -126,6 +126,17 @@ class CicKaryawanView extends StatelessWidget {
                 color: Colors.green,
                 padding: const EdgeInsets.all(0),
               ),
+              IconButton(
+                onPressed: () {
+                  controller.dialogListCuti(context, rdrCtx.row.cells['id']!.value, rdrCtx.row.cells['nama']!.value);
+                },
+                icon: const Icon(
+                  Icons.assignment_outlined,
+                ),
+                iconSize: 18,
+                color: Colors.lightBlueAccent,
+                padding: const EdgeInsets.all(0),
+              ),
               
             ],
           );
@@ -340,6 +351,7 @@ class CicKaryawanView extends StatelessWidget {
         ),
         Expanded(
           child: GetBuilder<CicKaryawanControl>(
+              id: 'list_karyawan',
               initState: (_) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   Get.find<CicKaryawanControl>().loadData();

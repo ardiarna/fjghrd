@@ -44,7 +44,7 @@ class CicKaryawanControl extends GetxController {
     var hasil = await AFdatabase.send(url: 'cic/karyawan', methodeRequest: MethodeRequest.get);
     if(hasil.success) {
       listData = hasil.daftar.map((e) => Karyawan.fromMap(e)).toList();
-      update();
+      update(['list_karyawan']);
     } else {
       AFwidget.formWarning(label: hasil.message);
     }
@@ -787,6 +787,127 @@ AFwidget.dialog(
     } catch(err) {
       AFwidget.formWarning(label: '$err');
     }
+  }
+
+    Opsi filterTahun = Opsi(value: DateTime.now().year.toString(), label: DateTime.now().year.toString());
+  
+  Future<Opsi?> pilihTahun({String value = ''}) async {
+    List<Opsi> list = [];
+    for(int i = 2023; i <= DateTime.now().year + 1; i++) {
+      list.add(Opsi(value: i.toString(), label: i.toString()));
+    }
+    return await AFcombobox.bottomSheet(
+      listOpsi: list,
+      valueSelected: value,
+      judul: 'Pilih Tahun',
+    );
+  }
+
+  Future<void> downloadPdfListCuti(String id, String nama) async {
+    Get.back();
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'cic/cuti/excel/pdf-list-cuti-karyawan/$id/${filterTahun.value}');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(label: 'Laporan pdf list cuti $nama berhasil dibuat. Silakan periksa directory Download anda (${hasil.message})', warna: Colors.green, ikon: Icons.info);
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat pdf. [${hasil.message}]');
+    }
+  }
+
+  Future<void> downloadExcelListCuti(String id, String nama) async {
+    Get.back();
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'cic/cuti/excel/list-cuti-karyawan/$id/${filterTahun.value}');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(label: 'Laporan excel list cuti $nama berhasil dibuat. Silakan periksa directory Download anda (${hasil.message})', warna: Colors.green, ikon: Icons.info);
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+  void dialogListCuti(BuildContext context, String id, String nama) {
+    AFwidget.dialog(
+      contentPadding: EdgeInsets.zero,
+      backgroundColor: Colors.transparent,
+      Container(
+        width: 500,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AFwidget.formHeader('List Cuti CIC ($nama)'),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              child: Row(
+                children: [
+                  Container(
+                    width: 100,
+                    padding: const EdgeInsets.only(right: 15),
+                    child: const Text('Tahun'),
+                  ),
+                  Expanded(
+                    child: GetBuilder<CicKaryawanControl>(
+                      id: 'filter_tahun_cuti',
+                      builder: (_) {
+                        return AFwidget.comboField(
+                          value: filterTahun.label,
+                          label: '',
+                          onTap: () async {
+                            var a = await pilihTahun(value: filterTahun.value);
+                            if(a != null && a.value != filterTahun.value) {
+                              filterTahun = a;
+                              update(['filter_tahun_cuti']);
+                            }
+                          }
+                        );
+                      }
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  AFwidget.tombol(
+                    label: 'Batal',
+                    color: Colors.grey,
+                    onPressed: Get.back,
+                    minimumSize: const Size(100, 40),
+                  ),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download PDF',
+                      color: Colors.red,
+                      onPressed: () => downloadPdfListCuti(id, nama),
+                      minimumSize: const Size(0, 40),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download Excel',
+                      color: Colors.green,
+                      onPressed: () => downloadExcelListCuti(id, nama),
+                      minimumSize: const Size(0, 40),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Future<void> hapusData(String id) async {
