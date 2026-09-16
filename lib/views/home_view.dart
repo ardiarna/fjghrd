@@ -1,3 +1,4 @@
+import 'package:fjghrd/views/changelog_view.dart';
 import 'package:fjghrd/views/training_view.dart';
 import 'package:fjghrd/controllers/auth_control.dart';
 import 'package:fjghrd/controllers/home_control.dart';
@@ -139,18 +140,51 @@ class HomeView extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: GetBuilder<AuthControl>(
                     builder: (auth) {
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            auth.user.nama,
-                            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  auth.user.nama,
+                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.white),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  auth.user.email,
+                                  style: const TextStyle(fontSize: 13, color: Colors.white70),
+                                ),
+                              ],
+                            ),
                           ),
-                          const SizedBox(height: 2),
-                          Text(
-                            auth.user.email,
-                            style: const TextStyle(fontSize: 13, color: Colors.white70),
+                          GestureDetector(
+                            onTap: () {
+                              Get.back();
+                              final hc = Get.find<HomeControl>();
+                              hc.tabId = 5;
+                              hc.kontener = const ChangelogView();
+                              hc.update();
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withValues(alpha: 0.15),
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(color: Colors.white30, width: 1),
+                              ),
+                              child: const Text(
+                                ChangelogView.appVersion,
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: Colors.white70,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 0.5,
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       );
