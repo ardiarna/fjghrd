@@ -58,7 +58,7 @@ class CustomerView extends StatelessWidget {
         field: 'nama',
         type: PlutoColumnType.text(),
         readOnly: true,
-        minWidth: 180,
+        minWidth: 150,
         backgroundColor: Colors.brown.shade100,
       ),
       PlutoColumn(
@@ -74,7 +74,7 @@ class CustomerView extends StatelessWidget {
       children: [
         AFwidget.pageHeader(
           title: 'CUSTOMER',
-          icon: Icons.list_alt_outlined,
+          icon: Icons.emoji_people,
           children: [
             const Spacer(),
             IconButton(

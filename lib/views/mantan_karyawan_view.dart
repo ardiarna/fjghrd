@@ -6,6 +6,7 @@ import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/views/karyawan_view.dart';
 import 'package:flutter/material.dart';
+import 'package:fjghrd/models/durasi_tanggal.dart';
 import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
@@ -16,6 +17,7 @@ class MantanKaryawanView extends StatelessWidget {
   final homeControl = Get.find<HomeControl>();
 
   List<PlutoRow> _buildRows(List<Karyawan> rowData) {
+    var now = DateTime.now();
     return List.generate(
       rowData.length,
           (index) => PlutoRow(
@@ -25,7 +27,8 @@ class MantanKaryawanView extends StatelessWidget {
           'nama': PlutoCell(value: rowData[index].nama),
           'tahun': PlutoCell(value: rowData[index].tanggalKeluar!.year),
           'tanggal_masuk': PlutoCell(value: '${AFconvert.matDate(rowData[index].tanggalMasuk)} s/d ${AFconvert.matDate(rowData[index].tanggalKeluar)}'),
-          'agama': PlutoCell(value: rowData[index].agama.nama),
+          'usia': PlutoCell(value: DurasiTanggal.diff(rowData[index].tanggalLahir ?? now, now).tahun),
+            'agama': PlutoCell(value: rowData[index].agama.nama),
           'divisi': PlutoCell(value: rowData[index].divisi.nama),
           'jabatan': PlutoCell(value: rowData[index].jabatan.nama),
           'nomor_kk': PlutoCell(value: rowData[index].nomorKk),
@@ -128,6 +131,17 @@ class MantanKaryawanView extends StatelessWidget {
         readOnly: true,
         width: 150,
         backgroundColor: Colors.red.shade100,
+      ),
+      PlutoColumn(
+        title: 'USIA\n(THN)',
+        field: 'usia',
+        type: PlutoColumnType.number(),
+        readOnly: true,
+        minWidth: 90,
+        width: 100,
+        backgroundColor: Colors.brown.shade100,
+        textAlign: PlutoColumnTextAlign.center,
+        titleTextAlign: PlutoColumnTextAlign.center,
       ),
       PlutoColumn(
         title: 'AGAMA',
@@ -263,8 +277,8 @@ class MantanKaryawanView extends StatelessWidget {
             hc.kontener = KaryawanView();
             hc.update();
           },
-          title: 'DATA EX KARYAWAN',
-          icon: Icons.list_alt_outlined,
+          title: 'EX KARYAWAN',
+          icon: Icons.person_off_outlined,
           children: [
             const Spacer(),
             const SizedBox(width: 20),
@@ -305,7 +319,7 @@ class MantanKaryawanView extends StatelessWidget {
                   event.stateManager.setShowColumnFilter(true);
                   event.stateManager.autoFitColumn(context, columns[4]);
                   event.stateManager.autoFitColumn(context, columns[2]);
-                  for (int i = 6; i <= 20; i++) {
+                  for (int i = 2; i < columns.length; i++) {
                     event.stateManager.autoFitColumn(context, columns[i]);
                   }
                   event.stateManager.setRowGroup(

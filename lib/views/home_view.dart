@@ -48,7 +48,23 @@ class HomeView extends StatelessWidget {
       ),
       bottomNavigationBar: GetBuilder<HomeControl>(
         builder: (_) {
-          return NavigationBar(
+          return NavigationBarTheme(
+            data: NavigationBarThemeData(
+              indicatorColor: const Color(0xFF334155),
+              iconTheme: WidgetStateProperty.resolveWith((states) {
+                if (states.contains(WidgetState.selected)) {
+                  return const IconThemeData(color: Colors.white);
+                }
+                return const IconThemeData(color: Color(0xFF334155));
+              }),
+              labelTextStyle: WidgetStateProperty.resolveWith((states) {
+                if (states.contains(WidgetState.selected)) {
+                  return const TextStyle(color: Color(0xFF334155), fontWeight: FontWeight.bold);
+                }
+                return const TextStyle(color: Color(0xFF334155));
+              }),
+            ),
+            child: NavigationBar(
             selectedIndex: controller.availableTabs.contains(controller.tabId) 
                ? controller.availableTabs.indexOf(controller.tabId) 
                : 0,
@@ -63,28 +79,28 @@ class HomeView extends StatelessWidget {
             destinations: [
               const NavigationDestination(
                 icon: Icon(Icons.home_outlined),
-                selectedIcon: Icon(Icons.home),
+                selectedIcon: Icon(Icons.home, color: Colors.white),
                 label: 'Beranda',
               ),
               const NavigationDestination(
                 icon: Icon(Icons.supervisor_account_outlined),
-                selectedIcon: Icon(Icons.supervisor_account),
+                selectedIcon: Icon(Icons.supervisor_account, color: Colors.white),
                 label: 'Karyawan',
               ),
               if (controller.authControl.user.role != 'user')
                 const NavigationDestination(
                   icon: Icon(Icons.assignment_outlined),
-                  selectedIcon: Icon(Icons.assignment),
+                  selectedIcon: Icon(Icons.assignment, color: Colors.white),
                   label: 'Payroll',
                 ),
               const NavigationDestination(
                 icon: Icon(Icons.beach_access_outlined),
-                selectedIcon: Icon(Icons.beach_access),
-                label: 'Cuti / Ijin',
+                selectedIcon: Icon(Icons.beach_access, color: Colors.white),
+                label: 'Cuti & Ijin',
               ),
               const NavigationDestination(
                 icon: Icon(Icons.analytics_outlined),
-                selectedIcon: Icon(Icons.analytics),
+                selectedIcon: Icon(Icons.analytics, color: Colors.white),
                 label: 'Laporan',
               ),
               const NavigationDestination(
@@ -92,11 +108,12 @@ class HomeView extends StatelessWidget {
                 label: 'Menu',
               ),
             ],
+          ),
           );
         }
       ),
       endDrawer: Drawer(
-        width: 250,
+        width: 385,
         child: Column(
           children: [
             Container(
@@ -144,172 +161,215 @@ class HomeView extends StatelessWidget {
             ),
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.only(top: 10),
+                padding: const EdgeInsets.only(top: 10, left: 10),
                 children: [
-                  drawItem(
-                    label: 'Area',
-                    icon: Icons.maps_home_work_outlined,
-                    color: Colors.blueGrey,
-                    onTap: () {
-                      controller.tabId = 5;
-                      controller.kontener = AreaView();
-                      Get.back();
-                      controller.update();
-                    },
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: drawItem(
+                        label: 'Area',
+                        icon: Icons.maps_home_work_outlined,
+                        color: Colors.blueGrey,
+                        onTap: () {
+                          controller.tabId = 5;
+                          controller.kontener = AreaView();
+                          Get.back();
+                          controller.update();
+                        },
+                      )),
+                      Expanded(child: drawItem(
+                        label: 'Divisi',
+                        icon: Icons.dataset_linked_outlined,
+                        color: Colors.blueGrey,
+                        onTap: () {
+                          controller.tabId = 5;
+                          controller.kontener = DivisiView();
+                          Get.back();
+                          controller.update();
+                        },
+                      )),
+                    ],
                   ),
-                  drawItem(
-                    label: 'Divisi',
-                    icon: Icons.dataset_linked_outlined,
-                    color: Colors.blueGrey,
-                    onTap: () {
-                      controller.tabId = 5;
-                      controller.kontener = DivisiView();
-                      Get.back();
-                      controller.update();
-                    },
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: drawItem(
+                        label: 'Jabatan',
+                        icon: Icons.chair_alt_outlined,
+                        color: Colors.blueGrey,
+                        onTap: () {
+                          controller.tabId = 5;
+                          controller.kontener = JabatanView();
+                          Get.back();
+                          controller.update();
+                        },
+                      )),
+                      if (controller.authControl.user.role != 'user')
+                        Expanded(child: drawItem(
+                          label: 'Salary',
+                          icon: Icons.payments_outlined,
+                          color: Colors.blueGrey,
+                          onTap: () {
+                            controller.tabId = 5;
+                            controller.kontener = UpahView();
+                            Get.back();
+                            controller.update();
+                          },
+                        ))
+                      else
+                        const Spacer(),
+                    ],
                   ),
-                  drawItem(
-                    label: 'Jabatan',
-                    icon: Icons.chair_alt_outlined,
-                    color: Colors.blueGrey,
-                    onTap: () {
-                      controller.tabId = 5;
-                      controller.kontener = JabatanView();
-                      Get.back();
-                      controller.update();
-                    },
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: drawItem(
+                        label: 'Agama',
+                        icon: Icons.mosque_outlined,
+                        color: Colors.blueGrey,
+                        onTap: () {
+                          controller.tabId = 5;
+                          controller.kontener = AgamaView();
+                          Get.back();
+                          controller.update();
+                        },
+                      )),
+                      Expanded(child: drawItem(
+                        label: 'Pendidikan',
+                        icon: Icons.school_outlined,
+                        color: Colors.blueGrey,
+                        onTap: () {
+                          controller.tabId = 5;
+                          controller.kontener = PendidikanView();
+                          Get.back();
+                          controller.update();
+                        },
+                      )),
+                    ],
                   ),
-                  if (controller.authControl.user.role != 'user')
-                    drawItem(
-                      label: 'Salary',
-                      icon: Icons.payments_outlined,
-                      color: Colors.blueGrey,
-                      onTap: () {
-                        controller.tabId = 5;
-                        controller.kontener = UpahView();
-                        Get.back();
-                        controller.update();
-                      },
-                    ),
-                  drawItem(
-                    label: 'Agama',
-                    icon: Icons.mosque_outlined,
-                    color: Colors.blueGrey,
-                    onTap: () {
-                      controller.tabId = 5;
-                      controller.kontener = AgamaView();
-                      Get.back();
-                      controller.update();
-                    },
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: drawItem(
+                        label: 'Training',
+                        icon: Icons.model_training,
+                        color: Colors.blueGrey,
+                        onTap: () {
+                          controller.tabId = 55;
+                          controller.kontener = TrainingView();
+                          Get.back();
+                          controller.update();
+                        },
+                      )),
+                      Expanded(child: drawItem(
+                        label: 'Customer',
+                        icon: Icons.emoji_people,
+                        color: Colors.blueGrey,
+                        onTap: () {
+                          controller.tabId = 5;
+                          controller.kontener = CustomerView();
+                          Get.back();
+                          controller.update();
+                        },
+                      )),
+                    ],
                   ),
-                  drawItem(
-                    label: 'Pendidikan',
-                    icon: Icons.school_outlined,
-                    color: Colors.blueGrey,
-                    onTap: () {
-                      controller.tabId = 5;
-                      controller.kontener = PendidikanView();
-                      Get.back();
-                      controller.update();
-                    },
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: drawItem(
+                        label: 'Status Karyawan',
+                        icon: Icons.badge_outlined,
+                        color: Colors.blueGrey,
+                        onTap: () {
+                          controller.tabId = 5;
+                          controller.kontener = StatusKerjaView();
+                          Get.back();
+                          controller.update();
+                        },
+                      )),
+                      Expanded(child: drawItem(
+                        label: 'Status PHK',
+                        icon: Icons.person_off_outlined,
+                        color: Colors.blueGrey,
+                        onTap: () {
+                          controller.tabId = 5;
+                          controller.kontener = StatusPhkView();
+                          Get.back();
+                          controller.update();
+                        },
+                      )),
+                    ],
                   ),
-                  drawItem(
-                    label: 'Training',
-                    icon: Icons.model_training,
-                    color: Colors.blueGrey,
-                    onTap: () {
-                      controller.tabId = 55;
-                      controller.kontener = TrainingView();
-                      Get.back();
-                      controller.update();
-                    },
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: drawItem(
+                        label: 'PTKP',
+                        icon: Icons.account_balance_wallet_outlined,
+                        color: Colors.blueGrey,
+                        onTap: () {
+                          controller.tabId = 5;
+                          controller.kontener = PtkpView();
+                          Get.back();
+                          controller.update();
+                        },
+                      )),
+                      Expanded(child: drawItem(
+                        label: 'Tarif Efektif (TER)',
+                        icon: Icons.money,
+                        color: Colors.blueGrey,
+                        onTap: () {
+                          controller.tabId = 5;
+                          controller.kontener = TarifEfektifView();
+                          Get.back();
+                          controller.update();
+                        },
+                      )),
+                    ],
                   ),
-                  drawItem(
-                    label: 'Status Karyawan',
-                    icon: Icons.arrow_drop_down_circle_outlined,
-                    color: Colors.blueGrey,
-                    onTap: () {
-                      controller.tabId = 5;
-                      controller.kontener = StatusKerjaView();
-                      Get.back();
-                      controller.update();
-                    },
-                  ),
-                  drawItem(
-                    label: 'Status PHK',
-                    icon: Icons.arrow_drop_down_circle_outlined,
-                    color: Colors.blueGrey,
-                    onTap: () {
-                      controller.tabId = 5;
-                      controller.kontener = StatusPhkView();
-                      Get.back();
-                      controller.update();
-                    },
-                  ),
-                  drawItem(
-                    label: 'PTKP',
-                    icon: Icons.arrow_drop_down_circle_outlined,
-                    color: Colors.blueGrey,
-                    onTap: () {
-                      controller.tabId = 5;
-                      controller.kontener = PtkpView();
-                      Get.back();
-                      controller.update();
-                    },
-                  ),
-                  drawItem(
-                    label: 'Tarif EFektif (TER)',
-                    icon: Icons.money,
-                    color: Colors.blueGrey,
-                    onTap: () {
-                      controller.tabId = 5;
-                      controller.kontener = TarifEfektifView();
-                      Get.back();
-                      controller.update();
-                    },
-                  ),
-                  drawItem(
-                    label: 'Customer',
-                    icon: Icons.emoji_people,
-                    color: Colors.blueGrey,
-                    onTap: () {
-                      controller.tabId = 5;
-                      controller.kontener = CustomerView();
-                      Get.back();
-                      controller.update();
-                    },
-                  ),
-                  drawItem(
-                    label: 'Hari Libur',
-                    icon: Icons.calendar_month,
-                    color: Colors.blueGrey,
-                    onTap: () {
-                      controller.tabId = 5;
-                      controller.kontener = HariLiburView();
-                      Get.back();
-                      controller.update();
-                    },
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: drawItem(
+                        label: 'Hari Libur',
+                        icon: Icons.calendar_month,
+                        color: Colors.blueGrey,
+                        onTap: () {
+                          controller.tabId = 5;
+                          controller.kontener = HariLiburView();
+                          Get.back();
+                          controller.update();
+                        },
+                      )),
+                      const Spacer(),
+                    ],
                   ),
                   const Divider(color: Color(0xFFE2E8F0)),
-                  drawItem(
-                    label: 'Ubah Email',
-                    icon: Icons.email_outlined,
-                    color: Colors.red,
-                    onTap: () {
-                      Get.back();
-                      controller.tabId = 5;
-                      dialogChangeEmail();
-                    },
-                  ),
-                  drawItem(
-                    label: 'Ubah Password',
-                    icon: Icons.key,
-                    color: Colors.red,
-                    onTap: () {
-                      Get.back();
-                      controller.tabId = 5;
-                      dialogChangePassword();
-                    },
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Expanded(child: drawItem(
+                        label: 'Ubah Email',
+                        icon: Icons.email_outlined,
+                        color: Colors.red,
+                        onTap: () {
+                          Get.back();
+                          controller.tabId = 5;
+                          dialogChangeEmail();
+                        },
+                      )),
+                      Expanded(child: drawItem(
+                        label: 'Ubah Password',
+                        icon: Icons.key,
+                        color: Colors.red,
+                        onTap: () {
+                          Get.back();
+                          controller.tabId = 5;
+                          dialogChangePassword();
+                        },
+                      )),
+                    ],
                   ),
                 ],
               ),
@@ -433,16 +493,16 @@ class HomeView extends StatelessWidget {
     void Function()? onTap,
   }) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
       ),
       child: ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 8),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         dense: true,
         leading: Icon(icon, size: 21, color: color),
-        title: Text(label, style: TextStyle(color: color, fontWeight: FontWeight.w500)),
-        trailing: Icon(Icons.keyboard_arrow_right, color: color?.withValues(alpha: 0.5)),
+        title: Text(label, style: TextStyle(color: color, fontWeight: FontWeight.w500, fontSize: 13)),
         onTap: onTap,
         hoverColor: color?.withValues(alpha: 0.1),
       ),
@@ -461,7 +521,7 @@ class HomeView extends StatelessWidget {
         ),
         child: Column(
           children: [
-            AFwidget.formHeader('UBAH EMAIL'),
+            AFwidget.formHeader('UBAH EMAIL', icon: Icons.email_outlined),
             Padding(
               padding: const EdgeInsets.all(20),
               child: AFwidget.textField(
@@ -512,7 +572,7 @@ class HomeView extends StatelessWidget {
         ),
         child: Column(
           children: [
-            AFwidget.formHeader('UBAH PASSWORD'),
+            AFwidget.formHeader('UBAH PASSWORD', icon: Icons.key),
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 15),
               child: GetBuilder<HomeControl>(

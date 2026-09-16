@@ -6,6 +6,7 @@ import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/views/karyawan_view.dart';
 import 'package:flutter/material.dart';
+import 'package:fjghrd/models/durasi_tanggal.dart';
 import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
@@ -32,6 +33,7 @@ class CalonKaryawanView extends StatelessWidget {
             'nik': PlutoCell(value: rowData[index].nik),
             'tanggal_masuk': PlutoCell(value: AFconvert.matDate(rowData[index].tanggalMasuk)),
             'masa_kerja': PlutoCell(value: '${tahun>0 ? '$tahun tahun' : ''} ${bulan>0 ? '$bulan bulan' : ''}'),
+            'usia': PlutoCell(value: DurasiTanggal.diff(rowData[index].tanggalLahir ?? now, now).tahun),
             'agama': PlutoCell(value: rowData[index].agama.nama),
             'divisi': PlutoCell(value: rowData[index].divisi.nama),
             'jabatan': PlutoCell(value: rowData[index].jabatan.nama),
@@ -160,6 +162,17 @@ class CalonKaryawanView extends StatelessWidget {
         type: PlutoColumnType.text(),
         readOnly: true,
         minWidth: 150,
+        backgroundColor: Colors.brown.shade100,
+        textAlign: PlutoColumnTextAlign.center,
+        titleTextAlign: PlutoColumnTextAlign.center,
+      ),
+      PlutoColumn(
+        title: 'USIA',
+        field: 'usia',
+        type: PlutoColumnType.number(),
+        readOnly: true,
+        minWidth: 90,
+        width: 100,
         backgroundColor: Colors.brown.shade100,
         textAlign: PlutoColumnTextAlign.center,
         titleTextAlign: PlutoColumnTextAlign.center,
@@ -301,8 +314,8 @@ class CalonKaryawanView extends StatelessWidget {
             hc.kontener = KaryawanView();
             hc.update();
           },
-          title: 'DATA CALON KARYAWAN',
-          icon: Icons.list_alt_outlined,
+          title: 'CALON KARYAWAN',
+          icon: Icons.person_add_alt_1,
           children: [
             const Spacer(),
             const SizedBox(width: 20),
@@ -370,7 +383,7 @@ class CalonKaryawanView extends StatelessWidget {
                 onChanged: (PlutoGridOnChangedEvent event) {},
                 onLoaded: (PlutoGridOnLoadedEvent event) {
                   event.stateManager.setShowColumnFilter(true);
-                  for (int i = 2; i <= 21; i++) {
+                  for (int i = 2; i < columns.length; i++) {
                     event.stateManager.autoFitColumn(context, columns[i]);
                   }
                 },

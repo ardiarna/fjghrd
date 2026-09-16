@@ -88,7 +88,7 @@ class PtkpView extends StatelessWidget {
       children: [
         AFwidget.pageHeader(
           title: 'PTKP',
-          icon: Icons.list_alt_outlined,
+          icon: Icons.account_balance_wallet_outlined,
           children: [
             const Spacer(),
             IconButton(

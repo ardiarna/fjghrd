@@ -19,7 +19,7 @@ class KaryawanPayrollView extends StatelessWidget {
         children: [
           AFwidget.pageHeader(
           onBack: Get.back,
-          title: 'PAYROLL & CUTI',
+          title: controller.authControl.user.role == 'user' ? 'CUTI' : 'PAYROLL & CUTI',
           icon: Icons.list_alt_outlined,
           children: [
             const Spacer(),
@@ -72,7 +72,8 @@ class KaryawanPayrollView extends StatelessWidget {
                       return AFwidget.comboField(
                         value: controller.filterTahun.label,
                         label: '',
-                        warna: Colors.brown.shade400,
+                        warna: Colors.white,
+                        warnaBackground: Colors.white.withValues(alpha: 0.1),
                         onTap: () async {
                           var a = await controller.pilihTahun(value: controller.filterTahun.value);
                           if(a != null && a.value != controller.filterTahun.value) {
@@ -260,6 +261,12 @@ class KaryawanPayrollView extends StatelessWidget {
   }
 
   Widget boxKonten(Payroll item) {
+    int totalA = item.gaji + item.kenaikanGaji + item.uangMakanJumlah + item.overtimeFjg + item.overtimeCus + item.medical + item.thr + item.bonus + item.insentif + item.telkomsel + item.lain;
+    int totalB = item.pot25jumlah + item.potTelepon + item.potKas + item.potCicilan + item.potBpjs + item.potBensin + item.potCutiJumlah + item.potKompensasiJumlah + item.potLain;
+    int totalDiterimaCalc = totalA - totalB;
+    int totalBenefit = item.kantorJp + item.kantorJht + item.kantorJkk + item.kantorJkm + item.kantorBpjs + item.pph21;
+    int totalGrand = totalDiterimaCalc + totalBenefit;
+
     return Stack(
       alignment: AlignmentDirectional.topEnd,
       children: [
@@ -307,6 +314,10 @@ class KaryawanPayrollView extends StatelessWidget {
                 value: AFconvert.matNumber(item.gaji),
               ),
               barisKonten(
+                label: 'Kenaikan Gaji',
+                value: AFconvert.matNumber(item.kenaikanGaji),
+              ),
+              barisKonten(
                 label: 'U/makan & Transport',
                 value: AFconvert.matNumber(item.uangMakanJumlah),
               ),
@@ -340,7 +351,7 @@ class KaryawanPayrollView extends StatelessWidget {
               ),
               barisKonten(
                 label: 'Total A',
-                value: AFconvert.matNumber(item.gaji+item.uangMakanJumlah+item.overtimeFjg+item.overtimeCus+item.medical+item.thr+item.bonus+item.insentif+item.telkomsel+item.lain),
+                value: AFconvert.matNumber(totalA),
                 withBorder: true,
                 color: Colors.grey.shade500,
                 textAlign: TextAlign.right,
@@ -388,7 +399,7 @@ class KaryawanPayrollView extends StatelessWidget {
               ),
               barisKonten(
                 label: 'Total B',
-                value: AFconvert.matNumber(item.pot25jumlah+item.potTelepon+item.potKas+item.potCicilan+item.potBpjs+item.potBensin+item.potCutiJumlah+item.potKompensasiJumlah+item.potLain),
+                value: AFconvert.matNumber(totalB),
                 withBorder: true,
                 color: Colors.grey.shade500,
                 textAlign: TextAlign.right,
@@ -404,7 +415,7 @@ class KaryawanPayrollView extends StatelessWidget {
                   ),
                   const Text('='),
                   Expanded(
-                    child: Text(AFconvert.matNumber(item.totalDiterima),
+                    child: Text(AFconvert.matNumber(totalDiterimaCalc),
                       textAlign: TextAlign.right,
                       style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.w600),
                     ),
@@ -460,7 +471,7 @@ class KaryawanPayrollView extends StatelessWidget {
                     ),
                     barisKonten(
                       label: 'Total Benefit',
-                      value: AFconvert.matNumber(item.kantorJp+item.kantorJht+item.kantorJkk+item.kantorJkm+item.kantorBpjs+item.pph21),
+                      value: AFconvert.matNumber(totalBenefit),
                       withBorder: true,
                       color: Colors.grey.shade500,
                       textAlign: TextAlign.right,
@@ -479,7 +490,7 @@ class KaryawanPayrollView extends StatelessWidget {
                   ),
                   const Text('='),
                   Expanded(
-                    child: Text(AFconvert.matNumber(item.totalDiterima+item.kantorJp+item.kantorJht+item.kantorJkk+item.kantorJkm+item.kantorBpjs+item.pph21),
+                    child: Text(AFconvert.matNumber(totalGrand),
                       textAlign: TextAlign.right,
                       style: const TextStyle(color: Colors.red, fontWeight: FontWeight.w600),
                     ),

@@ -58,7 +58,7 @@ class TrainingView extends StatelessWidget {
         field: 'nama',
         type: PlutoColumnType.text(),
         readOnly: true,
-        minWidth: 180,
+        minWidth: 150,
         backgroundColor: Colors.brown.shade100,
       ),
       PlutoColumn(
@@ -74,7 +74,7 @@ class TrainingView extends StatelessWidget {
       children: [
         AFwidget.pageHeader(
           title: 'TRAINING',
-          icon: Icons.list_alt_outlined,
+          icon: Icons.model_training,
           children: [
             const Spacer(),
             IconButton(

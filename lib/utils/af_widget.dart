@@ -912,6 +912,7 @@ abstract class AFwidget {
     required IconData icon,
     List<Widget>? children,
     void Function()? onBack,
+    Color? color,
   }) {
     List<Widget> rowChildren = [];
     if (onBack != null) {
@@ -923,13 +924,13 @@ abstract class AFwidget {
       ));
     }
     rowChildren.addAll([
-      Icon(icon, color: Colors.white, size: 28),
+      Icon(icon, color: color ?? Colors.white, size: 28),
       const SizedBox(width: 12),
       Text(title,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 22,
           fontWeight: FontWeight.bold,
-          color: Colors.white,
+          color: color ?? Colors.white,
         ),
       ),
     ]);
@@ -961,6 +962,7 @@ abstract class AFwidget {
   }
 
   static Widget formHeader(String label, {
+    IconData? icon,
     bool radiusLeft = true,
     bool radiusRight = true,
     List<Widget>? actions,
@@ -985,12 +987,21 @@ abstract class AFwidget {
       child: Row(
         mainAxisAlignment: mainAxisAlignment,
         children: [
-          Text(label,
-            style: const TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (icon != null) ...[
+                Icon(icon, color: Colors.white, size: 21),
+                const SizedBox(width: 8),
+              ],
+              Text(label,
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+            ],
           ),
           if (actions != null && actions.isNotEmpty) Row(children: actions),
         ],

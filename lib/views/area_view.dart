@@ -67,7 +67,7 @@ class AreaView extends StatelessWidget {
         field: 'nama',
         type: PlutoColumnType.text(),
         readOnly: true,
-        minWidth: 250,
+        minWidth: 150,
         backgroundColor: Colors.brown.shade100,
       ),
       PlutoColumn(
@@ -83,7 +83,7 @@ class AreaView extends StatelessWidget {
       children: [
         AFwidget.pageHeader(
           title: 'AREA',
-          icon: Icons.list_alt_outlined,
+          icon: Icons.maps_home_work_outlined,
           children: [
             const Spacer(),
             IconButton(

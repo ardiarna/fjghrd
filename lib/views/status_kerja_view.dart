@@ -58,7 +58,7 @@ class StatusKerjaView extends StatelessWidget {
         field: 'nama',
         type: PlutoColumnType.text(),
         readOnly: true,
-        minWidth: 180,
+        minWidth: 150,
         backgroundColor: Colors.brown.shade100,
       ),
       PlutoColumn(
@@ -74,7 +74,7 @@ class StatusKerjaView extends StatelessWidget {
       children: [
         AFwidget.pageHeader(
           title: 'STATUS KARYAWAN',
-          icon: Icons.list_alt_outlined,
+          icon: Icons.badge_outlined,
           children: [
             const Spacer(),
             IconButton(

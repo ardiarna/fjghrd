@@ -248,7 +248,7 @@ class MedicalView extends StatelessWidget {
             hc.update();
           },
           title: 'MEDICAL',
-          icon: Icons.list_alt_outlined,
+          icon: Icons.medical_information_outlined,
           children: [
             const Spacer(),
             const SizedBox(width: 40),

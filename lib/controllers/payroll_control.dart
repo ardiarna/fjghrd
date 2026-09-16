@@ -366,6 +366,8 @@ class PayrollControl extends GetxController {
       Get.back();
       if(hasil.success) {
         loadDetilPayrolls();
+        await loadPayrolls();
+        update();
         Get.back();
         AFwidget.snackbar(hasil.message);
       } else {

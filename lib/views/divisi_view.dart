@@ -67,7 +67,7 @@ class DivisiView extends StatelessWidget {
         field: 'nama',
         type: PlutoColumnType.text(),
         readOnly: true,
-        minWidth: 230,
+        minWidth: 150,
         backgroundColor: Colors.brown.shade100,
       ),
       PlutoColumn(
@@ -83,7 +83,7 @@ class DivisiView extends StatelessWidget {
       children: [
         AFwidget.pageHeader(
           title: 'DIVISI',
-          icon: Icons.list_alt_outlined,
+          icon: Icons.dataset_linked_outlined,
           children: [
             const Spacer(),
             IconButton(

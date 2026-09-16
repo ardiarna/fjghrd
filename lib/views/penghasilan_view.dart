@@ -203,7 +203,7 @@ class PenghasilanView extends StatelessWidget {
             hc.update();
           },
           title: 'PENGHASILAN',
-          icon: Icons.list_alt_outlined,
+          icon: Icons.attach_money,
           children: [
             const Spacer(),
             const SizedBox(width: 40),

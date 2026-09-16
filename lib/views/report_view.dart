@@ -36,7 +36,7 @@ class ReportView extends StatelessWidget {
             children: [
               const Icon(Icons.analytics_outlined, color: Colors.white, size: 28),
               const SizedBox(width: 12),
-              const Text('Laporan',
+              const Text('LAPORAN',
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,

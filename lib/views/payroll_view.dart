@@ -45,7 +45,7 @@ class PayrollView extends StatelessWidget {
             children: [
               const Icon(Icons.assignment_outlined, color: Colors.white, size: 28),
               const SizedBox(width: 12),
-              const Text('Payroll',
+              const Text('PAYROLL',
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -168,6 +168,9 @@ class PayrollView extends StatelessWidget {
   }
 
   Widget boxKonten(Payroll item) {
+    int totalA = item.gaji + item.kenaikanGaji + item.uangMakanJumlah + item.overtimeFjg + item.overtimeCus + item.medical + item.thr + item.bonus + item.insentif + item.telkomsel + item.lain;
+    int totalB = item.pot25jumlah + item.potTelepon + item.potKas + item.potCicilan + item.potBpjs + item.potBensin + item.potCutiJumlah + item.potKompensasiJumlah + item.potLain;
+    int totalDiterimaCalc = totalA - totalB;
     return Container(
       width: 430,
       decoration: BoxDecoration(
@@ -293,6 +296,13 @@ class PayrollView extends StatelessWidget {
             label: 'Lain-lain',
             value: AFconvert.matNumber(item.lain),
           ),
+          barisKonten(
+            label: 'Total A',
+            value: AFconvert.matNumber(totalA),
+            withBorder: true,
+            color: Colors.grey.shade500,
+            textAlign: TextAlign.right,
+          ),
           const SizedBox(height: 13),
           const Text(
             'B. POTONGAN',
@@ -335,6 +345,13 @@ class PayrollView extends StatelessWidget {
             label: 'Lain-lain',
             value: AFconvert.matNumber(item.potLain),
           ),
+          barisKonten(
+            label: 'Total B',
+            value: AFconvert.matNumber(totalB),
+            withBorder: true,
+            color: Colors.grey.shade500,
+            textAlign: TextAlign.right,
+          ),
           const SizedBox(height: 13),
           Row(
             children: [
@@ -348,7 +365,7 @@ class PayrollView extends StatelessWidget {
               const Text('='),
               Expanded(
                 child: Text(
-                  AFconvert.matNumber(item.totalDiterima),
+                  AFconvert.matNumber(totalDiterimaCalc),
                   textAlign: TextAlign.right,
                   style: const TextStyle(color: Colors.blue, fontWeight: FontWeight.w600),
                 ),
@@ -360,20 +377,41 @@ class PayrollView extends StatelessWidget {
     );
   }
 
-  Widget barisKonten({String label = '', String value = ''}) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 0, 0, 7),
+  Widget barisKonten({
+    String label = '',
+    String value = '',
+    TextAlign? textAlign,
+    Color? color,
+    bool withBorder = false,
+  }) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+      decoration: withBorder ? BoxDecoration(
+        border: Border.symmetric(horizontal: BorderSide(color: color ?? const Color(0xFF000000))),
+      ) : null,
       child: Row(
         children: [
-          SizedBox(
+          Container(
             width: 230,
-            child: Text(label),
+            padding: const EdgeInsets.only(right: 10),
+            child: Text(label,
+              textAlign: textAlign,
+              style: TextStyle(
+                color: color,
+              ),
+            ),
           ),
-          const Text('='),
+          Text('=',
+            style: TextStyle(
+              color: color,
+            ),
+          ),
           Expanded(
-            child: Text(
-              value,
+            child: Text(value,
               textAlign: TextAlign.right,
+              style: TextStyle(
+                color: color,
+              ),
             ),
           ),
         ],

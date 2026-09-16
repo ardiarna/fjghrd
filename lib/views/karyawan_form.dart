@@ -361,9 +361,14 @@ class KaryawanForm extends StatelessWidget {
           AFwidget.pageHeader(
           onBack: Get.back,
             title: controller.current.aktif == 'P'
-                ? 'DETAIL DATA CALON KARYAWAN' : controller.current.aktif == 'N'
-                ? 'DETAIL DATA EX KARYAWAN' : 'DETAIL DATA KARYAWAN',
-            icon: Icons.person_outline,
+                ? 'DETAIL CALON KARYAWAN' : controller.current.aktif == 'N'
+                ? 'DETAIL EX KARYAWAN' : 'DETAIL KARYAWAN',
+            icon: controller.current.aktif == 'P'
+                ? Icons.person_add_alt_1 : controller.current.aktif == 'N'
+                ? Icons.person_off_outlined : Icons.person_outline,
+            color: controller.current.aktif == 'P'
+                ? Colors.lightGreenAccent : controller.current.aktif == 'N'
+                ? Colors.redAccent.shade200 : Colors.white,
             children: [
               const Spacer(),
               GetBuilder<KaryawanControl>(id: 'form_karyawan',
@@ -1099,7 +1104,7 @@ class KaryawanForm extends StatelessWidget {
                                 var b = AFconvert.keTanggal(controller.txtTanggalKeluar.text) ?? _now;
                                 DurasiTanggal durasi = DurasiTanggal.diff(a ?? b, b);
                                 return Padding(
-                                  padding: const EdgeInsets.fromLTRB(10, 0, 15, 10),
+                                  padding: const EdgeInsets.fromLTRB(10, 20, 15, 10),
                                   child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [

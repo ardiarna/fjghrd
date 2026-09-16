@@ -158,7 +158,7 @@ class OncallCustomerView extends StatelessWidget {
             hc.update();
           },
           title: 'OVERTIME & ON CALL CUSTOMER',
-          icon: Icons.list_alt_outlined,
+          icon: Icons.call_missed_outlined,
           children: [
             const Spacer(),
             const SizedBox(width: 40),

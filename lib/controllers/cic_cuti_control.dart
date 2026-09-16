@@ -253,7 +253,7 @@ class CicCutiControl extends GetxController {
 
   Future<void> loadKaryawan() async {
     var hasil = await AFdatabase.send(
-      url: 'cic/karyawan?aktif=Y&staf=&area=&status_kerja=&sort_by=nama&sort_order=asc',
+      url: 'cic/karyawan?aktif=Y&staf=&area=&status_kerja=&sort_by=tanggal_masuk&sort_order=asc',
     );
     if (hasil.success) {
       listKaryawan.clear();

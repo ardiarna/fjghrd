@@ -246,14 +246,14 @@ class CutiView extends StatelessWidget {
               onPressed: () { controller.clearForm(); _openForm('IJIN'); },
             ),
             _tombol(
-              label: 'Cuti Masal',
+              label: 'Form Cuti Masal',
               icon: Icons.groups,
               onPressed: () {
                 Get.to(() => const cuti_masal.CutiMasalView());
               },
             ),
             _tombol(
-              label: 'Jatah Tahunan',
+              label: 'Jatah Cuti Tahunan',
               icon: Icons.date_range,
               onPressed: () {
                 Get.find<HomeControl>().kontener = JatahCutiTahunanView();

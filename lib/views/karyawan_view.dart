@@ -36,6 +36,7 @@ class KaryawanView extends StatelessWidget {
             'nik': PlutoCell(value: rowData[index].nik),
             'tanggal_masuk': PlutoCell(value: AFconvert.matDate(rowData[index].tanggalMasuk)),
             'masa_kerja': PlutoCell(value: durasi.cetakSingkat()),
+            'usia': PlutoCell(value: DurasiTanggal.diff(rowData[index].tanggalLahir ?? now, now).tahun),
             'agama': PlutoCell(value: rowData[index].agama.nama),
             'divisi': PlutoCell(value: rowData[index].divisi.nama),
             'jabatan': PlutoCell(value: rowData[index].jabatan.nama),
@@ -180,6 +181,17 @@ class KaryawanView extends StatelessWidget {
         type: PlutoColumnType.text(),
         readOnly: true,
         minWidth: 150,
+        backgroundColor: Colors.brown.shade100,
+        textAlign: PlutoColumnTextAlign.center,
+        titleTextAlign: PlutoColumnTextAlign.center,
+      ),
+      PlutoColumn(
+        title: 'USIA',
+        field: 'usia',
+        type: PlutoColumnType.number(),
+        readOnly: true,
+        minWidth: 90,
+        width: 100,
         backgroundColor: Colors.brown.shade100,
         textAlign: PlutoColumnTextAlign.center,
         titleTextAlign: PlutoColumnTextAlign.center,
@@ -337,7 +349,7 @@ class KaryawanView extends StatelessWidget {
             children: [
               const Icon(Icons.people_alt_outlined, color: Colors.white, size: 28),
               const SizedBox(width: 12),
-              const Text('Karyawan',
+              const Text('KARYAWAN',
                 style: TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
@@ -444,7 +456,7 @@ class KaryawanView extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              OutlinedButton(
+              OutlinedButton.icon(
                 style: ButtonStyle(
                   side: WidgetStateProperty.all<BorderSide>(BorderSide(color: Colors.greenAccent.shade200)),
                   foregroundColor: WidgetStateProperty.all<Color>(Colors.greenAccent.shade200),
@@ -454,10 +466,11 @@ class KaryawanView extends StatelessWidget {
                   homeControl.kontener = CalonKaryawanView();
                   homeControl.update();
                 },
-                child: const Text('CALON'),
+                icon: const Icon(Icons.person_add_alt_1),
+                label: const Text('CALON'),
               ),
               const SizedBox(width: 20),
-              OutlinedButton(
+              OutlinedButton.icon(
                 style: ButtonStyle(
                   side: WidgetStateProperty.all<BorderSide>(BorderSide(color: Colors.redAccent.shade200)),
                   foregroundColor: WidgetStateProperty.all<Color>(Colors.redAccent.shade200),
@@ -467,7 +480,8 @@ class KaryawanView extends StatelessWidget {
                   homeControl.kontener = MantanKaryawanView();
                   homeControl.update();
                 },
-                child: const Text('EX KARYAWAN'),
+                icon: const Icon(Icons.person_off_outlined),
+                label: const Text('EX KARYAWAN'),
               ),
             ],
           ),
@@ -482,7 +496,7 @@ class KaryawanView extends StatelessWidget {
                 onChanged: (PlutoGridOnChangedEvent event) {},
                 onLoaded: (PlutoGridOnLoadedEvent event) {
                   event.stateManager.setShowColumnFilter(true);
-                  for (int i = 2; i <= 21; i++) {
+                  for (int i = 2; i <= 22; i++) {
                     event.stateManager.autoFitColumn(context, columns[i]);
                   }
                   // event.stateManager.setRowGroup(

@@ -62,7 +62,7 @@ class CicJenisCutiKhususView extends StatelessWidget {
         field: 'nama',
         type: PlutoColumnType.text(),
         readOnly: true,
-        minWidth: 200,
+        minWidth: 150,
         backgroundColor: Colors.brown.shade100,
       ),
       PlutoColumn(
@@ -125,6 +125,7 @@ class CicJenisCutiKhususView extends StatelessWidget {
                   onChanged: (PlutoGridOnChangedEvent event) {},
                   onLoaded: (PlutoGridOnLoadedEvent event) {
                     event.stateManager.setShowColumnFilter(true);
+                    event.stateManager.autoFitColumn(context, columns[1]);
                   },
                   configuration: AFplutogridConfig.configSatu(),
                 );

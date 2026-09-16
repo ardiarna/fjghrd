@@ -184,7 +184,7 @@ class PotonganView extends StatelessWidget {
             hc.update();
           },
           title: 'POTONGAN',
-          icon: Icons.list_alt_outlined,
+          icon: Icons.money_off,
           children: [
             const Spacer(),
             const SizedBox(width: 40),

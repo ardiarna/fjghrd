@@ -191,7 +191,7 @@ class OvertimeView extends StatelessWidget {
             hc.update();
           },
           title: 'OVERTIME',
-          icon: Icons.list_alt_outlined,
+          icon: Icons.punch_clock_outlined,
           children: [
             const Spacer(),
             const SizedBox(width: 40),

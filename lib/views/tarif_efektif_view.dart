@@ -88,7 +88,7 @@ class TarifEfektifView extends StatelessWidget {
       children: [
         AFwidget.pageHeader(
           title: 'TER (TARIF EFEKTIF RATA-RATA)',
-          icon: Icons.list_alt_outlined,
+          icon: Icons.money,
           children: [
             const Spacer(),
             IconButton(

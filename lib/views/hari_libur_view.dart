@@ -69,8 +69,7 @@ class HariLiburView extends StatelessWidget {
         field: 'nama',
         type: PlutoColumnType.text(),
         readOnly: true,
-        minWidth: 300,
-        width: 300,
+        minWidth: 150,
         backgroundColor: Colors.brown.shade100,
       ),
 
@@ -79,7 +78,7 @@ class HariLiburView extends StatelessWidget {
       children: [
         AFwidget.pageHeader(
           title: 'HARI LIBUR',
-          icon: Icons.list_alt_outlined,
+          icon: Icons.calendar_month,
           children: [
             const Spacer(),
             const SizedBox(width: 20),

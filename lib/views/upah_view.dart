@@ -187,8 +187,8 @@ class UpahView extends StatelessWidget {
     return Column(
       children: [
         AFwidget.pageHeader(
-          title: 'LIST SALARY',
-          icon: Icons.list_alt_outlined,
+          title: 'SALARY',
+          icon: Icons.payments_outlined,
           children: [
             const SizedBox(width: 20),
             Padding(

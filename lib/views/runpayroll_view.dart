@@ -16,6 +16,7 @@ class RunpayrollView extends StatelessWidget {
 
   final PayrollControl controller = Get.put(PayrollControl());
   final ScrollController _scrollController = ScrollController();
+  final TextEditingController searchKaryawan = TextEditingController();
   final DateTime now = DateTime.now();
 
   PlutoGridStateManager? stateManager;
@@ -1458,6 +1459,22 @@ class RunpayrollView extends StatelessWidget {
             controller.homeControl.kontener = wgPeriode();
             controller.homeControl.update();
           },
+          children: [
+            const SizedBox(width: 40),
+            Text('Periode : ${controller.bulan.label} ${controller.tahun.label}',
+              style: const TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(width: 40),
+            Expanded(
+              child: Text('Periode Batas (Cut-Off) : ${controller.txtTanggalAwal.text} s/d ${controller.txtTanggalAkhir.text}',
+                style: const TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
         ),
         Expanded(
           child: Container(
@@ -1468,6 +1485,7 @@ class RunpayrollView extends StatelessWidget {
               children: [
                 const Spacer(),
                 Container(
+                  width: 665,
                   padding: const EdgeInsets.fromLTRB(20, 40, 20, 20),
                   decoration: const BoxDecoration(
                     color: Colors.white,
@@ -1483,71 +1501,120 @@ class RunpayrollView extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
+                GetBuilder<PayrollControl>(
+                  id: 'payroll_karyawan',
+                  builder: (_) {
+                    int totalSelected = controller.listKaryawan.where((e) => e.dipilih).length;
+                    int totalSemua = controller.listKaryawan.length;
+                    bool isAllSelected = totalSelected == totalSemua && totalSemua > 0;
+                    return Row(
+                      children: [
+                        Checkbox(
+                          value: isAllSelected,
+                          onChanged: (val) {
+                            for(var e in controller.listKaryawan) {
+                              e.dipilih = val ?? false;
+                            }
+                            controller.update(['payroll_karyawan']);
+                          }
+                        ),
+                        Text('$totalSelected / $totalSemua Karyawan', style: const TextStyle(fontWeight: FontWeight.bold)),
+                        const Spacer(),
+                        SizedBox(
+                          width: 350,
+                          height: 40,
+                          child: TextField(
+                            controller: searchKaryawan,
+                            onChanged: (v) {
+                               controller.update(['payroll_karyawan']);
+                            },
+                            decoration: InputDecoration(
+                              hintText: 'Cari...',
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+                              border: const OutlineInputBorder(),
+                              suffixIcon: searchKaryawan.text.isNotEmpty ? IconButton(
+                                icon: const Icon(Icons.close, size: 18),
+                                onPressed: () {
+                                  searchKaryawan.clear();
+                                  controller.update(['payroll_karyawan']);
+                                }
+                              ) : null,
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                ),
+                const SizedBox(height: 10),
                 Expanded(
                   child: GetBuilder<PayrollControl>(
                     id: 'payroll_karyawan',
                     builder: (_) {
                       List<Widget> children = [];
                       var no = 1;
+                      String cari = searchKaryawan.text.toLowerCase();
                       controller.totalKaryawanPerArea.forEach((key, value) {
-                        children.add(
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 3),
-                              child: Text(key,
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 17,
-                                  color: Colors.blue,
-                                ),
-                              ),
-                            )
-                        );
+                        List<Widget> tempAreaChildren = [];
                         for (var i = 0; i < controller.listKaryawan.length; i++) {
-                          if(controller.listKaryawan[i].staf && controller.listKaryawan[i].area.nama == key) {
-                            children.add(
-                              Row(
-                                children: [
-                                  Checkbox(
-                                    value: controller.listKaryawan[i].dipilih,
-                                    onChanged: (value) {
-                                      if(value != null) {
-                                        controller.listKaryawan[i].dipilih = value;
-                                        controller.update(['payroll_karyawan']);
-                                      }
-                                    },
-                                  ),
-                                  Text('$no. ${controller.listKaryawan[i].nama}'),
-                                  const SizedBox(width: 100),
-                                ],
+                          var k = controller.listKaryawan[i];
+                          
+                          bool matchArea = false;
+                          if (key == 'NON STAF') {
+                            matchArea = !k.staf;
+                          } else {
+                            matchArea = k.staf && k.area.nama == key;
+                          }
+                          
+                          if(matchArea) {
+                            int currentNo = no;
+                            no++;
+                            
+                            if (cari.isNotEmpty && !k.nama.toLowerCase().contains(cari)) continue;
+                            
+                            tempAreaChildren.add(
+                              Container(
+                                color: k.dipilih ? Colors.transparent : Colors.redAccent.withValues(alpha: 0.1),
+                                child: Row(
+                                  children: [
+                                    Checkbox(
+                                      value: k.dipilih,
+                                      onChanged: (value) {
+                                        if(value != null) {
+                                          k.dipilih = value;
+                                          controller.update(['payroll_karyawan']);
+                                        }
+                                      },
+                                    ),
+                                    Text('$currentNo. ${k.nama}',
+                                      style: TextStyle(
+                                        color: k.dipilih ? Colors.black87 : Colors.black38,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 100),
+                                  ],
+                                ),
                               ),
                             );
-                            no++;
                           }
                         }
-                        children.add(const SizedBox(height: 20));
-                      });
-                      for (var i = 0; i < controller.listKaryawan.length; i++) {
-                        if(!controller.listKaryawan[i].staf) {
+                        if (tempAreaChildren.isNotEmpty) {
                           children.add(
-                            Row(
-                              children: [
-                                Checkbox(
-                                  value: controller.listKaryawan[i].dipilih,
-                                  onChanged: (value) {
-                                    if(value != null) {
-                                      controller.listKaryawan[i].dipilih = value;
-                                        controller.update(['payroll_karyawan']);
-                                    }
-                                  },
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(20, 0, 20, 3),
+                                child: Text(key,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17,
+                                    color: Colors.blue,
+                                  ),
                                 ),
-                                Text('$no. ${controller.listKaryawan[i].nama}'),
-                                const SizedBox(width: 100),
-                              ],
-                            ),
+                              )
                           );
-                          no++;
+                          children.addAll(tempAreaChildren);
+                          children.add(const SizedBox(height: 20));
                         }
-                      }
+                      });
                       return Scrollbar(
                         controller: _scrollController,
                         thumbVisibility: true,
@@ -1624,20 +1691,25 @@ class RunpayrollView extends StatelessWidget {
           title: 'RUN PAYROLL',
           icon: Icons.data_exploration_outlined,
           children: [
-            const SizedBox(width: 50),
-            Flexible(
-              child: Text('Periode : ${controller.bulan.label} ${controller.tahun.label}',
+            const SizedBox(width: 40),
+            Text('Periode : ${controller.bulan.label} ${controller.tahun.label}',
+              style: const TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(width: 40),
+            Expanded(
+              child: Text('Periode Batas (Cut-Off) : ${controller.txtTanggalAwal.text} s/d ${controller.txtTanggalAkhir.text}',
                 style: const TextStyle(
-                  color: Colors.white70,
+                  color: Colors.white,
                 ),
               ),
             ),
-            const SizedBox(width: 50),
-            Flexible(
-              child: Text('Periode Batas (Cut-Off) : ${controller.txtTanggalAwal.text} s/d ${controller.txtTanggalAkhir.text}',
-                style: const TextStyle(
-                  color: Colors.white70,
-                ),
+            const SizedBox(width: 40),
+            Text('Terpilih : ${controller.listKaryawan.where((e) => e.dipilih).length} Karyawan',
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ],
