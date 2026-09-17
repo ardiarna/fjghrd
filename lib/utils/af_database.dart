@@ -27,8 +27,8 @@ abstract class AFdatabase {
   static Dio _createDio() {
     Dio dio = Dio(BaseOptions(
       baseUrl: _api,
-      connectTimeout: const Duration(seconds: 30),
-      receiveTimeout: const Duration(seconds: 30),
+      connectTimeout: const Duration(seconds: 60),
+      receiveTimeout: const Duration(seconds: 120),
     ));
 
     dio.interceptors.add(InterceptorsWrapper(

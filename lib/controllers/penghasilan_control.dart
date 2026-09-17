@@ -101,7 +101,7 @@ class PenghasilanControl extends GetxController {
     if(txtJumlah.text.isEmpty) return 'Jumlah IDR harus diisi';
     
     int valJumlah = AFconvert.keInt(txtJumlah.text);
-    if(valJumlah == 0) return 'Jumlah IDR tidak boleh 0';
+    if(jenis.value != 'AB' && valJumlah == 0) return 'Jumlah IDR tidak boleh 0';
     return '';
   }
 
