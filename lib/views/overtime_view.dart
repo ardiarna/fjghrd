@@ -28,7 +28,7 @@ class OvertimeView extends StatelessWidget {
           'jenis': PlutoCell(value: rowData[index].jenis == 'F' ? 'Fratekindo' : 'Customer'),
           'nama': PlutoCell(value: rowData[index].karyawan.nama),
           'area': PlutoCell(value: rowData[index].karyawan.area.kode),
-          'periode': PlutoCell(value: '${mapBulan[rowData[index].bulan]} ${rowData[index].tahun}'),
+          'periode': PlutoCell(value: '${mapBulanSingkat[rowData[index].bulan]?.toUpperCase()} \'${rowData[index].tahun.toString().substring(2)}'),
           'jabatan': PlutoCell(value: rowData[index].karyawan.jabatan.nama),
           'tanggal': PlutoCell(value: AFconvert.matDate(rowData[index].tanggal)),
           'bulan': PlutoCell(value: rowData[index].bulan),

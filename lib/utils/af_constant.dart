@@ -25,6 +25,22 @@ final Map<int, String> mapBulan = {
   12: 'Desember',
 };
 
+
+final Map<int, String> mapBulanSingkat = {
+  1: 'Jan',
+  2: 'Feb',
+  3: 'Mar',
+  4: 'Apr',
+  5: 'Mei',
+  6: 'Jun',
+  7: 'Jul',
+  8: 'Ags',
+  9: 'Sep',
+  10: 'Okt',
+  11: 'Nov',
+  12: 'Des',
+};
+
 final Map<int, String> mapHari = {
   1: 'Senin',
   2: 'Selasa',

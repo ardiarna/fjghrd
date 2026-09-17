@@ -27,7 +27,7 @@ class OncallCustomerView extends StatelessWidget {
           'customer_id': PlutoCell(value: rowData[index].customer.id),
           'nama': PlutoCell(value: rowData[index].customer.nama),
           'alamat': PlutoCell(value: rowData[index].customer.alamat),
-          'periode': PlutoCell(value: '${mapBulan[rowData[index].bulan]} ${rowData[index].tahun}'),
+          'periode': PlutoCell(value: '${mapBulanSingkat[rowData[index].bulan]?.toUpperCase()} \'${rowData[index].tahun.toString().substring(2)}'),
           'tanggal': PlutoCell(value: AFconvert.matDate(rowData[index].tanggal)),
           'bulan': PlutoCell(value: rowData[index].bulan),
           'tahun': PlutoCell(value: rowData[index].tahun),

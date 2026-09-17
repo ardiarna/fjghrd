@@ -105,7 +105,7 @@ class MedicalView extends StatelessWidget {
       groupedData.length,
           (index) {
         final ids = groupedData[index].id.split(',').map((e) => e.trim()).toList();
-        String nmBulan = mapBulan[groupedData[index].bulan] ?? '';
+        String nmBulan = mapBulanSingkat[groupedData[index].bulan]?.toUpperCase() ?? '';
         String thn = groupedData[index].tahun.toString();
         if(thn.length == 4) thn = thn.substring(2);
         String periode = "$nmBulan '$thn";

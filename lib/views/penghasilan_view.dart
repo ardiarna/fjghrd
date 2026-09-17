@@ -40,7 +40,7 @@ class PenghasilanView extends StatelessWidget {
             'jenis': PlutoCell(value:  jenis.label),
             'nama': PlutoCell(value: rowData[index].karyawan.nama),
             'area': PlutoCell(value: rowData[index].karyawan.area.kode),
-            'periode': PlutoCell(value: '${mapBulan[rowData[index].bulan]} ${rowData[index].tahun}'),
+            'periode': PlutoCell(value: '${mapBulanSingkat[rowData[index].bulan]?.toUpperCase()} \'${rowData[index].tahun.toString().substring(2)}'),
             'jabatan': PlutoCell(value: rowData[index].karyawan.jabatan.nama),
             'tanggal': PlutoCell(value: AFconvert.matDate(rowData[index].tanggal)),
             'tahun': PlutoCell(value: rowData[index].tahun),
