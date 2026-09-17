@@ -160,32 +160,7 @@ class HomeView extends StatelessWidget {
                               ],
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              Get.back();
-                              final hc = Get.find<HomeControl>();
-                              hc.tabId = 5;
-                              hc.kontener = const ChangelogView();
-                              hc.update();
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.15),
-                                borderRadius: BorderRadius.circular(20),
-                                border: Border.all(color: Colors.white30, width: 1),
-                              ),
-                              child: const Text(
-                                ChangelogView.appVersion,
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  color: Colors.white70,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 0.5,
-                                ),
-                              ),
-                            ),
-                          ),
+                          Image.asset('assets/images/logo_white.png', height: 35),
                         ],
                       );
                     }
@@ -409,13 +384,47 @@ class HomeView extends StatelessWidget {
               ),
             ),
             Container(
-              color: Colors.red,
-              child: drawItem(
-                label: 'Keluar',
-                icon: Icons.logout_outlined,
+              height: 55,
+              decoration: BoxDecoration(
                 color: Colors.white,
-                onTap: () {
-                  AFwidget.dialog(
+                border: Border(top: BorderSide(color: Colors.blueGrey.withValues(alpha: 0.2))),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 16),
+                        child: GestureDetector(
+                          onTap: () {
+                            Get.back();
+                            final hc = Get.find<HomeControl>();
+                            hc.tabId = 5;
+                            hc.kontener = const ChangelogView();
+                            hc.update();
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                            child: Text(
+                              ChangelogView.appVersion.replaceFirst('v', 'Versi '),
+                              style: const TextStyle(
+                                fontSize: 13,
+                                color: Colors.blueGrey,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Material(
+                    color: Colors.red,
+                    child: InkWell(
+                      onTap: () {
+                        AFwidget.dialog(
                     Stack(
                       alignment: AlignmentDirectional.topCenter,
                       children: [
@@ -434,7 +443,7 @@ class HomeView extends StatelessWidget {
                               const Padding(
                                 padding: EdgeInsets.only(top: 15, bottom: 20),
                                 child: Text(
-                                    'Ingin keluar dari aplikasi HRD Fratekindo?'),
+                                    'Ingin keluar dari aplikasi HRD FRATEKINDO?'),
                               ),
                               Row(
                                 children: [
@@ -488,7 +497,22 @@ class HomeView extends StatelessWidget {
                     contentPadding: const EdgeInsets.all(0),
                     backgroundColor: Colors.transparent,
                   );
-                },
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 24),
+                        alignment: Alignment.center,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: const [
+                            Icon(Icons.logout_outlined, color: Colors.white, size: 20),
+                            SizedBox(width: 8),
+                            Text('Keluar', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             )
           ],

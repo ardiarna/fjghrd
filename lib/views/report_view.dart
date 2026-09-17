@@ -68,6 +68,8 @@ class ReportView extends StatelessWidget {
                   ),
                 ),
               ),
+              const SizedBox(width: 35),
+              Image.asset('assets/images/logo_white.png', height: 40),
             ],
           ),
         ),

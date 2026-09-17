@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 class ChangelogView extends StatefulWidget {
   const ChangelogView({super.key});
 
-  static const String appVersion = 'v2.1.0';
+  static const String appVersion = 'v2.2.0';
 
   @override
   State<ChangelogView> createState() => _ChangelogViewState();
@@ -46,6 +46,19 @@ class _ChangelogViewState extends State<ChangelogView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  _buildVersion(
+                    version: 'v2.2.0',
+                    date: '17 Sep 2026',
+                    emoji: '✨',
+                    subtitle: 'Pembaruan Identitas & Penyesuaian UI',
+                    items: [
+                      'Ikon Aplikasi: Pembaruan ikon launcher aplikasi untuk berbagai platform (Web, Windows, dan macOS).',
+                      'Logo & Header: Integrasi logo FRATEKINDO (versi putih) pada header halaman Beranda, Laporan, dan Sidebar untuk identitas yang lebih kuat.',
+                      'Sidebar Footer Redesign: Tata letak baru pada bagian bawah sidebar dengan tombol Keluar (Logout) yang tersambung penuh dengan tepi layar.',
+                      'Tampilan Versi: Penyesuaian label penunjuk versi aplikasi menjadi format teks minimalis di pojok kiri bawah.',
+                      'Perbaikan Bug: Resolusi kendala navigasi kembali (back button) dan fungsi scroll controller pada halaman Changelog.',
+                    ],
+                  ),
                   _buildVersion(
                     version: 'v2.1.0',
                     date: '16 Sep 2026',
@@ -172,10 +185,10 @@ class _ChangelogViewState extends State<ChangelogView> {
                   _buildVersion(
                     version: 'v1.0.0',
                     date: '03 Mei 2024',
-                    emoji: '🎉',
+                    emoji: '🚀',
                     subtitle: 'Rilis Awal (Initial Release)',
                     items: [
-                      'Arsitektur Dasar: Fondasi awal pengembangan sistem HRD Fratekindo.',
+                      'Arsitektur Dasar: Fondasi awal pengembangan sistem HRD FRATEKINDO.',
                       'Master Data Utama: Manajemen Jabatan, Divisi, Area, Hari Libur, Agama, dan Pendidikan.',
                       'Data Karyawan Induk: Pencatatan biodata dasar, NIK, alamat, NPWP, status karyawan (PKWT/PKWTT), Jenis Kelamin, dan Timeline Masa Kerja.',
                       'Master Upah & Hari Libur: Setup awal komponen Upah (Gaji Pokok) dan kalender Hari Libur.',

@@ -1,7 +1,7 @@
 name: fjghrd
 description: "HRD Fratekindo Application"
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-version: 1.0.0+1
+version: 2.2.0+1
 
 environment:
   sdk: '>=3.2.0 <4.0.0'
@@ -33,6 +33,7 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.13.1
 
 flutter:
 
@@ -52,3 +53,19 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
+flutter_launcher_icons:
+  image_path: "assets/images/icon_app.png"
+  android: true
+  ios: true
+  web:
+    generate: true
+    image_path: "assets/images/icon_app.png"
+    background_color: "#ffffff"
+    theme_color: "#ffffff"
+  windows:
+    generate: true
+    image_path: "assets/images/icon_app.png"
+    icon_size: 256
+  macos:
+    generate: true
+    image_path: "assets/images/icon_app.png"

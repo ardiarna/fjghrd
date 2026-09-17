@@ -91,6 +91,8 @@ class BerandaView extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
+                const Spacer(),
+                Image.asset('assets/images/logo_white.png', height: 40),
               ],
             ),
           ),

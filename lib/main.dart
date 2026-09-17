@@ -18,7 +18,7 @@ void main() async {
     await windowManager.ensureInitialized();
     WindowOptions windowOptions = const WindowOptions(
       center: true,
-      title: 'HRD Fratekindo',
+      title: 'HRD FRATEKINDO - Your Partner',
     );
     windowManager.waitUntilReadyToShow(windowOptions, () async {
       await windowManager.show();
@@ -33,7 +33,7 @@ void main() async {
   runApp(
     GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'HRD Fratekindo',
+      title: 'HRD FRATEKINDO - Your Partner',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blueGrey),
         textTheme: GoogleFonts.interTextTheme(),
