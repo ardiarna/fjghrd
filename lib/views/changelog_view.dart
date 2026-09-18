@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 class ChangelogView extends StatefulWidget {
   const ChangelogView({super.key});
 
-  static const String appVersion = 'v2.2.0';
+  static const String appVersion = 'v2.2.1';
 
   @override
   State<ChangelogView> createState() => _ChangelogViewState();
@@ -46,6 +46,18 @@ class _ChangelogViewState extends State<ChangelogView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  _buildVersion(
+                    version: 'v2.2.1',
+                    date: '18 Sep 2026',
+                    emoji: '🔧',
+                    subtitle: 'Stabilisasi Desktop & Perbaikan Fungsional',
+                    items: [
+                      'Optimalisasi Desktop (Windows/macOS): Memperbaiki kendala layar putih (blank) dan form tidak responsif saat aplikasi pertama kali dibuka (mengatasi race condition pada inisiasi window).',
+                      'Export Excel Skala Besar: Peningkatan batas waktu (timeout) penerimaan data menjadi 120 detik untuk memastikan unduhan Laporan Jadwal Cuti karyawan yang memakan waktu lama tidak lagi terputus di tengah jalan.',
+                      'Fleksibilitas Input Kehadiran: Penyesuaian sistem validasi pada form Penghasilan; kini memungkinkan pengisian Jumlah IDR senilai 0 khusus untuk tipe penghasilan "Kehadiran".',
+                      'Format Kolom Periode: Penyederhanaan tampilan kolom "Periode" pada seluruh tabel data grid (Penghasilan, Potongan, Lembur, dll) menggunakan format singkatan kapital (contoh: JAN \'26) agar lebih ringkas dan rapi.',
+                    ],
+                  ),
                   _buildVersion(
                     version: 'v2.2.0',
                     date: '17 Sep 2026',

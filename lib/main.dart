@@ -28,7 +28,8 @@ void main() async {
   }
 
   final AuthControl authControl = Get.put(AuthControl(), permanent: true);
-  await authControl.loadUser();
+  await authControl.getSession();
+  authControl.loadUser(); // Non-blocking background check
 
   runApp(
     GetMaterialApp(

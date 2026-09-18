@@ -2,6 +2,7 @@ import 'package:fjghrd/controllers/login_control.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:fjghrd/views/changelog_view.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 
 class LoginView extends StatelessWidget {
@@ -113,6 +114,15 @@ class LoginView extends StatelessWidget {
                       ],
                     ),
                   ).animate(delay: 200.ms).fadeIn(duration: 600.ms).slideY(begin: 0.1, end: 0, curve: Curves.easeOutQuad),
+                  const SizedBox(height: 32),
+                  Text(
+                    ChangelogView.appVersion.replaceFirst('v', 'Versi '),
+                    style: const TextStyle(
+                      color: Color(0xFF94A3B8),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ).animate(delay: 400.ms).fadeIn(duration: 600.ms),
                 ],
               ),
             ),

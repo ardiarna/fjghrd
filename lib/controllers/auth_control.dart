@@ -38,6 +38,7 @@ class AuthControl extends GetxController {
         user.password = p;
       } else {
         await logout();
+        Get.offAllNamed(Rute.login);
       }
       update();
     }
