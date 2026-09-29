@@ -92,6 +92,11 @@ class ReportView extends StatelessWidget {
                     if (controller.authControl.user.role != 'user') ...[
                       barisBox(
                         label: 'List Salary',
+                        onDownloadExcel: controller.dowloadListSalaryBasic,
+                        onDownloadPdf: controller.dowloadListSalaryPdfBasic,
+                      ),
+                      barisBox(
+                        label: 'List Salary & Tunjangan',
                         onDownloadExcel: controller.dowloadListSalary,
                         onDownloadPdf: controller.dowloadListSalaryPdf,
                       ),
@@ -805,6 +810,7 @@ class ReportView extends StatelessWidget {
       {'label': 'NIK & TLP Karyawan', 'onDownloadExcel': () { Get.back(); controller.dowloadNikTlpKaryawan(); }, 'onDownloadPdf': () { Get.back(); controller.dowloadNikTlpKaryawanPdf(); }},
       {'label': 'Data Status Karyawan', 'onDownloadExcel': () { Get.back(); controller.dowloadDataStatusKaryawan(); }, 'onDownloadPdf': () { Get.back(); controller.dowloadDataStatusKaryawanPdf(); }},
       {'label': 'Data Jabatan Karyawan', 'onDownloadExcel': () { Get.back(); controller.dowloadDataJabatanKaryawan(); }, 'onDownloadPdf': () { Get.back(); controller.dowloadDataJabatanKaryawanPdf(); }},
+      {'label': 'Data Pendidikan Karyawan', 'onDownloadExcel': () { Get.back(); controller.dowloadDataPendidikanKaryawan(); }, 'onDownloadPdf': () { Get.back(); controller.dowloadDataPendidikanKaryawanPdf(); }},
       {'label': 'Data Karyawan Per Joint', 'onModalTap': () { Get.back(); dialogDataKaryawanPerJoint(); }},
     ];
     

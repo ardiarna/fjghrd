@@ -232,6 +232,36 @@ class ReportControl extends GetxController {
       AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
     }
   }
+  Future<void> dowloadListSalaryBasic() async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/list-salary?type=basic');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'laporan excel list salary telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+  Future<void> dowloadListSalaryPdfBasic() async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/pdf-list-salary?type=basic');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'laporan pdf list salary telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat pdf. [${hasil.message}]');
+    }
+  }
+
 
   Future<void> dowloadListSalary() async {
     AFwidget.loading();
@@ -239,7 +269,7 @@ class ReportControl extends GetxController {
     Get.back();
     if(hasil.success) {
       AFwidget.formWarning(
-        label: 'laporan excel list salary telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        label: 'laporan excel list salary & tunjangan telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
         warna: Colors.green,
         ikon: Icons.info,
       );
@@ -254,7 +284,7 @@ class ReportControl extends GetxController {
     Get.back();
     if(hasil.success) {
       AFwidget.formWarning(
-        label: 'laporan pdf list salary telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        label: 'laporan pdf list salary & tunjangan telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
         warna: Colors.green,
         ikon: Icons.info,
       );
@@ -440,6 +470,36 @@ class ReportControl extends GetxController {
     if(hasil.success) {
       AFwidget.formWarning(
         label: 'Laporan PDF Data $nama telah berhasil dibuat. Silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat pdf. [${hasil.message}]');
+    }
+  }
+
+    Future<void> dowloadDataPendidikanKaryawan() async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/data-pendidikan-karyawan');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'laporan excel Data PENDIDIKAN Karyawan telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+  Future<void> dowloadDataPendidikanKaryawanPdf() async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/pdf-data-pendidikan-karyawan');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan PDF Data PENDIDIKAN Karyawan telah berhasil dibuat. Silakan periksa directory Download anda (${hasil.message})',
         warna: Colors.green,
         ikon: Icons.info,
       );

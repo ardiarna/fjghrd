@@ -643,6 +643,7 @@ class KaryawanForm extends StatelessWidget {
                                       ],
                                     ),
                                   ),
+                                  if(controller.current.aktif != 'N')
                                   Padding(
                                     padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
                                     child: Row(
@@ -1075,13 +1076,12 @@ class KaryawanForm extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               const SizedBox(width: 48), // replaced refresh button
-                              controller.current.aktif != 'N' ?
                               AFwidget.tombol(
                                 label: 'Simpan Perubahan',
                                 color: Colors.blue,
                                 onPressed: controller.ubahData,
                                 minimumSize: const Size(120, 40),
-                              ) : Container(),
+                              ),
                             ],
                           ),
                         ),

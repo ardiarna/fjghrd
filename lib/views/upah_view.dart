@@ -244,7 +244,7 @@ class UpahView extends StatelessWidget {
                   var hasil = await AFdatabase.download(url: 'excel/pdf-list-salary');
                   Get.back();
                   if(hasil.success) {
-                    AFwidget.snackbar('Berhasil mengunduh pdf LIST_SALARY. Silakan periksa folder Download Anda.');
+                    AFwidget.snackbar('Berhasil mengunduh pdf LIST_SALARY_&_TUNJANGAN. Silakan periksa folder Download Anda.');
                   } else {
                     AFwidget.formWarning(label: hasil.message);
                   }
@@ -259,7 +259,7 @@ class UpahView extends StatelessWidget {
                   var hasil = await AFdatabase.download(url: 'excel/list-salary');
                   Get.back();
                   if(hasil.success) {
-                    AFwidget.snackbar('Berhasil mengunduh excel LIST_SALARY. Silakan periksa folder Download Anda.');
+                    AFwidget.snackbar('Berhasil mengunduh excel LIST_SALARY_&_TUNJANGAN. Silakan periksa folder Download Anda.');
                   } else {
                     AFwidget.formWarning(label: hasil.message);
                   }

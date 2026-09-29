@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 class ChangelogView extends StatefulWidget {
   const ChangelogView({super.key});
 
-  static const String appVersion = 'v2.2.1';
+  static const String appVersion = 'v2.2.2';
 
   @override
   State<ChangelogView> createState() => _ChangelogViewState();
@@ -46,6 +46,19 @@ class _ChangelogViewState extends State<ChangelogView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  _buildVersion(
+                    version: 'v2.2.2',
+                    date: '29 Sep 2026',
+                    emoji: '🔧',
+                    subtitle: 'Laporan Tambahan & Penyesuaian Fitur',
+                    items: [
+                      'Form Ex Karyawan: Menampilkan kembali tombol "Simpan Perubahan" dan menyembunyikan opsi "Status Aktif" agar konsisten dan meminimalisir kesalahan input.',
+                      'Laporan List Salary: Perubahan nama laporan sebelumnya menjadi "List Salary & Tunjangan", serta penambahan laporan baru "List Salary (basic)" yang memuat detail hanya sampai pada kolom Gaji Pokok.',
+                      'Laporan NIK & TLP Karyawan: Menambahkan kolom informasi Umur (AGE) dan Masa Kerja (YEARS OF SERVICE) pada hasil unduhan Excel dan PDF.',
+                      'Laporan List Payroll: Penyesuaian kalkulasi status perbandingan komparasi (Naik/Turun/Tetap) pada Overtime Fratekindo dan Overtime Customer, serta perubahan kondisi kemunculan pesan "Tercover On Call Customer".',
+                      'Laporan Data Pendidikan Karyawan: Penambahan menu baru di halaman Laporan khusus untuk mengunduh rincian profil singkat & riwayat pendidikan terakhir karyawan (versi Excel & PDF).',
+                    ],
+                  ),
                   _buildVersion(
                     version: 'v2.2.1',
                     date: '18 Sep 2026',
