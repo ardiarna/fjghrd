@@ -57,6 +57,7 @@ class _ChangelogViewState extends State<ChangelogView> {
                       'Laporan NIK & TLP Karyawan: Menambahkan kolom informasi Umur (AGE) dan Masa Kerja (YEARS OF SERVICE) pada hasil unduhan Excel dan PDF.',
                       'Laporan List Payroll: Penyesuaian kalkulasi status perbandingan komparasi (Naik/Turun/Tetap) pada Overtime Fratekindo dan Overtime Customer, serta perubahan kondisi kemunculan pesan "Tercover On Call Customer".',
                       'Laporan Data Pendidikan Karyawan: Penambahan menu baru di halaman Laporan khusus untuk mengunduh rincian profil singkat & riwayat pendidikan terakhir karyawan (versi Excel & PDF).',
+                      'Laporan Biodata Karyawan: Penambahan fitur unduh biodata lengkap karyawan pada menu Karyawan (tersedia dalam format Excel & PDF).',
                     ],
                   ),
                   _buildVersion(

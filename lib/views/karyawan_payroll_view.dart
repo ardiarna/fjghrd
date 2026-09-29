@@ -42,6 +42,12 @@ class KaryawanPayrollView extends StatelessWidget {
                   ],
                 ),
                 const Spacer(),
+                tombol(
+                  label: 'Biodata',
+                  icon: Icons.download,
+                  color: Colors.white,
+                  onPressed: dialogBiodata,
+                ),
                 if (controller.authControl.user.role != 'user') ...[
                   tombol(
                     label: 'Slip Gaji',
@@ -544,6 +550,66 @@ class KaryawanPayrollView extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void dialogBiodata() {
+    AFwidget.dialog(
+      Container(
+        width: 500,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AFwidget.formHeader('Cetak Biodata Karyawan'),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  AFwidget.tombol(
+                    label: 'Batal',
+                    color: Colors.grey,
+                    onPressed: Get.back,
+                    minimumSize: const Size(100, 40),
+                  ),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download PDF',
+                      color: Colors.red,
+                      onPressed: () {
+                        Get.back();
+                        controller.downloadPdfBiodata(controller.current.id);
+                      },
+                      minimumSize: const Size(0, 40),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download Excel',
+                      color: Colors.green,
+                      onPressed: () {
+                        Get.back();
+                        controller.downloadBiodata(controller.current.id);
+                      },
+                      minimumSize: const Size(0, 40),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      barrierDismissible: false,
+      backgroundColor: Colors.transparent,
+      contentPadding: const EdgeInsets.all(0),
     );
   }
 

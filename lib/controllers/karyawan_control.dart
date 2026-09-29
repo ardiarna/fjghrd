@@ -1468,6 +1468,36 @@ class KaryawanControl extends GetxController {
     }
   }
 
+    Future<void> downloadPdfBiodata(String id) async {
+    AFwidget.loading();
+    var hasil = await _repo.pdfBiodataKaryawan(id: id);
+    Get.back();
+    if (hasil.success) {
+      AFwidget.formWarning(
+        label: 'Biodata Karyawan (PDF) telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat PDF biodata. [${hasil.message}]');
+    }
+  }
+
+  Future<void> downloadBiodata(String id) async {
+    AFwidget.loading();
+    var hasil = await _repo.excelBiodataKaryawan(id: id);
+    Get.back();
+    if (hasil.success) {
+      AFwidget.formWarning(
+        label: 'Biodata Karyawan telah berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat excel biodata. [${hasil.message}]');
+    }
+  }
+
   Future<void> downloadSlipGaji() async {
     AFwidget.loading();
     List<int> selected = bulanTerpilih.entries
