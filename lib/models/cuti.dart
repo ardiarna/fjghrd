@@ -99,7 +99,7 @@ class Cuti {
   String id;
   String karyawanId;
   String jenisForm;
-  DateTime? tanggalKembali;
+  String? tanggalKembali;
   String tahun;
   Karyawan? karyawan;
   List<CutiDetail> details;
@@ -121,7 +121,7 @@ class Cuti {
       id: map['id']?.toString() ?? '',
       karyawanId: map['karyawan_id']?.toString() ?? map['cic_karyawan_id']?.toString() ?? '',
       jenisForm: map['jenis_form'] ?? '',
-      tanggalKembali: AFconvert.keTanggal(map['tanggal_kembali']),
+      tanggalKembali: map['tanggal_kembali']?.toString(),
       tahun: map['tahun']?.toString() ?? '',
       karyawan: map['karyawan'] != null ? Karyawan.fromMap(map['karyawan']) : (map['cic_karyawan'] != null ? Karyawan.fromMap(map['cic_karyawan']) : null),
       details: map['details'] != null
@@ -136,7 +136,7 @@ class Cuti {
       'id': id,
       'karyawan_id': karyawanId,
       'jenis_form': jenisForm,
-      'tanggal_kembali': tanggalKembali != null ? AFconvert.matYMD(tanggalKembali!) : null,
+      'tanggal_kembali': tanggalKembali,
       'tahun': tahun,
       'details': details.map((x) => x.toMap()).toList(),
     };

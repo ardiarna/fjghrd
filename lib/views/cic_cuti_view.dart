@@ -435,7 +435,7 @@ class CicCutiView extends StatelessWidget {
           'lama_cuti': PlutoCell(value: _getLamaCuti(rowData[index].details)),
           'tanggal_cuti': PlutoCell(value: _getTanggalCuti(rowData[index].details)),
           'keterangan': PlutoCell(value: _getKeterangan(rowData[index])),
-          'tanggal_kembali': PlutoCell(value: AFconvert.matDate(rowData[index].tanggalKembali)),
+          'tanggal_kembali': PlutoCell(value: _getTanggalKembali(rowData[index].tanggalKembali)),
         },
       ),
     );
@@ -487,6 +487,46 @@ class CicCutiView extends StatelessWidget {
   String _formatDateShort(DateTime dt) {
     const months = ['', 'Jan', 'Peb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nop', 'Des'];
     return "${dt.day} ${months[dt.month]}";
+  }
+
+  String _getTanggalKembali(String? tk) {
+    if (tk == null || tk.isEmpty) return '';
+    List<DateTime> parsedDates = [];
+    if (tk.contains(',')) {
+      for (var t in tk.split(',')) {
+        DateTime? dt = AFconvert.keTanggal(t);
+        if (dt != null) parsedDates.add(dt);
+      }
+    } else {
+      DateTime? dt = AFconvert.keTanggal(tk);
+      if (dt != null) parsedDates.add(dt);
+    }
+    if (parsedDates.isEmpty) return '';
+
+    parsedDates.sort((a, b) => a.compareTo(b));
+    
+    if (parsedDates.length == 1) {
+      return _formatDateShort(parsedDates.first);
+    } else if (parsedDates.length > 5) {
+      return "${_formatDateShort(parsedDates.first)} s/d ${_formatDateShort(parsedDates.last)}";
+    } else {
+      Map<int, List<int>> grouped = {};
+      for (var dt in parsedDates) {
+        if (!grouped.containsKey(dt.month)) {
+          grouped[dt.month] = [];
+        }
+        grouped[dt.month]!.add(dt.day);
+      }
+      
+      List<String> monthStrings = [];
+      const months = ['', 'Jan', 'Peb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ags', 'Sep', 'Okt', 'Nop', 'Des'];
+      
+      grouped.forEach((m, days) {
+        monthStrings.add("${days.join(', ')} ${months[m]}");
+      });
+      
+      return monthStrings.join(', ');
+    }
   }
 
   String _getTanggalCuti(List<CutiDetail> details) {

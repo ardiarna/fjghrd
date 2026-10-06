@@ -237,7 +237,7 @@ class CicCutiMasalEditView extends StatelessWidget {
                 String ket = _getKeterangan(objCuti);
                 String lamaHari = _getLamaCuti(objCuti.details);
                 String tglCutiStr = objCuti.tanggalCutiStr.isNotEmpty ? objCuti.tanggalCutiStr : _getTanggalCuti(objCuti.details);
-                String tglKembali = AFconvert.matDate(objCuti.tanggalKembali);
+                String tglKembali = objCuti.tanggalKembali != null ? objCuti.tanggalKembali!.split(',').map((e) => AFconvert.matDate(AFconvert.keTanggal(e))).join(', ') : '';
 
                 return Container(
                   decoration: const BoxDecoration(

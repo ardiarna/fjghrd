@@ -138,6 +138,7 @@ class CicCutiControl extends GetxController {
   Karyawan? selectedKaryawan;
 
     TextEditingController txtTanggalKembali = TextEditingController();
+    List<DateTime> tglKembaliMulti = [];
 
   String idDetailTahunan = '';
   String idDetailKhusus = '';
@@ -470,8 +471,21 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
           hasJatah = listJatah.any((e) => e.karyawanId == selectedKaryawan!.id);
           fetchInfoCuti(snapDet: snapDet);
       }
-      if(cuti.tanggalKembali != null) {
-          txtTanggalKembali.text = AFconvert.matDate(cuti.tanggalKembali);
+      if(cuti.tanggalKembali != null && cuti.tanggalKembali!.isNotEmpty) {
+          if (cuti.tanggalKembali!.contains(',')) {
+              List<String> tkList = cuti.tanggalKembali!.split(',');
+              for(var t in tkList) {
+                  DateTime? dt = AFconvert.keTanggal(t);
+                  if (dt != null) tglKembaliMulti.add(dt);
+              }
+              txtTanggalKembali.text = tglKembaliMulti.isNotEmpty ? AFconvert.matDate(tglKembaliMulti.first) : '';
+          } else {
+              DateTime? dt = AFconvert.keTanggal(cuti.tanggalKembali);
+              if (dt != null) {
+                  txtTanggalKembali.text = AFconvert.matDate(dt);
+                  tglKembaliMulti.add(dt);
+              }
+          }
       }
       
       for(var det in cuti.details) {
@@ -606,6 +620,7 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
     currentId = '';
     selectedKaryawan = null;
     txtTanggalKembali.clear();
+    tglKembaliMulti.clear();
     idDetailTahunan = '';
     idDetailKhusus = '';
     idDetailUnpaid = '';
@@ -634,7 +649,11 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
   
   bool get canSubmit {
     if (selectedKaryawan == null) { debugCanSubmitReason = ''; return false; }
-    if (txtTanggalKembali.text.isEmpty) { debugCanSubmitReason = 'Tanggal Masuk Kembali belum diisi'; return false; }
+    if (formType == 'CUTI') {
+        if (tglKembaliMulti.isEmpty) { debugCanSubmitReason = 'Tanggal Masuk Kembali belum diisi'; return false; }
+    } else {
+        if (txtTanggalKembali.text.isEmpty) { debugCanSubmitReason = 'Tanggal Masuk Kembali belum diisi'; return false; }
+    }
     
     bool anyChecked = cekTahunan || cekKhusus || cekUnpaid || cekGantiLibur || cekMasal;
     if (!anyChecked) { debugCanSubmitReason = 'Pilih minimal satu jenis cuti'; return false; }
@@ -757,7 +776,7 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
         'id': currentId,
         'cic_karyawan_id': selectedKaryawan!.id,
         'jenis_form': formType,
-          'tanggal_kembali': txtTanggalKembali.text.isNotEmpty ? AFconvert.matYMD(DateFormat('dd-MM-yyyy').parse(txtTanggalKembali.text)) : null,
+          'tanggal_kembali': (formType == 'CUTI' && tglKembaliMulti.isNotEmpty) ? tglKembaliMulti.map((d) => AFconvert.matYMD(d)).join(',') : (txtTanggalKembali.text.isNotEmpty ? AFconvert.matYMD(DateFormat('dd-MM-yyyy').parse(txtTanggalKembali.text)) : null),
         'tahun': AFconvert.keInt(filterTahun.value),
         'details': details,
     };

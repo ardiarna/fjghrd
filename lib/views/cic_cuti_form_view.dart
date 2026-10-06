@@ -37,21 +37,27 @@ class CicCutiFormView extends StatelessWidget {
                   if(controller.selectedKaryawan != null) ...[
                     _buildKaryawanInfo(),
 
-                    AFwidget.barisText(
-                      controller: controller.txtTanggalKembali,
-                      label: 'Tgl Masuk Kembali',
-                      readOnly: true,
-                      ontap: (controller.formType == 'CUTI_MASAL') ? null : () async {
-                        DateTime? picked = await AFwidget.pickDate(
-                          context: context,
-                          initialDate: controller.txtTanggalKembali.text.isNotEmpty ? DateFormat('dd-MM-yyyy').parse(controller.txtTanggalKembali.text) : DateTime.now(),
-                        );
-                        if (picked != null) {
-                          controller.txtTanggalKembali.text = AFconvert.matDate(picked);
-                          controller.update(['form_cuti']);
-                        }
-                      },
-                    ),
+                    if (controller.formType == 'CUTI')
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
+                        child: _buildDateSelector(context, 'Tgl Masuk Kembali', controller.tglKembaliMulti, max: 99, readOnly: controller.currentId != ''),
+                      )
+                    else
+                      AFwidget.barisText(
+                        controller: controller.txtTanggalKembali,
+                        label: 'Tgl Masuk Kembali',
+                        readOnly: true,
+                        ontap: (controller.formType == 'CUTI_MASAL' || controller.currentId != '') ? null : () async {
+                          DateTime? picked = await AFwidget.pickDate(
+                            context: context,
+                            initialDate: controller.txtTanggalKembali.text.isNotEmpty ? DateFormat('dd-MM-yyyy').parse(controller.txtTanggalKembali.text) : DateTime.now(),
+                          );
+                          if (picked != null) {
+                            controller.txtTanggalKembali.text = AFconvert.matDate(picked);
+                            controller.update(['form_cuti']);
+                          }
+                        },
+                      ),
                     const SizedBox(height: 20),
                     if(formType == 'CUTI_MASAL') ...[
                       _buildMasalChecklist(context),
@@ -805,7 +811,7 @@ class CicCutiFormView extends StatelessWidget {
                     },
                   ),
                 ),
-              if (max > 0 && dates.length < max)
+              if (label != 'Tgl Masuk Kembali' && max > 0 && dates.length < max)
                 Padding(
                   padding: const EdgeInsets.only(top: 5),
                   child: Text(
