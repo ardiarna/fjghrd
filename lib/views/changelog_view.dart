@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 class ChangelogView extends StatefulWidget {
   const ChangelogView({super.key});
 
-  static const String appVersion = 'v2.2.2';
+  static const String appVersion = 'v2.2.3';
 
   @override
   State<ChangelogView> createState() => _ChangelogViewState();
@@ -47,6 +47,16 @@ class _ChangelogViewState extends State<ChangelogView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildVersion(
+                    version: 'v2.2.3',
+                    date: '06 Okt 2026',
+                    emoji: '🚀',
+                    subtitle: 'Peningkatan Fitur Cuti & Perbaikan Tampilan',
+                    items: [
+                      'Form Cuti: Menambahkan dukungan multi-tanggal (multi-select) untuk kolom Tgl Masuk Kembali.',
+                      'Beranda Dashboard: Memperbaiki kendala tampilan (RenderFlex overflow) yang terpotong pada kotak ringkasan status area dengan menambahkan fungsi scroll horizontal.'
+                    ],
+                  ),
+                  _buildVersion(
                     version: 'v2.2.2',
                     date: '29 Sep 2026',
                     emoji: '🔧',
@@ -57,6 +67,7 @@ class _ChangelogViewState extends State<ChangelogView> {
                       'Laporan NIK & TLP Karyawan: Menambahkan kolom informasi Umur (AGE) dan Masa Kerja (YEARS OF SERVICE) pada hasil unduhan Excel dan PDF.',
                       'Laporan List Payroll: Penyesuaian kalkulasi status perbandingan komparasi (Naik/Turun/Tetap) pada Overtime Fratekindo dan Overtime Customer, serta perubahan kondisi kemunculan pesan "Tercover On Call Customer".',
                       'Laporan Data Pendidikan Karyawan: Penambahan menu baru di halaman Laporan khusus untuk mengunduh rincian profil singkat & riwayat pendidikan terakhir karyawan (versi Excel & PDF).',
+                      'Laporan Biodata Karyawan: Penambahan fitur unduh biodata lengkap karyawan pada menu Karyawan (tersedia dalam format Excel & PDF yang telah disesuaikan gaya dokumennya).',
                       'Laporan Biodata Karyawan: Penambahan fitur unduh biodata lengkap karyawan pada menu Karyawan (tersedia dalam format Excel & PDF).',
                     ],
                   ),
