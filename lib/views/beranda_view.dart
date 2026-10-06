@@ -733,9 +733,14 @@ class BerandaView extends StatelessWidget {
             );
           }
         }
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: widgets,
+        return Center(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: widgets,
+            ),
+          ),
         );
       },
     );
