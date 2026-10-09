@@ -1518,6 +1518,21 @@ class KaryawanControl extends GetxController {
     }
   }
 
+  Future<void> downloadExcelSlipPhk() async {
+    AFwidget.loading();
+    var hasil = await _repo.excelSlipPhk(id: current.id);
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Slip PHK ${current.nama} berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna:  Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
   Future<void> downloadPdfSlipGaji() async {
     AFwidget.loading();
     List<int> selected = bulanTerpilih.entries

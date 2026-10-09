@@ -277,6 +277,12 @@ class KaryawanRepository {
     return await AFdatabase.download(url: 'excel/biodata-karyawan/$id');
   }
 
+  Future<Hasil> excelSlipPhk({
+    required String id,
+  }) async {
+    return await AFdatabase.download(url: 'excel/slip-phk/$id');
+  }
+
   Future<Hasil> excelSlipGaji({
     required String id,
     required String tahun,
