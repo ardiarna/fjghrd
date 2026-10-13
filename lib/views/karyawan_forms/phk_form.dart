@@ -408,13 +408,15 @@ class PhkForm extends StatelessWidget {
                         },
                       ),
                       const Spacer(),
-                      AFwidget.tombol(
-                        label: 'Cetak Slip PHK',
-                        color: Colors.green,
-                        onPressed: controller.downloadExcelSlipPhk,
-                        minimumSize: const Size(120, 40),
-                      ),
-                      const SizedBox(width: 40),
+                      if (controller.current.phkId.isNotEmpty || controller.current.phk.id.isNotEmpty) ...[
+                        AFwidget.tombol(
+                          label: 'Cetak Slip PHK',
+                          color: Colors.green,
+                          onPressed: controller.downloadExcelSlipPhk,
+                          minimumSize: const Size(120, 40),
+                        ),
+                        const SizedBox(width: 40),
+                      ],
                       AFwidget.tombol(
                         label: 'Batal',
                         color: Colors.orange,

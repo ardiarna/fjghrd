@@ -40,6 +40,7 @@ class Karyawan {
   String nomorKk;
   String nomorPaspor;
   String nomorPwp;
+  String phkId;
   Phk phk = Phk();
   UangPhk2 uangPhk = UangPhk2();
   Upah upah = Upah();
@@ -71,6 +72,7 @@ class Karyawan {
     this.nomorKk = '',
     this.nomorPaspor = '',
     this.nomorPwp = '',
+    this.phkId = '',
     this.createdAt,
     this.updatedAt,
     this.jumlahAnak = 0,
@@ -101,6 +103,7 @@ class Karyawan {
       nomorKk: AFconvert.keString(data['nomor_kk']),
       nomorPaspor: AFconvert.keString(data['nomor_paspor']),
       nomorPwp: AFconvert.keString(data['nomor_pwp']),
+      phkId: AFconvert.keString(data['phk_id']),
       createdAt: AFconvert.keTanggal(data['created_at']),
       updatedAt: AFconvert.keTanggal(data['updated_at']),
       jumlahAnak: AFconvert.keInt(data['jumlah_anak']),
@@ -128,6 +131,12 @@ class Karyawan {
     }
     if(data['phk'] != null) {
       a.phk = Phk.fromMap(data['phk']);
+      if(a.phkId.isEmpty) {
+        a.phkId = a.phk.id;
+      }
+      if(a.phk.uangPhk.id != '') {
+        a.uangPhk = a.phk.uangPhk;
+      }
     }
     if(data['uang_phk'] != null) {
       a.uangPhk = UangPhk2.fromMap(data['uang_phk']);

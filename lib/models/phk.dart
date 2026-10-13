@@ -1,6 +1,7 @@
 
 import 'package:fjghrd/models/status_kerja.dart';
 import 'package:fjghrd/models/status_phk.dart';
+import 'package:fjghrd/models/uang_phk_2.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 
 class Phk {
@@ -10,6 +11,8 @@ class Phk {
   DateTime? tanggalAKhir;
   StatusKerja statusKerja = StatusKerja();
   StatusPhk statusPhk = StatusPhk();
+  String uangPhkId;
+  UangPhk2 uangPhk = UangPhk2();
   String keterangan;
   DateTime? createdAt;
   DateTime? updatedAt;
@@ -19,6 +22,7 @@ class Phk {
     this.karyawanId = '',
     this.tanggalAwal,
     this.tanggalAKhir,
+    this.uangPhkId = '',
     this.keterangan = '',
     this.createdAt,
     this.updatedAt,
@@ -30,6 +34,7 @@ class Phk {
       karyawanId: AFconvert.keString(data['karyawan_id']),
       tanggalAwal: AFconvert.keTanggal(data['tanggal_awal']),
       tanggalAKhir: AFconvert.keTanggal(data['tanggal_akhir']),
+      uangPhkId: AFconvert.keString(data['uang_phk_id']),
       keterangan: AFconvert.keString(data['keterangan']),
       createdAt: AFconvert.keTanggal(data['created_at']),
       updatedAt: AFconvert.keTanggal(data['updated_at']),
@@ -39,6 +44,9 @@ class Phk {
     }
     if(data['status_phk'] != null) {
       a.statusPhk = StatusPhk.fromMap(data['status_phk']);
+    }
+    if(data['uang_phk'] != null) {
+      a.uangPhk = UangPhk2.fromMap(data['uang_phk']);
     }
     return a;
   }
@@ -56,6 +64,9 @@ class Phk {
     }
     if(statusPhk.id != '') {
       data['status_phk_id'] = statusPhk.id;
+    }
+    if(uangPhkId != '') {
+      data['uang_phk_id'] = uangPhkId;
     }
     return data;
   }

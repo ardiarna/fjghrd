@@ -1007,14 +1007,27 @@ class KaryawanControl extends GetxController {
       UangPhkRepository repoUang = UangPhkRepository();
 
       AFwidget.loading();
-      var hasilA = current.phk.id == ''
-          ? await _repo.phkCreate(a.karyawanId, a.toMap())
-          : await _repo.phkUpdate(a.karyawanId, a.toMap());
       var hasilB = current.uangPhk.id == ''
           ? await repoUang.create(b.toMap())
           : await repoUang.update(b.id, b.toMap());
+
+      if (!hasilB.success) {
+        Get.back();
+        AFwidget.formWarning(label: hasilB.message);
+        return;
+      }
+
+      String uangPhkId = current.uangPhk.id;
+      if (uangPhkId == '' && hasilB.data.containsKey('id')) {
+        uangPhkId = AFconvert.keString(hasilB.data['id']);
+      }
+      a.uangPhkId = uangPhkId;
+
+      var hasilA = current.phk.id == ''
+          ? await _repo.phkCreate(a.karyawanId, a.toMap())
+          : await _repo.phkUpdate(a.karyawanId, a.toMap());
       Get.back();
-      if(hasilA.success && hasilB.success) {
+      if(hasilA.success) {
         loadKaryawans();
         authControl.karyawanUpdateTrigger.value++;
         loadMantanKaryawans();
@@ -1041,6 +1054,7 @@ class KaryawanControl extends GetxController {
       if(hasil.success) {
         current.aktif = 'Y';
         current.tanggalKeluar = null;
+        current.phkId = '';
         current.phk = Phk();
         current.uangPhk = UangPhk2();
         loadKaryawans();
