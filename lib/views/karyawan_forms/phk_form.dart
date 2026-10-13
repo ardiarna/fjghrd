@@ -390,7 +390,13 @@ class PhkForm extends StatelessWidget {
                         id: 'payroll_phk_button',
                         builder: (_) {
                           String label = 'Payroll PHK';
-                          if (controller.payrollPhk.id.isNotEmpty) {
+                          if (controller.listPayrollPhk.isNotEmpty) {
+                            if (controller.listPayrollPhk.length == 1) {
+                              label = 'Payroll PHK : Rp. ${AFconvert.matNumber(controller.listPayrollPhk[0].totalDiterima)}';
+                            } else {
+                              label = 'Payroll PHK (${controller.listPayrollPhk.length}) : Rp. ${AFconvert.matNumber(controller.listPayrollPhk[0].totalDiterima)}';
+                            }
+                          } else if (controller.payrollPhk.id.isNotEmpty) {
                             label = 'Payroll PHK : Rp. ${AFconvert.matNumber(controller.payrollPhk.totalDiterima)}';
                           }
                           return AFwidget.tombol(

@@ -319,4 +319,11 @@ class KaryawanRepository {
       body: body,
     );
   }
+
+  Future<Hasil> payrollPhkDelete(String id) async {
+    return await AFdatabase.send(
+      url: 'payroll_phk/$id',
+      methodeRequest: MethodeRequest.delete,
+    );
+  }
 }
