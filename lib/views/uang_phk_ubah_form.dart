@@ -155,6 +155,7 @@ void showUangPhkUbahForm(String id, BuildContext context) {
   controller.txtSisaCutiJumlah.text = AFconvert.matNumber(item.sisaCutiJumlah);
   controller.txtLain.text = AFconvert.matNumber(item.lain);
   controller.txtPotKas.text = AFconvert.matNumber(item.potKas);
+  controller.txtPotCicilan.text = AFconvert.matNumber(item.potCicilan);
   controller.txtPotCutiHari.text = AFconvert.matNumber(item.potCutiHari);
   controller.txtPotCutiJumlah.text = AFconvert.matNumber(item.potCutiJumlah);
   controller.txtPotLain.text = AFconvert.matNumber(item.potLain);

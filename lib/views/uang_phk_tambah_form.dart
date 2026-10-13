@@ -182,8 +182,15 @@ class UangPhkTambahForm extends StatelessWidget {
                                 labelSyle: TextStyle(color: Colors.red, fontWeight: FontWeight.w600),
                               ),
                               AFwidget.barisText(
-                                label: 'Kas / Cicilan',
+                                label: 'Kas',
                                 controller: controller.txtPotKas,
+                                isNumber: true,
+                                labelWidth: 130,
+                                paddingLeft: 40,
+                              ),
+                              AFwidget.barisText(
+                                label: 'Cicilan',
+                                controller: controller.txtPotCicilan,
                                 isNumber: true,
                                 labelWidth: 130,
                                 paddingLeft: 40,
@@ -299,6 +306,7 @@ void showUangPhkTambahForm(BuildContext context) {
   controller.txtSisaCutiJumlah.text = '';
   controller.txtLain.text = '';
   controller.txtPotKas.text = '';
+  controller.txtPotCicilan.text = '';
   controller.txtPotCutiHari.text = '';
   controller.txtPotCutiJumlah.text = '';
   controller.txtPotLain.text = '';

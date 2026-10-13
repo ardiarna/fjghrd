@@ -256,8 +256,16 @@ class PhkForm extends StatelessWidget {
                                 labelSyle: TextStyle(color: Colors.red, fontWeight: FontWeight.w600),
                               ),
                               AFwidget.barisText(
-                                label: 'Kas / Cicilan',
+                                label: 'Kas',
                                 controller: controller.txtPotKas,
+                                isNumber: true,
+                                onchanged: (val) => controller.hitungTotalPhk(),
+                                labelWidth: 130,
+                                paddingLeft: 40,
+                              ),
+                              AFwidget.barisText(
+                                label: 'Cicilan',
+                                controller: controller.txtPotCicilan,
                                 isNumber: true,
                                 onchanged: (val) => controller.hitungTotalPhk(),
                                 labelWidth: 130,
@@ -441,6 +449,7 @@ void showPhkForm(BuildContext context) {
     controller.txtSisaCutiJumlah.text = AFconvert.matNumber(controller.current.uangPhk.sisaCutiJumlah);
     controller.txtLain.text = AFconvert.matNumber(controller.current.uangPhk.lain);
     controller.txtPotKas.text = AFconvert.matNumber(controller.current.uangPhk.potKas);
+    controller.txtPotCicilan.text = AFconvert.matNumber(controller.current.uangPhk.potCicilan);
     controller.txtPotCutiHari.text = AFconvert.matNumber(controller.current.uangPhk.potCutiHari);
     controller.txtPotCutiJumlah.text = AFconvert.matNumber(controller.current.uangPhk.potCutiJumlah);
     controller.txtPotLain.text = AFconvert.matNumber(controller.current.uangPhk.potLain);

@@ -13,6 +13,7 @@ class UangPhk2 {
   int sisaCutiJumlah;
   int lain;
   int potKas;
+  int potCicilan;
   int potCutiHari;
   int potCutiJumlah;
   int potLain;
@@ -35,6 +36,7 @@ class UangPhk2 {
     this.sisaCutiJumlah = 0,
     this.lain = 0,
     this.potKas = 0,
+    this.potCicilan = 0,
     this.potCutiHari = 0,
     this.potCutiJumlah = 0,
     this.potLain = 0,
@@ -59,6 +61,7 @@ class UangPhk2 {
       sisaCutiJumlah: AFconvert.keInt(data['sisa_cuti_jumlah']),
       lain: AFconvert.keInt(data['lain']),
       potKas: AFconvert.keInt(data['pot_kas']),
+      potCicilan: AFconvert.keInt(data['pot_cicilan']),
       potCutiHari: AFconvert.keInt(data['pot_cuti_hari']),
       potCutiJumlah: AFconvert.keInt(data['pot_cuti_jumlah']),
       potLain: AFconvert.keInt(data['pot_lain']),
@@ -84,6 +87,7 @@ class UangPhk2 {
       'sisa_cuti_jumlah': AFconvert.keString(sisaCutiJumlah),
       'lain': AFconvert.keString(lain),
       'pot_kas': AFconvert.keString(potKas),
+      'pot_cicilan': AFconvert.keString(potCicilan),
       'pot_cuti_hari': AFconvert.keString(potCutiHari),
       'pot_cuti_jumlah': AFconvert.keString(potCutiJumlah),
       'pot_lain': AFconvert.keString(potLain),

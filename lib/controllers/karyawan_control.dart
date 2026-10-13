@@ -95,7 +95,7 @@ class KaryawanControl extends GetxController {
   late TextEditingController txtPerjanjianId, txtPerjanjianNomor, txtPerjanjianTglAwal, txtPerjanjianTglAkhir, txtPhkKeterangan;
   late TextEditingController txtTrainingKaryawanId, txtTrainingKaryawanTanggal, txtTrainingKaryawanKeterangan;
   late TextEditingController txtKompensasi, txtPesangon, txtMasaKerja, txtUangPisah, txtSisaCutiHari, txtSisaCutiJumlah, txtLain,
-      txtPotKas, txtPotCutiHari, txtPotCutiJumlah, txtPotLain, txtKetLain, txtKetPotLain;
+      txtPotKas, txtPotCicilan, txtPotCutiHari, txtPotCutiJumlah, txtPotLain, txtKetLain, txtKetPotLain;
   var totalPhkKalkulasi = 0.obs;
   var totalPhkPotongan = 0.obs;
   var totalPhkDiterima = 0.obs;
@@ -109,6 +109,7 @@ class KaryawanControl extends GetxController {
                     AFconvert.keInt(txtLain.text);
     
     int potongan = AFconvert.keInt(txtPotKas.text) +
+                   AFconvert.keInt(txtPotCicilan.text) +
                    AFconvert.keInt(txtPotCutiJumlah.text) +
                    AFconvert.keInt(txtPotLain.text);
                    
@@ -992,6 +993,7 @@ class KaryawanControl extends GetxController {
         sisaCutiJumlah: AFconvert.keInt(txtSisaCutiJumlah.text),
         lain: AFconvert.keInt(txtLain.text),
         potKas: AFconvert.keInt(txtPotKas.text),
+        potCicilan: AFconvert.keInt(txtPotCicilan.text),
         potCutiHari: AFconvert.keInt(txtPotCutiHari.text),
         potCutiJumlah: AFconvert.keInt(txtPotCutiJumlah.text),
         potLain: AFconvert.keInt(txtPotLain.text),
@@ -1628,6 +1630,7 @@ class KaryawanControl extends GetxController {
     txtSisaCutiJumlah = TextEditingController();
     txtLain = TextEditingController();
     txtPotKas = TextEditingController();
+    txtPotCicilan = TextEditingController();
     txtPotCutiHari = TextEditingController();
     txtPotCutiJumlah = TextEditingController();
     txtPotLain = TextEditingController();
@@ -1721,6 +1724,7 @@ class KaryawanControl extends GetxController {
     txtSisaCutiJumlah.dispose();
     txtLain.dispose();
     txtPotKas.dispose();
+    txtPotCicilan.dispose();
     txtPotCutiHari.dispose();
     txtPotCutiJumlah.dispose();
     txtPotLain.dispose();

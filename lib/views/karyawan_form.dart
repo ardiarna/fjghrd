@@ -375,7 +375,7 @@ class KaryawanForm extends StatelessWidget {
                 builder: (_) {
                   if(controller.current.aktif == 'Y' || controller.current.aktif == 'N') {
                     return AFwidget.tombol(
-                      label: controller.current.aktif == 'Y' ? 'PHK' : 'Ubah Data PHK',
+                      label: controller.current.aktif == 'Y' ? 'PHK' : 'Data PHK',
                       color: Colors.orange,
                       onPressed: () {
                         showPhkForm(context);

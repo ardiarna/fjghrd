@@ -24,7 +24,7 @@ class UangPhkControl extends GetxController {
   late List<Opsi> listTahun;
   late Opsi filterTahun;
 
-  late TextEditingController txtId, txtKompensasi, txtUangPisah, txtPesangon, txtMasaKerja, txtSisaCutiHari, txtSisaCutiJumlah, txtLain, txtPotKas, txtPotCutiHari, txtPotCutiJumlah, txtPotLain, txtKeterangan;
+  late TextEditingController txtId, txtKompensasi, txtUangPisah, txtPesangon, txtMasaKerja, txtSisaCutiHari, txtSisaCutiJumlah, txtLain, txtPotKas, txtPotCicilan, txtPotCutiHari, txtPotCutiJumlah, txtPotLain, txtKeterangan;
   Karyawan karyawan = Karyawan();
   late Opsi tahun;
 
@@ -67,7 +67,15 @@ class UangPhkControl extends GetxController {
         uangPisah: AFconvert.keInt(txtUangPisah.text),
         pesangon: AFconvert.keInt(txtPesangon.text),
         masaKerja: AFconvert.keInt(txtMasaKerja.text),
+        sisaCutiHari: AFconvert.keInt(txtSisaCutiHari.text),
+        sisaCutiJumlah: AFconvert.keInt(txtSisaCutiJumlah.text),
         lain: AFconvert.keInt(txtLain.text),
+        potKas: AFconvert.keInt(txtPotKas.text),
+        potCicilan: AFconvert.keInt(txtPotCicilan.text),
+        potCutiHari: AFconvert.keInt(txtPotCutiHari.text),
+        potCutiJumlah: AFconvert.keInt(txtPotCutiJumlah.text),
+        potLain: AFconvert.keInt(txtPotLain.text),
+        keterangan: txtKeterangan.text,
       );
       a.karyawan = karyawan;
 
@@ -106,7 +114,15 @@ class UangPhkControl extends GetxController {
         uangPisah: AFconvert.keInt(txtUangPisah.text),
         pesangon: AFconvert.keInt(txtPesangon.text),
         masaKerja: AFconvert.keInt(txtMasaKerja.text),
+        sisaCutiHari: AFconvert.keInt(txtSisaCutiHari.text),
+        sisaCutiJumlah: AFconvert.keInt(txtSisaCutiJumlah.text),
         lain: AFconvert.keInt(txtLain.text),
+        potKas: AFconvert.keInt(txtPotKas.text),
+        potCicilan: AFconvert.keInt(txtPotCicilan.text),
+        potCutiHari: AFconvert.keInt(txtPotCutiHari.text),
+        potCutiJumlah: AFconvert.keInt(txtPotCutiJumlah.text),
+        potLain: AFconvert.keInt(txtPotLain.text),
+        keterangan: txtKeterangan.text,
       );
       a.karyawan = karyawan;
 
@@ -180,6 +196,7 @@ class UangPhkControl extends GetxController {
     txtSisaCutiJumlah = TextEditingController();
     txtLain = TextEditingController();
     txtPotKas = TextEditingController();
+    txtPotCicilan = TextEditingController();
     txtPotCutiHari = TextEditingController();
     txtPotCutiJumlah = TextEditingController();
     txtPotLain = TextEditingController();
@@ -199,6 +216,7 @@ class UangPhkControl extends GetxController {
     txtSisaCutiJumlah.dispose();
     txtLain.dispose();
     txtPotKas.dispose();
+    txtPotCicilan.dispose();
     txtPotCutiHari.dispose();
     txtPotCutiJumlah.dispose();
     txtPotLain.dispose();
