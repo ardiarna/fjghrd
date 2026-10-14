@@ -2,6 +2,7 @@ import 'package:fjghrd/models/agama.dart';
 import 'package:fjghrd/models/area.dart';
 import 'package:fjghrd/models/divisi.dart';
 import 'package:fjghrd/models/jabatan.dart';
+import 'package:fjghrd/models/payroll_phk.dart';
 import 'package:fjghrd/models/pendidikan.dart';
 import 'package:fjghrd/models/phk.dart';
 import 'package:fjghrd/models/ptkp.dart';
@@ -43,6 +44,7 @@ class Karyawan {
   String phkId;
   Phk phk = Phk();
   UangPhk2 uangPhk = UangPhk2();
+  PayrollPhk payrollPhk = PayrollPhk();
   Upah upah = Upah();
   DateTime? createdAt;
   DateTime? updatedAt;
@@ -137,9 +139,15 @@ class Karyawan {
       if(a.phk.uangPhk.id != '') {
         a.uangPhk = a.phk.uangPhk;
       }
+      if(a.phk.payrollPhk.id != '') {
+        a.payrollPhk = a.phk.payrollPhk;
+      }
     }
     if(data['uang_phk'] != null) {
       a.uangPhk = UangPhk2.fromMap(data['uang_phk']);
+    }
+    if(data['payroll_phk'] != null) {
+      a.payrollPhk = PayrollPhk.fromMap(data['payroll_phk']);
     }
     a.upah = Upah(
       id: AFconvert.keString(data['upah_id']),

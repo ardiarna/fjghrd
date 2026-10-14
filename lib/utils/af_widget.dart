@@ -1062,12 +1062,14 @@ abstract class AFwidget {
     String label = '',
     String nilai = '',
     double paddingTop = 20,
+    double paddingLeft = 20,
+    double paddingRight = 20,
     double labelWidth = 150,
     TextStyle? labelSyle,
     TextStyle nilaiStyle = const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
   }) {
     return Padding(
-      padding: EdgeInsets.fromLTRB(20, paddingTop, 20, 0),
+      padding: EdgeInsets.fromLTRB(paddingLeft, paddingTop, paddingRight, 0),
       child: Row(
         children: [
           Container(

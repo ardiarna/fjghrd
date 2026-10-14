@@ -1,4 +1,5 @@
 
+import 'package:fjghrd/models/payroll_phk.dart';
 import 'package:fjghrd/models/status_kerja.dart';
 import 'package:fjghrd/models/status_phk.dart';
 import 'package:fjghrd/models/uang_phk_2.dart';
@@ -13,6 +14,8 @@ class Phk {
   StatusPhk statusPhk = StatusPhk();
   String uangPhkId;
   UangPhk2 uangPhk = UangPhk2();
+  String payrollPhkId;
+  PayrollPhk payrollPhk = PayrollPhk();
   String keterangan;
   DateTime? createdAt;
   DateTime? updatedAt;
@@ -23,6 +26,7 @@ class Phk {
     this.tanggalAwal,
     this.tanggalAKhir,
     this.uangPhkId = '',
+    this.payrollPhkId = '',
     this.keterangan = '',
     this.createdAt,
     this.updatedAt,
@@ -35,6 +39,7 @@ class Phk {
       tanggalAwal: AFconvert.keTanggal(data['tanggal_awal']),
       tanggalAKhir: AFconvert.keTanggal(data['tanggal_akhir']),
       uangPhkId: AFconvert.keString(data['uang_phk_id']),
+      payrollPhkId: AFconvert.keString(data['payroll_phk_id']),
       keterangan: AFconvert.keString(data['keterangan']),
       createdAt: AFconvert.keTanggal(data['created_at']),
       updatedAt: AFconvert.keTanggal(data['updated_at']),
@@ -47,6 +52,9 @@ class Phk {
     }
     if(data['uang_phk'] != null) {
       a.uangPhk = UangPhk2.fromMap(data['uang_phk']);
+    }
+    if(data['payroll_phk'] != null) {
+      a.payrollPhk = PayrollPhk.fromMap(data['payroll_phk']);
     }
     return a;
   }
@@ -67,6 +75,9 @@ class Phk {
     }
     if(uangPhkId != '') {
       data['uang_phk_id'] = uangPhkId;
+    }
+    if(payrollPhkId != '') {
+      data['payroll_phk_id'] = payrollPhkId;
     }
     return data;
   }

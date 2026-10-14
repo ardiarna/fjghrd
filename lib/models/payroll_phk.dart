@@ -4,7 +4,8 @@ import 'package:fjghrd/utils/af_convert.dart';
 
 class PayrollPhk {
   String id;
-  Karyawan karyawan = Karyawan();
+  String karyawanId;
+  Karyawan? karyawan;
   int tahun;
   int bulan;
   DateTime? tanggalAwal;
@@ -42,6 +43,8 @@ class PayrollPhk {
 
   PayrollPhk({
     this.id = '',
+    this.karyawanId = '',
+    this.karyawan,
     this.tahun = 0,
     this.bulan = 0,
     this.tanggalAwal,
@@ -81,6 +84,7 @@ class PayrollPhk {
   factory PayrollPhk.fromMap(Map<String, dynamic> data) {
     var a = PayrollPhk(
       id: AFconvert.keString(data['id']),
+      karyawanId: AFconvert.keString(data['karyawan_id']),
       tahun: AFconvert.keInt(data['tahun']),
       bulan: AFconvert.keInt(data['bulan']),
       tanggalAwal: AFconvert.keTanggal(data['tanggal_awal']),
@@ -125,7 +129,7 @@ class PayrollPhk {
   Map<String, String> toMap() {
     return {
       'id': id,
-      'karyawan_id': karyawan.id,
+      'karyawan_id': (karyawan != null && karyawan!.id.isNotEmpty) ? karyawan!.id : karyawanId,
       'tahun': AFconvert.keString(tahun),
       'bulan': AFconvert.keString(bulan),
       'tanggal_awal': AFconvert.matYMDTime(tanggalAwal),
