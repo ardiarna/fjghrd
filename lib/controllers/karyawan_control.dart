@@ -140,7 +140,7 @@ class KaryawanControl extends GetxController {
     txtPayrollPhkTotalDiterima.text = AFconvert.matNumber(penghasilan - potongan);
   }
 
-  late TextEditingController txtPayrollPhkTglAwal, txtPayrollPhkTglAkhir, txtPayrollPhkGaji, txtPayrollPhkKenaikanGaji, txtPayrollPhkHariMakan, txtPayrollPhkUangMakanHarian,
+  late TextEditingController txtPayrollPhkTglAwal, txtPayrollPhkTglAkhir, txtPayrollPhkTglGajiAwal, txtPayrollPhkTglGajiAkhir, txtPayrollPhkGaji, txtPayrollPhkKenaikanGaji, txtPayrollPhkHariMakan, txtPayrollPhkUangMakanHarian,
       txtPayrollPhkUangMakanJumlah, txtPayrollPhkOvertimeFjg, txtPayrollPhkOvertimeCus, txtPayrollPhkMedical, txtPayrollPhkThr,
       txtPayrollPhkBonus, txtPayrollPhkInsentif, txtPayrollPhkTelkomsel, txtPayrollPhkLain, txtPayrollPhkPot25hari,
       txtPayrollPhkPot25jumlah, txtPayrollPhkPotTelepon, txtPayrollPhkPotBensin, txtPayrollPhkPotKas, txtPayrollPhkPotCicilan,
@@ -1030,8 +1030,10 @@ class KaryawanControl extends GetxController {
         id: isPayrollPhkBaru.value ? '' : (payrollPhk.id.isNotEmpty ? payrollPhk.id : current.phk.payrollPhk.id),
         tahun: AFconvert.keInt(tahunPhk.value),
         bulan: AFconvert.keInt(bulanPhk.value),
-        tanggalAwal: AFconvert.keTanggal('${txtPayrollPhkTglAwal.text} 08:00:00'),
-        tanggalAkhir: AFconvert.keTanggal('${txtPayrollPhkTglAkhir.text} 08:00:00'),
+        tanggalAwal: txtPayrollPhkTglAwal.text.isNotEmpty ? AFconvert.keTanggal('${txtPayrollPhkTglAwal.text} 08:00:00') : null,
+        tanggalAkhir: txtPayrollPhkTglAkhir.text.isNotEmpty ? AFconvert.keTanggal('${txtPayrollPhkTglAkhir.text} 08:00:00') : null,
+        tglGajiAwal: txtPayrollPhkTglGajiAwal.text.isNotEmpty ? AFconvert.keTanggal('${txtPayrollPhkTglGajiAwal.text} 08:00:00') : null,
+        tglGajiAkhir: txtPayrollPhkTglGajiAkhir.text.isNotEmpty ? AFconvert.keTanggal('${txtPayrollPhkTglGajiAkhir.text} 08:00:00') : null,
         makanHarian: payrollPhkMakanHarian,
         gaji: AFconvert.keInt(txtPayrollPhkGaji.text),
         kenaikanGaji: AFconvert.keInt(txtPayrollPhkKenaikanGaji.text),
@@ -1207,12 +1209,23 @@ class KaryawanControl extends GetxController {
     txtPayrollPhkKeterangan.text = item.keterangan;
     txtKetLain.text = current.uangPhk.ketLain;
     txtKetPotLain.text = current.uangPhk.ketPotLain;
+    int vTahun = item.tahun == 0 ? DateTime.now().year : item.tahun;
+    int vBulan = item.bulan == 0 ? DateTime.now().month : item.bulan;
+    int prevBulan = vBulan == 1 ? 12 : vBulan - 1;
+    int prevTahun = vBulan == 1 ? vTahun - 1 : vTahun;
+
     txtPayrollPhkTglAwal.text = item.tanggalAwal == null
-        ? AFconvert.matYMD(DateTime(DateTime.now().month == 1 ? (DateTime.now().year - 1) : DateTime.now().year, DateTime.now().month == 1 ? 12 : DateTime.now().month - 1, 19))
+        ? AFconvert.matYMD(DateTime(prevTahun, prevBulan, 19))
         : AFconvert.matYMD(item.tanggalAwal);
     txtPayrollPhkTglAkhir.text = item.tanggalAkhir == null
-        ? AFconvert.matYMD(DateTime(DateTime.now().year, DateTime.now().month, 18))
+        ? AFconvert.matYMD(DateTime(vTahun, vBulan, 18))
         : AFconvert.matYMD(item.tanggalAkhir);
+    txtPayrollPhkTglGajiAwal.text = item.tglGajiAwal == null
+        ? AFconvert.matYMD(DateTime(prevTahun, prevBulan, 26))
+        : AFconvert.matYMD(item.tglGajiAwal);
+    txtPayrollPhkTglGajiAkhir.text = item.tglGajiAkhir == null
+        ? AFconvert.matYMD(DateTime(vTahun, vBulan, 25))
+        : AFconvert.matYMD(item.tglGajiAkhir);
     tahunPhk = item.tahun == 0
         ? Opsi(value: '${DateTime.now().year}', label: '${DateTime.now().year}')
         : Opsi(value: '${item.tahun}', label: '${item.tahun}');
@@ -1263,6 +1276,11 @@ class KaryawanControl extends GetxController {
     DateTime tglAkhir = DateTime(now.year, now.month, 18);
     txtPayrollPhkTglAwal.text = AFconvert.matYMD(tglAwal);
     txtPayrollPhkTglAkhir.text = AFconvert.matYMD(tglAkhir);
+
+    DateTime tglGajiAwal = DateTime(now.month == 1 ? (now.year - 1) : now.year, now.month == 1 ? 12 : now.month - 1, 26);
+    DateTime tglGajiAkhir = DateTime(now.year, now.month, 25);
+    txtPayrollPhkTglGajiAwal.text = AFconvert.matYMD(tglGajiAwal);
+    txtPayrollPhkTglGajiAkhir.text = AFconvert.matYMD(tglGajiAkhir);
 
     tahunPhk = Opsi(value: '${now.year}', label: '${now.year}');
     bulanPhk = Opsi(value: '${now.month}', label: mapBulan[now.month] ?? '${now.month}');
@@ -1326,8 +1344,10 @@ class KaryawanControl extends GetxController {
         id: isPayrollPhkBaru.value ? '' : payrollPhk.id,
         tahun: AFconvert.keInt(tahunPhk.value),
         bulan: AFconvert.keInt(bulanPhk.value),
-        tanggalAwal: AFconvert.keTanggal('${txtPayrollPhkTglAwal.text} 08:00:00'),
-        tanggalAkhir: AFconvert.keTanggal('${txtPayrollPhkTglAkhir.text} 08:00:00'),
+        tanggalAwal: txtPayrollPhkTglAwal.text.isNotEmpty ? AFconvert.keTanggal('${txtPayrollPhkTglAwal.text} 08:00:00') : null,
+        tanggalAkhir: txtPayrollPhkTglAkhir.text.isNotEmpty ? AFconvert.keTanggal('${txtPayrollPhkTglAkhir.text} 08:00:00') : null,
+        tglGajiAwal: txtPayrollPhkTglGajiAwal.text.isNotEmpty ? AFconvert.keTanggal('${txtPayrollPhkTglGajiAwal.text} 08:00:00') : null,
+        tglGajiAkhir: txtPayrollPhkTglGajiAkhir.text.isNotEmpty ? AFconvert.keTanggal('${txtPayrollPhkTglGajiAkhir.text} 08:00:00') : null,
         makanHarian: payrollPhkMakanHarian,
         gaji: AFconvert.keInt(txtPayrollPhkGaji.text),
         kenaikanGaji: AFconvert.keInt(txtPayrollPhkKenaikanGaji.text),
@@ -1900,6 +1920,8 @@ class KaryawanControl extends GetxController {
     txtPayrollPhkKeterangan = TextEditingController();
     txtPayrollPhkTglAwal = TextEditingController();
     txtPayrollPhkTglAkhir = TextEditingController();
+    txtPayrollPhkTglGajiAwal = TextEditingController();
+    txtPayrollPhkTglGajiAkhir = TextEditingController();
     tahunPhk = Opsi(value: '${_now.year}', label: '${_now.year}');
     bulanPhk = Opsi(value: '${_now.month}', label: mapBulan[_now.month]!);
     loadKaryawans();
@@ -1994,6 +2016,8 @@ class KaryawanControl extends GetxController {
     txtPayrollPhkKeterangan.dispose();
     txtPayrollPhkTglAwal.dispose();
     txtPayrollPhkTglAkhir.dispose();
+    txtPayrollPhkTglGajiAwal.dispose();
+    txtPayrollPhkTglGajiAkhir.dispose();
     super.onClose();
   }
 }

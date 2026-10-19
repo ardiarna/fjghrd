@@ -308,7 +308,7 @@ class PhkForm extends StatelessWidget {
                       paddingTop: 12,
                       paddingLeft: 15,
                     ),
-                    // Periode Payroll & Cut-Off (2 Kolom)
+                    // Periode Payroll & Periode Gaji (Row 1)
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -333,8 +333,12 @@ class PhkForm extends StatelessWidget {
                                           controller.bulanPhk = a;
                                           int vTahun = AFconvert.keInt(controller.tahunPhk.value);
                                           int vBulan = AFconvert.keInt(a.value);
-                                          controller.txtPayrollPhkTglAwal.text = AFconvert.matYMD(DateTime(vBulan == 1 ? vTahun-1 : vTahun, vBulan == 1 ? 12 : vBulan-1, 19));
+                                          int prevBulan = vBulan == 1 ? 12 : vBulan - 1;
+                                          int prevTahun = vBulan == 1 ? vTahun - 1 : vTahun;
+                                          controller.txtPayrollPhkTglAwal.text = AFconvert.matYMD(DateTime(prevTahun, prevBulan, 19));
                                           controller.txtPayrollPhkTglAkhir.text = AFconvert.matYMD(DateTime(vTahun, vBulan, 18));
+                                          controller.txtPayrollPhkTglGajiAwal.text = AFconvert.matYMD(DateTime(prevTahun, prevBulan, 26));
+                                          controller.txtPayrollPhkTglGajiAkhir.text = AFconvert.matYMD(DateTime(vTahun, vBulan, 25));
                                           controller.update();
                                         }
                                       },
@@ -353,8 +357,12 @@ class PhkForm extends StatelessWidget {
                                           controller.tahunPhk = a;
                                           int vTahun = AFconvert.keInt(a.value);
                                           int vBulan = AFconvert.keInt(controller.bulanPhk.value);
-                                          controller.txtPayrollPhkTglAwal.text = AFconvert.matYMD(DateTime(vBulan == 1 ? vTahun-1 : vTahun, vBulan == 1 ? 12 : vBulan-1, 19));
+                                          int prevBulan = vBulan == 1 ? 12 : vBulan - 1;
+                                          int prevTahun = vBulan == 1 ? vTahun - 1 : vTahun;
+                                          controller.txtPayrollPhkTglAwal.text = AFconvert.matYMD(DateTime(prevTahun, prevBulan, 19));
                                           controller.txtPayrollPhkTglAkhir.text = AFconvert.matYMD(DateTime(vTahun, vBulan, 18));
+                                          controller.txtPayrollPhkTglGajiAwal.text = AFconvert.matYMD(DateTime(prevTahun, prevBulan, 26));
+                                          controller.txtPayrollPhkTglGajiAkhir.text = AFconvert.matYMD(DateTime(vTahun, vBulan, 25));
                                           controller.update();
                                         }
                                       },
@@ -363,6 +371,81 @@ class PhkForm extends StatelessWidget {
                                 ),
                               ],
                             ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 11, 15, 0),
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: labelWidth,
+                                  padding: const EdgeInsets.only(right: 15),
+                                  child: const Text('Periode Gaji'),
+                                ),
+                                Expanded(
+                                  child: AFwidget.textField(
+                                    marginTop: 0,
+                                    controller: controller.txtPayrollPhkTglGajiAwal,
+                                    readOnly: true,
+                                    prefixIcon: const Icon(Icons.calendar_month),
+                                    ontap: () async {
+                                      var a = await AFwidget.pickDate(
+                                        context: context,
+                                        initialDate: AFconvert.keTanggal(controller.txtPayrollPhkTglGajiAwal.text),
+                                      );
+                                      if(a != null) {
+                                        controller.txtPayrollPhkTglGajiAwal.text = AFconvert.matYMD(a);
+                                      }
+                                    },
+                                  ),
+                                ),
+                                const Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 8),
+                                  child: Text('s/d', textAlign: TextAlign.center),
+                                ),
+                                Expanded(
+                                  child: AFwidget.textField(
+                                    marginTop: 0,
+                                    controller: controller.txtPayrollPhkTglGajiAkhir,
+                                    readOnly: true,
+                                    prefixIcon: const Icon(Icons.calendar_month),
+                                    ontap: () async {
+                                      var a = await AFwidget.pickDate(
+                                        context: context,
+                                        initialDate: AFconvert.keTanggal(controller.txtPayrollPhkTglGajiAkhir.text),
+                                      );
+                                      if(a != null) {
+                                        controller.txtPayrollPhkTglGajiAkhir.text = AFconvert.matYMD(a);
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    // Kehadiran (Hari) & Periode Cut-Off (Row 2)
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: AFwidget.barisText(
+                            label: 'Kehadiran (Hari)',
+                            controller: controller.txtPayrollPhkHariMakan,
+                            isNumber: true,
+                            onchanged: (nilai) {
+                              if(controller.payrollPhkMakanHarian) {
+                                var jumlah = AFconvert.keInt(nilai) * AFconvert.keInt(controller.txtPayrollPhkUangMakanHarian.text);
+                                controller.txtPayrollPhkUangMakanJumlah.text = AFconvert.matNumber(jumlah);
+                                controller.hitungPayrollPhkPenerimaanBersih(nilai);
+                              }
+                            },
+                            labelWidth: labelWidth,
+                            paddingLeft: 15,
+                            paddingRight: 10,
                           ),
                         ),
                         Expanded(
@@ -417,28 +500,6 @@ class PhkForm extends StatelessWidget {
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: AFwidget.barisText(
-                            label: 'Kehadiran (Hari)',
-                            controller: controller.txtPayrollPhkHariMakan,
-                            isNumber: true,
-                            onchanged: (nilai) {
-                              if(controller.payrollPhkMakanHarian) {
-                                var jumlah = AFconvert.keInt(nilai) * AFconvert.keInt(controller.txtPayrollPhkUangMakanHarian.text);
-                                controller.txtPayrollPhkUangMakanJumlah.text = AFconvert.matNumber(jumlah);
-                                controller.hitungPayrollPhkPenerimaanBersih(nilai);
-                              }
-                            },
-                            labelWidth: labelWidth,
-                            paddingLeft: 15,
-                            paddingRight: 10,
-                          ),
-                        ),
-                        const Expanded(child: SizedBox()),
                       ],
                     ),
                     AFwidget.barisText(

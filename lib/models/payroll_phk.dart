@@ -38,6 +38,8 @@ class PayrollPhk {
   int potLain;
   int totalDiterima;
   String keterangan;
+  DateTime? tglGajiAwal;
+  DateTime? tglGajiAkhir;
   DateTime? createdAt;
   DateTime? updatedAt;
 
@@ -77,6 +79,8 @@ class PayrollPhk {
     this.potLain = 0,
     this.totalDiterima = 0,
     this.keterangan = '',
+    this.tglGajiAwal,
+    this.tglGajiAkhir,
     this.createdAt,
     this.updatedAt,
   });
@@ -117,6 +121,8 @@ class PayrollPhk {
       potLain: AFconvert.keInt(data['pot_lain']),
       totalDiterima: AFconvert.keInt(data['total_diterima']),
       keterangan: AFconvert.keString(data['keterangan']),
+      tglGajiAwal: AFconvert.keTanggal(data['tgl_gaji_awal']),
+      tglGajiAkhir: AFconvert.keTanggal(data['tgl_gaji_akhir']),
       createdAt: AFconvert.keTanggal(data['created_at']),
       updatedAt: AFconvert.keTanggal(data['updated_at']),
     );
@@ -162,6 +168,8 @@ class PayrollPhk {
       'pot_lain': AFconvert.keString(potLain),
       'total_diterima': AFconvert.keString(totalDiterima),
       'keterangan': keterangan,
+      'tgl_gaji_awal': AFconvert.matYMDTime(tglGajiAwal),
+      'tgl_gaji_akhir': AFconvert.matYMDTime(tglGajiAkhir),
     };
   }
 }
