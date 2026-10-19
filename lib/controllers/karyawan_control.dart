@@ -97,7 +97,7 @@ class KaryawanControl extends GetxController {
   late TextEditingController txtKontakId, txtKontakNama, txtKontakTelepon, txtKontakEmail;
   late TextEditingController txtPerjanjianId, txtPerjanjianNomor, txtPerjanjianTglAwal, txtPerjanjianTglAkhir, txtPhkKeterangan;
   late TextEditingController txtTrainingKaryawanId, txtTrainingKaryawanTanggal, txtTrainingKaryawanKeterangan;
-  late TextEditingController txtKompensasi, txtPesangon, txtMasaKerja, txtUangPisah, txtSisaCutiHari, txtSisaCutiJumlah, txtLain,
+  late TextEditingController txtKompensasi, txtPesangon, txtKetPesangon, txtMasaKerja, txtUangPisah, txtSisaCutiHari, txtSisaCutiJumlah, txtLain,
       txtPotKas, txtPotCicilan, txtPotCutiHari, txtPotCutiJumlah, txtPotLain, txtKetLain, txtKetPotLain;
   var totalPhkKalkulasi = 0.obs;
   var totalPenghasilanPayroll = 0.obs;
@@ -1076,6 +1076,7 @@ class KaryawanControl extends GetxController {
         potCutiJumlah: AFconvert.keInt(txtPayrollPhkPotCutiJumlah.text),
         potLain: AFconvert.keInt(txtPayrollPhkPotLain.text),
         keterangan: txtPhkKeterangan.text,
+        ketPesangon: txtKetPesangon.text,
         ketLain: txtKetLain.text,
         ketPotLain: txtKetPotLain.text,
       );
@@ -1160,10 +1161,26 @@ class KaryawanControl extends GetxController {
           : await _repo.phkUpdate(a.karyawanId, a.toMap());
       Get.back();
       if(hasilA.success) {
+        if (current.phk.id == '' && hasilA.data.containsKey('id')) {
+          a.id = AFconvert.keString(hasilA.data['id']);
+        }
+        b.id = uangPhkId;
+        c.id = payrollPhkId;
+        a.uangPhk = b;
+        a.payrollPhk = c;
+        current.phk = a;
+        current.uangPhk = b;
+        current.payrollPhk = c;
+        current.phkId = a.id;
+        current.aktif = 'N';
+        current.tanggalKeluar = a.tanggalAKhir;
+        txtTanggalKeluar.text = AFconvert.matYMD(current.tanggalKeluar);
+        loadTimelineMasakerja();
+        update(['form_karyawan']);
+        update(['detail_karyawan']);
         loadKaryawans();
         authControl.karyawanUpdateTrigger.value++;
         loadMantanKaryawans();
-        Get.back();
         Get.back();
         AFwidget.snackbar('${hasilA.message}, ${hasilB.message}, ${hasilC.message}.');
       } else {
@@ -1934,6 +1951,7 @@ class KaryawanControl extends GetxController {
     txtPhkKeterangan = TextEditingController();
     txtKompensasi = TextEditingController();
     txtPesangon = TextEditingController();
+    txtKetPesangon = TextEditingController();
     txtMasaKerja = TextEditingController();
     txtUangPisah = TextEditingController();
     txtSisaCutiHari = TextEditingController();
@@ -2030,6 +2048,7 @@ class KaryawanControl extends GetxController {
     txtPhkKeterangan.dispose();
     txtKompensasi.dispose();
     txtPesangon.dispose();
+    txtKetPesangon.dispose();
     txtMasaKerja.dispose();
     txtUangPisah.dispose();
     txtSisaCutiHari.dispose();

@@ -19,6 +19,7 @@ class UangPhk {
   int potCutiJumlah;
   int potLain;
   String keterangan;
+  String ketPesangon;
   DateTime? createdAt;
   DateTime? updatedAt;
 
@@ -39,6 +40,7 @@ class UangPhk {
     this.potCutiJumlah = 0,
     this.potLain = 0,
     this.keterangan = '',
+    this.ketPesangon = '',
     this.createdAt,
     this.updatedAt,
   }) ;
@@ -61,6 +63,7 @@ class UangPhk {
       potCutiJumlah: AFconvert.keInt(data['pot_cuti_jumlah']),
       potLain: AFconvert.keInt(data['pot_lain']),
       keterangan: AFconvert.keString(data['keterangan']),
+      ketPesangon: AFconvert.keString(data['ket_pesangon']),
       createdAt: AFconvert.keTanggal(data['created_at']),
       updatedAt: AFconvert.keTanggal(data['updated_at']),
     );
@@ -89,6 +92,7 @@ class UangPhk {
       'pot_cuti_jumlah': AFconvert.keString(potCutiJumlah),
       'pot_lain': AFconvert.keString(potLain),
       'keterangan': keterangan,
+      'ket_pesangon': ketPesangon,
     };
     return data;
   }

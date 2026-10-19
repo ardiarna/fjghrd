@@ -225,8 +225,17 @@ class PhkForm extends StatelessWidget {
                     Row(
                       children: [
                         Expanded(
+                          child: AFwidget.barisText(
+                            label: 'Note Pesangon',
+                            controller: controller.txtKetPesangon,
+                            labelWidth: labelWidth,
+                            paddingLeft: 15,
+                            paddingRight: 10,
+                          ),
+                        ),
+                        Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.fromLTRB(15, 11, 10, 0),
+                            padding: const EdgeInsets.fromLTRB(10, 11, 15, 0),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
@@ -281,7 +290,6 @@ class PhkForm extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const Expanded(child: SizedBox()),
                       ],
                     ),
                   ],
@@ -1152,6 +1160,7 @@ void showPhkForm(BuildContext context) {
   controller.statusPhk = controller.current.phk.statusPhk;
   controller.txtKompensasi.text = AFconvert.matNumber(controller.current.uangPhk.kompensasi);
   controller.txtPesangon.text = AFconvert.matNumber(controller.current.uangPhk.pesangon);
+  controller.txtKetPesangon.text = controller.current.uangPhk.ketPesangon;
   controller.txtMasaKerja.text = AFconvert.matNumber(controller.current.uangPhk.masaKerja);
   controller.txtUangPisah.text = AFconvert.matNumber(controller.current.uangPhk.uangPisah);
   controller.txtSisaCutiHari.text = AFconvert.matNumber(controller.current.uangPhk.sisaCutiHari);
