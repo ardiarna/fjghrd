@@ -465,6 +465,8 @@ abstract class AFwidget {
     double marginRight = 0,
     double marginLeft = 0,
     TextAlign textAlign = TextAlign.start,
+    String? hintText,
+    Function(String)? onsubmitted,
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -486,6 +488,7 @@ abstract class AFwidget {
         controller: controller,
         decoration: InputDecoration(
           labelText: label ?? '',
+          hintText: hintText,
           floatingLabelBehavior: floatingLabelBehavior,
           // labelStyle: const TextStyle(fontWeight: FontWeight.w500),
           prefix: prefix,
@@ -517,6 +520,7 @@ abstract class AFwidget {
         focusNode: focusNode,
         onTap: ontap,
         onChanged: onchanged,
+        onSubmitted: onsubmitted,
         obscureText: obscureText,
         minLines: minLines,
         maxLines: maxLines,

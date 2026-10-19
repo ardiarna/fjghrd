@@ -103,6 +103,49 @@ class KaryawanControl extends GetxController {
   var totalPenghasilanPayroll = 0.obs;
   var totalPotonganPayroll = 0.obs;
   var totalPhkDiterima = 0.obs;
+  RxList<String> listTelepon = <String>[].obs;
+
+  void tambahTelepon([String? nomor]) {
+    var val = (nomor ?? txtTelepon.text).trim();
+    if (val.isEmpty) return;
+    if (val.contains(',')) {
+      var parts = val.split(',');
+      for (var p in parts) {
+        var t = p.trim();
+        if (t.isNotEmpty && !listTelepon.contains(t)) {
+          listTelepon.add(t);
+        }
+      }
+    } else {
+      if (!listTelepon.contains(val)) {
+        listTelepon.add(val);
+      }
+    }
+    txtTelepon.clear();
+  }
+
+  void hapusTelepon(String nomor) {
+    listTelepon.remove(nomor);
+  }
+
+  String getTeleponString() {
+    var tempList = List<String>.from(listTelepon);
+    var currentInput = txtTelepon.text.trim();
+    if (currentInput.isNotEmpty) {
+      if (currentInput.contains(',')) {
+        var parts = currentInput.split(',');
+        for (var p in parts) {
+          var t = p.trim();
+          if (t.isNotEmpty && !tempList.contains(t)) {
+            tempList.add(t);
+          }
+        }
+      } else if (!tempList.contains(currentInput)) {
+        tempList.add(currentInput);
+      }
+    }
+    return tempList.join(',');
+  }
 
   void hitungTotalPhk([String? _]) {
     int kalkulasi = AFconvert.keInt(txtKompensasi.text) +
@@ -469,7 +512,17 @@ class KaryawanControl extends GetxController {
     txtTanggalLahir.text = AFconvert.matYMD(current.tanggalLahir);
     txtAlamatKtp.text = current.alamatKtp;
     txtAlamatTinggal.text = current.alamatTinggal;
-    txtTelepon.text = current.telepon;
+    listTelepon.clear();
+    if (current.telepon.isNotEmpty) {
+      var parts = current.telepon.split(',');
+      for (var p in parts) {
+        var t = p.trim();
+        if (t.isNotEmpty && !listTelepon.contains(t)) {
+          listTelepon.add(t);
+        }
+      }
+    }
+    txtTelepon.text = '';
     txtEmail.text = current.email;
     txtPendidikanAlmamater.text = current.pendidikanAlmamater;
     txtPendidikanJurusan.text = current.pendidikanJurusan;
@@ -528,7 +581,8 @@ class KaryawanControl extends GetxController {
       if(txtAlamatKtp.text.isEmpty) {
         throw ValidationException('Alamat sesuai KTP harus diisi');
       }
-      if(txtTelepon.text.isEmpty) {
+      String teleponValue = getTeleponString();
+      if(teleponValue.isEmpty) {
         throw ValidationException('Nomor telepon harus diisi');
       }
       if(kawin == '') {
@@ -546,7 +600,7 @@ class KaryawanControl extends GetxController {
         tanggalLahir: AFconvert.keTanggal('${txtTanggalLahir.text} 08:00:00'),
         alamatKtp: txtAlamatKtp.text,
         alamatTinggal: txtAlamatTinggal.text,
-        telepon: txtTelepon.text,
+        telepon: teleponValue,
         email: txtEmail.text,
         kawin: kawin,
         kelamin: kelamin,
@@ -627,7 +681,8 @@ class KaryawanControl extends GetxController {
       if(txtAlamatKtp.text.isEmpty) {
         throw ValidationException('Alamat sesuai KTP harus diisi');
       }
-      if(txtTelepon.text.isEmpty) {
+      String teleponValue = getTeleponString();
+      if(teleponValue.isEmpty) {
         throw ValidationException('Nomor telepon harus diisi');
       }
       if(kawin == '') {
@@ -655,7 +710,7 @@ class KaryawanControl extends GetxController {
         tanggalLahir: AFconvert.keTanggal('${txtTanggalLahir.text} 08:00:00'),
         alamatKtp: txtAlamatKtp.text,
         alamatTinggal: txtAlamatTinggal.text,
-        telepon: txtTelepon.text,
+        telepon: teleponValue,
         email: txtEmail.text,
         kawin: kawin,
         kelamin: kelamin,

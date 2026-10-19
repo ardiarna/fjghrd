@@ -837,10 +837,7 @@ class KaryawanForm extends StatelessWidget {
                                       ],
                                     ),
                                   ),
-                                  barisForm(
-                                    label: 'No. Telepon',
-                                    controller: controller.txtTelepon,
-                                  ),
+                                  _buildTeleponField(controller),
                                   Padding(
                                     padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
                                     child: Row(
@@ -1481,6 +1478,66 @@ class KaryawanForm extends StatelessWidget {
               marginTop: 0,
               controller: controller,
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTeleponField(KaryawanControl controller) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 11, 20, 0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 150,
+            padding: const EdgeInsets.only(right: 15, top: 12),
+            child: const Text('No. Telepon'),
+          ),
+          Expanded(
+            child: Obx(() => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (controller.listTelepon.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 6),
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 4,
+                      children: controller.listTelepon.map((telp) {
+                        return Chip(
+                          backgroundColor: Colors.blue.shade50,
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          label: Text(
+                            telp,
+                            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                          ),
+                          deleteIcon: const Icon(Icons.close, size: 16, color: Colors.red),
+                          onDeleted: () => controller.hapusTelepon(telp),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                AFwidget.textField(
+                  marginTop: 0,
+                  controller: controller.txtTelepon,
+                  hintText: 'Ketik nomor telepon...',
+                  keyboard: TextInputType.phone,
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.add_circle, color: Colors.teal),
+                    tooltip: 'Tambah Nomor Telepon',
+                    onPressed: () => controller.tambahTelepon(),
+                  ),
+                  onchanged: (val) {
+                    if (val.contains(',')) {
+                      controller.tambahTelepon();
+                    }
+                  },
+                  onsubmitted: (_) => controller.tambahTelepon(),
+                ),
+              ],
+            )),
           ),
         ],
       ),
