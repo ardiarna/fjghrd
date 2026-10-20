@@ -2,9 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
 abstract class AFplutogridConfig {
-  static PlutoGridConfiguration configSatu({double iconSize = 18}) {
+  static PlutoGridConfiguration configSatu({
+    double iconSize = 18,
+    double rowHeight = 30,
+    PlutoAutoSizeMode autoSizeMode = PlutoAutoSizeMode.none,
+  }) {
     return PlutoGridConfiguration(
       enableMoveHorizontalInEditing: true,
+      columnSize: PlutoGridColumnSizeConfig(
+        autoSizeMode: autoSizeMode,
+      ),
       scrollbar: const PlutoGridScrollbarConfig(
         isAlwaysShown: true,
         onlyDraggingThumb: false,
@@ -35,7 +42,7 @@ abstract class AFplutogridConfig {
         saturday: 'Sb',
       ),
       style: PlutoGridStyleConfig(
-        rowHeight: 30,
+        rowHeight: rowHeight,
         columnHeight: 35,
         borderColor: Colors.brown.shade200,
         gridBorderColor: Colors.transparent,
@@ -46,7 +53,10 @@ abstract class AFplutogridConfig {
     );
   }
 
-  static PlutoGridConfiguration configDua({double iconSize = 18}) {
+  static PlutoGridConfiguration configDua({
+    double iconSize = 18,
+    double rowHeight = 30,
+  }) {
     return PlutoGridConfiguration(
       enableMoveHorizontalInEditing: true,
       scrollbar: const PlutoGridScrollbarConfig(
@@ -79,7 +89,7 @@ abstract class AFplutogridConfig {
         saturday: 'Sb',
       ),
       style: PlutoGridStyleConfig(
-        rowHeight: 30,
+        rowHeight: rowHeight,
         columnHeight: 35,
         borderColor: Colors.brown.shade200,
         gridBorderColor: Colors.transparent,

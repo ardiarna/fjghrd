@@ -9,6 +9,7 @@ import 'package:fjghrd/views/beranda_view.dart';
 import 'package:fjghrd/views/customer_view.dart';
 import 'package:fjghrd/views/divisi_view.dart';
 import 'package:fjghrd/views/hari_libur_view.dart';
+import 'package:fjghrd/views/note_view.dart';
 import 'package:fjghrd/views/jabatan_view.dart';
 import 'package:fjghrd/views/upah_view.dart';
 import 'package:fjghrd/views/pendidikan_view.dart';
@@ -351,7 +352,17 @@ class HomeView extends StatelessWidget {
                           controller.update();
                         },
                       )),
-                      const Spacer(),
+                      Expanded(child: drawItem(
+                        label: 'Note',
+                        icon: Icons.note_alt_outlined,
+                        color: Colors.blueGrey,
+                        onTap: () {
+                          controller.tabId = 5;
+                          controller.kontener = NoteView();
+                          Get.back();
+                          controller.update();
+                        },
+                      )),
                     ],
                   ),
                   const Divider(color: Color(0xFFE2E8F0)),
