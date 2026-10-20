@@ -1122,7 +1122,7 @@ class PhkForm extends StatelessWidget {
                       AFwidget.tombol(
                         label: 'Cetak Slip PHK',
                         color: Colors.green,
-                        onPressed: controller.downloadExcelSlipPhk,
+                        onPressed: () => dialogSlipPhk(controller),
                         minimumSize: const Size(120, 40),
                       ),
                       const SizedBox(width: 25),
@@ -1148,6 +1148,66 @@ class PhkForm extends StatelessWidget {
           AFwidget.formHeader('Form PHK Karyawan'),
         ],
       ),
+    );
+  }
+
+  void dialogSlipPhk(KaryawanControl controller) {
+    AFwidget.dialog(
+      Container(
+        width: 500,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            AFwidget.formHeader('Cetak Slip PHK'),
+            Padding(
+              padding: const EdgeInsets.all(20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  AFwidget.tombol(
+                    label: 'Batal',
+                    color: Colors.grey,
+                    onPressed: Get.back,
+                    minimumSize: const Size(100, 40),
+                  ),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download PDF',
+                      color: Colors.red,
+                      onPressed: () {
+                        Get.back();
+                        controller.downloadPdfSlipPhk();
+                      },
+                      minimumSize: const Size(0, 40),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: AFwidget.tombol(
+                      label: 'Download Excel',
+                      color: Colors.green,
+                      onPressed: () {
+                        Get.back();
+                        controller.downloadExcelSlipPhk();
+                      },
+                      minimumSize: const Size(0, 40),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      barrierDismissible: false,
+      backgroundColor: Colors.transparent,
+      contentPadding: const EdgeInsets.all(0),
     );
   }
 }
