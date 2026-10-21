@@ -168,6 +168,7 @@ class PayrollView extends StatelessWidget {
   }
 
   Widget boxKonten(Payroll item) {
+    bool isExpanded = controller.expandedPayrollIds.contains(item.id);
     int totalA = item.gaji + item.kenaikanGaji + item.uangMakanJumlah + item.overtimeFjg + item.overtimeCus + item.medical + item.thr + item.bonus + item.insentif + item.telkomsel + item.lain;
     int totalB = item.pot25jumlah + item.potTelepon + item.potKas + item.potCicilan + item.potBpjs + item.potBensin + item.potCutiJumlah + item.potKompensasiJumlah + item.potLain;
     int totalDiterimaCalc = totalA - totalB;
@@ -248,7 +249,17 @@ class PayrollView extends StatelessWidget {
                   color: Colors.red,
                 ),
               ),
-              const SizedBox(width: 10),
+              IconButton(
+                tooltip: isExpanded ? 'Collapse' : 'Expand',
+                onPressed: () {
+                  controller.toggleExpandPayroll(item.id);
+                },
+                icon: Icon(
+                  isExpanded ? Icons.expand_less : Icons.expand_more,
+                  color: Colors.blue.shade700,
+                ),
+              ),
+              const SizedBox(width: 5),
             ],
           ),
           const Text(
@@ -256,50 +267,53 @@ class PayrollView extends StatelessWidget {
             style: TextStyle(color: Colors.blue, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 7),
-          barisKonten(
-            label: 'Gaji Pokok',
-            value: AFconvert.matNumber(item.gaji),
-          ),
-          barisKonten(
-            label: 'Kenaikan Gaji',
-            value: AFconvert.matNumber(item.kenaikanGaji),
-          ),
-          barisKonten(
-            label: 'U/makan & Transport',
-            value: AFconvert.matNumber(item.uangMakanJumlah),
-          ),
-          barisKonten(
-            label: 'Lembur/Overtime',
-            value: AFconvert.matNumber(item.overtimeFjg+item.overtimeCus),
-          ),
-          barisKonten(
-            label: 'Reimbursement Medical',
-            value: AFconvert.matNumber(item.medical),
-          ),
-          barisKonten(
-            label: 'Tunjangan Hari Raya',
-            value: AFconvert.matNumber(item.thr),
-          ),
-          barisKonten(
-            label: 'Bonus',
-            value: AFconvert.matNumber(item.bonus),
-          ),
-          barisKonten(
-            label: 'Insentif',
-            value: AFconvert.matNumber(item.insentif),
-          ),
-          barisKonten(
-            label: 'Telkomsel',
-            value: AFconvert.matNumber(item.telkomsel),
-          ),
-          barisKonten(
-            label: 'Lain-lain',
-            value: AFconvert.matNumber(item.lain),
-          ),
+          if (isExpanded) ...[
+            barisKonten(
+              label: 'Gaji Pokok',
+              value: AFconvert.matNumber(item.gaji),
+            ),
+            barisKonten(
+              label: 'Kenaikan Gaji',
+              value: AFconvert.matNumber(item.kenaikanGaji),
+            ),
+            barisKonten(
+              label: 'U/makan & Transport',
+              value: AFconvert.matNumber(item.uangMakanJumlah),
+            ),
+            barisKonten(
+              label: 'Lembur/Overtime',
+              value: AFconvert.matNumber(item.overtimeFjg+item.overtimeCus),
+            ),
+            barisKonten(
+              label: 'Reimbursement Medical',
+              value: AFconvert.matNumber(item.medical),
+            ),
+            barisKonten(
+              label: 'Tunjangan Hari Raya',
+              value: AFconvert.matNumber(item.thr),
+            ),
+            barisKonten(
+              label: 'Bonus',
+              value: AFconvert.matNumber(item.bonus),
+            ),
+            barisKonten(
+              label: 'Insentif',
+              value: AFconvert.matNumber(item.insentif),
+            ),
+            barisKonten(
+              label: 'Telkomsel',
+              value: AFconvert.matNumber(item.telkomsel),
+            ),
+            barisKonten(
+              label: 'Lain-lain',
+              value: AFconvert.matNumber(item.lain),
+            ),
+          ],
           barisKonten(
             label: 'Total A',
             value: AFconvert.matNumber(totalA),
             withBorder: true,
+            borderTop: isExpanded,
             color: Colors.grey.shade500,
             textAlign: TextAlign.right,
           ),
@@ -309,46 +323,49 @@ class PayrollView extends StatelessWidget {
             style: TextStyle(color: Colors.blue, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 7),
-          barisKonten(
-            label: 'Keterlambatan Kehadiran 25%',
-            value: AFconvert.matNumber(item.pot25jumlah),
-          ),
-          barisKonten(
-            label: 'Pemakaian Telepon/Telkomsel',
-            value: AFconvert.matNumber(item.potTelepon),
-          ),
-          barisKonten(
-            label: 'Pinjaman Kas',
-            value: AFconvert.matNumber(item.potKas),
-          ),
-          barisKonten(
-            label: 'Pinjaman / Cicilan ',
-            value: AFconvert.matNumber(item.potCicilan),
-          ),
-          barisKonten(
-            label: 'BPJS Kesehatan',
-            value: AFconvert.matNumber(item.potBpjs),
-          ),
-          barisKonten(
-            label: 'Pemakaian Bensin',
-            value: AFconvert.matNumber(item.potBensin),
-          ),
-          barisKonten(
-            label: 'Unpaid Leave / Cuti Bersama',
-            value: AFconvert.matNumber(item.potCutiJumlah),
-          ),
-          barisKonten(
-            label: 'Kompensasi Kehadiran (Jam)',
-            value: AFconvert.matNumber(item.potKompensasiJumlah),
-          ),
-          barisKonten(
-            label: 'Lain-lain',
-            value: AFconvert.matNumber(item.potLain),
-          ),
+          if (isExpanded) ...[
+            barisKonten(
+              label: 'Keterlambatan Kehadiran 25%',
+              value: AFconvert.matNumber(item.pot25jumlah),
+            ),
+            barisKonten(
+              label: 'Pemakaian Telepon/Telkomsel',
+              value: AFconvert.matNumber(item.potTelepon),
+            ),
+            barisKonten(
+              label: 'Pinjaman Kas',
+              value: AFconvert.matNumber(item.potKas),
+            ),
+            barisKonten(
+              label: 'Pinjaman / Cicilan ',
+              value: AFconvert.matNumber(item.potCicilan),
+            ),
+            barisKonten(
+              label: 'BPJS Kesehatan',
+              value: AFconvert.matNumber(item.potBpjs),
+            ),
+            barisKonten(
+              label: 'Pemakaian Bensin',
+              value: AFconvert.matNumber(item.potBensin),
+            ),
+            barisKonten(
+              label: 'Unpaid Leave / Cuti Bersama',
+              value: AFconvert.matNumber(item.potCutiJumlah),
+            ),
+            barisKonten(
+              label: 'Kompensasi Kehadiran (Jam)',
+              value: AFconvert.matNumber(item.potKompensasiJumlah),
+            ),
+            barisKonten(
+              label: 'Lain-lain',
+              value: AFconvert.matNumber(item.potLain),
+            ),
+          ],
           barisKonten(
             label: 'Total B',
             value: AFconvert.matNumber(totalB),
             withBorder: true,
+            borderTop: isExpanded,
             color: Colors.grey.shade500,
             textAlign: TextAlign.right,
           ),
@@ -383,11 +400,16 @@ class PayrollView extends StatelessWidget {
     TextAlign? textAlign,
     Color? color,
     bool withBorder = false,
+    bool borderTop = true,
+    bool borderBottom = true,
   }) {
     return Container(
       padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
       decoration: withBorder ? BoxDecoration(
-        border: Border.symmetric(horizontal: BorderSide(color: color ?? const Color(0xFF000000))),
+        border: Border(
+          top: borderTop ? BorderSide(color: color ?? const Color(0xFF000000)) : BorderSide.none,
+          bottom: borderBottom ? BorderSide(color: color ?? const Color(0xFF000000)) : BorderSide.none,
+        ),
       ) : null,
       child: Row(
         children: [

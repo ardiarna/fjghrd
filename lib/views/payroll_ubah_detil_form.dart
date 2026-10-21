@@ -495,6 +495,12 @@ class PayrollUbahDetilForm extends StatelessWidget {
                   isTextArea: true,
                   labelWidth: 230,
                 ),
+                AFwidget.barisText(
+                  label: 'Note',
+                  controller: controller.txtNote,
+                  isTextArea: true,
+                  labelWidth: 230,
+                ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
                   child: Row(
@@ -555,6 +561,7 @@ void showPayrollUbahDetilForm(String id, BuildContext context) {
     controller.txtPotLain.text = AFconvert.matNumber(controller.currentDetilPayroll.potLain);
     controller.txtTotalDiterima.text = AFconvert.matNumber(controller.currentDetilPayroll.totalDiterima);
     controller.txtKeterangan.text = controller.currentDetilPayroll.keterangan;
+    controller.txtNote.text = controller.currentDetilPayroll.note;
   AFwidget.dialog(
       const PayrollUbahDetilForm(),
       barrierDismissible: false,

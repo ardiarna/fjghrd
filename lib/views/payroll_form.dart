@@ -59,6 +59,7 @@ class PayrollForm extends StatelessWidget {
           'pot_lain': PlutoCell(value: e.potLain),
           'total_diterima': PlutoCell(value: e.totalDiterima),
           'keterangan': PlutoCell(value: e.keterangan),
+          'note': PlutoCell(value: e.note),
         },
       );
     }).toList();
@@ -1165,6 +1166,31 @@ class PayrollForm extends StatelessWidget {
         enableContextMenu: false,
         enableSorting: false,
         enableColumnDrag: false,
+      ),
+      PlutoColumn(
+        title: 'NOTE',
+        field: 'note',
+        type: PlutoColumnType.text(),
+        readOnly: true,
+        width: 200,
+        backgroundColor: Colors.brown.shade100,
+        titleTextAlign: PlutoColumnTextAlign.center,
+        suppressedAutoSize: true,
+        enableContextMenu: false,
+        enableSorting: false,
+        enableColumnDrag: false,
+        renderer: (rendererContext) {
+          final value = rendererContext.cell.value?.toString() ?? '';
+          final text = value.replaceAll('\n', ' ').trim();
+          return Tooltip(
+            message: value,
+            child: Text(
+              text,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          );
+        },
       ),
     ];
     controller.loadDetilPayrolls();

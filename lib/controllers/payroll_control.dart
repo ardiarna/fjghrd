@@ -46,11 +46,30 @@ class PayrollControl extends GetxController {
   Payroll currentPayroll = Payroll();
   Payroll currentDetilPayroll = Payroll();
 
+  String runPayrollNote = '';
+  Set<String> runPayrollNoteKaryawanIds = <String>{};
+  bool runPayrollNoteHasBeenSaved = false;
+  RxSet<String> expandedPayrollIds = <String>{}.obs;
+
+  void toggleExpandPayroll(String id) {
+    if (expandedPayrollIds.contains(id)) {
+      expandedPayrollIds.remove(id);
+    } else {
+      expandedPayrollIds.add(id);
+    }
+  }
+
+  void resetRunPayrollNote() {
+    runPayrollNote = '';
+    runPayrollNoteKaryawanIds.clear();
+    runPayrollNoteHasBeenSaved = false;
+  }
+
   late TextEditingController txtTanggalAwal, txtTanggalAkhir,
       txtGaji, txtKenaikanGaji, txtHariMakan, txtUangMakanHarian, txtUangMakanJumlah, txtOvertimeFjg, txtOvertimeCus,
       txtMedical, txtThr, txtBonus, txtInsentif, txtTelkomsel, txtLain, txtPot25hari, txtPot25jumlah,
       txtPotTelepon, txtPotBensin, txtPotKas, txtPotCicilan, txtPotBpjs, txtPotCutiHari, txtPotCutiJumlah, txtPotLain,
-      txtPotKompensasiJam, txtPotKompensasiJumlah, txtTotalDiterima, txtKeterangan;
+      txtPotKompensasiJam, txtPotKompensasiJumlah, txtTotalDiterima, txtKeterangan, txtNote;
   late Opsi filterTahun;
   late Opsi tahun;
   late Opsi bulan;
@@ -62,6 +81,7 @@ class PayrollControl extends GetxController {
       for (var data in hasil.daftar) {
         tempList.add(Payroll.fromMap(data));
       }
+      tempList.sort((a, b) => b.bulan.compareTo(a.bulan));
       listPayroll.assignAll(tempList);
     }
   }
@@ -359,6 +379,7 @@ class PayrollControl extends GetxController {
         potLain: AFconvert.keInt(txtPotLain.text),
         totalDiterima: AFconvert.keInt(txtTotalDiterima.text),
         keterangan: txtKeterangan.text,
+        note: txtNote.text,
       );
       a.karyawan = currentDetilPayroll.karyawan;
       AFwidget.loading();
@@ -434,6 +455,7 @@ class PayrollControl extends GetxController {
     txtPotLain = TextEditingController();
     txtTotalDiterima = TextEditingController();
     txtKeterangan = TextEditingController();
+    txtNote = TextEditingController();
     loadPayrolls();
     super.onInit();
   }
@@ -469,6 +491,7 @@ class PayrollControl extends GetxController {
     txtPotLain.dispose();
     txtTotalDiterima.dispose();
     txtKeterangan.dispose();
+    txtNote.dispose();
     super.onClose();
   }
 }

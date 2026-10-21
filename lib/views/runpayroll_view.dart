@@ -6,6 +6,7 @@ import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/views/payroll_view.dart';
+import 'package:fjghrd/views/payroll_forms/run_payroll_note_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
@@ -1247,6 +1248,7 @@ class RunpayrollView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    controller.resetRunPayrollNote();
     controller.txtTanggalAwal.text = AFconvert.matDate(DateTime(now.month == 1 ? (now.year-1) : now.year, now.month == 1 ? 12 : now.month-1, 19));
     controller.txtTanggalAkhir.text = AFconvert.matDate(DateTime(now.year, now.month, 18));
     controller.tahun = Opsi(value: '${now.year}', label: '${now.year}');
@@ -1776,10 +1778,67 @@ class RunpayrollView extends StatelessWidget {
                 label: 'Batal',
                 color: Colors.orange,
                 onPressed: () {
+                  controller.resetRunPayrollNote();
                   controller.homeControl.kontener = PayrollView();
                   controller.homeControl.update();
                 },
                 minimumSize: const Size(120, 40),
+              ),
+              const SizedBox(width: 20),
+              GetBuilder<PayrollControl>(
+                id: 'grid_payroll_actions',
+                builder: (_) {
+                  bool hasNote = controller.runPayrollNoteHasBeenSaved &&
+                      controller.runPayrollNote.isNotEmpty;
+                  String noteLabel;
+                  if (!hasNote) {
+                    noteLabel = 'Tambahkan Note Slip Gaji';
+                  } else {
+                    int count = controller.runPayrollNoteKaryawanIds.length;
+                    String textPreview = controller.runPayrollNote.replaceAll('\n', ' ').trim();
+                    if (textPreview.length > 25) {
+                      textPreview = '${textPreview.substring(0, 25)}...';
+                    }
+                    noteLabel = 'Note untuk $count karyawan: $textPreview';
+                  }
+
+                  return Tooltip(
+                    message: hasNote
+                        ? controller.runPayrollNote
+                        : 'Tambahkan note slip gaji untuk karyawan',
+                    child: OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor:
+                            hasNote ? const Color(0xFF0D9488) : const Color(0xFF2563EB),
+                        backgroundColor:
+                            hasNote ? const Color(0xFFF0FDFA) : const Color(0xFFEFF6FF),
+                        side: BorderSide(
+                          color: hasNote ? const Color(0xFF0D9488) : const Color(0xFF3B82F6),
+                          width: 1.5,
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      onPressed: () {
+                        showRunPayrollNoteDialog();
+                      },
+                      icon: Icon(
+                        hasNote ? Icons.note_alt : Icons.note_add_outlined,
+                        size: 20,
+                        color: hasNote ? const Color(0xFF0D9488) : const Color(0xFF2563EB),
+                      ),
+                      label: Text(
+                        noteLabel,
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: hasNote ? const Color(0xFF134E4A) : const Color(0xFF1E40AF),
+                        ),
+                      ),
+                    ),
+                  );
+                },
               ),
               const Spacer(),
               FilledButton.icon(
@@ -1805,6 +1864,14 @@ class RunpayrollView extends StatelessWidget {
                           rowData[h.key] = h.value.value.toString();
                         }
                       }
+                      String kid = e.cells['karyawan_id']!.value.toString();
+                      if (controller.runPayrollNoteHasBeenSaved &&
+                          controller.runPayrollNote.isNotEmpty &&
+                          controller.runPayrollNoteKaryawanIds.contains(kid)) {
+                        rowData['note'] = controller.runPayrollNote;
+                      } else {
+                        rowData['note'] = '';
+                      }
                       listData.add(rowData);
                     }
                     var a = await controller.runPayroll(
@@ -1815,6 +1882,7 @@ class RunpayrollView extends StatelessWidget {
                       payrolls: listData,
                     );
                     if(a) {
+                      controller.resetRunPayrollNote();
                       controller.loadPayrolls();
                       controller.homeControl.kontener = PayrollView();
                       controller.homeControl.update();

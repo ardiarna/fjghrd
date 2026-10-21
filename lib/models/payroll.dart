@@ -49,6 +49,7 @@ class Payroll {
   int dpp;
   int pph21;
   String keterangan;
+  String note;
   bool dikunci;
   DateTime? createdAt;
   DateTime? updatedAt;
@@ -99,6 +100,7 @@ class Payroll {
     this.dpp = 0,
     this.pph21 = 0,
     this.keterangan = '',
+    this.note = '',
     this.dikunci = false,
     this.createdAt,
     this.updatedAt,
@@ -143,6 +145,7 @@ class Payroll {
       potLain: AFconvert.keInt(data['pot_lain']),
       totalDiterima: AFconvert.keInt(data['total_diterima']),
       keterangan: AFconvert.keString(data['keterangan']),
+      note: AFconvert.keString(data['note']),
       dikunci: AFconvert.keBool(data['dikunci']),
       createdAt: AFconvert.keTanggal(data['created_at']),
       updatedAt: AFconvert.keTanggal(data['updated_at']),
@@ -201,6 +204,7 @@ class Payroll {
       'pot_lain': AFconvert.keString(potLain),
       'total_diterima': AFconvert.keString(totalDiterima),
       'keterangan': keterangan,
+      'note': note,
     };
     return data;
   }
