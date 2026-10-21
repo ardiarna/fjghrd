@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 class ChangelogView extends StatefulWidget {
   const ChangelogView({super.key});
 
-  static const String appVersion = 'v2.2.3';
+  static const String appVersion = 'v2.2.4';
 
   @override
   State<ChangelogView> createState() => _ChangelogViewState();
@@ -46,6 +46,19 @@ class _ChangelogViewState extends State<ChangelogView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  _buildVersion(
+                    version: 'v2.2.4',
+                    date: '21 Okt 2026',
+                    emoji: '🚀',
+                    subtitle: 'Fitur Note Slip Gaji, Peningkatan Payroll & PHK',
+                    items: [
+                      'Note Slip Gaji: Penambahan dialog dan pengisian Note Slip Gaji dengan filter checklist karyawan pada Run Payroll, tampilan kolom Note di Detail Payroll dan form ubah payroll, serta integrasi catatan dinamis pada slip gaji (Excel & PDF).',
+                      'Tampilan Card Payroll: Desain tampilan ringkas (default collapse) dengan tombol expand/collapse, penghilangan border atas baris Total saat tertutup, serta urutan card periode dari Desember ke Januari.',
+                      'Master Data Note: Penambahan modul pengelolaan master catatan (CRUD) untuk standarisasi format template catatan.',
+                      'Slip & Kompensasi PHK: Fitur unduh slip PHK dalam format PDF & Excel, penambahan kolom Potongan Cicilan & Keterangan Pesangon pada Uang PHK, serta integrasi data PHK dengan Payroll PHK.',
+                      'Data Karyawan: Dukungan penginputan multi nomor telepon untuk fleksibilitas nomor kontak karyawan.',
+                    ],
+                  ),
                   _buildVersion(
                     version: 'v2.2.3',
                     date: '06 Okt 2026',
