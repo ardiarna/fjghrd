@@ -547,7 +547,15 @@ class KaryawanControl extends GetxController {
   }
 
   void payrollView(String id) {
-    current = listKaryawan.where((element) => element.id == id).first;
+    current = listKaryawan.firstWhereOrNull((element) => element.id == id) ??
+        listMantanKaryawan.firstWhereOrNull((element) => element.id == id) ??
+        listCalonKaryawan.firstWhereOrNull((element) => element.id == id) ??
+        current;
+    if (current.tanggalKeluar != null && current.aktif == 'N') {
+      filterTahun = Opsi(value: '${current.tanggalKeluar!.year}', label: '${current.tanggalKeluar!.year}');
+    } else {
+      filterTahun = Opsi(value: '${DateTime.now().year}', label: '${DateTime.now().year}');
+    }
     loadPayrolls();
     Get.toNamed(Rute.karyawanPayrollView);
   }

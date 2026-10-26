@@ -84,7 +84,7 @@ class MantanKaryawanView extends StatelessWidget {
         field: 'id',
         type: PlutoColumnType.text(),
         readOnly: true,
-        width: 70,
+        width: 100,
         backgroundColor: Colors.red.shade100,
         enableFilterMenuItem: false,
         enableContextMenu: false,
@@ -94,16 +94,31 @@ class MantanKaryawanView extends StatelessWidget {
           if(rdrCtx.row.cells['id']!.value == null) {
             return const Text('');
           }
-          return IconButton(
-            onPressed: () {
-              controller.ubahForm(rdrCtx.row.cells['id']!.value, 'N');
-            },
-            icon: const Icon(
-              Icons.edit_square,
-            ),
-            iconSize: 18,
-            color: Colors.green,
-            padding: const EdgeInsets.all(0),
+          return Row(
+            children: [
+              IconButton(
+                onPressed: () {
+                  controller.ubahForm(rdrCtx.row.cells['id']!.value, 'N');
+                },
+                icon: const Icon(
+                  Icons.edit_square,
+                ),
+                iconSize: 18,
+                color: Colors.green,
+                padding: const EdgeInsets.all(0),
+              ),
+              IconButton(
+                onPressed: () {
+                  controller.payrollView(rdrCtx.row.cells['id']!.value);
+                },
+                icon: const Icon(
+                  Icons.assignment_outlined,
+                ),
+                iconSize: 18,
+                color: Colors.lightBlueAccent,
+                padding: const EdgeInsets.all(0),
+              ),
+            ],
           );
         },
       ),
