@@ -19,7 +19,10 @@ class UangPhk {
   int potCutiJumlah;
   int potLain;
   String keterangan;
+  String ketKompensasi;
+  String ketUangPisah;
   String ketPesangon;
+  String ketMasaKerja;
   DateTime? createdAt;
   DateTime? updatedAt;
 
@@ -40,7 +43,10 @@ class UangPhk {
     this.potCutiJumlah = 0,
     this.potLain = 0,
     this.keterangan = '',
+    this.ketKompensasi = '',
+    this.ketUangPisah = '',
     this.ketPesangon = '',
+    this.ketMasaKerja = '',
     this.createdAt,
     this.updatedAt,
   }) ;
@@ -63,7 +69,10 @@ class UangPhk {
       potCutiJumlah: AFconvert.keInt(data['pot_cuti_jumlah']),
       potLain: AFconvert.keInt(data['pot_lain']),
       keterangan: AFconvert.keString(data['keterangan']),
+      ketKompensasi: AFconvert.keString(data['ket_kompensasi']),
+      ketUangPisah: AFconvert.keString(data['ket_uang_pisah']),
       ketPesangon: AFconvert.keString(data['ket_pesangon']),
+      ketMasaKerja: AFconvert.keString(data['ket_masa_kerja']),
       createdAt: AFconvert.keTanggal(data['created_at']),
       updatedAt: AFconvert.keTanggal(data['updated_at']),
     );
@@ -92,7 +101,10 @@ class UangPhk {
       'pot_cuti_jumlah': AFconvert.keString(potCutiJumlah),
       'pot_lain': AFconvert.keString(potLain),
       'keterangan': keterangan,
+      'ket_kompensasi': ketKompensasi,
+      'ket_uang_pisah': ketUangPisah,
       'ket_pesangon': ketPesangon,
+      'ket_masa_kerja': ketMasaKerja,
     };
     return data;
   }

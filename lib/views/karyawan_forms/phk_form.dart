@@ -185,10 +185,32 @@ class PhkForm extends StatelessWidget {
                         ),
                         Expanded(
                           child: AFwidget.barisText(
-                            label: 'Masa Kerja',
-                            controller: controller.txtMasaKerja,
+                            label: 'Note Kompensasi',
+                            controller: controller.txtKetKompensasi,
+                            labelWidth: labelWidth,
+                            paddingLeft: 10,
+                            paddingRight: 15,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: AFwidget.barisText(
+                            label: 'Uang Pisah',
+                            controller: controller.txtUangPisah,
                             isNumber: true,
                             onchanged: (val) => controller.hitungTotalPhk(),
+                            labelWidth: labelWidth,
+                            paddingLeft: 15,
+                            paddingRight: 10,
+                          ),
+                        ),
+                        Expanded(
+                          child: AFwidget.barisText(
+                            label: 'Note Uang Pisah',
+                            controller: controller.txtKetUangPisah,
                             labelWidth: labelWidth,
                             paddingLeft: 10,
                             paddingRight: 15,
@@ -211,10 +233,8 @@ class PhkForm extends StatelessWidget {
                         ),
                         Expanded(
                           child: AFwidget.barisText(
-                            label: 'Uang Pisah',
-                            controller: controller.txtUangPisah,
-                            isNumber: true,
-                            onchanged: (val) => controller.hitungTotalPhk(),
+                            label: 'Note Pesangon',
+                            controller: controller.txtKetPesangon,
                             labelWidth: labelWidth,
                             paddingLeft: 10,
                             paddingRight: 15,
@@ -226,16 +246,31 @@ class PhkForm extends StatelessWidget {
                       children: [
                         Expanded(
                           child: AFwidget.barisText(
-                            label: 'Note Pesangon',
-                            controller: controller.txtKetPesangon,
+                            label: 'Masa Kerja',
+                            controller: controller.txtMasaKerja,
+                            isNumber: true,
+                            onchanged: (val) => controller.hitungTotalPhk(),
                             labelWidth: labelWidth,
                             paddingLeft: 15,
                             paddingRight: 10,
                           ),
                         ),
                         Expanded(
+                          child: AFwidget.barisText(
+                            label: 'Note Masa Kerja',
+                            controller: controller.txtKetMasaKerja,
+                            labelWidth: labelWidth,
+                            paddingLeft: 10,
+                            paddingRight: 15,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
                           child: Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 11, 15, 0),
+                            padding: const EdgeInsets.fromLTRB(15, 11, 10, 0),
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
@@ -290,6 +325,7 @@ class PhkForm extends StatelessWidget {
                             ),
                           ),
                         ),
+                        const Expanded(child: SizedBox()),
                       ],
                     ),
                   ],
@@ -1219,10 +1255,13 @@ void showPhkForm(BuildContext context) {
   controller.txtTanggalKeluar.text = AFconvert.matYMD(controller.current.phk.tanggalAKhir ?? DateTime.now());
   controller.statusPhk = controller.current.phk.statusPhk;
   controller.txtKompensasi.text = AFconvert.matNumber(controller.current.uangPhk.kompensasi);
+  controller.txtKetKompensasi.text = controller.current.uangPhk.ketKompensasi;
+  controller.txtUangPisah.text = AFconvert.matNumber(controller.current.uangPhk.uangPisah);
+  controller.txtKetUangPisah.text = controller.current.uangPhk.ketUangPisah;
   controller.txtPesangon.text = AFconvert.matNumber(controller.current.uangPhk.pesangon);
   controller.txtKetPesangon.text = controller.current.uangPhk.ketPesangon;
   controller.txtMasaKerja.text = AFconvert.matNumber(controller.current.uangPhk.masaKerja);
-  controller.txtUangPisah.text = AFconvert.matNumber(controller.current.uangPhk.uangPisah);
+  controller.txtKetMasaKerja.text = controller.current.uangPhk.ketMasaKerja;
   controller.txtSisaCutiHari.text = AFconvert.matNumber(controller.current.uangPhk.sisaCutiHari);
   controller.txtSisaCutiJumlah.text = AFconvert.matNumber(controller.current.uangPhk.sisaCutiJumlah);
   controller.txtKetLain.text = controller.current.uangPhk.ketLain;

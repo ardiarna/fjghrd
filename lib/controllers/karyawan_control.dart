@@ -97,7 +97,7 @@ class KaryawanControl extends GetxController {
   late TextEditingController txtKontakId, txtKontakNama, txtKontakTelepon, txtKontakEmail;
   late TextEditingController txtPerjanjianId, txtPerjanjianNomor, txtPerjanjianTglAwal, txtPerjanjianTglAkhir, txtPhkKeterangan;
   late TextEditingController txtTrainingKaryawanId, txtTrainingKaryawanTanggal, txtTrainingKaryawanKeterangan;
-  late TextEditingController txtKompensasi, txtPesangon, txtKetPesangon, txtMasaKerja, txtUangPisah, txtSisaCutiHari, txtSisaCutiJumlah, txtLain,
+  late TextEditingController txtKompensasi, txtKetKompensasi, txtPesangon, txtKetPesangon, txtMasaKerja, txtKetMasaKerja, txtUangPisah, txtKetUangPisah, txtSisaCutiHari, txtSisaCutiJumlah, txtLain,
       txtPotKas, txtPotCicilan, txtPotCutiHari, txtPotCutiJumlah, txtPotLain, txtKetLain, txtKetPotLain;
   var totalPhkKalkulasi = 0.obs;
   var totalPenghasilanPayroll = 0.obs;
@@ -1084,7 +1084,10 @@ class KaryawanControl extends GetxController {
         potCutiJumlah: AFconvert.keInt(txtPayrollPhkPotCutiJumlah.text),
         potLain: AFconvert.keInt(txtPayrollPhkPotLain.text),
         keterangan: txtPhkKeterangan.text,
+        ketKompensasi: txtKetKompensasi.text,
+        ketUangPisah: txtKetUangPisah.text,
         ketPesangon: txtKetPesangon.text,
+        ketMasaKerja: txtKetMasaKerja.text,
         ketLain: txtKetLain.text,
         ketPotLain: txtKetPotLain.text,
       );
@@ -1973,10 +1976,13 @@ class KaryawanControl extends GetxController {
     txtTrainingKaryawanKeterangan = TextEditingController();
     txtPhkKeterangan = TextEditingController();
     txtKompensasi = TextEditingController();
+    txtKetKompensasi = TextEditingController();
+    txtUangPisah = TextEditingController();
+    txtKetUangPisah = TextEditingController();
     txtPesangon = TextEditingController();
     txtKetPesangon = TextEditingController();
     txtMasaKerja = TextEditingController();
-    txtUangPisah = TextEditingController();
+    txtKetMasaKerja = TextEditingController();
     txtSisaCutiHari = TextEditingController();
     txtSisaCutiJumlah = TextEditingController();
     txtLain = TextEditingController();
@@ -2070,10 +2076,13 @@ class KaryawanControl extends GetxController {
     txtTrainingKaryawanKeterangan.dispose();
     txtPhkKeterangan.dispose();
     txtKompensasi.dispose();
+    txtKetKompensasi.dispose();
+    txtUangPisah.dispose();
+    txtKetUangPisah.dispose();
     txtPesangon.dispose();
     txtKetPesangon.dispose();
     txtMasaKerja.dispose();
-    txtUangPisah.dispose();
+    txtKetMasaKerja.dispose();
     txtSisaCutiHari.dispose();
     txtSisaCutiJumlah.dispose();
     txtLain.dispose();
