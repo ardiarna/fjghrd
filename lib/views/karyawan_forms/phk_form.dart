@@ -4,6 +4,8 @@ import 'package:fjghrd/controllers/karyawan_control.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/models/status_phk.dart';
+import 'package:fjghrd/models/upah.dart';
+import 'package:fjghrd/repositories/upah_repository.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 
 class PhkForm extends StatelessWidget {
@@ -53,6 +55,74 @@ class PhkForm extends StatelessWidget {
                     ),
                   ),
                 ],
+              ),
+              GetBuilder<KaryawanControl>(
+                builder: (_) {
+                  final upah = controller.current.upah;
+                  final pPhk = controller.current.phk.payrollPhk.id.isNotEmpty
+                      ? controller.current.phk.payrollPhk
+                      : controller.current.payrollPhk;
+                  final int gaji = upah.gaji > 0 ? upah.gaji : pPhk.gaji;
+                  final int uangMakan = upah.uangMakan > 0 ? upah.uangMakan : pPhk.uangMakanHarian;
+                  final bool makanHarian = upah.id.isNotEmpty
+                      ? upah.makanHarian
+                      : pPhk.makanHarian;
+
+                  return Column(
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: AFwidget.barisInfo(
+                              label: 'Jabatan',
+                              nilai: controller.current.jabatan.nama,
+                              labelWidth: labelWidth,
+                              paddingLeft: 20,
+                              paddingRight: 10,
+                              paddingTop: 11,
+                            ),
+                          ),
+                          Expanded(
+                            child: AFwidget.barisInfo(
+                              label: 'Gaji',
+                              nilai: 'Rp. ${AFconvert.matNumber(gaji)}',
+                              labelWidth: labelWidth,
+                              paddingLeft: 10,
+                              paddingRight: 20,
+                              paddingTop: 11,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: AFwidget.barisInfo(
+                              label: 'Divisi',
+                              nilai: controller.current.divisi.nama,
+                              labelWidth: labelWidth,
+                              paddingLeft: 20,
+                              paddingRight: 10,
+                              paddingTop: 11,
+                            ),
+                          ),
+                          Expanded(
+                            child: AFwidget.barisInfo(
+                              label: 'Uang Makan',
+                              nilai: 'Rp. ${AFconvert.matNumber(uangMakan)} (${makanHarian ? 'Harian' : 'Tetap'})',
+                              labelWidth: labelWidth,
+                              paddingLeft: 10,
+                              paddingRight: 20,
+                              paddingTop: 11,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
+                },
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -547,7 +617,7 @@ class PhkForm extends StatelessWidget {
                       ],
                     ),
                     AFwidget.barisText(
-                      label: 'Keterangan',
+                      label: 'Keterangan Payroll',
                       controller: controller.txtPayrollPhkKeterangan,
                       isTextArea: true,
                       labelWidth: labelWidth,
@@ -1248,38 +1318,20 @@ class PhkForm extends StatelessWidget {
   }
 }
 
-void showPhkForm(BuildContext context) {
+void showPhkForm(BuildContext context) async {
   final controller = Get.find<KaryawanControl>();
-  controller.txtPhkKeterangan.text = controller.current.phk.keterangan;
-  controller.txtTanggalMasuk.text = AFconvert.matYMD(controller.current.phk.tanggalAwal ?? controller.current.tanggalMasuk);
-  controller.txtTanggalKeluar.text = AFconvert.matYMD(controller.current.phk.tanggalAKhir ?? DateTime.now());
-  controller.statusPhk = controller.current.phk.statusPhk;
-  controller.txtKompensasi.text = AFconvert.matNumber(controller.current.uangPhk.kompensasi);
-  controller.txtKetKompensasi.text = controller.current.uangPhk.ketKompensasi;
-  controller.txtUangPisah.text = AFconvert.matNumber(controller.current.uangPhk.uangPisah);
-  controller.txtKetUangPisah.text = controller.current.uangPhk.ketUangPisah;
-  controller.txtPesangon.text = AFconvert.matNumber(controller.current.uangPhk.pesangon);
-  controller.txtKetPesangon.text = controller.current.uangPhk.ketPesangon;
-  controller.txtMasaKerja.text = AFconvert.matNumber(controller.current.uangPhk.masaKerja);
-  controller.txtKetMasaKerja.text = controller.current.uangPhk.ketMasaKerja;
-  controller.txtSisaCutiHari.text = AFconvert.matNumber(controller.current.uangPhk.sisaCutiHari);
-  controller.txtSisaCutiJumlah.text = AFconvert.matNumber(controller.current.uangPhk.sisaCutiJumlah);
-  controller.txtKetLain.text = controller.current.uangPhk.ketLain;
-  controller.txtKetPotLain.text = controller.current.uangPhk.ketPotLain;
-
-  if (controller.current.phk.payrollPhk.id.isNotEmpty) {
-    controller.isPayrollPhkBaru.value = false;
-    controller.isiFormPayrollPhk(controller.current.phk.payrollPhk);
-  } else if (controller.current.payrollPhk.id.isNotEmpty) {
-    controller.isPayrollPhkBaru.value = false;
-    controller.isiFormPayrollPhk(controller.current.payrollPhk);
-  } else {
-    controller.isPayrollPhkBaru.value = true;
-    controller.setPayrollPhkBaru();
+  if (controller.current.upah.id.isEmpty || (controller.current.upah.gaji == 0 && controller.current.upah.uangMakan == 0)) {
+    AFwidget.loading();
+    try {
+      UpahRepository upahRepo = UpahRepository();
+      var hasilUpah = await upahRepo.find(controller.current.id);
+      if (hasilUpah.success && hasilUpah.data.isNotEmpty) {
+        controller.current.upah = Upah.fromMap(hasilUpah.data);
+      }
+    } catch (_) {}
+    Get.back();
   }
-
-  controller.loadPayrollPhkData();
-  controller.hitungTotalPhk();
+  await controller.initPhkForm();
   AFwidget.dialog(
     const PhkForm(),
     barrierDismissible: false,

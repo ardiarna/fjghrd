@@ -8,7 +8,6 @@ class UangPhk2 {
   int uangPisah;
   int pesangon;
   int masaKerja;
-  int penggantianHak;
   int sisaCutiHari;
   int sisaCutiJumlah;
   int lain;
@@ -35,7 +34,6 @@ class UangPhk2 {
     this.uangPisah = 0,
     this.pesangon = 0,
     this.masaKerja = 0,
-    this.penggantianHak = 0,
     this.sisaCutiHari = 0,
     this.sisaCutiJumlah = 0,
     this.lain = 0,
@@ -64,7 +62,6 @@ class UangPhk2 {
       uangPisah: AFconvert.keInt(data['uang_pisah']),
       pesangon: AFconvert.keInt(data['pesangon']),
       masaKerja: AFconvert.keInt(data['masa_kerja']),
-      penggantianHak: AFconvert.keInt(data['penggantian_hak']),
       sisaCutiHari: AFconvert.keInt(data['sisa_cuti_hari']),
       sisaCutiJumlah: AFconvert.keInt(data['sisa_cuti_jumlah']),
       lain: AFconvert.keInt(data['lain']),
@@ -94,7 +91,6 @@ class UangPhk2 {
       'uang_pisah': AFconvert.keString(uangPisah),
       'pesangon': AFconvert.keString(pesangon),
       'masa_kerja': AFconvert.keString(masaKerja),
-      'penggantian_hak': AFconvert.keString(penggantianHak),
       'sisa_cuti_hari': AFconvert.keString(sisaCutiHari),
       'sisa_cuti_jumlah': AFconvert.keString(sisaCutiJumlah),
       'lain': AFconvert.keString(lain),

@@ -149,14 +149,18 @@ class Karyawan {
     if(data['payroll_phk'] != null) {
       a.payrollPhk = PayrollPhk.fromMap(data['payroll_phk']);
     }
-    a.upah = Upah(
-      id: AFconvert.keString(data['upah_id']),
-      karyawanId: a.id,
-      gaji: AFconvert.keInt(data['gaji']),
-      uangMakan: AFconvert.keInt(data['uang_makan']),
-      makanHarian: AFconvert.keBool(data['makan_harian']),
-      overtime: AFconvert.keBool(data['overtime']),
-    );
+    if(data['upah'] != null) {
+      a.upah = Upah.fromMap(data['upah']);
+    } else {
+      a.upah = Upah(
+        id: AFconvert.keString(data['upah_id']),
+        karyawanId: a.id,
+        gaji: AFconvert.keInt(data['gaji']),
+        uangMakan: AFconvert.keInt(data['uang_makan']),
+        makanHarian: AFconvert.keBool(data['makan_harian']),
+        overtime: AFconvert.keBool(data['overtime']),
+      );
+    }
     return a;
   }
 

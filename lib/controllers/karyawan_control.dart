@@ -13,6 +13,7 @@ import 'package:fjghrd/models/pendidikan.dart';
 import 'package:fjghrd/models/perjanjian_kerja.dart';
 import 'package:fjghrd/models/training.dart';
 import 'package:fjghrd/models/training_karyawan.dart';
+import 'package:fjghrd/models/upah.dart';
 import 'package:fjghrd/repositories/training_repository.dart';
 
 import 'package:fjghrd/models/phk.dart';
@@ -69,8 +70,6 @@ class KaryawanControl extends GetxController {
   RxList<Cuti> listCutiKaryawan = <Cuti>[].obs;
   int totalHakCuti = 0;
   PayrollPhk payrollPhk = PayrollPhk();
-  RxList<PayrollPhk> listPayrollPhk = <PayrollPhk>[].obs;
-  RxInt selectedPayrollPhkIndex = 0.obs;
   RxBool isPayrollPhkBaru = false.obs;
   Opsi filterStaf = Opsi(value: 'Y', label: 'STAF');
   Opsi filterArea = Opsi(value: '', label: 'SEMUA');
@@ -461,6 +460,19 @@ class KaryawanControl extends GetxController {
     update(['detail_karyawan']);
   }
 
+  Future<void> loadUpahCurrent() async {
+    if (current.id.isNotEmpty && (current.upah.id.isEmpty || (current.upah.gaji == 0 && current.upah.uangMakan == 0))) {
+      try {
+        UpahRepository upahRepo = UpahRepository();
+        var hasil = await upahRepo.find(current.id);
+        if (hasil.success && hasil.data.isNotEmpty) {
+          current.upah = Upah.fromMap(hasil.data);
+          update();
+        }
+      } catch (_) {}
+    }
+  }
+
   Future<void> loadPayrolls() async {
     listPayroll.clear();
     var hasil = await _repo.payrollFindAll(id: current.id, tahun: filterTahun.value);
@@ -543,6 +555,7 @@ class KaryawanControl extends GetxController {
     loadPerjanjianKerjas();
     loadTrainingKaryawan();
     loadTimelineMasakerja();
+    loadUpahCurrent();
     Get.toNamed(Rute.karyawanForm);
   }
 
@@ -1219,6 +1232,8 @@ class KaryawanControl extends GetxController {
         current.uangPhk = UangPhk2();
         current.payrollPhk = PayrollPhk();
         payrollPhk = PayrollPhk();
+        isPayrollPhkBaru.value = true;
+        setPayrollPhkBaru();
         loadKaryawans();
         authControl.karyawanUpdateTrigger.value++;
         loadMantanKaryawans();
@@ -1233,29 +1248,47 @@ class KaryawanControl extends GetxController {
     }
   }
 
-  Future<void> loadPayrollPhkData() async {
-    payrollPhk = PayrollPhk();
-    listPayrollPhk.clear();
-    var hasil = await _repo.payrollPhkFind(current.id);
-    if (hasil.success) {
-      if (hasil.daftar.isNotEmpty) {
-        listPayrollPhk.value = hasil.daftar.map((item) => PayrollPhk.fromMap(item)).toList();
-      } else if (hasil.data.isNotEmpty) {
-        listPayrollPhk.value = [PayrollPhk.fromMap(hasil.data)];
-      }
-    }
-    if (current.phk.payrollPhk.id.isNotEmpty) {
-      payrollPhk = current.phk.payrollPhk;
-      isPayrollPhkBaru.value = false;
-      isiFormPayrollPhk(current.phk.payrollPhk);
-    } else if (listPayrollPhk.isNotEmpty) {
-      selectedPayrollPhkIndex.value = 0;
-      isPayrollPhkBaru.value = false;
-      isiFormPayrollPhk(listPayrollPhk[0]);
-    } else {
-      selectedPayrollPhkIndex.value = -1;
+  Future<void> initPhkForm() async {
+    txtPhkKeterangan.text = current.phk.keterangan;
+    txtTanggalMasuk.text = AFconvert.matYMD(current.phk.tanggalAwal ?? current.tanggalMasuk);
+    txtTanggalKeluar.text = AFconvert.matYMD(current.phk.tanggalAKhir ?? DateTime.now());
+    statusPhk = current.phk.statusPhk;
+    txtKompensasi.text = AFconvert.matNumber(current.uangPhk.kompensasi);
+    txtKetKompensasi.text = current.uangPhk.ketKompensasi;
+    txtUangPisah.text = AFconvert.matNumber(current.uangPhk.uangPisah);
+    txtKetUangPisah.text = current.uangPhk.ketUangPisah;
+    txtPesangon.text = AFconvert.matNumber(current.uangPhk.pesangon);
+    txtKetPesangon.text = current.uangPhk.ketPesangon;
+    txtMasaKerja.text = AFconvert.matNumber(current.uangPhk.masaKerja);
+    txtKetMasaKerja.text = current.uangPhk.ketMasaKerja;
+    txtSisaCutiHari.text = AFconvert.matNumber(current.uangPhk.sisaCutiHari);
+    txtSisaCutiJumlah.text = AFconvert.matNumber(current.uangPhk.sisaCutiJumlah);
+    txtKetLain.text = current.uangPhk.ketLain;
+    txtKetPotLain.text = current.uangPhk.ketPotLain;
+
+    if (current.aktif == 'Y' || current.phk.id.isEmpty) {
       isPayrollPhkBaru.value = true;
       setPayrollPhkBaru();
+    } else {
+      PayrollPhk targetPayroll = current.phk.payrollPhk.id.isNotEmpty
+          ? current.phk.payrollPhk
+          : current.payrollPhk;
+
+      if (targetPayroll.id.isEmpty) {
+        var hasil = await _repo.payrollPhkFind(current.id);
+        if (hasil.success && hasil.data.isNotEmpty) {
+          targetPayroll = PayrollPhk.fromMap(hasil.data);
+        }
+      }
+
+      if (targetPayroll.id.isNotEmpty) {
+        payrollPhk = targetPayroll;
+        isPayrollPhkBaru.value = false;
+        isiFormPayrollPhk(targetPayroll);
+      } else {
+        isPayrollPhkBaru.value = true;
+        setPayrollPhkBaru();
+      }
     }
     hitungTotalPhk();
     update();
@@ -1322,7 +1355,6 @@ class KaryawanControl extends GetxController {
 
   void setPayrollPhkBaru() {
     isPayrollPhkBaru.value = true;
-    selectedPayrollPhkIndex.value = -1;
     payrollPhk = PayrollPhk();
     var now = DateTime.now();
     txtPayrollPhkGaji.text = AFconvert.matNumber(current.upah.gaji);
@@ -1372,108 +1404,8 @@ class KaryawanControl extends GetxController {
     update();
   }
 
-  void pilihPayrollPhkTab(int index) {
-    if (index >= 0 && index < listPayrollPhk.length) {
-      selectedPayrollPhkIndex.value = index;
-      isPayrollPhkBaru.value = false;
-      isiFormPayrollPhk(listPayrollPhk[index]);
-    }
-  }
-
-  void tambahPayrollPhkBaru() {
-    setPayrollPhkBaru();
-  }
-
-  Future<void> hapusPayrollPhkData(String id) async {
-    try {
-      if (id.isEmpty) {
-        throw ValidationException('ID Payroll PHK null');
-      }
-      AFwidget.loading();
-      var hasil = await _repo.payrollPhkDelete(id);
-      Get.back();
-      if (hasil.success) {
-        Get.back();
-        Get.back();
-        await loadPayrollPhkData();
-        AFwidget.snackbar(hasil.message);
-      } else {
-        AFwidget.formWarning(label: hasil.message);
-      }
-    } catch (er) {
-      AFwidget.formWarning(label: '$er');
-    }
-  }
-
   void hitungPayrollPhkPenerimaanBersih ([String? nilai]) {
     hitungTotalPhk(nilai);
-  }
-
-  Future<void> simpanPayrollPhkData() async {
-    try {
-      if(current.id.isEmpty) {
-        throw ValidationException('ID Karyawan tidak ditemukan');
-      }
-      if(tahunPhk.value.isEmpty || bulanPhk.value.isEmpty) {
-        throw ValidationException('Periode penggajian harus diisi');
-      }
-      if(txtPayrollPhkTglAwal.text.isEmpty || txtPayrollPhkTglAkhir.text.isEmpty) {
-        throw ValidationException('Periode batas (cut-off) harus diisi');
-      }
-      if(txtPayrollPhkGaji.text.isEmpty) {
-        throw ValidationException('Gaji harus diisi');
-      }
-      var a = PayrollPhk(
-        id: isPayrollPhkBaru.value ? '' : payrollPhk.id,
-        tahun: AFconvert.keInt(tahunPhk.value),
-        bulan: AFconvert.keInt(bulanPhk.value),
-        tanggalAwal: txtPayrollPhkTglAwal.text.isNotEmpty ? AFconvert.keTanggal('${txtPayrollPhkTglAwal.text} 08:00:00') : null,
-        tanggalAkhir: txtPayrollPhkTglAkhir.text.isNotEmpty ? AFconvert.keTanggal('${txtPayrollPhkTglAkhir.text} 08:00:00') : null,
-        tglGajiAwal: txtPayrollPhkTglGajiAwal.text.isNotEmpty ? AFconvert.keTanggal('${txtPayrollPhkTglGajiAwal.text} 08:00:00') : null,
-        tglGajiAkhir: txtPayrollPhkTglGajiAkhir.text.isNotEmpty ? AFconvert.keTanggal('${txtPayrollPhkTglGajiAkhir.text} 08:00:00') : null,
-        makanHarian: payrollPhkMakanHarian,
-        gaji: AFconvert.keInt(txtPayrollPhkGaji.text),
-        kenaikanGaji: AFconvert.keInt(txtPayrollPhkKenaikanGaji.text),
-        hariMakan: AFconvert.keInt(txtPayrollPhkHariMakan.text),
-        uangMakanHarian: AFconvert.keInt(txtPayrollPhkUangMakanHarian.text),
-        uangMakanJumlah: AFconvert.keInt(txtPayrollPhkUangMakanJumlah.text),
-        overtimeFjg: AFconvert.keInt(txtPayrollPhkOvertimeFjg.text),
-        overtimeCus: AFconvert.keInt(txtPayrollPhkOvertimeCus.text),
-        medical: AFconvert.keInt(txtPayrollPhkMedical.text),
-        thr: AFconvert.keInt(txtPayrollPhkThr.text),
-        bonus: AFconvert.keInt(txtPayrollPhkBonus.text),
-        insentif: AFconvert.keInt(txtPayrollPhkInsentif.text),
-        telkomsel: AFconvert.keInt(txtPayrollPhkTelkomsel.text),
-        lain: AFconvert.keInt(txtPayrollPhkLain.text),
-        pot25hari: AFconvert.keInt(txtPayrollPhkPot25hari.text),
-        pot25jumlah: AFconvert.keInt(txtPayrollPhkPot25jumlah.text),
-        potTelepon: AFconvert.keInt(txtPayrollPhkPotTelepon.text),
-        potBensin: AFconvert.keInt(txtPayrollPhkPotBensin.text),
-        potKas: AFconvert.keInt(txtPayrollPhkPotKas.text),
-        potCicilan: AFconvert.keInt(txtPayrollPhkPotCicilan.text),
-        potBpjs: AFconvert.keInt(txtPayrollPhkPotBpjs.text),
-        potCutiHari: AFconvert.keInt(txtPayrollPhkPotCutiHari.text),
-        potCutiJumlah: AFconvert.keInt(txtPayrollPhkPotCutiJumlah.text),
-        potKompensasiJam: AFconvert.keDouble(txtPayrollPhkPotKompensasiJam.text),
-        potKompensasiJumlah: AFconvert.keInt(txtPayrollPhkPotKompensasiJumlah.text),
-        potLain: AFconvert.keInt(txtPayrollPhkPotLain.text),
-        totalDiterima: AFconvert.keInt(txtPayrollPhkTotalDiterima.text),
-        keterangan: txtPayrollPhkKeterangan.text,
-      );
-      a.karyawan = current;
-      AFwidget.loading();
-      var hasil = await _repo.payrollPhkUpdateOrCreate(a.karyawan?.id ?? current.id, a.toMap());
-      Get.back();
-      if(hasil.success) {
-        await loadPayrollPhkData();
-        Get.back();
-        AFwidget.snackbar(hasil.message);
-      } else {
-        AFwidget.formWarning(label: hasil.message);
-      }
-    } catch (er) {
-      AFwidget.formWarning(label: '$er');
-    }
   }
 
   Future<void> loadAgamas() async {
