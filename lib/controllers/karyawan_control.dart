@@ -71,6 +71,8 @@ class KaryawanControl extends GetxController {
   int totalHakCuti = 0;
   PayrollPhk payrollPhk = PayrollPhk();
   RxBool isPayrollPhkBaru = false.obs;
+  RxBool sertakanKalkulasiPhk = false.obs;
+  RxBool sertakanPayrollPhk = false.obs;
   Opsi filterStaf = Opsi(value: 'Y', label: 'STAF');
   Opsi filterArea = Opsi(value: '', label: 'SEMUA');
   Opsi filterStatusKerja = Opsi(value: '', label: 'SEMUA');
@@ -147,33 +149,39 @@ class KaryawanControl extends GetxController {
   }
 
   void hitungTotalPhk([String? _]) {
-    int kalkulasi = AFconvert.keInt(txtKompensasi.text) +
-                    AFconvert.keInt(txtPesangon.text) +
-                    AFconvert.keInt(txtMasaKerja.text) +
-                    AFconvert.keInt(txtUangPisah.text) +
-                    AFconvert.keInt(txtSisaCutiJumlah.text);
+    int kalkulasi = sertakanKalkulasiPhk.value
+        ? (AFconvert.keInt(txtKompensasi.text) +
+           AFconvert.keInt(txtPesangon.text) +
+           AFconvert.keInt(txtMasaKerja.text) +
+           AFconvert.keInt(txtUangPisah.text) +
+           AFconvert.keInt(txtSisaCutiJumlah.text))
+        : 0;
 
-    int penghasilan = AFconvert.keInt(txtPayrollPhkGaji.text) +
-                      AFconvert.keInt(txtPayrollPhkKenaikanGaji.text) +
-                      AFconvert.keInt(txtPayrollPhkUangMakanJumlah.text) +
-                      AFconvert.keInt(txtPayrollPhkOvertimeFjg.text) +
-                      AFconvert.keInt(txtPayrollPhkOvertimeCus.text) +
-                      AFconvert.keInt(txtPayrollPhkMedical.text) +
-                      AFconvert.keInt(txtPayrollPhkThr.text) +
-                      AFconvert.keInt(txtPayrollPhkBonus.text) +
-                      AFconvert.keInt(txtPayrollPhkInsentif.text) +
-                      AFconvert.keInt(txtPayrollPhkTelkomsel.text) +
-                      AFconvert.keInt(txtPayrollPhkLain.text);
+    int penghasilan = sertakanPayrollPhk.value
+        ? (AFconvert.keInt(txtPayrollPhkGaji.text) +
+           AFconvert.keInt(txtPayrollPhkKenaikanGaji.text) +
+           AFconvert.keInt(txtPayrollPhkUangMakanJumlah.text) +
+           AFconvert.keInt(txtPayrollPhkOvertimeFjg.text) +
+           AFconvert.keInt(txtPayrollPhkOvertimeCus.text) +
+           AFconvert.keInt(txtPayrollPhkMedical.text) +
+           AFconvert.keInt(txtPayrollPhkThr.text) +
+           AFconvert.keInt(txtPayrollPhkBonus.text) +
+           AFconvert.keInt(txtPayrollPhkInsentif.text) +
+           AFconvert.keInt(txtPayrollPhkTelkomsel.text) +
+           AFconvert.keInt(txtPayrollPhkLain.text))
+        : 0;
 
-    int potongan = AFconvert.keInt(txtPayrollPhkPot25jumlah.text) +
-                   AFconvert.keInt(txtPayrollPhkPotTelepon.text) +
-                   AFconvert.keInt(txtPayrollPhkPotBensin.text) +
-                   AFconvert.keInt(txtPayrollPhkPotKas.text) +
-                   AFconvert.keInt(txtPayrollPhkPotCicilan.text) +
-                   AFconvert.keInt(txtPayrollPhkPotBpjs.text) +
-                   AFconvert.keInt(txtPayrollPhkPotCutiJumlah.text) +
-                   AFconvert.keInt(txtPayrollPhkPotKompensasiJumlah.text) +
-                   AFconvert.keInt(txtPayrollPhkPotLain.text);
+    int potongan = sertakanPayrollPhk.value
+        ? (AFconvert.keInt(txtPayrollPhkPot25jumlah.text) +
+           AFconvert.keInt(txtPayrollPhkPotTelepon.text) +
+           AFconvert.keInt(txtPayrollPhkPotBensin.text) +
+           AFconvert.keInt(txtPayrollPhkPotKas.text) +
+           AFconvert.keInt(txtPayrollPhkPotCicilan.text) +
+           AFconvert.keInt(txtPayrollPhkPotBpjs.text) +
+           AFconvert.keInt(txtPayrollPhkPotCutiJumlah.text) +
+           AFconvert.keInt(txtPayrollPhkPotKompensasiJumlah.text) +
+           AFconvert.keInt(txtPayrollPhkPotLain.text))
+        : 0;
 
     totalPhkKalkulasi.value = kalkulasi;
     totalPenghasilanPayroll.value = penghasilan;
@@ -1054,7 +1062,7 @@ class KaryawanControl extends GetxController {
     }
   }
 
-  Future<void> simpanPhkData() async {
+  Future<void> simpanPhkData({bool skipKonfirmasi = false}) async {
     try {
       if(current.id.isEmpty) {
         throw ValidationException('ID Karyawan tidak ditemukan');
@@ -1069,6 +1077,39 @@ class KaryawanControl extends GetxController {
         throw ValidationException('Silakan pilih status phk');
       }
 
+      // Cek apakah ada bagian yang awalnya memiliki data lalu di-uncheck
+      if (!skipKonfirmasi && current.phk.id.isNotEmpty) {
+        bool wasUangPhkAda = current.phk.uangPhkId.isNotEmpty || current.phk.uangPhk.id.isNotEmpty;
+        bool wasPayrollPhkAda = current.phk.payrollPhkId.isNotEmpty || current.phk.payrollPhk.id.isNotEmpty;
+        bool isUangPhkUnchecked = wasUangPhkAda && !sertakanKalkulasiPhk.value;
+        bool isPayrollPhkUnchecked = wasPayrollPhkAda && !sertakanPayrollPhk.value;
+
+        if (isUangPhkUnchecked || isPayrollPhkUnchecked) {
+          String bagian;
+          if (isUangPhkUnchecked && isPayrollPhkUnchecked) {
+            bagian = 'Kalkulasi PHK dan Payroll PHK';
+          } else if (isUangPhkUnchecked) {
+            bagian = 'Kalkulasi PHK';
+          } else {
+            bagian = 'Payroll PHK';
+          }
+
+          AFwidget.formWarning(
+            label: 'Anda memilih untuk tidak menyertakan $bagian. Rincian data $bagian yang tersimpan sebelumnya akan dihapus. Tetap simpan perubahan?',
+            ikon: Icons.warning_amber_rounded,
+            warna: Colors.red,
+            isKonfirmasi: true,
+            labelBatal: 'Batal',
+            labelYa: 'Ya, lanjutkan',
+            aksi: () {
+              Get.back();
+              simpanPhkData(skipKonfirmasi: true);
+            },
+          );
+          return;
+        }
+      }
+
       var a = Phk(
         id: current.phk.id,
         karyawanId: current.id,
@@ -1079,107 +1120,115 @@ class KaryawanControl extends GetxController {
       a.statusKerja = statusKerja;
       a.statusPhk = statusPhk;
 
-      // 1. Uang PHK (ambil nilai potongan & lain dari inputan Payroll PHK)
-      var b = UangPhk2(
-        id: current.uangPhk.id,
-        karyawanId: current.id,
-        tahun: a.tanggalAKhir!.year,
-        kompensasi: AFconvert.keInt(txtKompensasi.text),
-        uangPisah: AFconvert.keInt(txtUangPisah.text),
-        pesangon: AFconvert.keInt(txtPesangon.text),
-        masaKerja: AFconvert.keInt(txtMasaKerja.text),
-        sisaCutiHari: AFconvert.keInt(txtSisaCutiHari.text),
-        sisaCutiJumlah: AFconvert.keInt(txtSisaCutiJumlah.text),
-        lain: AFconvert.keInt(txtPayrollPhkLain.text),
-        potKas: AFconvert.keInt(txtPayrollPhkPotKas.text),
-        potCicilan: AFconvert.keInt(txtPayrollPhkPotCicilan.text),
-        potCutiHari: AFconvert.keInt(txtPayrollPhkPotCutiHari.text),
-        potCutiJumlah: AFconvert.keInt(txtPayrollPhkPotCutiJumlah.text),
-        potLain: AFconvert.keInt(txtPayrollPhkPotLain.text),
-        keterangan: txtPhkKeterangan.text,
-        ketKompensasi: txtKetKompensasi.text,
-        ketUangPisah: txtKetUangPisah.text,
-        ketPesangon: txtKetPesangon.text,
-        ketMasaKerja: txtKetMasaKerja.text,
-        ketLain: txtKetLain.text,
-        ketPotLain: txtKetPotLain.text,
-      );
-
-      // 2. Payroll PHK
-      var c = PayrollPhk(
-        id: isPayrollPhkBaru.value ? '' : (payrollPhk.id.isNotEmpty ? payrollPhk.id : current.phk.payrollPhk.id),
-        tahun: AFconvert.keInt(tahunPhk.value),
-        bulan: AFconvert.keInt(bulanPhk.value),
-        tanggalAwal: txtPayrollPhkTglAwal.text.isNotEmpty ? AFconvert.keTanggal('${txtPayrollPhkTglAwal.text} 08:00:00') : null,
-        tanggalAkhir: txtPayrollPhkTglAkhir.text.isNotEmpty ? AFconvert.keTanggal('${txtPayrollPhkTglAkhir.text} 08:00:00') : null,
-        tglGajiAwal: txtPayrollPhkTglGajiAwal.text.isNotEmpty ? AFconvert.keTanggal('${txtPayrollPhkTglGajiAwal.text} 08:00:00') : null,
-        tglGajiAkhir: txtPayrollPhkTglGajiAkhir.text.isNotEmpty ? AFconvert.keTanggal('${txtPayrollPhkTglGajiAkhir.text} 08:00:00') : null,
-        makanHarian: payrollPhkMakanHarian,
-        gaji: AFconvert.keInt(txtPayrollPhkGaji.text),
-        kenaikanGaji: AFconvert.keInt(txtPayrollPhkKenaikanGaji.text),
-        hariMakan: AFconvert.keInt(txtPayrollPhkHariMakan.text),
-        uangMakanHarian: AFconvert.keInt(txtPayrollPhkUangMakanHarian.text),
-        uangMakanJumlah: AFconvert.keInt(txtPayrollPhkUangMakanJumlah.text),
-        overtimeFjg: AFconvert.keInt(txtPayrollPhkOvertimeFjg.text),
-        overtimeCus: AFconvert.keInt(txtPayrollPhkOvertimeCus.text),
-        medical: AFconvert.keInt(txtPayrollPhkMedical.text),
-        thr: AFconvert.keInt(txtPayrollPhkThr.text),
-        bonus: AFconvert.keInt(txtPayrollPhkBonus.text),
-        insentif: AFconvert.keInt(txtPayrollPhkInsentif.text),
-        telkomsel: AFconvert.keInt(txtPayrollPhkTelkomsel.text),
-        lain: AFconvert.keInt(txtPayrollPhkLain.text),
-        pot25hari: AFconvert.keInt(txtPayrollPhkPot25hari.text),
-        pot25jumlah: AFconvert.keInt(txtPayrollPhkPot25jumlah.text),
-        potTelepon: AFconvert.keInt(txtPayrollPhkPotTelepon.text),
-        potBensin: AFconvert.keInt(txtPayrollPhkPotBensin.text),
-        potKas: AFconvert.keInt(txtPayrollPhkPotKas.text),
-        potCicilan: AFconvert.keInt(txtPayrollPhkPotCicilan.text),
-        potBpjs: AFconvert.keInt(txtPayrollPhkPotBpjs.text),
-        potCutiHari: AFconvert.keInt(txtPayrollPhkPotCutiHari.text),
-        potCutiJumlah: AFconvert.keInt(txtPayrollPhkPotCutiJumlah.text),
-        potKompensasiJam: AFconvert.keDouble(txtPayrollPhkPotKompensasiJam.text),
-        potKompensasiJumlah: AFconvert.keInt(txtPayrollPhkPotKompensasiJumlah.text),
-        potLain: AFconvert.keInt(txtPayrollPhkPotLain.text),
-        totalDiterima: AFconvert.keInt(txtPayrollPhkTotalDiterima.text),
-        keterangan: txtPayrollPhkKeterangan.text,
-      );
-      c.karyawan = current;
-
-      UangPhkRepository repoUang = UangPhkRepository();
       AFwidget.loading();
 
-      // Save UangPhk
-      var hasilB = current.uangPhk.id == ''
-          ? await repoUang.create(b.toMap())
-          : await repoUang.update(b.id, b.toMap());
+      // 1. Uang PHK (hanya dibuat/diupdate jika sertakanKalkulasiPhk diceklis)
+      String uangPhkId = '';
+      UangPhk2? b;
+      if (sertakanKalkulasiPhk.value) {
+        b = UangPhk2(
+          id: current.uangPhk.id,
+          karyawanId: current.id,
+          tahun: a.tanggalAKhir!.year,
+          kompensasi: AFconvert.keInt(txtKompensasi.text),
+          uangPisah: AFconvert.keInt(txtUangPisah.text),
+          pesangon: AFconvert.keInt(txtPesangon.text),
+          masaKerja: AFconvert.keInt(txtMasaKerja.text),
+          sisaCutiHari: AFconvert.keInt(txtSisaCutiHari.text),
+          sisaCutiJumlah: AFconvert.keInt(txtSisaCutiJumlah.text),
+          lain: AFconvert.keInt(txtPayrollPhkLain.text),
+          potKas: AFconvert.keInt(txtPayrollPhkPotKas.text),
+          potCicilan: AFconvert.keInt(txtPayrollPhkPotCicilan.text),
+          potCutiHari: AFconvert.keInt(txtPayrollPhkPotCutiHari.text),
+          potCutiJumlah: AFconvert.keInt(txtPayrollPhkPotCutiJumlah.text),
+          potLain: AFconvert.keInt(txtPayrollPhkPotLain.text),
+          keterangan: txtPhkKeterangan.text,
+          ketKompensasi: txtKetKompensasi.text,
+          ketUangPisah: txtKetUangPisah.text,
+          ketPesangon: txtKetPesangon.text,
+          ketMasaKerja: txtKetMasaKerja.text,
+          ketLain: txtKetLain.text,
+          ketPotLain: txtKetPotLain.text,
+        );
 
-      if (!hasilB.success) {
-        Get.back();
-        AFwidget.formWarning(label: hasilB.message);
-        return;
-      }
+        UangPhkRepository repoUang = UangPhkRepository();
+        var hasilB = current.uangPhk.id == ''
+            ? await repoUang.create(b.toMap())
+            : await repoUang.update(b.id, b.toMap());
 
-      String uangPhkId = current.uangPhk.id;
-      if (uangPhkId == '' && hasilB.data.containsKey('id')) {
-        uangPhkId = AFconvert.keString(hasilB.data['id']);
+        if (!hasilB.success) {
+          Get.back();
+          AFwidget.formWarning(label: hasilB.message);
+          return;
+        }
+
+        uangPhkId = current.uangPhk.id;
+        if (uangPhkId == '' && hasilB.data.containsKey('id')) {
+          uangPhkId = AFconvert.keString(hasilB.data['id']);
+        }
+        b.id = uangPhkId;
       }
       a.uangPhkId = uangPhkId;
 
-      // Save PayrollPhk
-      var hasilC = await _repo.payrollPhkUpdateOrCreate(current.id, c.toMap());
-      if (!hasilC.success) {
-        Get.back();
-        AFwidget.formWarning(label: hasilC.message);
-        return;
-      }
+      // 2. Payroll PHK (hanya dibuat/diupdate jika sertakanPayrollPhk diceklis)
+      String payrollPhkId = '';
+      PayrollPhk? c;
+      if (sertakanPayrollPhk.value) {
+        c = PayrollPhk(
+          id: isPayrollPhkBaru.value ? '' : (payrollPhk.id.isNotEmpty ? payrollPhk.id : current.phk.payrollPhk.id),
+          tahun: AFconvert.keInt(tahunPhk.value),
+          bulan: AFconvert.keInt(bulanPhk.value),
+          tanggalAwal: txtPayrollPhkTglAwal.text.isNotEmpty ? AFconvert.keTanggal('${txtPayrollPhkTglAwal.text} 08:00:00') : null,
+          tanggalAkhir: txtPayrollPhkTglAkhir.text.isNotEmpty ? AFconvert.keTanggal('${txtPayrollPhkTglAkhir.text} 08:00:00') : null,
+          tglGajiAwal: txtPayrollPhkTglGajiAwal.text.isNotEmpty ? AFconvert.keTanggal('${txtPayrollPhkTglGajiAwal.text} 08:00:00') : null,
+          tglGajiAkhir: txtPayrollPhkTglGajiAkhir.text.isNotEmpty ? AFconvert.keTanggal('${txtPayrollPhkTglGajiAkhir.text} 08:00:00') : null,
+          makanHarian: payrollPhkMakanHarian,
+          gaji: AFconvert.keInt(txtPayrollPhkGaji.text),
+          kenaikanGaji: AFconvert.keInt(txtPayrollPhkKenaikanGaji.text),
+          hariMakan: AFconvert.keInt(txtPayrollPhkHariMakan.text),
+          uangMakanHarian: AFconvert.keInt(txtPayrollPhkUangMakanHarian.text),
+          uangMakanJumlah: AFconvert.keInt(txtPayrollPhkUangMakanJumlah.text),
+          overtimeFjg: AFconvert.keInt(txtPayrollPhkOvertimeFjg.text),
+          overtimeCus: AFconvert.keInt(txtPayrollPhkOvertimeCus.text),
+          medical: AFconvert.keInt(txtPayrollPhkMedical.text),
+          thr: AFconvert.keInt(txtPayrollPhkThr.text),
+          bonus: AFconvert.keInt(txtPayrollPhkBonus.text),
+          insentif: AFconvert.keInt(txtPayrollPhkInsentif.text),
+          telkomsel: AFconvert.keInt(txtPayrollPhkTelkomsel.text),
+          lain: AFconvert.keInt(txtPayrollPhkLain.text),
+          pot25hari: AFconvert.keInt(txtPayrollPhkPot25hari.text),
+          pot25jumlah: AFconvert.keInt(txtPayrollPhkPot25jumlah.text),
+          potTelepon: AFconvert.keInt(txtPayrollPhkPotTelepon.text),
+          potBensin: AFconvert.keInt(txtPayrollPhkPotBensin.text),
+          potKas: AFconvert.keInt(txtPayrollPhkPotKas.text),
+          potCicilan: AFconvert.keInt(txtPayrollPhkPotCicilan.text),
+          potBpjs: AFconvert.keInt(txtPayrollPhkPotBpjs.text),
+          potCutiHari: AFconvert.keInt(txtPayrollPhkPotCutiHari.text),
+          potCutiJumlah: AFconvert.keInt(txtPayrollPhkPotCutiJumlah.text),
+          potKompensasiJam: AFconvert.keDouble(txtPayrollPhkPotKompensasiJam.text),
+          potKompensasiJumlah: AFconvert.keInt(txtPayrollPhkPotKompensasiJumlah.text),
+          potLain: AFconvert.keInt(txtPayrollPhkPotLain.text),
+          totalDiterima: AFconvert.keInt(txtPayrollPhkTotalDiterima.text),
+          keterangan: txtPayrollPhkKeterangan.text,
+        );
+        c.karyawan = current;
 
-      String payrollPhkId = c.id;
-      if (payrollPhkId == '' && hasilC.data.containsKey('id')) {
-        payrollPhkId = AFconvert.keString(hasilC.data['id']);
+        var hasilC = await _repo.payrollPhkUpdateOrCreate(current.id, c.toMap());
+        if (!hasilC.success) {
+          Get.back();
+          AFwidget.formWarning(label: hasilC.message);
+          return;
+        }
+
+        payrollPhkId = c.id;
+        if (payrollPhkId == '' && hasilC.data.containsKey('id')) {
+          payrollPhkId = AFconvert.keString(hasilC.data['id']);
+        }
+        c.id = payrollPhkId;
       }
       a.payrollPhkId = payrollPhkId;
 
-      // Save Phk
+      // 3. Save Phk
       var hasilA = current.phk.id == ''
           ? await _repo.phkCreate(a.karyawanId, a.toMap())
           : await _repo.phkUpdate(a.karyawanId, a.toMap());
@@ -1188,13 +1237,25 @@ class KaryawanControl extends GetxController {
         if (current.phk.id == '' && hasilA.data.containsKey('id')) {
           a.id = AFconvert.keString(hasilA.data['id']);
         }
-        b.id = uangPhkId;
-        c.id = payrollPhkId;
-        a.uangPhk = b;
-        a.payrollPhk = c;
+        if (b != null) {
+          b.id = uangPhkId;
+          a.uangPhk = b;
+          current.uangPhk = b;
+        } else {
+          a.uangPhk = UangPhk2();
+          current.uangPhk = UangPhk2();
+        }
+        if (c != null) {
+          c.id = payrollPhkId;
+          a.payrollPhk = c;
+          current.payrollPhk = c;
+        } else {
+          a.payrollPhk = PayrollPhk();
+          current.payrollPhk = PayrollPhk();
+          payrollPhk = PayrollPhk();
+          isPayrollPhkBaru.value = true;
+        }
         current.phk = a;
-        current.uangPhk = b;
-        current.payrollPhk = c;
         current.phkId = a.id;
         current.aktif = 'N';
         current.tanggalKeluar = a.tanggalAKhir;
@@ -1206,9 +1267,9 @@ class KaryawanControl extends GetxController {
         authControl.karyawanUpdateTrigger.value++;
         loadMantanKaryawans();
         Get.back();
-        AFwidget.snackbar('${hasilA.message}, ${hasilB.message}, ${hasilC.message}.');
+        AFwidget.snackbar(hasilA.message);
       } else {
-        AFwidget.formWarning(label: '${hasilA.message}, ${hasilB.message}.');
+        AFwidget.formWarning(label: hasilA.message);
       }
     } catch (er) {
       AFwidget.formWarning(label: '$er');
@@ -1232,6 +1293,8 @@ class KaryawanControl extends GetxController {
         current.uangPhk = UangPhk2();
         current.payrollPhk = PayrollPhk();
         payrollPhk = PayrollPhk();
+        sertakanKalkulasiPhk.value = false;
+        sertakanPayrollPhk.value = false;
         isPayrollPhkBaru.value = true;
         setPayrollPhkBaru();
         loadKaryawans();
@@ -1267,14 +1330,19 @@ class KaryawanControl extends GetxController {
     txtKetPotLain.text = current.uangPhk.ketPotLain;
 
     if (current.aktif == 'Y' || current.phk.id.isEmpty) {
+      sertakanKalkulasiPhk.value = false;
+      sertakanPayrollPhk.value = false;
       isPayrollPhkBaru.value = true;
       setPayrollPhkBaru();
     } else {
+      sertakanKalkulasiPhk.value = current.phk.uangPhkId.isNotEmpty || current.phk.uangPhk.id.isNotEmpty;
+      sertakanPayrollPhk.value = current.phk.payrollPhkId.isNotEmpty || current.phk.payrollPhk.id.isNotEmpty;
+
       PayrollPhk targetPayroll = current.phk.payrollPhk.id.isNotEmpty
           ? current.phk.payrollPhk
           : current.payrollPhk;
 
-      if (targetPayroll.id.isEmpty) {
+      if (targetPayroll.id.isEmpty && sertakanPayrollPhk.value) {
         var hasil = await _repo.payrollPhkFind(current.id);
         if (hasil.success && hasil.data.isNotEmpty) {
           targetPayroll = PayrollPhk.fromMap(hasil.data);

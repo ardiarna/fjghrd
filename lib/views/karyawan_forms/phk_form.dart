@@ -223,23 +223,68 @@ class PhkForm extends StatelessWidget {
               const SizedBox(height: 15),
 
               // 1. KALKULASI PHK (2 KOLOM)
-              Container(
-                padding: const EdgeInsets.only(bottom: 15),
+              Obx(() => Container(
+                padding: EdgeInsets.only(bottom: controller.sertakanKalkulasiPhk.value ? 15 : 0),
                 margin: const EdgeInsets.fromLTRB(15, 0, 15, 0),
                 decoration: BoxDecoration(
+                  color: controller.sertakanKalkulasiPhk.value ? Colors.white : Colors.blue.shade50,
                   border: Border.all(color: Colors.blue.shade200, width: 1.2),
                   borderRadius: const BorderRadius.all(Radius.circular(6)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AFwidget.barisInfo(
-                      label: 'KALKULASI PHK',
-                      labelWidth: 200,
-                      labelSyle: TextStyle(color: Colors.blue.shade800, fontWeight: FontWeight.bold, fontSize: 14),
-                      paddingTop: 12,
-                      paddingLeft: 15,
+                    InkWell(
+                      borderRadius: const BorderRadius.all(Radius.circular(6)),
+                      onTap: () {
+                        controller.sertakanKalkulasiPhk.toggle();
+                        controller.hitungTotalPhk();
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: Checkbox(
+                                value: controller.sertakanKalkulasiPhk.value,
+                                onChanged: (val) {
+                                  controller.sertakanKalkulasiPhk.value = val ?? false;
+                                  controller.hitungTotalPhk();
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              'KALKULASI PHK',
+                              style: TextStyle(
+                                color: Colors.blue.shade800,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              controller.sertakanKalkulasiPhk.value
+                                  ? '(Disertakan)'
+                                  : '(Tidak Disertakan / Klik untuk mengisi kalkulasi PHK)',
+                              style: TextStyle(
+                                color: controller.sertakanKalkulasiPhk.value ? Colors.blue.shade700 : Colors.grey.shade600,
+                                fontSize: 12,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                            const Spacer(),
+                            Icon(
+                              controller.sertakanKalkulasiPhk.value ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                              color: Colors.blue.shade700,
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
+                    if (controller.sertakanKalkulasiPhk.value) ...[
                     Row(
                       children: [
                         Expanded(
@@ -398,30 +443,76 @@ class PhkForm extends StatelessWidget {
                         const Expanded(child: SizedBox()),
                       ],
                     ),
+                    ],
                   ],
                 ),
-              ),
+              )),
 
               const SizedBox(height: 15),
 
               // 2. PAYROLL PHK
-              Container(
-                padding: const EdgeInsets.only(bottom: 15),
+              Obx(() => Container(
+                padding: EdgeInsets.only(bottom: controller.sertakanPayrollPhk.value ? 15 : 0),
                 margin: const EdgeInsets.fromLTRB(15, 0, 15, 0),
                 decoration: BoxDecoration(
+                  color: controller.sertakanPayrollPhk.value ? Colors.white : Colors.green.shade50,
                   border: Border.all(color: Colors.green.shade500, width: 1.5),
                   borderRadius: const BorderRadius.all(Radius.circular(6)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    AFwidget.barisInfo(
-                      label: 'PAYROLL PHK',
-                      labelWidth: 200,
-                      labelSyle: TextStyle(color: Colors.green.shade800, fontWeight: FontWeight.bold, fontSize: 14),
-                      paddingTop: 12,
-                      paddingLeft: 15,
+                    InkWell(
+                      borderRadius: const BorderRadius.all(Radius.circular(6)),
+                      onTap: () {
+                        controller.sertakanPayrollPhk.toggle();
+                        controller.hitungTotalPhk();
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              height: 24,
+                              width: 24,
+                              child: Checkbox(
+                                value: controller.sertakanPayrollPhk.value,
+                                onChanged: (val) {
+                                  controller.sertakanPayrollPhk.value = val ?? false;
+                                  controller.hitungTotalPhk();
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              'PAYROLL PHK',
+                              style: TextStyle(
+                                color: Colors.green.shade800,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Text(
+                              controller.sertakanPayrollPhk.value
+                                  ? '(Disertakan)'
+                                  : '(Tidak Disertakan / Klik untuk mengisi payroll PHK)',
+                              style: TextStyle(
+                                color: controller.sertakanPayrollPhk.value ? Colors.green.shade700 : Colors.grey.shade600,
+                                fontSize: 12,
+                                fontStyle: FontStyle.italic,
+                              ),
+                            ),
+                            const Spacer(),
+                            Icon(
+                              controller.sertakanPayrollPhk.value ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                              color: Colors.green.shade700,
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
+                    if (controller.sertakanPayrollPhk.value) ...[
                     // Periode Payroll & Periode Gaji (Row 1)
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -1170,9 +1261,10 @@ class PhkForm extends StatelessWidget {
                         ],
                       ),
                     ),
+                    ],
                   ],
                 ),
-              ),
+              )),
 
               // 3. RINGKASAN TOTAL (4 KOLOM)
               Obx(() => Container(
@@ -1224,7 +1316,10 @@ class PhkForm extends StatelessWidget {
                 child: Row(
                   children: [
                     const Spacer(),
-                    if (controller.current.phkId.isNotEmpty || controller.current.phk.id.isNotEmpty) ...[
+                    if (controller.current.phk.uangPhkId.isNotEmpty ||
+                        controller.current.phk.payrollPhkId.isNotEmpty ||
+                        controller.current.phk.uangPhk.id.isNotEmpty ||
+                        controller.current.phk.payrollPhk.id.isNotEmpty) ...[
                       AFwidget.tombol(
                         label: 'Cetak Slip PHK',
                         color: Colors.green,
@@ -1241,7 +1336,9 @@ class PhkForm extends StatelessWidget {
                     ),
                     const SizedBox(width: 25),
                     AFwidget.tombol(
-                      label: 'Simpan',
+                      label: (controller.current.phk.id.isEmpty || controller.current.aktif == 'Y')
+                          ? 'Simpan'
+                          : 'Simpan Perubahan',
                       color: Colors.blue,
                       onPressed: controller.simpanPhkData,
                       minimumSize: const Size(120, 40),

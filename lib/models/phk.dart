@@ -73,12 +73,8 @@ class Phk {
     if(statusPhk.id != '') {
       data['status_phk_id'] = statusPhk.id;
     }
-    if(uangPhkId != '') {
-      data['uang_phk_id'] = uangPhkId;
-    }
-    if(payrollPhkId != '') {
-      data['payroll_phk_id'] = payrollPhkId;
-    }
+    data['uang_phk_id'] = uangPhkId;
+    data['payroll_phk_id'] = payrollPhkId;
     return data;
   }
 
