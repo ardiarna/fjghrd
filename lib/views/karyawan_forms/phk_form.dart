@@ -410,6 +410,13 @@ class PhkForm extends StatelessWidget {
                                           ),
                                         ],
                                         textAlign: TextAlign.end,
+                                        onchanged: (nilai) {
+                                          int hari = AFconvert.keInt(nilai);
+                                          int gaji = controller.current.upah.gaji;
+                                          var jumlah = (gaji / 21) * hari;
+                                          controller.txtSisaCutiJumlah.text = AFconvert.matNumber(jumlah.round());
+                                          controller.hitungTotalPhk();
+                                        },
                                       ),
                                     ],
                                   ),
@@ -642,8 +649,8 @@ class PhkForm extends StatelessWidget {
                             controller: controller.txtPayrollPhkHariMakan,
                             isNumber: true,
                             onchanged: (nilai) {
-                              if(controller.payrollPhkMakanHarian) {
-                                var jumlah = AFconvert.keInt(nilai) * AFconvert.keInt(controller.txtPayrollPhkUangMakanHarian.text);
+                              if (controller.current.upah.makanHarian) {
+                                var jumlah = AFconvert.keInt(nilai) * controller.current.upah.uangMakan;
                                 controller.txtPayrollPhkUangMakanJumlah.text = AFconvert.matNumber(jumlah);
                                 controller.hitungPayrollPhkPenerimaanBersih(nilai);
                               }
@@ -757,147 +764,17 @@ class PhkForm extends StatelessWidget {
                                   paddingLeft: 15,
                                   paddingRight: 10,
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(15, 11, 10, 0),
-                                  child: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Container(
-                                        width: labelWidth,
-                                        padding: const EdgeInsets.only(right: 15),
-                                        child: Text('Jenis Uang Makan', style: stylePenghasilan),
-                                      ),
-                                      Expanded(
-                                        child: GetBuilder<KaryawanControl>(
-                                          builder: (_) {
-                                            return RadioGroup<bool>(
-                                              groupValue: controller.payrollPhkMakanHarian,
-                                              onChanged: (a) {
-                                                if(a != null && a != controller.payrollPhkMakanHarian) {
-                                                  controller.payrollPhkMakanHarian = a;
-                                                  controller.update();
-                                                }
-                                              },
-                                              child: Row(
-                                                children: const [
-                                                  Radio<bool>(value: true),
-                                                  Padding(
-                                                    padding: EdgeInsets.fromLTRB(0, 0, 18, 0),
-                                                    child: Text('Harian'),
-                                                  ),
-                                                  Radio<bool>(value: false),
-                                                  Padding(
-                                                    padding: EdgeInsets.fromLTRB(0, 0, 18, 0),
-                                                    child: Text('Tetap'),
-                                                  ),
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                GetBuilder<KaryawanControl>(
-                                  builder: (_) {
-                                    if(controller.payrollPhkMakanHarian) {
-                                      return Padding(
-                                        padding: const EdgeInsets.fromLTRB(15, 11, 10, 0),
-                                        child: Row(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              width: labelWidth,
-                                              padding: const EdgeInsets.only(right: 15),
-                                              child: Text('U/makan & Transport', style: stylePenghasilan),
-                                            ),
-                                            Expanded(
-                                              flex: 2,
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  const Text('@Hari IDR :'),
-                                                  AFwidget.textField(
-                                                    marginTop: 0,
-                                                    controller: controller.txtPayrollPhkUangMakanHarian,
-                                                    inputformatters: [
-                                                      CurrencyTextInputFormatter.currency(
-                                                        symbol: '',
-                                                        decimalDigits: 0,
-                                                      ),
-                                                    ],
-                                                    textAlign: TextAlign.end,
-                                                    onchanged: (nilai) {
-                                                      var jumlah = AFconvert.keInt(nilai) * AFconvert.keInt(controller.txtPayrollPhkHariMakan.text);
-                                                      controller.txtPayrollPhkUangMakanJumlah.text = AFconvert.matNumber(jumlah);
-                                                      controller.hitungPayrollPhkPenerimaanBersih(nilai);
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            const SizedBox(width: 10),
-                                            Expanded(
-                                              flex: 3,
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  const Text('Jumlah IDR :'),
-                                                  AFwidget.textField(
-                                                    readOnly: true,
-                                                    marginTop: 0,
-                                                    controller: controller.txtPayrollPhkUangMakanJumlah,
-                                                    inputformatters: [
-                                                      CurrencyTextInputFormatter.currency(
-                                                        symbol: '',
-                                                        decimalDigits: 0,
-                                                      ),
-                                                    ],
-                                                    textAlign: TextAlign.end,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    } else {
-                                      return Padding(
-                                        padding: const EdgeInsets.fromLTRB(15, 11, 10, 0),
-                                        child: Row(
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                              width: labelWidth,
-                                              padding: const EdgeInsets.only(right: 15),
-                                              child: Text('U/makan & Transport', style: stylePenghasilan),
-                                            ),
-                                            Expanded(
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  const Text('Jumlah IDR :'),
-                                                  AFwidget.textField(
-                                                    marginTop: 0,
-                                                    controller: controller.txtPayrollPhkUangMakanJumlah,
-                                                    inputformatters: [
-                                                      CurrencyTextInputFormatter.currency(
-                                                        symbol: '',
-                                                        decimalDigits: 0,
-                                                      ),
-                                                    ],
-                                                    textAlign: TextAlign.end,
-                                                    onchanged: controller.hitungPayrollPhkPenerimaanBersih,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    }
-                                  },
+
+                                AFwidget.barisText(
+                                  label: 'U/makan & Transport',
+                                  controller: controller.txtPayrollPhkUangMakanJumlah,
+                                  isNumber: true,
+                                  readOnly: controller.current.upah.makanHarian,
+                                  onchanged: controller.hitungPayrollPhkPenerimaanBersih,
+                                  labelWidth: labelWidth,
+                                  labelStyle: stylePenghasilan,
+                                  paddingLeft: 15,
+                                  paddingRight: 10,
                                 ),
                                 AFwidget.barisText(
                                   label: 'Overtime Fratekindo',
@@ -1009,7 +886,7 @@ class PhkForm extends StatelessWidget {
                                 ),
                                 GetBuilder<KaryawanControl>(
                                   builder: (_) {
-                                    if (!controller.payrollPhkMakanHarian) return const SizedBox.shrink();
+                                    if (!controller.current.upah.makanHarian) return const SizedBox.shrink();
                                     return Padding(
                                       padding: const EdgeInsets.fromLTRB(10, 11, 15, 0),
                                       child: Row(
@@ -1037,8 +914,8 @@ class PhkForm extends StatelessWidget {
                                                   ],
                                                   textAlign: TextAlign.end,
                                                   onchanged: (nilai) {
-                                                    var jumlah = (AFconvert.keInt(controller.txtPayrollPhkUangMakanHarian.text)/4) * AFconvert.keInt(nilai);
-                                                    controller.txtPayrollPhkPot25jumlah.text = AFconvert.matNumber(jumlah);
+                                                    var jumlah = (controller.current.upah.uangMakan / 4) * AFconvert.keInt(nilai);
+                                                    controller.txtPayrollPhkPot25jumlah.text = AFconvert.matNumber(jumlah.round());
                                                     controller.hitungPayrollPhkPenerimaanBersih(nilai);
                                                   },
                                                 ),
@@ -1149,8 +1026,8 @@ class PhkForm extends StatelessWidget {
                                               ],
                                               textAlign: TextAlign.end,
                                               onchanged: (nilai) {
-                                                var jumlah = (AFconvert.keInt(controller.txtPayrollPhkGaji.text)/21) * AFconvert.keInt(nilai);
-                                                controller.txtPayrollPhkPotCutiJumlah.text = AFconvert.matNumber(jumlah);
+                                                var jumlah = (controller.current.upah.gaji / 21) * AFconvert.keInt(nilai);
+                                                controller.txtPayrollPhkPotCutiJumlah.text = AFconvert.matNumber(jumlah.round());
                                                 controller.hitungPayrollPhkPenerimaanBersih(nilai);
                                               },
                                             ),
@@ -1203,8 +1080,8 @@ class PhkForm extends StatelessWidget {
                                               controller: controller.txtPayrollPhkPotKompensasiJam,
                                               textAlign: TextAlign.end,
                                               onchanged: (nilai) {
-                                                var jumlah = (AFconvert.keInt(controller.txtPayrollPhkGaji.text)/168) * AFconvert.keDouble(nilai);
-                                                controller.txtPayrollPhkPotKompensasiJumlah.text = AFconvert.matNumber(jumlah);
+                                                var jumlah = (controller.current.upah.gaji / 168) * AFconvert.keDouble(nilai);
+                                                controller.txtPayrollPhkPotKompensasiJumlah.text = AFconvert.matNumber(jumlah.round());
                                                 controller.hitungPayrollPhkPenerimaanBersih(nilai);
                                               },
                                             ),

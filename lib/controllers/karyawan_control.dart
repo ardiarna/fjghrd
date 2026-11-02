@@ -1182,11 +1182,11 @@ class KaryawanControl extends GetxController {
           tanggalAkhir: txtPayrollPhkTglAkhir.text.isNotEmpty ? AFconvert.keTanggal('${txtPayrollPhkTglAkhir.text} 08:00:00') : null,
           tglGajiAwal: txtPayrollPhkTglGajiAwal.text.isNotEmpty ? AFconvert.keTanggal('${txtPayrollPhkTglGajiAwal.text} 08:00:00') : null,
           tglGajiAkhir: txtPayrollPhkTglGajiAkhir.text.isNotEmpty ? AFconvert.keTanggal('${txtPayrollPhkTglGajiAkhir.text} 08:00:00') : null,
-          makanHarian: payrollPhkMakanHarian,
+          makanHarian: current.upah.makanHarian,
           gaji: AFconvert.keInt(txtPayrollPhkGaji.text),
           kenaikanGaji: AFconvert.keInt(txtPayrollPhkKenaikanGaji.text),
           hariMakan: AFconvert.keInt(txtPayrollPhkHariMakan.text),
-          uangMakanHarian: AFconvert.keInt(txtPayrollPhkUangMakanHarian.text),
+          uangMakanHarian: current.upah.uangMakan,
           uangMakanJumlah: AFconvert.keInt(txtPayrollPhkUangMakanJumlah.text),
           overtimeFjg: AFconvert.keInt(txtPayrollPhkOvertimeFjg.text),
           overtimeCus: AFconvert.keInt(txtPayrollPhkOvertimeCus.text),
@@ -1367,7 +1367,7 @@ class KaryawanControl extends GetxController {
     txtPayrollPhkGaji.text = AFconvert.matNumber(item.gaji);
     txtPayrollPhkKenaikanGaji.text = AFconvert.matNumber(item.kenaikanGaji);
     txtPayrollPhkHariMakan.text = AFconvert.matNumber(item.hariMakan);
-    txtPayrollPhkUangMakanHarian.text = AFconvert.matNumber(item.uangMakanHarian);
+    txtPayrollPhkUangMakanHarian.text = AFconvert.matNumber(current.upah.uangMakan);
     txtPayrollPhkUangMakanJumlah.text = AFconvert.matNumber(item.uangMakanJumlah);
     txtPayrollPhkOvertimeFjg.text = AFconvert.matNumber(item.overtimeFjg);
     txtPayrollPhkOvertimeCus.text = AFconvert.matNumber(item.overtimeCus);
@@ -1416,7 +1416,7 @@ class KaryawanControl extends GetxController {
     bulanPhk = item.bulan == 0
         ? Opsi(value: '${DateTime.now().month}', label: mapBulan[DateTime.now().month]!)
         : Opsi(value: '${item.bulan}', label: mapBulan[item.bulan] ?? '${item.bulan}');
-    payrollPhkMakanHarian = item.makanHarian;
+    payrollPhkMakanHarian = current.upah.makanHarian;
     hitungTotalPhk();
     update();
   }
@@ -1429,7 +1429,7 @@ class KaryawanControl extends GetxController {
     txtPayrollPhkKenaikanGaji.text = '0';
     txtPayrollPhkHariMakan.text = '0';
     txtPayrollPhkUangMakanHarian.text = AFconvert.matNumber(current.upah.uangMakan);
-    txtPayrollPhkUangMakanJumlah.text = '0';
+    txtPayrollPhkUangMakanJumlah.text = current.upah.makanHarian ? '0' : AFconvert.matNumber(current.upah.uangMakan);
     txtPayrollPhkOvertimeFjg.text = '0';
     txtPayrollPhkOvertimeCus.text = '0';
     txtPayrollPhkMedical.text = '0';
