@@ -332,11 +332,6 @@ class MantanKaryawanView extends StatelessWidget {
                 onChanged: (PlutoGridOnChangedEvent event) {},
                 onLoaded: (PlutoGridOnLoadedEvent event) {
                   event.stateManager.setShowColumnFilter(true);
-                  event.stateManager.autoFitColumn(context, columns[4]);
-                  event.stateManager.autoFitColumn(context, columns[2]);
-                  for (int i = 2; i < columns.length; i++) {
-                    event.stateManager.autoFitColumn(context, columns[i]);
-                  }
                   event.stateManager.setRowGroup(
                     PlutoRowGroupByColumnDelegate(
                       columns: [
@@ -344,6 +339,20 @@ class MantanKaryawanView extends StatelessWidget {
                       ],
                     ),
                   );
+                  for (final row in [...event.stateManager.iterateAllMainRowGroup]) {
+                    if (row.type.isGroup && !row.type.group.expanded) {
+                      event.stateManager.toggleExpandedRowGroup(
+                        rowGroup: row,
+                        notify: false,
+                      );
+                    }
+                  }
+                  event.stateManager.notifyListeners();
+                  event.stateManager.autoFitColumn(context, columns[4]);
+                  event.stateManager.autoFitColumn(context, columns[2]);
+                  for (int i = 2; i < columns.length; i++) {
+                    event.stateManager.autoFitColumn(context, columns[i]);
+                  }
                 },
                 configuration: AFplutogridConfig.configSatu(),
               );
