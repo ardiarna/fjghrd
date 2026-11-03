@@ -526,11 +526,7 @@ class KaryawanTambahForm extends StatelessWidget {
                     ],
                   ),
                 ),
-                AFwidget.barisText(
-                  label: 'Email Pribadi',
-                  controller: controller.txtEmail,
-                  labelWidth: 200,
-                ),
+                _buildEmailField(controller, labelWidth: 200, paddingLeft: 20, paddingRight: 20),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
                   child: Row(
@@ -803,6 +799,66 @@ class KaryawanTambahForm extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildEmailField(KaryawanControl controller, {double labelWidth = 200, double paddingLeft = 20, double paddingRight = 20}) {
+    return Padding(
+      padding: EdgeInsets.fromLTRB(paddingLeft, 11, paddingRight, 0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: labelWidth,
+            padding: const EdgeInsets.only(right: 15, top: 12),
+            child: const Text('Email Pribadi'),
+          ),
+          Expanded(
+            child: Obx(() => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (controller.listEmail.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 6),
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 4,
+                      children: controller.listEmail.map((em) {
+                        return Chip(
+                          backgroundColor: Colors.blue.shade50,
+                          padding: const EdgeInsets.symmetric(horizontal: 4),
+                          label: Text(
+                            em,
+                            style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                          ),
+                          deleteIcon: const Icon(Icons.close, size: 16, color: Colors.red),
+                          onDeleted: () => controller.hapusEmail(em),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                AFwidget.textField(
+                  marginTop: 0,
+                  controller: controller.txtEmail,
+                  hintText: 'Ketik email...',
+                  keyboard: TextInputType.emailAddress,
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.add_circle, color: Colors.teal),
+                    tooltip: 'Tambah Email',
+                    onPressed: () => controller.tambahEmail(),
+                  ),
+                  onchanged: (val) {
+                    if (val.contains(',')) {
+                      controller.tambahEmail();
+                    }
+                  },
+                  onsubmitted: (_) => controller.tambahEmail(),
+                ),
+              ],
+            )),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 void showKaryawanTambahForm(BuildContext context) {
@@ -827,6 +883,7 @@ void showKaryawanTambahForm(BuildContext context) {
     controller.txtAlamatTinggal.text = '';
     controller.listTelepon.clear();
     controller.txtTelepon.text = '';
+    controller.listEmail.clear();
     controller.txtEmail.text = '';
     controller.txtPendidikanAlmamater.text = '';
     controller.txtPendidikanJurusan.text = '';

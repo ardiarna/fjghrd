@@ -148,6 +148,50 @@ class KaryawanControl extends GetxController {
     return tempList.join(',');
   }
 
+  RxList<String> listEmail = <String>[].obs;
+
+  void tambahEmail([String? email]) {
+    var val = (email ?? txtEmail.text).trim();
+    if (val.isEmpty) return;
+    if (val.contains(',')) {
+      var parts = val.split(',');
+      for (var p in parts) {
+        var t = p.trim();
+        if (t.isNotEmpty && !listEmail.contains(t)) {
+          listEmail.add(t);
+        }
+      }
+    } else {
+      if (!listEmail.contains(val)) {
+        listEmail.add(val);
+      }
+    }
+    txtEmail.clear();
+  }
+
+  void hapusEmail(String email) {
+    listEmail.remove(email);
+  }
+
+  String getEmailString() {
+    var tempList = List<String>.from(listEmail);
+    var currentInput = txtEmail.text.trim();
+    if (currentInput.isNotEmpty) {
+      if (currentInput.contains(',')) {
+        var parts = currentInput.split(',');
+        for (var p in parts) {
+          var t = p.trim();
+          if (t.isNotEmpty && !tempList.contains(t)) {
+            tempList.add(t);
+          }
+        }
+      } else if (!tempList.contains(currentInput)) {
+        tempList.add(currentInput);
+      }
+    }
+    return tempList.join(',');
+  }
+
   void hitungTotalPhk([String? _]) {
     int kalkulasi = sertakanKalkulasiPhk.value
         ? (AFconvert.keInt(txtKompensasi.text) +
@@ -543,7 +587,17 @@ class KaryawanControl extends GetxController {
       }
     }
     txtTelepon.text = '';
-    txtEmail.text = current.email;
+    listEmail.clear();
+    if (current.email.isNotEmpty) {
+      var parts = current.email.split(',');
+      for (var p in parts) {
+        var t = p.trim();
+        if (t.isNotEmpty && !listEmail.contains(t)) {
+          listEmail.add(t);
+        }
+      }
+    }
+    txtEmail.text = '';
     txtPendidikanAlmamater.text = current.pendidikanAlmamater;
     txtPendidikanJurusan.text = current.pendidikanJurusan;
     agama = current.agama;
@@ -630,7 +684,7 @@ class KaryawanControl extends GetxController {
         alamatKtp: txtAlamatKtp.text,
         alamatTinggal: txtAlamatTinggal.text,
         telepon: teleponValue,
-        email: txtEmail.text,
+        email: getEmailString(),
         kawin: kawin,
         kelamin: kelamin,
         nomorKk: txtNomorKk.text,
@@ -740,7 +794,7 @@ class KaryawanControl extends GetxController {
         alamatKtp: txtAlamatKtp.text,
         alamatTinggal: txtAlamatTinggal.text,
         telepon: teleponValue,
-        email: txtEmail.text,
+        email: getEmailString(),
         kawin: kawin,
         kelamin: kelamin,
         nomorKk: txtNomorKk.text,
