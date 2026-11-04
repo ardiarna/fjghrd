@@ -53,6 +53,7 @@ class KaryawanControl extends GetxController {
   RxList<Karyawan> listCalonKaryawan = <Karyawan>[].obs;
   RxList<Karyawan> listMantanKaryawan = <Karyawan>[].obs;
   List<Karyawan> listUlangTahun = [];
+  bool isLoadingKaryawan = true;
   List<Opsi> listAgama = [];
   List<Opsi> listArea = [];
   List<Opsi> listDivisi = [];
@@ -301,109 +302,150 @@ class KaryawanControl extends GetxController {
   bool payrollPhkMakanHarian = true;
 
   Future<void> loadKaryawans() async {
-    var hasil = await _repo.findAll(
-      isStaf: filterStaf.value,
-      area: filterArea.value,
-      statusKerja: filterStatusKerja.value,
-    );
-    if (hasil.success) {
-      listKaryawan.clear();
-      List<Karyawan> tempKaryawans = [];
-      listUlangTahun.clear();
-      totalKaryawanPerArea.clear();
-      totalKaryawanPerStatuskerjaPerArea.clear();
-      totalKaryawanPerKelamin.clear();
-      totalKaryawanPerKawin.clear();
-      totalKaryawanPerAgama.clear();
-      totalKaryawanPerPendidikan.clear();
-      totalKaryawanPerUsia.clear();
-      String hariUltah = AFconvert.matMD(_now);
-      for (var data in hasil.daftar) {
-        var k = Karyawan.fromMap(data);
-        tempKaryawans.add(k);
+    isLoadingKaryawan = true;
+    update(['summary_karyawan', 'ulang_tahun', 'demografi', 'beranda']);
+    try {
+      var hasil = await _repo.findAll(
+        isStaf: filterStaf.value,
+        area: filterArea.value,
+        statusKerja: filterStatusKerja.value,
+      );
+      if (hasil.success) {
+        listKaryawan.clear();
+        List<Karyawan> tempKaryawans = [];
+        listUlangTahun.clear();
+        totalKaryawanPerArea.clear();
+        totalKaryawanPerStatuskerjaPerArea.clear();
+        totalKaryawanPerKelamin.clear();
+        totalKaryawanPerKawin.clear();
+        totalKaryawanPerAgama.clear();
+        totalKaryawanPerPendidikan.clear();
+        totalKaryawanPerUsia.clear();
+        String hariUltah = AFconvert.matMD(_now);
+        for (var data in hasil.daftar) {
+          var k = Karyawan.fromMap(data);
+          tempKaryawans.add(k);
 
-        if(AFconvert.matMD(k.tanggalLahir) == hariUltah) {
-          listUlangTahun.add(k);
-        }
+          if (AFconvert.matMD(k.tanggalLahir) == hariUltah) {
+            listUlangTahun.add(k);
+          }
 
-        if (totalKaryawanPerArea.containsKey('TOTAL KARYAWAN')) {
-          totalKaryawanPerArea['TOTAL KARYAWAN'] = totalKaryawanPerArea['TOTAL KARYAWAN']! + 1;
-        } else {
-          totalKaryawanPerArea['TOTAL KARYAWAN'] = 1;
-        }
-        if (totalKaryawanPerArea.containsKey(k.area.kode)) {
-          totalKaryawanPerArea[k.area.kode] = totalKaryawanPerArea[k.area.kode]! + 1;
-        } else {
-          totalKaryawanPerArea[k.area.kode] = 1;
-        }
+          if (totalKaryawanPerArea.containsKey('TOTAL KARYAWAN')) {
+            totalKaryawanPerArea['TOTAL KARYAWAN'] =
+                totalKaryawanPerArea['TOTAL KARYAWAN']! + 1;
+          } else {
+            totalKaryawanPerArea['TOTAL KARYAWAN'] = 1;
+          }
+          if (totalKaryawanPerArea.containsKey(k.area.kode)) {
+            totalKaryawanPerArea[k.area.kode] =
+                totalKaryawanPerArea[k.area.kode]! + 1;
+          } else {
+            totalKaryawanPerArea[k.area.kode] = 1;
+          }
 
-        if (!totalKaryawanPerStatuskerjaPerArea.containsKey(k.statusKerja.nama)) {
-          totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama] = {};
-          totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]!['TOTAL KARYAWAN'] = 0;
-        }
-        if (totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]!.containsKey(k.area.kode)) {
-          totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]![k.area.kode] = totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]![k.area.kode]! + 1;
-        } else {
-          totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]![k.area.kode] = 1;
-        }
-        totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]!['TOTAL KARYAWAN'] = totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]!['TOTAL KARYAWAN']! + 1;
+          if (!totalKaryawanPerStatuskerjaPerArea
+              .containsKey(k.statusKerja.nama)) {
+            totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama] = {};
+            totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]![
+                'TOTAL KARYAWAN'] = 0;
+          }
+          if (totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]!
+              .containsKey(k.area.kode)) {
+            totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]![
+                k.area.kode] = totalKaryawanPerStatuskerjaPerArea[
+                    k.statusKerja.nama]![k.area.kode]! +
+                1;
+          } else {
+            totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]![
+                k.area.kode] = 1;
+          }
+          totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]![
+              'TOTAL KARYAWAN'] = totalKaryawanPerStatuskerjaPerArea[
+                  k.statusKerja.nama]!['TOTAL KARYAWAN']! +
+              1;
 
-        if (!totalKaryawanPerKelamin.containsKey(k.kelamin)) {
-          totalKaryawanPerKelamin[k.kelamin] = {};
-          totalKaryawanPerKelamin[k.kelamin]!['TOTAL KARYAWAN'] = 0;
-        }
-        if (totalKaryawanPerKelamin[k.kelamin]!.containsKey(k.area.kode)) {
-          totalKaryawanPerKelamin[k.kelamin]![k.area.kode] = totalKaryawanPerKelamin[k.kelamin]![k.area.kode]! + 1;
-        } else {
-          totalKaryawanPerKelamin[k.kelamin]![k.area.kode] = 1;
-        }
-        totalKaryawanPerKelamin[k.kelamin]!['TOTAL KARYAWAN'] = totalKaryawanPerKelamin[k.kelamin]!['TOTAL KARYAWAN']! + 1;
+          if (!totalKaryawanPerKelamin.containsKey(k.kelamin)) {
+            totalKaryawanPerKelamin[k.kelamin] = {};
+            totalKaryawanPerKelamin[k.kelamin]!['TOTAL KARYAWAN'] = 0;
+          }
+          if (totalKaryawanPerKelamin[k.kelamin]!.containsKey(k.area.kode)) {
+            totalKaryawanPerKelamin[k.kelamin]![k.area.kode] =
+                totalKaryawanPerKelamin[k.kelamin]![k.area.kode]! + 1;
+          } else {
+            totalKaryawanPerKelamin[k.kelamin]![k.area.kode] = 1;
+          }
+          totalKaryawanPerKelamin[k.kelamin]!['TOTAL KARYAWAN'] =
+              totalKaryawanPerKelamin[k.kelamin]!['TOTAL KARYAWAN']! + 1;
 
-        if (!totalKaryawanPerKawin.containsKey(k.kawin)) {
-          totalKaryawanPerKawin[k.kawin] = {};
-          totalKaryawanPerKawin[k.kawin]!['TOTAL KARYAWAN'] = 0;
-        }
-        if (totalKaryawanPerKawin[k.kawin]!.containsKey(k.area.kode)) {
-          totalKaryawanPerKawin[k.kawin]![k.area.kode] = totalKaryawanPerKawin[k.kawin]![k.area.kode]! + 1;
-        } else {
-          totalKaryawanPerKawin[k.kawin]![k.area.kode] = 1;
-        }
-        totalKaryawanPerKawin[k.kawin]!['TOTAL KARYAWAN'] = totalKaryawanPerKawin[k.kawin]!['TOTAL KARYAWAN']! + 1;
+          if (!totalKaryawanPerKawin.containsKey(k.kawin)) {
+            totalKaryawanPerKawin[k.kawin] = {};
+            totalKaryawanPerKawin[k.kawin]!['TOTAL KARYAWAN'] = 0;
+          }
+          if (totalKaryawanPerKawin[k.kawin]!.containsKey(k.area.kode)) {
+            totalKaryawanPerKawin[k.kawin]![k.area.kode] =
+                totalKaryawanPerKawin[k.kawin]![k.area.kode]! + 1;
+          } else {
+            totalKaryawanPerKawin[k.kawin]![k.area.kode] = 1;
+          }
+          totalKaryawanPerKawin[k.kawin]!['TOTAL KARYAWAN'] =
+              totalKaryawanPerKawin[k.kawin]!['TOTAL KARYAWAN']! + 1;
 
-        if (!totalKaryawanPerAgama.containsKey(k.agama.nama)) {
-          totalKaryawanPerAgama[k.agama.nama] = {};
-          totalKaryawanPerAgama[k.agama.nama]!['TOTAL KARYAWAN'] = 0;
-        }
-        if (totalKaryawanPerAgama[k.agama.nama]!.containsKey(k.area.kode)) {
-          totalKaryawanPerAgama[k.agama.nama]![k.area.kode] = totalKaryawanPerAgama[k.agama.nama]![k.area.kode]! + 1;
-        } else {
-          totalKaryawanPerAgama[k.agama.nama]![k.area.kode] = 1;
-        }
-        totalKaryawanPerAgama[k.agama.nama]!['TOTAL KARYAWAN'] = totalKaryawanPerAgama[k.agama.nama]!['TOTAL KARYAWAN']! + 1;
+          if (!totalKaryawanPerAgama.containsKey(k.agama.nama)) {
+            totalKaryawanPerAgama[k.agama.nama] = {};
+            totalKaryawanPerAgama[k.agama.nama]!['TOTAL KARYAWAN'] = 0;
+          }
+          if (totalKaryawanPerAgama[k.agama.nama]!.containsKey(k.area.kode)) {
+            totalKaryawanPerAgama[k.agama.nama]![k.area.kode] =
+                totalKaryawanPerAgama[k.agama.nama]![k.area.kode]! + 1;
+          } else {
+            totalKaryawanPerAgama[k.agama.nama]![k.area.kode] = 1;
+          }
+          totalKaryawanPerAgama[k.agama.nama]!['TOTAL KARYAWAN'] =
+              totalKaryawanPerAgama[k.agama.nama]!['TOTAL KARYAWAN']! + 1;
 
-        if (!totalKaryawanPerPendidikan.containsKey(k.pendidikan.nama)) {
-          totalKaryawanPerPendidikan[k.pendidikan.nama] = {};
-          totalKaryawanPerPendidikan[k.pendidikan.nama]!['TOTAL KARYAWAN'] = 0;
-        }
-        if (totalKaryawanPerPendidikan[k.pendidikan.nama]!.containsKey(k.area.kode)) {
-          totalKaryawanPerPendidikan[k.pendidikan.nama]![k.area.kode] = totalKaryawanPerPendidikan[k.pendidikan.nama]![k.area.kode]! + 1;
-        } else {
-          totalKaryawanPerPendidikan[k.pendidikan.nama]![k.area.kode] = 1;
-        }
-        totalKaryawanPerPendidikan[k.pendidikan.nama]!['TOTAL KARYAWAN'] = totalKaryawanPerPendidikan[k.pendidikan.nama]!['TOTAL KARYAWAN']! + 1;
+          if (!totalKaryawanPerPendidikan.containsKey(k.pendidikan.nama)) {
+            totalKaryawanPerPendidikan[k.pendidikan.nama] = {};
+            totalKaryawanPerPendidikan[k.pendidikan.nama]!['TOTAL KARYAWAN'] =
+                0;
+          }
+          if (totalKaryawanPerPendidikan[k.pendidikan.nama]!
+              .containsKey(k.area.kode)) {
+            totalKaryawanPerPendidikan[k.pendidikan.nama]![k.area.kode] =
+                totalKaryawanPerPendidikan[k.pendidikan.nama]![k.area.kode]! +
+                    1;
+          } else {
+            totalKaryawanPerPendidikan[k.pendidikan.nama]![k.area.kode] = 1;
+          }
+          totalKaryawanPerPendidikan[k.pendidikan.nama]!['TOTAL KARYAWAN'] =
+              totalKaryawanPerPendidikan[k.pendidikan.nama]![
+                      'TOTAL KARYAWAN']! +
+                  1;
 
-        if (!totalKaryawanPerUsia.containsKey(getKelompokUsia(k.tanggalLahir))) {
-          totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)] = {};
-          totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]!['TOTAL KARYAWAN'] = 0;
+          if (!totalKaryawanPerUsia
+              .containsKey(getKelompokUsia(k.tanggalLahir))) {
+            totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)] = {};
+            totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]![
+                'TOTAL KARYAWAN'] = 0;
+          }
+          if (totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]!
+              .containsKey(k.area.kode)) {
+            totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]![
+                k.area.kode] = totalKaryawanPerUsia[
+                    getKelompokUsia(k.tanggalLahir)]![k.area.kode]! +
+                1;
+          } else {
+            totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]![
+                k.area.kode] = 1;
+          }
+          totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]![
+              'TOTAL KARYAWAN'] = totalKaryawanPerUsia[
+                  getKelompokUsia(k.tanggalLahir)]!['TOTAL KARYAWAN']! +
+              1;
         }
-        if (totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]!.containsKey(k.area.kode)) {
-          totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]![k.area.kode] = totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]![k.area.kode]! + 1;
-        } else {
-          totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]![k.area.kode] = 1;
-        }
-        totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]!['TOTAL KARYAWAN'] = totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]!['TOTAL KARYAWAN']! + 1;
+        listKaryawan.assignAll(tempKaryawans);
       }
-      listKaryawan.assignAll(tempKaryawans);
+    } finally {
+      isLoadingKaryawan = false;
       update(['summary_karyawan', 'ulang_tahun', 'demografi', 'beranda']);
     }
   }

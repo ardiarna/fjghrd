@@ -18,6 +18,16 @@ class CutiRepository {
     );
   }
 
+  Future<Hasil> fetchHariIni({String tanggal = ''}) async {
+    String url = 'cuti/hari-ini';
+    if (tanggal.isNotEmpty) {
+      url += '?tanggal=$tanggal';
+    }
+    return await AFdatabase.send(
+      url: url,
+    );
+  }
+
   Future<Hasil> submit(Map<String, dynamic> body) async {
     return await AFdatabase.send(
       url: 'cuti/submit',
