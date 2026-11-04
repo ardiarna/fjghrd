@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 class ChangelogView extends StatefulWidget {
   const ChangelogView({super.key});
 
-  static const String appVersion = 'v2.2.4';
+  static const String appVersion = 'v2.2.5';
 
   @override
   State<ChangelogView> createState() => _ChangelogViewState();
@@ -46,6 +46,19 @@ class _ChangelogViewState extends State<ChangelogView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  _buildVersion(
+                    version: 'v2.2.5',
+                    date: '04 Nov 2026',
+                    emoji: '🚀',
+                    subtitle: 'Kartu Cuti Beranda, Multi Email, Peningkatan Data PHK & Laporan',
+                    items: [
+                      'Dashboard Beranda: Penggantian kartu "Keterangan Status Karyawan" dengan kartu "Karyawan Yang Mengambil Cuti Hari Ini" (menampilkan cuti reguler, khusus, dan cuti masal untuk karyawan umum & CIC), penambahan badge total karyawan pada kartu Cuti & Ulang Tahun, penyediaan indikator loading dan status data kosong, serta perbaikan issue RenderFlex overflow saat ada karyawan berulang tahun.',
+                      'Data Karyawan: Dukungan penginputan multi email pada data profil karyawan untuk fleksibilitas penyimpanan kontak email.',
+                      'Laporan Excel PHK & Payroll: Penyederhanaan kolom Keterangan pada Excel List PHK (hanya menampilkan keterangan uang PHK) serta penambahan rincian keterangan lain & potongan lain pada kolom Keterangan di Excel Rekap Payroll per Karyawan.',
+                      'Kalkulasi & Detail PHK: Penyesuaian kalkulasi Payroll PHK menggunakan upah berjalan (current.upah), opsi integrasi penarikan Uang PHK & Payroll PHK, penambahan field catatan kompensasi, uang pisah, dan masa kerja pada Uang PHK, serta pembersihan field yang sudah tidak digunakan.',
+                      'Tampilan Mantan Karyawan: Peningkatan tampilan riwayat payroll mantan karyawan serta optimasi auto-fit kolom dan ekspansi grup baris pada tabel data.',
+                    ],
+                  ),
                   _buildVersion(
                     version: 'v2.2.4',
                     date: '21 Okt 2026',
