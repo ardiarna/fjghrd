@@ -1677,15 +1677,17 @@ class KaryawanControl extends GetxController {
   }
 
   Future<void> loadAllData() async {
-    await loadAgamas();
-    await loadAreas();
-    await loadDivisis();
-    await loadJabatans();
-    await loadPendidikans();
-    await loadTrainings();
-    await loadStatusKerjas();
-    await loadStatusPhks();
-    await loadPtkps();
+    await Future.wait([
+      loadAgamas(),
+      loadAreas(),
+      loadDivisis(),
+      loadJabatans(),
+      loadPendidikans(),
+      loadTrainings(),
+      loadStatusKerjas(),
+      loadStatusPhks(),
+      loadPtkps(),
+    ]);
     update(['form_karyawan']);
   }
 
