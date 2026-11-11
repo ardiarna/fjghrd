@@ -5,7 +5,6 @@ import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/views/agama_view.dart';
 import 'package:fjghrd/views/area_view.dart';
-import 'package:fjghrd/views/beranda_view.dart';
 import 'package:fjghrd/views/customer_view.dart';
 import 'package:fjghrd/views/divisi_view.dart';
 import 'package:fjghrd/views/hari_libur_view.dart';
@@ -27,7 +26,6 @@ class HomeView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    controller.kontener = BerandaView();
     return Scaffold(
       key: controller.scaffoldKey,
       backgroundColor: Colors.grey.shade50,
@@ -35,17 +33,12 @@ class HomeView extends StatelessWidget {
         height: double.infinity,
         width: double.infinity,
         child: GetBuilder<HomeControl>(
-            builder: (_) {
-              return AnimatedSwitcher(
-                duration: const Duration(milliseconds: 300),
-                switchInCurve: Curves.easeOutQuad,
-                switchOutCurve: Curves.easeInQuad,
-                child: KeyedSubtree(
-                  key: ValueKey(controller.tabId),
-                  child: controller.kontener,
-                ),
-              );
-            }
+          builder: (_) {
+            return IndexedStack(
+              index: controller.currentIndex,
+              children: controller.allTabs,
+            );
+          },
         ),
       ),
       bottomNavigationBar: GetBuilder<HomeControl>(

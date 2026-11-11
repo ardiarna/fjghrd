@@ -15,7 +15,89 @@ class HomeControl extends GetxController {
   final UserRepository _userRepository = UserRepository();
 
   int tabId = 0;
-  Widget kontener = Container();
+  final Set<int> loadedTabs = {0};
+  Widget? _subKontener;
+
+  Widget? _berandaTab;
+  Widget? _karyawanTab;
+  Widget? _payrollTab;
+  Widget? _cutiTab;
+  Widget? _reportTab;
+
+  Widget get kontener => _subKontener ?? _getTabWidget(tabId);
+
+  set kontener(Widget widget) {
+    if (widget is BerandaView) {
+      tabId = 0;
+      _subKontener = null;
+      loadedTabs.add(0);
+    } else if (widget is KaryawanView) {
+      tabId = 1;
+      _subKontener = null;
+      loadedTabs.add(1);
+    } else if (widget is PayrollView) {
+      tabId = 2;
+      _subKontener = null;
+      loadedTabs.add(2);
+    } else if (widget is CutiView) {
+      tabId = 3;
+      _subKontener = null;
+      loadedTabs.add(3);
+    } else if (widget is ReportView) {
+      tabId = 4;
+      _subKontener = null;
+      loadedTabs.add(4);
+    } else {
+      _subKontener = widget;
+    }
+  }
+
+  bool get isSubPage => _subKontener != null;
+
+  int get currentIndex {
+    if (isSubPage) {
+      return 5;
+    }
+    if (tabId >= 0 && tabId <= 4) {
+      return tabId;
+    }
+    return 0;
+  }
+
+  Widget _getTabWidget(int index) {
+    switch (index) {
+      case 0:
+        return _berandaTab ??= const BerandaView();
+      case 1:
+        if (!loadedTabs.contains(1)) return const SizedBox.shrink();
+        return _karyawanTab ??= KaryawanView();
+      case 2:
+        if (!loadedTabs.contains(2)) return const SizedBox.shrink();
+        return _payrollTab ??= (authControl.user.role == 'user'
+            ? const SizedBox.shrink()
+            : PayrollView());
+      case 3:
+        if (!loadedTabs.contains(3)) return const SizedBox.shrink();
+        return _cutiTab ??= CutiView();
+      case 4:
+        if (!loadedTabs.contains(4)) return const SizedBox.shrink();
+        return _reportTab ??= ReportView();
+      default:
+        return const SizedBox.shrink();
+    }
+  }
+
+  List<Widget> get allTabs => [
+    _getTabWidget(0),
+    _getTabWidget(1),
+    _getTabWidget(2),
+    _getTabWidget(3),
+    _getTabWidget(4),
+    _subKontener != null
+        ? KeyedSubtree(key: ObjectKey(_subKontener), child: _subKontener!)
+        : const SizedBox.shrink(),
+  ];
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   var isTampilPassword = false;
@@ -32,23 +114,12 @@ class HomeControl extends GetxController {
   }
 
   void pindahTab(int idx) {
-    if(idx == 0) {
+    if (idx >= 0 && idx <= 4) {
       tabId = idx;
-      kontener = BerandaView();
-    } else if(idx == 1) {
-      tabId = idx;
-      kontener = KaryawanView();
-    } else if(idx == 2) {
-      tabId = idx;
-      kontener = PayrollView();
-    } else if(idx == 3) {
-      tabId = idx;
-      kontener = CutiView();
-    } else if(idx == 4) {
-      tabId = idx;
-      kontener = ReportView();
-    } else if(idx == 5) {
-      if(scaffoldKey.currentState!.isEndDrawerOpen) {
+      _subKontener = null;
+      loadedTabs.add(idx);
+    } else if (idx == 5) {
+      if (scaffoldKey.currentState!.isEndDrawerOpen) {
         scaffoldKey.currentState!.closeEndDrawer();
       } else {
         scaffoldKey.currentState!.openEndDrawer();
