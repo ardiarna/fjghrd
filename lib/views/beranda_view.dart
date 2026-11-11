@@ -10,15 +10,48 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class BerandaView extends StatelessWidget {
-  BerandaView({super.key});
+class BerandaView extends StatefulWidget {
+  const BerandaView({super.key});
 
+  @override
+  State<BerandaView> createState() => _BerandaViewState();
+}
+
+class RekapPayrollData {
+  final Map<int, double> payrolls;
+  final Map<double, double> overtimes;
+  final Map<double, double> medicals;
+
+  const RekapPayrollData({
+    required this.payrolls,
+    required this.overtimes,
+    required this.medicals,
+  });
+
+  factory RekapPayrollData.empty() => const RekapPayrollData(
+        payrolls: {},
+        overtimes: {},
+        medicals: {},
+      );
+}
+
+class _BerandaViewState extends State<BerandaView> {
   final KaryawanControl karyawanControl = Get.put(KaryawanControl());
   final HomeControl homeControl = Get.find<HomeControl>();
 
-  final _now = DateTime.now();
+  final DateTime _now = DateTime.now();
 
-  Future<List<Map<String, dynamic>>> getCutiHariIni() async {
+  late Future<List<Map<String, dynamic>>> _cutiHariIniFuture;
+  late Future<RekapPayrollData> _rekapPayrollFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _cutiHariIniFuture = _loadCutiHariIni();
+    _rekapPayrollFuture = _loadRekapPayroll();
+  }
+
+  Future<List<Map<String, dynamic>>> _loadCutiHariIni() async {
     List<Map<String, dynamic>> list = [];
     final CutiRepository cutiRepo = CutiRepository();
     var hasil = await cutiRepo.fetchHariIni(tanggal: AFconvert.matYMD(_now));
@@ -35,43 +68,37 @@ class BerandaView extends StatelessWidget {
     return list;
   }
 
-  Future<Map<int, double>> getPayrolls() async {
-    Map<int, double> rekap = {};
+  Future<RekapPayrollData> _loadRekapPayroll() async {
     final PayrollRepository payrollRepo = PayrollRepository();
     var hasil = await payrollRepo.reportRekap(tahun: _now.year.toString());
     if (hasil.success) {
       var data = hasil.data;
-      (data['payrolls'] as Map).forEach((key, value) {
-        rekap[AFconvert.keInt(key)] = AFconvert.keDouble(value) / 1000000;
-      });
-    }
-    return rekap;
-  }
+      Map<int, double> payrolls = {};
+      Map<double, double> overtimes = {};
+      Map<double, double> medicals = {};
 
-  Future<Map<double, double>> getOvertimes() async {
-    Map<double, double> rekap = {};
-    final PayrollRepository payrollRepo = PayrollRepository();
-    var hasil = await payrollRepo.reportRekap(tahun: _now.year.toString());
-    if (hasil.success) {
-      var data = hasil.data;
-      (data['overtimes'] as Map).forEach((key, value) {
-        rekap[AFconvert.keDouble(key)] = AFconvert.keDouble(value) / 1000000;
-      });
+      if (data['payrolls'] is Map) {
+        (data['payrolls'] as Map).forEach((key, value) {
+          payrolls[AFconvert.keInt(key)] = AFconvert.keDouble(value) / 1000000;
+        });
+      }
+      if (data['overtimes'] is Map) {
+        (data['overtimes'] as Map).forEach((key, value) {
+          overtimes[AFconvert.keDouble(key)] = AFconvert.keDouble(value) / 1000000;
+        });
+      }
+      if (data['medicals'] is Map) {
+        (data['medicals'] as Map).forEach((key, value) {
+          medicals[AFconvert.keDouble(key)] = AFconvert.keDouble(value) / 1000000;
+        });
+      }
+      return RekapPayrollData(
+        payrolls: payrolls,
+        overtimes: overtimes,
+        medicals: medicals,
+      );
     }
-    return rekap;
-  }
-
-  Future<Map<double, double>> getMedicals() async {
-    Map<double, double> rekap = {};
-    final PayrollRepository payrollRepo = PayrollRepository();
-    var hasil = await payrollRepo.reportRekap(tahun: _now.year.toString());
-    if (hasil.success) {
-      var data = hasil.data;
-      (data['medicals'] as Map).forEach((key, value) {
-        rekap[AFconvert.keDouble(key)] = AFconvert.keDouble(value) / 1000000;
-      });
-    }
-    return rekap;
+    return RekapPayrollData.empty();
   }
 
   @override
@@ -158,7 +185,7 @@ class BerandaView extends StatelessWidget {
                                         ),
                                         FutureBuilder<
                                             List<Map<String, dynamic>>>(
-                                          future: getCutiHariIni(),
+                                          future: _cutiHariIniFuture,
                                           builder: (_, snap) {
                                             bool isLoading =
                                                 snap.connectionState ==
@@ -478,17 +505,17 @@ class BerandaView extends StatelessWidget {
                                 ),
                               ),
                               Expanded(
-                                child: FutureBuilder<Map<double, double>>(
-                                  future: getOvertimes(),
+                                child: FutureBuilder<RekapPayrollData>(
+                                  future: _rekapPayrollFuture,
                                   builder: (_, snap) {
-                                    if (snap.hasData) {
-                                      if (snap.data != null) {
-                                        if (snap.data!.isNotEmpty) {
-                                          var spots =
-                                              snap.data!.entries.map((e) {
-                                            return FlSpot(e.key, e.value);
-                                          }).toList();
-                                          return LineChart(
+                                    if (snap.hasData &&
+                                        snap.data != null &&
+                                        snap.data!.overtimes.isNotEmpty) {
+                                      var spots =
+                                          snap.data!.overtimes.entries.map((e) {
+                                        return FlSpot(e.key, e.value);
+                                      }).toList();
+                                      return LineChart(
                                             LineChartData(
                                               lineBarsData: [
                                                 LineChartBarData(
@@ -554,8 +581,6 @@ class BerandaView extends StatelessWidget {
                                             ),
                                           );
                                         }
-                                      }
-                                    }
                                     return AFwidget.circularProgress();
                                   },
                                 ),
@@ -588,133 +613,132 @@ class BerandaView extends StatelessWidget {
                                 ),
                               ),
                               Expanded(
-                                child: FutureBuilder<Map<int, double>>(
-                                  future: getPayrolls(),
+                                child: FutureBuilder<RekapPayrollData>(
+                                  future: _rekapPayrollFuture,
                                   builder: (_, snap) {
-                                    if (snap.hasData) {
-                                      if (snap.data != null) {
-                                        if (snap.data!.isNotEmpty) {
-                                          var barGroups =
-                                              snap.data!.entries.map((e) {
-                                            return BarChartGroupData(
-                                              x: e.key,
-                                              barRods: [
-                                                BarChartRodData(
-                                                  toY: e.value,
-                                                  color: Colors.blue,
-                                                  width: 12,
-                                                  borderRadius:
-                                                      BorderRadius.zero,
-                                                )
-                                              ],
-                                            );
-                                          }).toList();
-                                          return Column(
-                                            children: [
-                                              Expanded(
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.fromLTRB(
-                                                          20, 0, 10, 0),
-                                                  child: BarChart(
-                                                    BarChartData(
-                                                      barGroups: barGroups,
-                                                      gridData:
-                                                          const FlGridData(
-                                                        drawVerticalLine: false,
-                                                        // horizontalInterval: 1,
-                                                        // verticalInterval: 1,
+                                    if (snap.hasData &&
+                                        snap.data != null &&
+                                        snap.data!.payrolls.isNotEmpty) {
+                                      var payrolls = snap.data!.payrolls;
+                                      var barGroups =
+                                          payrolls.entries.map((e) {
+                                        return BarChartGroupData(
+                                          x: e.key,
+                                          barRods: [
+                                            BarChartRodData(
+                                              toY: e.value,
+                                              color: Colors.blue,
+                                              width: 12,
+                                              borderRadius:
+                                                  BorderRadius.zero,
+                                            )
+                                          ],
+                                        );
+                                      }).toList();
+                                      return Column(
+                                        children: [
+                                          Expanded(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      20, 0, 10, 0),
+                                              child: BarChart(
+                                                BarChartData(
+                                                  barGroups: barGroups,
+                                                  gridData:
+                                                      const FlGridData(
+                                                    drawVerticalLine: false,
+                                                    // horizontalInterval: 1,
+                                                    // verticalInterval: 1,
+                                                  ),
+                                                  titlesData: FlTitlesData(
+                                                    show: true,
+                                                    rightTitles:
+                                                        const AxisTitles(
+                                                      sideTitles:
+                                                          SideTitles(
+                                                              showTitles:
+                                                                  false),
+                                                    ),
+                                                    topTitles:
+                                                        const AxisTitles(
+                                                      sideTitles:
+                                                          SideTitles(
+                                                              showTitles:
+                                                                  false),
+                                                    ),
+                                                    bottomTitles:
+                                                        AxisTitles(
+                                                      sideTitles:
+                                                          SideTitles(
+                                                        showTitles: true,
+                                                        interval: 1,
+                                                        getTitlesWidget:
+                                                            bottomTitleWidgetsPayroll,
                                                       ),
-                                                      titlesData: FlTitlesData(
-                                                        show: true,
-                                                        rightTitles:
-                                                            const AxisTitles(
-                                                          sideTitles:
-                                                              SideTitles(
-                                                                  showTitles:
-                                                                      false),
-                                                        ),
-                                                        topTitles:
-                                                            const AxisTitles(
-                                                          sideTitles:
-                                                              SideTitles(
-                                                                  showTitles:
-                                                                      false),
-                                                        ),
-                                                        bottomTitles:
-                                                            AxisTitles(
-                                                          sideTitles:
-                                                              SideTitles(
-                                                            showTitles: true,
-                                                            interval: 1,
-                                                            getTitlesWidget:
-                                                                bottomTitleWidgetsPayroll,
-                                                          ),
-                                                        ),
-                                                        leftTitles: AxisTitles(
-                                                          sideTitles:
-                                                              SideTitles(
-                                                            showTitles: false,
-                                                            reservedSize: 100,
-                                                          ),
-                                                        ),
+                                                    ),
+                                                    leftTitles: AxisTitles(
+                                                      sideTitles:
+                                                          SideTitles(
+                                                        showTitles: false,
+                                                        reservedSize: 100,
                                                       ),
-                                                      borderData: FlBorderData(
-                                                        show: true,
-                                                        border: const Border(
-                                                          bottom: BorderSide(
-                                                            color: Colors
-                                                                .lightBlue,
-                                                            width: 0.5,
-                                                          ),
-                                                          left: BorderSide(
-                                                            color: Colors
-                                                                .lightBlue,
-                                                            width: 0.5,
-                                                          ),
-                                                        ),
+                                                    ),
+                                                  ),
+                                                  borderData: FlBorderData(
+                                                    show: true,
+                                                    border: const Border(
+                                                      bottom: BorderSide(
+                                                        color: Colors
+                                                            .lightBlue,
+                                                        width: 0.5,
+                                                      ),
+                                                      left: BorderSide(
+                                                        color: Colors
+                                                            .lightBlue,
+                                                        width: 0.5,
                                                       ),
                                                     ),
                                                   ),
                                                 ),
                                               ),
-                                              const SizedBox(height: 15),
-                                              Wrap(
-                                                alignment: WrapAlignment.start,
-                                                spacing: 25,
-                                                runSpacing: 5,
-                                                children: snap.data!.entries
-                                                    .map((entry) {
-                                                  return Row(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    children: [
-                                                      Container(
-                                                        width: 5,
-                                                        height: 5,
-                                                        margin: const EdgeInsets
-                                                            .only(right: 3),
-                                                        decoration:
-                                                            const BoxDecoration(
-                                                          color: Colors.blue,
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        '${mapBulan[entry.key]} : ${AFconvert.matNumber(entry.value * 1000000)}',
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                          color: Colors.blue,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  );
-                                                }).toList(),
-                                              ),
-                                            ],
-                                          );
-                                        }
-                                      }
+                                            ),
+                                          ),
+                                          const SizedBox(height: 15),
+                                          Wrap(
+                                            alignment: WrapAlignment.start,
+                                            spacing: 25,
+                                            runSpacing: 5,
+                                            children: payrolls.entries
+                                                .map((entry) {
+                                              return Row(
+                                                mainAxisSize:
+                                                    MainAxisSize.min,
+                                                children: [
+                                                  Container(
+                                                    width: 5,
+                                                    height: 5,
+                                                    margin: const EdgeInsets
+                                                        .only(right: 3),
+                                                    decoration:
+                                                        const BoxDecoration(
+                                                      color: Colors.blue,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    '${mapBulan[entry.key]} : ${AFconvert.matNumber(entry.value * 1000000)}',
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      color: Colors.blue,
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            }).toList(),
+                                          ),
+                                        ],
+                                      );
                                     }
                                     return AFwidget.circularProgress();
                                   },
@@ -742,84 +766,82 @@ class BerandaView extends StatelessWidget {
                                 ),
                               ),
                               Expanded(
-                                child: FutureBuilder<Map<double, double>>(
-                                  future: getMedicals(),
+                                child: FutureBuilder<RekapPayrollData>(
+                                  future: _rekapPayrollFuture,
                                   builder: (_, snap) {
-                                    if (snap.hasData) {
-                                      if (snap.data != null) {
-                                        if (snap.data!.isNotEmpty) {
-                                          var spots =
-                                              snap.data!.entries.map((e) {
-                                            return FlSpot(e.key, e.value);
-                                          }).toList();
-                                          return LineChart(
-                                            LineChartData(
-                                              lineBarsData: [
-                                                LineChartBarData(
-                                                  spots: spots,
-                                                  color: Colors.red,
-                                                  isCurved: false,
-                                                  barWidth: 5,
-                                                  isStrokeCapRound: true,
-                                                  dotData: const FlDotData(
-                                                    show: true,
-                                                  ),
-                                                  belowBarData: BarAreaData(
-                                                    show: true,
-                                                    gradient: LinearGradient(
-                                                      colors: [
-                                                        Colors.red.withValues(
+                                    if (snap.hasData &&
+                                        snap.data != null &&
+                                        snap.data!.medicals.isNotEmpty) {
+                                      var spots =
+                                          snap.data!.medicals.entries.map((e) {
+                                        return FlSpot(e.key, e.value);
+                                      }).toList();
+                                      return LineChart(
+                                        LineChartData(
+                                          lineBarsData: [
+                                            LineChartBarData(
+                                              spots: spots,
+                                              color: Colors.red,
+                                              isCurved: false,
+                                              barWidth: 5,
+                                              isStrokeCapRound: true,
+                                              dotData: const FlDotData(
+                                                show: true,
+                                              ),
+                                              belowBarData: BarAreaData(
+                                                show: true,
+                                                gradient: LinearGradient(
+                                                  colors: [
+                                                    Colors.red.withValues(
+                                                        alpha: 0.3),
+                                                    Colors.orange
+                                                        .withValues(
                                                             alpha: 0.3),
-                                                        Colors.orange
-                                                            .withValues(
-                                                                alpha: 0.3),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              ],
-                                              gridData: const FlGridData(
-                                                show: true,
-                                              ),
-                                              titlesData: FlTitlesData(
-                                                show: true,
-                                                rightTitles: const AxisTitles(
-                                                  sideTitles: SideTitles(
-                                                      showTitles: false),
-                                                ),
-                                                topTitles: const AxisTitles(
-                                                  sideTitles: SideTitles(
-                                                      showTitles: false),
-                                                ),
-                                                bottomTitles: AxisTitles(
-                                                  sideTitles: SideTitles(
-                                                    showTitles: true,
-                                                    interval: 1,
-                                                    getTitlesWidget:
-                                                        bottomTitleWidgetsMedical,
-                                                  ),
-                                                ),
-                                                leftTitles: AxisTitles(
-                                                  sideTitles: SideTitles(
-                                                    showTitles: true,
-                                                    reservedSize: 100,
-                                                    getTitlesWidget:
-                                                        leftTitleWidgetsMedical,
-                                                  ),
+                                                  ],
                                                 ),
                                               ),
-                                              borderData: FlBorderData(
-                                                show: true,
-                                                border: Border.all(
-                                                    color:
-                                                        Colors.grey.shade300),
-                                              ),
-                                              minX: 1,
-                                              maxX: 12,
                                             ),
-                                          );
-                                        }
-                                      }
+                                          ],
+                                          gridData: const FlGridData(
+                                            show: true,
+                                          ),
+                                          titlesData: FlTitlesData(
+                                            show: true,
+                                            rightTitles: const AxisTitles(
+                                              sideTitles: SideTitles(
+                                                  showTitles: false),
+                                            ),
+                                            topTitles: const AxisTitles(
+                                              sideTitles: SideTitles(
+                                                  showTitles: false),
+                                            ),
+                                            bottomTitles: AxisTitles(
+                                              sideTitles: SideTitles(
+                                                showTitles: true,
+                                                interval: 1,
+                                                getTitlesWidget:
+                                                    bottomTitleWidgetsMedical,
+                                              ),
+                                            ),
+                                            leftTitles: AxisTitles(
+                                              sideTitles: SideTitles(
+                                                showTitles: true,
+                                                reservedSize: 100,
+                                                getTitlesWidget:
+                                                    leftTitleWidgetsMedical,
+                                              ),
+                                            ),
+                                          ),
+                                          borderData: FlBorderData(
+                                            show: true,
+                                            border: Border.all(
+                                                color:
+                                                    Colors.grey.shade300),
+                                          ),
+                                          minX: 1,
+                                          maxX: 12,
+                                        ),
+                                      );
                                     }
                                     return AFwidget.circularProgress();
                                   },
