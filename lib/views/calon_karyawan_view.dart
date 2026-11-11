@@ -1,6 +1,7 @@
 import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/controllers/karyawan_control.dart';
 import 'package:fjghrd/models/karyawan.dart';
+import 'package:fjghrd/utils/af_plutogrid.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
@@ -124,6 +125,7 @@ class CalonKaryawanView extends StatelessWidget {
         field: 'nama',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 200,
         minWidth: 200,
         backgroundColor: Colors.brown.shade100,
         frozen: PlutoColumnFrozen.start,
@@ -133,6 +135,7 @@ class CalonKaryawanView extends StatelessWidget {
         field: 'area',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 230,
         minWidth: 230,
         backgroundColor: Colors.brown.shade100,
         enableFilterMenuItem: false,
@@ -142,6 +145,7 @@ class CalonKaryawanView extends StatelessWidget {
         field: 'nik',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 120,
         minWidth: 120,
         backgroundColor: Colors.brown.shade100,
         textAlign: PlutoColumnTextAlign.center,
@@ -151,6 +155,7 @@ class CalonKaryawanView extends StatelessWidget {
         field: 'tanggal_masuk',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 150,
         minWidth: 150,
         backgroundColor: Colors.brown.shade100,
         textAlign: PlutoColumnTextAlign.center,
@@ -161,6 +166,7 @@ class CalonKaryawanView extends StatelessWidget {
         field: 'masa_kerja',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 150,
         minWidth: 150,
         backgroundColor: Colors.brown.shade100,
         textAlign: PlutoColumnTextAlign.center,
@@ -171,8 +177,8 @@ class CalonKaryawanView extends StatelessWidget {
         field: 'usia',
         type: PlutoColumnType.number(),
         readOnly: true,
-        minWidth: 90,
         width: 100,
+        minWidth: 90,
         backgroundColor: Colors.brown.shade100,
         textAlign: PlutoColumnTextAlign.center,
         titleTextAlign: PlutoColumnTextAlign.center,
@@ -182,6 +188,7 @@ class CalonKaryawanView extends StatelessWidget {
         field: 'agama',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 120,
         minWidth: 120,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -190,6 +197,7 @@ class CalonKaryawanView extends StatelessWidget {
         field: 'divisi',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 150,
         minWidth: 150,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -198,6 +206,7 @@ class CalonKaryawanView extends StatelessWidget {
         field: 'jabatan',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 150,
         minWidth: 150,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -206,6 +215,7 @@ class CalonKaryawanView extends StatelessWidget {
         field: 'nomor_kk',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 170,
         minWidth: 170,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -214,6 +224,7 @@ class CalonKaryawanView extends StatelessWidget {
         field: 'nomor_ktp',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 170,
         minWidth: 170,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -222,6 +233,7 @@ class CalonKaryawanView extends StatelessWidget {
         field: 'nomor_paspor',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 170,
         minWidth: 170,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -230,6 +242,7 @@ class CalonKaryawanView extends StatelessWidget {
         field: 'nomor_pwp',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 170,
         minWidth: 170,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -238,6 +251,7 @@ class CalonKaryawanView extends StatelessWidget {
         field: 'ttl',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 200,
         minWidth: 200,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -246,6 +260,7 @@ class CalonKaryawanView extends StatelessWidget {
         field: 'alamat_ktp',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 200,
         minWidth: 200,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -254,6 +269,7 @@ class CalonKaryawanView extends StatelessWidget {
         field: 'alamat_tinggal',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 200,
         minWidth: 200,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -262,6 +278,7 @@ class CalonKaryawanView extends StatelessWidget {
         field: 'telepon',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 150,
         minWidth: 150,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -270,6 +287,7 @@ class CalonKaryawanView extends StatelessWidget {
         field: 'kawin',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 110,
         minWidth: 100,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -278,6 +296,7 @@ class CalonKaryawanView extends StatelessWidget {
         field: 'pendidikan',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 230,
         minWidth: 230,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -286,6 +305,7 @@ class CalonKaryawanView extends StatelessWidget {
         field: 'email',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 150,
         minWidth: 100,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -294,6 +314,7 @@ class CalonKaryawanView extends StatelessWidget {
         field: 'status_kerja',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 180,
         minWidth: 180,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -375,17 +396,13 @@ class CalonKaryawanView extends StatelessWidget {
         ),
         Expanded(
           child: Obx(() {
-              return PlutoGrid(
-                key: UniqueKey(),
+              return AFPlutoGrid(
                 columns: columns,
                 rows: _buildRows(controller.listCalonKaryawan),
                 columnGroups: columnGroups,
                 onChanged: (PlutoGridOnChangedEvent event) {},
                 onLoaded: (PlutoGridOnLoadedEvent event) {
                   event.stateManager.setShowColumnFilter(true);
-                  for (int i = 2; i < columns.length; i++) {
-                    event.stateManager.autoFitColumn(context, columns[i]);
-                  }
                 },
                 rowColorCallback: (rtx) {
                   switch(rtx.row.cells['status_kerja_id']!.value) {

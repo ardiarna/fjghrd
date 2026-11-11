@@ -3,6 +3,7 @@ import 'package:fjghrd/models/karyawan.dart';
 import 'package:fjghrd/models/opsi.dart';
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_convert.dart';
+import 'package:fjghrd/utils/af_plutogrid.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/views/payroll_view.dart';
@@ -1720,8 +1721,7 @@ class RunpayrollView extends StatelessWidget {
           child: GetBuilder<PayrollControl>(
             id: 'grid_payroll',
             builder: (_) {
-              return PlutoGrid(
-                key: UniqueKey(),
+              return AFPlutoGrid(
                 columns: columns,
                 rows: _buildRows(controller.listKaryawan.where((element) => element.dipilih).toList()),
                 columnGroups: columnGroups,

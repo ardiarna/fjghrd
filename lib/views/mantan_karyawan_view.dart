@@ -2,6 +2,7 @@ import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/controllers/karyawan_control.dart';
 import 'package:fjghrd/models/karyawan.dart';
 import 'package:fjghrd/utils/af_convert.dart';
+import 'package:fjghrd/utils/af_plutogrid.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/views/karyawan_view.dart';
@@ -63,6 +64,18 @@ class MantanKaryawanView extends StatelessWidget {
       backgroundColor: Colors.red.shade100,
     ),
   ];
+
+  void _expandAllGroups(PlutoGridStateManager sm) {
+    for (final row in [...sm.iterateAllMainRowGroup]) {
+      if (row.type.isGroup && !row.type.group.expanded) {
+        sm.toggleExpandedRowGroup(
+          rowGroup: row,
+          notify: false,
+        );
+      }
+    }
+    sm.notifyListeners();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,6 +140,7 @@ class MantanKaryawanView extends StatelessWidget {
         field: 'nama',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 200,
         minWidth: 200,
         backgroundColor: Colors.red.shade100,
         frozen: PlutoColumnFrozen.start,
@@ -171,6 +185,7 @@ class MantanKaryawanView extends StatelessWidget {
         field: 'divisi',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 150,
         backgroundColor: Colors.red.shade100,
       ),
       PlutoColumn(
@@ -178,6 +193,7 @@ class MantanKaryawanView extends StatelessWidget {
         field: 'jabatan',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 150,
         backgroundColor: Colors.red.shade100,
       ),
       PlutoColumn(
@@ -185,6 +201,7 @@ class MantanKaryawanView extends StatelessWidget {
         field: 'nomor_kk',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 170,
         minWidth: 170,
         backgroundColor: Colors.red.shade100,
       ),
@@ -193,6 +210,7 @@ class MantanKaryawanView extends StatelessWidget {
         field: 'nomor_ktp',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 170,
         minWidth: 170,
         backgroundColor: Colors.red.shade100,
       ),
@@ -201,6 +219,7 @@ class MantanKaryawanView extends StatelessWidget {
         field: 'nomor_paspor',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 170,
         minWidth: 170,
         backgroundColor: Colors.red.shade100,
       ),
@@ -209,6 +228,7 @@ class MantanKaryawanView extends StatelessWidget {
         field: 'ttl',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 200,
         minWidth: 200,
         backgroundColor: Colors.red.shade100,
       ),
@@ -217,6 +237,7 @@ class MantanKaryawanView extends StatelessWidget {
         field: 'alamat_ktp',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 200,
         minWidth: 200,
         backgroundColor: Colors.red.shade100,
       ),
@@ -225,6 +246,7 @@ class MantanKaryawanView extends StatelessWidget {
         field: 'alamat_tinggal',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 200,
         minWidth: 200,
         backgroundColor: Colors.red.shade100,
       ),
@@ -233,6 +255,7 @@ class MantanKaryawanView extends StatelessWidget {
         field: 'telepon',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 150,
         backgroundColor: Colors.red.shade100,
       ),
       PlutoColumn(
@@ -240,6 +263,7 @@ class MantanKaryawanView extends StatelessWidget {
         field: 'kawin',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 110,
         minWidth: 100,
         backgroundColor: Colors.red.shade100,
       ),
@@ -248,6 +272,7 @@ class MantanKaryawanView extends StatelessWidget {
         field: 'pendidikan',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 230,
         minWidth: 230,
         backgroundColor: Colors.red.shade100,
       ),
@@ -256,6 +281,7 @@ class MantanKaryawanView extends StatelessWidget {
         field: 'email',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 150,
         minWidth: 100,
         backgroundColor: Colors.red.shade100,
       ),
@@ -264,6 +290,7 @@ class MantanKaryawanView extends StatelessWidget {
         field: 'status_kerja',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 180,
         minWidth: 180,
         backgroundColor: Colors.red.shade100,
       ),
@@ -272,6 +299,7 @@ class MantanKaryawanView extends StatelessWidget {
         field: 'status_phk',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 180,
         minWidth: 180,
         backgroundColor: Colors.red.shade100,
       ),
@@ -280,6 +308,7 @@ class MantanKaryawanView extends StatelessWidget {
         field: 'keterangan_phk',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 200,
         minWidth: 200,
         backgroundColor: Colors.red.shade100,
       ),
@@ -324,8 +353,7 @@ class MantanKaryawanView extends StatelessWidget {
         ),
         Expanded(
           child: Obx(() {
-              return PlutoGrid(
-                key: UniqueKey(),
+              return AFPlutoGrid(
                 columns: columns,
                 rows: _buildRows(controller.listMantanKaryawan),
                 columnGroups: columnGroups,
@@ -339,20 +367,10 @@ class MantanKaryawanView extends StatelessWidget {
                       ],
                     ),
                   );
-                  for (final row in [...event.stateManager.iterateAllMainRowGroup]) {
-                    if (row.type.isGroup && !row.type.group.expanded) {
-                      event.stateManager.toggleExpandedRowGroup(
-                        rowGroup: row,
-                        notify: false,
-                      );
-                    }
-                  }
-                  event.stateManager.notifyListeners();
-                  event.stateManager.autoFitColumn(context, columns[4]);
-                  event.stateManager.autoFitColumn(context, columns[2]);
-                  for (int i = 2; i < columns.length; i++) {
-                    event.stateManager.autoFitColumn(context, columns[i]);
-                  }
+                  _expandAllGroups(event.stateManager);
+                },
+                onRowsUpdated: (stateManager) {
+                  _expandAllGroups(stateManager);
                 },
                 configuration: AFplutogridConfig.configSatu(),
               );

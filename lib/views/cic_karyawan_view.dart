@@ -5,6 +5,7 @@ import 'package:fjghrd/views/cic_cuti_view.dart';
 import 'package:fjghrd/models/karyawan.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/models/durasi_tanggal.dart';
+import 'package:fjghrd/utils/af_plutogrid.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -158,6 +159,7 @@ class CicKaryawanView extends StatelessWidget {
         field: 'nama',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 200,
         minWidth: 200,
         backgroundColor: Colors.brown.shade100,
         frozen: PlutoColumnFrozen.start,
@@ -167,6 +169,7 @@ class CicKaryawanView extends StatelessWidget {
         field: 'area',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 230,
         minWidth: 230,
         backgroundColor: Colors.brown.shade100,
         enableFilterMenuItem: false,
@@ -176,6 +179,7 @@ class CicKaryawanView extends StatelessWidget {
         field: 'nik',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 120,
         minWidth: 120,
         backgroundColor: Colors.brown.shade100,
         textAlign: PlutoColumnTextAlign.center,
@@ -185,6 +189,7 @@ class CicKaryawanView extends StatelessWidget {
         field: 'tanggal_masuk',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 150,
         minWidth: 150,
         backgroundColor: Colors.brown.shade100,
         textAlign: PlutoColumnTextAlign.center,
@@ -195,6 +200,7 @@ class CicKaryawanView extends StatelessWidget {
         field: 'masa_kerja',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 150,
         minWidth: 150,
         backgroundColor: Colors.brown.shade100,
         textAlign: PlutoColumnTextAlign.center,
@@ -205,6 +211,7 @@ class CicKaryawanView extends StatelessWidget {
         field: 'agama',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 120,
         minWidth: 120,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -213,6 +220,7 @@ class CicKaryawanView extends StatelessWidget {
         field: 'divisi',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 150,
         minWidth: 150,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -221,6 +229,7 @@ class CicKaryawanView extends StatelessWidget {
         field: 'jabatan',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 150,
         minWidth: 150,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -229,6 +238,7 @@ class CicKaryawanView extends StatelessWidget {
         field: 'nomor_kk',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 170,
         minWidth: 170,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -237,6 +247,7 @@ class CicKaryawanView extends StatelessWidget {
         field: 'nomor_ktp',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 170,
         minWidth: 170,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -245,6 +256,7 @@ class CicKaryawanView extends StatelessWidget {
         field: 'nomor_paspor',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 170,
         minWidth: 170,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -253,6 +265,7 @@ class CicKaryawanView extends StatelessWidget {
         field: 'nomor_pwp',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 170,
         minWidth: 170,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -261,6 +274,7 @@ class CicKaryawanView extends StatelessWidget {
         field: 'ttl',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 200,
         minWidth: 200,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -269,6 +283,7 @@ class CicKaryawanView extends StatelessWidget {
         field: 'alamat_ktp',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 200,
         minWidth: 200,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -277,6 +292,7 @@ class CicKaryawanView extends StatelessWidget {
         field: 'alamat_tinggal',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 200,
         minWidth: 200,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -285,6 +301,7 @@ class CicKaryawanView extends StatelessWidget {
         field: 'telepon',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 150,
         minWidth: 150,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -293,6 +310,7 @@ class CicKaryawanView extends StatelessWidget {
         field: 'kawin',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 110,
         minWidth: 100,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -301,6 +319,7 @@ class CicKaryawanView extends StatelessWidget {
         field: 'pendidikan',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 230,
         minWidth: 230,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -309,6 +328,7 @@ class CicKaryawanView extends StatelessWidget {
         field: 'email',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 150,
         minWidth: 100,
         backgroundColor: Colors.brown.shade100,
       ),
@@ -317,6 +337,7 @@ class CicKaryawanView extends StatelessWidget {
         field: 'status_kerja',
         type: PlutoColumnType.text(),
         readOnly: true,
+        width: 180,
         minWidth: 180,
         backgroundColor: Colors.brown.shade100,
         enableFilterMenuItem: false,
@@ -361,19 +382,13 @@ class CicKaryawanView extends StatelessWidget {
                 if (ctrl.listData.isEmpty) {
                   return const Center(child: Text('Belum ada data'));
                 }
-                return PlutoGrid(
-                  key: UniqueKey(),
+                return AFPlutoGrid(
                   columns: columns,
                   rows: _buildRows(ctrl.listData),
                   columnGroups: columnGroups,
                   onChanged: (PlutoGridOnChangedEvent event) {},
                   onLoaded: (PlutoGridOnLoadedEvent event) {
                     event.stateManager.setShowColumnFilter(true);
-                    for (int i = 2; i <= 20; i++) {
-                      try {
-                        event.stateManager.autoFitColumn(context, columns[i]);
-                      } catch (e) { /* ignore */ }
-                    }
                   },
                   rowColorCallback: (rtx) {
                     return _getStatusColor(rtx.row.cells['status_kerja_id']!.value);

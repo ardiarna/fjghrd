@@ -6,6 +6,7 @@ import 'package:fjghrd/views/overtime_ubah_form.dart';
 import 'package:fjghrd/models/overtime.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_constant.dart';
+import 'package:fjghrd/utils/af_plutogrid.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
@@ -317,8 +318,7 @@ class OvertimeView extends StatelessWidget {
             ),
             child: Obx(
               () {
-                return PlutoGrid(
-                  key: UniqueKey(),
+                return AFPlutoGrid(
                   columns: columns,
                   rows: _buildRows(controller.listOvertime),
                   onChanged: (PlutoGridOnChangedEvent event) {},

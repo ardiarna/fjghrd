@@ -2,6 +2,7 @@ import 'package:fjghrd/utils/af_database.dart';
 import 'package:fjghrd/controllers/upah_control.dart';
 import 'package:fjghrd/views/upah_ubah_form.dart';
 import 'package:fjghrd/models/karyawan.dart';
+import 'package:fjghrd/utils/af_plutogrid.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
@@ -271,8 +272,7 @@ class UpahView extends StatelessWidget {
         ),
         Expanded(
           child: Obx(() {
-                return PlutoGrid(
-                key: UniqueKey(),
+                return AFPlutoGrid(
                 columns: columns,
                 rows: _buildRows(controller.listKaryawan),
                 columnGroups: columnGroups,
