@@ -70,30 +70,8 @@ abstract class AFconvert {
     }
   }
 
-  static List<String> keList(dynamic nilai) {
-    if (nilai != null) {
-      if (nilai is String) {
-        return nilai.split(',');
-      } else {
-        return nilai.toString().split(',');
-      }
-    } else {
-      return [];
-    }
-  }
-
-  static String matDateTime(DateTime? nilai) {
-    final mat = DateFormat('dd-MM-yyyy HH:mm');
-    return nilai != null ? mat.format(nilai) : '';
-  }
-
   static String matDate(DateTime? nilai) {
     final mat = DateFormat('dd-MM-yyyy');
-    return nilai != null ? mat.format(nilai) : '';
-  }
-
-  static String matTime(DateTime? nilai) {
-    final mat = DateFormat('HH:mm');
     return nilai != null ? mat.format(nilai) : '';
   }
 
@@ -115,11 +93,6 @@ abstract class AFconvert {
   static String matDMYtoYMD(String nilai) {
     List<String> tanggal = nilai.split('-');
     return '${tanggal[2]}-${tanggal[1]}-${tanggal[0]}';
-  }
-
-  static String matYMDtoDate(String nilai) {
-    List<String> tanggal = nilai.split('-');
-    return '${tanggal[2]} ${mapBulan[int.parse(tanggal[1])]} ${tanggal[0]}';
   }
 
   static String matMonthYear(DateTime? nilai) {

@@ -1,5 +1,4 @@
 import 'package:fjghrd/models/opsi.dart';
-import 'package:fjghrd/utils/af_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -150,81 +149,6 @@ class _DaftarOpsiState extends State<DaftarOpsi> {
 }
 
 abstract class AFcombobox {
-
-  static Future<String?> ikon({String valueSelected = "", Color? color, double? size}) {
-    return Get.bottomSheet<String>(
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          GestureDetector(
-            child: Container(
-              margin: const EdgeInsets.only(right: 15, bottom: 5, top: 40),
-              alignment: Alignment.center,
-              height: 35,
-              width: 35,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.white,
-              ),
-              child: const Icon(Icons.close, color: Colors.grey),
-            ),
-            onTap: () {
-              Get.back();
-            },
-          ),
-          Expanded(
-            child: Container(
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(15)),
-              ),
-              child: Stack(
-                children: [
-                  SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 50, width: double.infinity),
-                        Wrap(
-                          children: mapIkon.entries.map((e) {
-                            return Container(
-                              padding: const EdgeInsets.all(10),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: e.key == valueSelected ? Colors.grey.shade400.withValues(alpha: 0.5) : Colors.transparent,
-                              ),
-                              child: IconButton(
-                                icon: Icon(e.value, size: size),
-                                color: color,
-                                onPressed: () {
-                                  Get.back<String>(result: e.key);
-                                },
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    height: 50,
-                    width: double.infinity,
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(topLeft: Radius.circular(15)),
-                    ),
-                    alignment: AlignmentDirectional.center,
-                    child: const Text('Pilih Ikon', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-      isScrollControlled: true,
-    );
-  }
 
   static Future<Opsi?> bottomSheet({
     required List<Opsi> listOpsi,

@@ -23,14 +23,6 @@ class UserRepository {
     );
   }
 
-  Future<Hasil> photo(String filePath) async {
-    return await AFdatabase.send(
-      url: 'user/photo',
-      methodeRequest: MethodeRequest.multipartRequest,
-      filePaths: { 'foto' : filePath},
-    );
-  }
-
   Future<Hasil> changePassword({
     String oldPassword = '',
     String newPassword = '',
