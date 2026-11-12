@@ -113,6 +113,28 @@ class CutiControl extends GetxController {
     loadJenisKhusus();
   }
 
+  @override
+  void onClose() {
+    txtJatahId.dispose();
+    txtJatahJumlahCuti.dispose();
+    txtPlusTahunLalu.dispose();
+    txtMinTahunLalu.dispose();
+    txtTanggalKembali.dispose();
+    txtAkanDiambil.dispose();
+    txtKetTahunan.dispose();
+    txtLamaKhusus.dispose();
+    txtKetKhusus.dispose();
+    txtTglAwalKhusus.dispose();
+    txtTglAkhirKhusus.dispose();
+    txtLamaUnpaid.dispose();
+    txtKetUnpaid.dispose();
+    txtLamaGantiLibur.dispose();
+    txtKetGantiLibur.dispose();
+    txtLamaMasal.dispose();
+    txtKetMasal.dispose();
+    super.onClose();
+  }
+
   
   Future<void> loadJatah() async {
     var hasil = await AFdatabase.send(url: 'jatah-cuti?tahun=${filterTahun.value}');

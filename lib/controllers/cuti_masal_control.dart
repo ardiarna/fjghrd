@@ -67,6 +67,8 @@ class CutiMasalControl extends GetxController {
     txtKeperluan.dispose();
     txtTglKembali.dispose();
     txtLamaHariGlobal.dispose();
+    txtCari.dispose();
+    txtKeteranganTambah.dispose();
     for(var k in listKaryawan) {
       k.txtLamaHari.dispose();
     }
@@ -81,6 +83,9 @@ class CutiMasalControl extends GetxController {
       );
       Get.back();
       if(hasil.success) {
+        for(var k in listKaryawan) {
+          k.txtLamaHari.dispose();
+        }
         listKaryawan.clear();
         for(var a in hasil.daftar) {
           listKaryawan.add(KaryawanCutiMasal.fromMap(a));

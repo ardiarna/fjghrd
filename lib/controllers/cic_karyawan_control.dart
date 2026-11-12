@@ -968,4 +968,26 @@ AFwidget.dialog(
     loadData();
     super.onInit();
   }
+
+  @override
+  void onClose() {
+    txtId.dispose();
+    txtNama.dispose();
+    txtNik.dispose();
+    txtNomorKtp.dispose();
+    txtTempatLahir.dispose();
+    txtTanggalLahir.dispose();
+    txtTanggalMasuk.dispose();
+    txtTanggalKeluar.dispose();
+    txtAlamatKtp.dispose();
+    txtAlamatTinggal.dispose();
+    txtTelepon.dispose();
+    txtEmail.dispose();
+    txtPendidikanAlmamater.dispose();
+    txtPendidikanJurusan.dispose();
+    txtNomorKk.dispose();
+    txtNomorPaspor.dispose();
+    txtNomorPwp.dispose();
+    super.onClose();
+  }
 }
