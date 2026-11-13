@@ -98,7 +98,7 @@ class KaryawanControl extends GetxController {
       txtKeluargaTanggalLahir, txtKeluargaTelepon, txtKeluargaEmail;
   late TextEditingController txtKontakId, txtKontakNama, txtKontakTelepon, txtKontakEmail;
   late TextEditingController txtPerjanjianId, txtPerjanjianNomor, txtPerjanjianTglAwal, txtPerjanjianTglAkhir, txtPhkKeterangan;
-  late TextEditingController txtTrainingKaryawanId, txtTrainingKaryawanTanggal, txtTrainingKaryawanKeterangan;
+  late TextEditingController txtTrainingKaryawanId, txtTrainingKaryawanTanggalAwal, txtTrainingKaryawanTanggalAkhir, txtTrainingKaryawanKeterangan;
   late TextEditingController txtKompensasi, txtKetKompensasi, txtPesangon, txtKetPesangon, txtMasaKerja, txtKetMasaKerja, txtUangPisah, txtKetUangPisah, txtSisaCutiHari, txtSisaCutiJumlah, txtLain,
       txtPotKas, txtPotCicilan, txtPotCutiHari, txtPotCutiJumlah, txtPotLain, txtKetLain, txtKetPotLain;
   var totalPhkKalkulasi = 0.obs;
@@ -1051,7 +1051,8 @@ class KaryawanControl extends GetxController {
         'id': txtTrainingKaryawanId.text,
         'karyawan_id': current.id,
         'training_id': trainingTerpilih!.id,
-        'tanggal': txtTrainingKaryawanTanggal.text,
+        'tanggal_awal': txtTrainingKaryawanTanggalAwal.text,
+        'tanggal_akhir': txtTrainingKaryawanTanggalAkhir.text,
         'keterangan': txtTrainingKaryawanKeterangan.text,
       };
 
@@ -2070,7 +2071,8 @@ class KaryawanControl extends GetxController {
     txtPerjanjianTglAwal = TextEditingController();
     txtPerjanjianTglAkhir = TextEditingController();
     txtTrainingKaryawanId = TextEditingController();
-    txtTrainingKaryawanTanggal = TextEditingController();
+    txtTrainingKaryawanTanggalAwal = TextEditingController();
+    txtTrainingKaryawanTanggalAkhir = TextEditingController();
     txtTrainingKaryawanKeterangan = TextEditingController();
     txtPhkKeterangan = TextEditingController();
     txtKompensasi = TextEditingController();
@@ -2170,7 +2172,8 @@ class KaryawanControl extends GetxController {
     txtPerjanjianTglAwal.dispose();
     txtPerjanjianTglAkhir.dispose();
     txtTrainingKaryawanId.dispose();
-    txtTrainingKaryawanTanggal.dispose();
+    txtTrainingKaryawanTanggalAwal.dispose();
+    txtTrainingKaryawanTanggalAkhir.dispose();
     txtTrainingKaryawanKeterangan.dispose();
     txtPhkKeterangan.dispose();
     txtKompensasi.dispose();

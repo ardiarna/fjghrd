@@ -5,7 +5,8 @@ class TrainingKaryawan {
   String id;
   String karyawanId;
   String trainingId;
-  String? tanggal;
+  String? tanggalAwal;
+  String? tanggalAkhir;
   String? keterangan;
   Training? training;
 
@@ -13,7 +14,8 @@ class TrainingKaryawan {
     this.id = '',
     this.karyawanId = '',
     this.trainingId = '',
-    this.tanggal,
+    this.tanggalAwal,
+    this.tanggalAkhir,
     this.keterangan,
     this.training,
   });
@@ -23,7 +25,8 @@ class TrainingKaryawan {
       id: AFconvert.keString(map['id']),
       karyawanId: AFconvert.keString(map['karyawan_id']),
       trainingId: AFconvert.keString(map['training_id']),
-      tanggal: map['tanggal'],
+      tanggalAwal: map['tanggal_awal'],
+      tanggalAkhir: map['tanggal_akhir'],
       keterangan: map['keterangan'],
       training: map['training'] != null ? Training.fromMap(map['training']) : null,
     );
@@ -34,7 +37,8 @@ class TrainingKaryawan {
       'id': id,
       'karyawan_id': karyawanId,
       'training_id': trainingId,
-      'tanggal': tanggal,
+      'tanggal_awal': tanggalAwal,
+      'tanggal_akhir': tanggalAkhir,
       'keterangan': keterangan,
     };
   }

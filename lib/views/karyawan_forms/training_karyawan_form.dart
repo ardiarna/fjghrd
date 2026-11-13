@@ -83,20 +83,20 @@ class TrainingKaryawanForm extends StatelessWidget {
                       Container(
                         width: 150,
                         padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Tanggal'),
+                        child: const Text('Tanggal Awal'),
                       ),
                       Expanded(
                         child: AFwidget.textField(
                           marginTop: 0,
-                          controller: controller.txtTrainingKaryawanTanggal,
+                          controller: controller.txtTrainingKaryawanTanggalAwal,
                           readOnly: true,
                           ontap: () async {
                             DateTime? a = await AFwidget.pickDate(
                               context: context,
-                              initialDate: AFconvert.keTanggal(controller.txtTrainingKaryawanTanggal.text) ?? DateTime.now(),
+                              initialDate: AFconvert.keTanggal(controller.txtTrainingKaryawanTanggalAwal.text) ?? DateTime.now(),
                             );
                             if(a != null) {
-                              controller.txtTrainingKaryawanTanggal.text = AFconvert.matYMD(a);
+                              controller.txtTrainingKaryawanTanggalAwal.text = AFconvert.matYMD(a);
                               controller.update();
                             }
                           },
@@ -104,12 +104,58 @@ class TrainingKaryawanForm extends StatelessWidget {
                       ),
                       GetBuilder<KaryawanControl>(
                         builder: (_) {
-                          if(controller.txtTrainingKaryawanTanggal.text.isNotEmpty) {
+                          if(controller.txtTrainingKaryawanTanggalAwal.text.isNotEmpty) {
                             return Padding(
                               padding: const EdgeInsets.only(left: 10),
                               child: IconButton(
                                 onPressed: () {
-                                  controller.txtTrainingKaryawanTanggal.text = '';
+                                  controller.txtTrainingKaryawanTanggalAwal.text = '';
+                                  controller.update();
+                                },
+                                icon: const Icon(Icons.highlight_off),
+                              ),
+                            );
+                          }
+                          return Container();
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 150,
+                        padding: const EdgeInsets.only(right: 15),
+                        child: const Text('Tanggal Akhir'),
+                      ),
+                      Expanded(
+                        child: AFwidget.textField(
+                          marginTop: 0,
+                          controller: controller.txtTrainingKaryawanTanggalAkhir,
+                          readOnly: true,
+                          ontap: () async {
+                            DateTime? a = await AFwidget.pickDate(
+                              context: context,
+                              initialDate: AFconvert.keTanggal(controller.txtTrainingKaryawanTanggalAkhir.text) ?? DateTime.now(),
+                            );
+                            if(a != null) {
+                              controller.txtTrainingKaryawanTanggalAkhir.text = AFconvert.matYMD(a);
+                              controller.update();
+                            }
+                          },
+                        ),
+                      ),
+                      GetBuilder<KaryawanControl>(
+                        builder: (_) {
+                          if(controller.txtTrainingKaryawanTanggalAkhir.text.isNotEmpty) {
+                            return Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: IconButton(
+                                onPressed: () {
+                                  controller.txtTrainingKaryawanTanggalAkhir.text = '';
                                   controller.update();
                                 },
                                 icon: const Icon(Icons.highlight_off),
@@ -174,7 +220,8 @@ void showTrainingKaryawanForm(String id, BuildContext context) {
   TrainingKaryawan item = TrainingKaryawan();
   if(id != '') item = controller.listTrainingKaryawan.where((element) => element.id == id).first;
   controller.txtTrainingKaryawanId.text = item.id;
-  controller.txtTrainingKaryawanTanggal.text = AFconvert.matYMD(AFconvert.keTanggal(item.tanggal));
+  controller.txtTrainingKaryawanTanggalAwal.text = AFconvert.matYMD(AFconvert.keTanggal(item.tanggalAwal));
+  controller.txtTrainingKaryawanTanggalAkhir.text = AFconvert.matYMD(AFconvert.keTanggal(item.tanggalAkhir));
   controller.txtTrainingKaryawanKeterangan.text = item.keterangan ?? '';
   controller.trainingTerpilih = item.training;
 

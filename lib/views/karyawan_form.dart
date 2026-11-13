@@ -73,7 +73,8 @@ class KaryawanForm extends StatelessWidget {
           cells: {
             'id': PlutoCell(value: rowData[index].id),
             'training': PlutoCell(value: rowData[index].training?.nama ?? ''),
-            'tanggal': PlutoCell(value: rowData[index].tanggal ?? ''),
+            'tanggal_awal': PlutoCell(value: rowData[index].tanggalAwal ?? ''),
+            'tanggal_akhir': PlutoCell(value: rowData[index].tanggalAkhir ?? ''),
             'keterangan': PlutoCell(value: rowData[index].keterangan ?? ''),
           },
         );
@@ -217,8 +218,16 @@ class KaryawanForm extends StatelessWidget {
         backgroundColor: Colors.brown.shade100,
       ),
       PlutoColumn(
-        title: 'TANGGAL',
-        field: 'tanggal',
+        title: 'TGL AWAL',
+        field: 'tanggal_awal',
+        type: PlutoColumnType.text(),
+        readOnly: true,
+        width: 120,
+        backgroundColor: Colors.brown.shade100,
+      ),
+      PlutoColumn(
+        title: 'TGL AKHIR',
+        field: 'tanggal_akhir',
         type: PlutoColumnType.text(),
         readOnly: true,
         width: 120,
