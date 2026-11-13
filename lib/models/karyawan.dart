@@ -215,4 +215,15 @@ class Karyawan {
     return data;
   }
 
+  bool get isUltahHariIni {
+    if (tanggalLahir == null) return false;
+    final now = DateTime.now();
+    return tanggalLahir!.day == now.day && tanggalLahir!.month == now.month;
+  }
+
+  bool get isUltahBulanIni {
+    if (tanggalLahir == null) return false;
+    return tanggalLahir!.month == DateTime.now().month;
+  }
+
 }

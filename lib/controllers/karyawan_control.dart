@@ -321,12 +321,11 @@ class KaryawanControl extends GetxController {
         totalKaryawanPerAgama.clear();
         totalKaryawanPerPendidikan.clear();
         totalKaryawanPerUsia.clear();
-        String hariUltah = AFconvert.matMD(_now);
         for (var data in hasil.daftar) {
           var k = Karyawan.fromMap(data);
           tempKaryawans.add(k);
 
-          if (AFconvert.matMD(k.tanggalLahir) == hariUltah) {
+          if (k.tanggalLahir != null && k.tanggalLahir!.month == _now.month) {
             listUlangTahun.add(k);
           }
 
@@ -442,6 +441,11 @@ class KaryawanControl extends GetxController {
                   getKelompokUsia(k.tanggalLahir)]!['TOTAL KARYAWAN']! +
               1;
         }
+        listUlangTahun.sort((a, b) {
+          int dayA = a.tanggalLahir?.day ?? 0;
+          int dayB = b.tanggalLahir?.day ?? 0;
+          return dayA.compareTo(dayB);
+        });
         listKaryawan.assignAll(tempKaryawans);
       }
     } finally {

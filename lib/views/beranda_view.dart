@@ -375,7 +375,7 @@ class _BerandaViewState extends State<BerandaView> {
                                                             .center,
                                                     children: [
                                                       Text(
-                                                        'BERULANG TAHUN HARI INI: ',
+                                                        'BERULANG TAHUN BULAN INI: ',
                                                         style: TextStyle(
                                                           fontSize: 13,
                                                           color: Colors
@@ -386,42 +386,48 @@ class _BerandaViewState extends State<BerandaView> {
                                                       ),
                                                       if (!karyawanControl
                                                           .isLoadingKaryawan)
-                                                        Container(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .symmetric(
-                                                                  horizontal: 8,
-                                                                  vertical: 2),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: karyawanControl
-                                                                    .listUlangTahun
-                                                                    .isNotEmpty
-                                                                ? Colors.green
-                                                                    .shade100
-                                                                : Colors.grey
-                                                                    .shade200,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        10),
-                                                          ),
-                                                          child: Text(
-                                                            '${karyawanControl.listUlangTahun.length} Karyawan',
-                                                            style: TextStyle(
-                                                              fontSize: 11,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color: karyawanControl
-                                                                      .listUlangTahun
-                                                                      .isNotEmpty
-                                                                  ? Colors.green
-                                                                      .shade800
-                                                                  : Colors.grey
-                                                                      .shade700,
-                                                            ),
-                                                          ),
+                                                        Builder(
+                                                          builder: (_) {
+                                                            final int totalBulanIni = karyawanControl.listUlangTahun.length;
+                                                            final int totalHariIni = karyawanControl.listUlangTahun.where((k) => k.isUltahHariIni).length;
+                                                            String label = '$totalBulanIni Karyawan';
+                                                            if (totalHariIni > 0) {
+                                                              label += ' ($totalHariIni Hari Ini)';
+                                                            }
+                                                            return Container(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                      horizontal: 8,
+                                                                      vertical: 2),
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                color: totalBulanIni > 0
+                                                                    ? Colors.green
+                                                                        .shade100
+                                                                    : Colors.grey
+                                                                        .shade200,
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            10),
+                                                              ),
+                                                              child: Text(
+                                                                label,
+                                                                style: TextStyle(
+                                                                  fontSize: 11,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: totalBulanIni > 0
+                                                                      ? Colors.green
+                                                                          .shade800
+                                                                      : Colors.grey
+                                                                          .shade700,
+                                                                ),
+                                                              ),
+                                                            );
+                                                          },
                                                         ),
                                                     ],
                                                   ),
@@ -447,7 +453,7 @@ class _BerandaViewState extends State<BerandaView> {
                                                   else if (karyawanControl
                                                       .listUlangTahun.isEmpty)
                                                     Text(
-                                                      'Tidak ada yang berulang tahun hari ini',
+                                                      'Tidak ada yang berulang tahun bulan ini',
                                                       style: TextStyle(
                                                         fontSize: 13,
                                                         color:
@@ -458,11 +464,113 @@ class _BerandaViewState extends State<BerandaView> {
                                                     )
                                                   else
                                                     Wrap(
-                                                      spacing: 15,
-                                                      runSpacing: 4,
+                                                      spacing: 12,
+                                                      runSpacing: 6,
+                                                      crossAxisAlignment:
+                                                          WrapCrossAlignment
+                                                              .center,
                                                       children: karyawanControl
                                                           .listUlangTahun
                                                           .map((e) {
+                                                        if (e.isUltahHariIni) {
+                                                          return Container(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                                    horizontal: 8,
+                                                                    vertical: 3),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              color: Colors
+                                                                  .amber.shade100,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          8),
+                                                              border: Border.all(
+                                                                color: Colors
+                                                                    .amber
+                                                                    .shade600,
+                                                                width: 1.2,
+                                                              ),
+                                                              boxShadow: [
+                                                                BoxShadow(
+                                                                  color: Colors
+                                                                      .amber
+                                                                      .withValues(
+                                                                          alpha:
+                                                                              0.3),
+                                                                  blurRadius: 4,
+                                                                  offset:
+                                                                      const Offset(
+                                                                          0, 1),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            child: Row(
+                                                              mainAxisSize:
+                                                                  MainAxisSize
+                                                                      .min,
+                                                              children: [
+                                                                const Text(
+                                                                  '🎉 ',
+                                                                  style: TextStyle(
+                                                                      fontSize:
+                                                                          13),
+                                                                ),
+                                                                Text(
+                                                                  '${e.nama} (${AFconvert.matDate(e.tanggalLahir)})',
+                                                                  style:
+                                                                      TextStyle(
+                                                                    fontSize: 13,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: Colors
+                                                                        .amber
+                                                                        .shade900,
+                                                                  ),
+                                                                ),
+                                                                const SizedBox(
+                                                                    width: 6),
+                                                                Container(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .symmetric(
+                                                                          horizontal:
+                                                                              5,
+                                                                          vertical:
+                                                                              1.5),
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    color: Colors
+                                                                        .red
+                                                                        .shade600,
+                                                                    borderRadius:
+                                                                        BorderRadius
+                                                                            .circular(
+                                                                                4),
+                                                                  ),
+                                                                  child:
+                                                                      const Text(
+                                                                    'HARI INI',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize: 9,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      color: Colors
+                                                                          .white,
+                                                                      letterSpacing:
+                                                                          0.5,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          );
+                                                        }
                                                         return Text(
                                                           '🎂${e.nama} (${AFconvert.matDate(e.tanggalLahir)})',
                                                           style: TextStyle(

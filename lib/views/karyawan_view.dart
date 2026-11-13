@@ -552,7 +552,7 @@ class KaryawanView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'BERULANG TAHUN HARI INI: ',
+                          'BERULANG TAHUN BULAN INI: ',
                           style: TextStyle(
                             fontSize: 13,
                             color: Colors.green.shade300,
@@ -561,8 +561,66 @@ class KaryawanView extends StatelessWidget {
                         ),
                         const SizedBox(height: 5),
                         Wrap(
-                          spacing: 15,
+                          spacing: 12,
+                          runSpacing: 6,
+                          crossAxisAlignment: WrapCrossAlignment.center,
                           children: controller.listUlangTahun.map((e) {
+                            if (e.isUltahHariIni) {
+                              return Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 3),
+                                decoration: BoxDecoration(
+                                  color: Colors.amber.shade100,
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: Colors.amber.shade600,
+                                    width: 1.2,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.amber.withValues(alpha: 0.3),
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 1),
+                                    ),
+                                  ],
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Text(
+                                      '🎉 ',
+                                      style: TextStyle(fontSize: 13),
+                                    ),
+                                    Text(
+                                      '${e.nama} (${AFconvert.matDate(e.tanggalLahir)})',
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.amber.shade900,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 6),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 1.5),
+                                      decoration: BoxDecoration(
+                                        color: Colors.red.shade600,
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                      child: const Text(
+                                        'HARI INI',
+                                        style: TextStyle(
+                                          fontSize: 9,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          letterSpacing: 0.5,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            }
                             return Text(
                               '🎂${e.nama} (${AFconvert.matDate(e.tanggalLahir)})',
                               style: TextStyle(
