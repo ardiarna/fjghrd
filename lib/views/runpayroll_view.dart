@@ -1,6 +1,8 @@
 import 'package:fjghrd/controllers/payroll_control.dart';
 import 'package:fjghrd/models/karyawan.dart';
 import 'package:fjghrd/models/opsi.dart';
+import 'package:fjghrd/models/penghasilan.dart';
+import 'package:fjghrd/models/potongan.dart';
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_plutogrid.dart';
@@ -24,115 +26,165 @@ class RunpayrollView extends StatelessWidget {
   PlutoGridStateManager? stateManager;
 
   List<PlutoRow> _buildRows(List<Karyawan> rowData) {
+    // 1. Pre-grouping data per karyawan_id (O(M) single-pass)
+    final Map<String, List<Penghasilan>> mapPenghasilan = {};
+    for (var p in controller.listPenghasilan) {
+      (mapPenghasilan[p.karyawan.id] ??= []).add(p);
+    }
+
+    final Map<String, List<Potongan>> mapPotongan = {};
+    for (var pot in controller.listPotongan) {
+      (mapPotongan[pot.karyawan.id] ??= []).add(pot);
+    }
+
+    final Map<String, int> mapMedical = {};
+    for (var m in controller.listMedical) {
+      mapMedical[m.karyawan.id] = (mapMedical[m.karyawan.id] ?? 0) + m.jumlah;
+    }
+
+    final Map<String, Map<String, int>> mapOvertime = {};
+    for (var o in controller.listOvertime) {
+      var otJenisMap = mapOvertime[o.karyawan.id] ??= {};
+      otJenisMap[o.jenis] = (otJenisMap[o.jenis] ?? 0) + o.jumlah;
+    }
+
     return rowData.map((e) {
+      final List<Penghasilan> pList = mapPenghasilan[e.id] ?? const [];
+      final List<Potongan> potList = mapPotongan[e.id] ?? const [];
+      final int medical = mapMedical[e.id] ?? 0;
+      final Map<String, int> otMap = mapOvertime[e.id] ?? const {};
+      final int overtimeFjg = otMap['F'] ?? 0;
+      final int overtimeCus = otMap['C'] ?? 0;
+
       double hariMakan = -1.0;
       String makanTglAwal = '';
       String makanTglAkhir = '';
-      try {
-        var listAB = controller.listPenghasilan.where((element) => element.karyawan.id == e.id && element.jenis == 'AB').toList();
-        if (listAB.isNotEmpty) {
-            hariMakan = listAB.fold(0.0, (sum, element) => sum + element.hari);
-            makanTglAwal = listAB[0].tglAwal;
-            makanTglAkhir = listAB[0].tglAkhir;
+      int uangMakanJumlah = 0;
+      int kenaikanGaji = 0;
+      int thr = 0;
+      int bonus = 0;
+      int insentif = 0;
+      int telkomsel = 0;
+      int lain = 0;
+      int gajiPokokCustom = 0;
+      bool hasGP = false;
+      List<String> ketPenghasilan = [];
+
+      for (var p in pList) {
+        if (p.keterangan.isNotEmpty) {
+          ketPenghasilan.add(p.keterangan);
         }
-      } catch (_) {}
-      
+        switch (p.jenis) {
+          case 'AB':
+            if (hariMakan < 0) hariMakan = 0.0;
+            hariMakan += p.hari;
+            if (makanTglAwal.isEmpty) makanTglAwal = p.tglAwal;
+            if (makanTglAkhir.isEmpty) makanTglAkhir = p.tglAkhir;
+            uangMakanJumlah += p.jumlah;
+            break;
+          case 'KG':
+            kenaikanGaji += p.jumlah;
+            break;
+          case 'HR':
+            thr += p.jumlah;
+            break;
+          case 'BN':
+            bonus += p.jumlah;
+            break;
+          case 'IN':
+            insentif += p.jumlah;
+            break;
+          case 'TK':
+            telkomsel += p.jumlah;
+            break;
+          case 'LL':
+            lain += p.jumlah;
+            break;
+          case 'GP':
+            hasGP = true;
+            gajiPokokCustom += p.jumlah;
+            break;
+        }
+      }
+
       String periodeBatas = '';
       if (makanTglAwal.isNotEmpty && makanTglAkhir.isNotEmpty) {
-          periodeBatas = '${AFconvert.matDate(AFconvert.keTanggal('$makanTglAwal 00:00:00'))} s/d ${AFconvert.matDate(AFconvert.keTanggal('$makanTglAkhir 00:00:00'))}';
+        periodeBatas = '${AFconvert.matDate(AFconvert.keTanggal('$makanTglAwal 00:00:00'))} s/d ${AFconvert.matDate(AFconvert.keTanggal('$makanTglAkhir 00:00:00'))}';
       }
       int uangMakanHarian = e.upah.makanHarian ? e.upah.uangMakan : 0;
-      int uangMakanJumlah = controller.listPenghasilan
-          .where((element) => element.karyawan.id == e.id && element.jenis == 'AB')
-          .fold(0, (sum, element) => sum + element.jumlah);
-      int medical = controller.listMedical
-          .where((element) => element.karyawan.id == e.id)
-          .fold(0, (sum, element) => sum + element.jumlah);
-      var overtimeFjg = controller.listOvertime
-          .where((element) => element.karyawan.id == e.id && element.jenis == 'F')
-          .fold(0, (sum, element) => sum + element.jumlah);
-      var overtimeCus = controller.listOvertime
-          .where((element) => element.karyawan.id == e.id && element.jenis == 'C')
-          .fold(0, (sum, element) => sum + element.jumlah);
-      var kenaikanGaji = controller.listPenghasilan
-          .where((element) => element.karyawan.id == e.id && element.jenis == 'KG')
-          .fold(0, (sum, element) => sum + element.jumlah);
-      var thr = controller.listPenghasilan
-          .where((element) => element.karyawan.id == e.id && element.jenis == 'HR')
-          .fold(0, (sum, element) => sum + element.jumlah);
-      var bonus = controller.listPenghasilan
-          .where((element) => element.karyawan.id == e.id && element.jenis == 'BN')
-          .fold(0, (sum, element) => sum + element.jumlah);
-      var insentif = controller.listPenghasilan
-          .where((element) => element.karyawan.id == e.id && element.jenis == 'IN')
-          .fold(0, (sum, element) => sum + element.jumlah);
-      var telkomsel = controller.listPenghasilan
-          .where((element) => element.karyawan.id == e.id && element.jenis == 'TK')
-          .fold(0, (sum, element) => sum + element.jumlah);
-      var lain = controller.listPenghasilan
-          .where((element) => element.karyawan.id == e.id && element.jenis == 'LL')
-          .fold(0, (sum, element) => sum + element.jumlah);
-      var pot25Hari = controller.listPotongan
-          .where((element) => element.karyawan.id == e.id && element.jenis == 'TB')
-          .fold(0.0, (sum, element) => sum + element.hari);
-      var pot25HJumlah = controller.listPotongan
-          .where((element) => element.karyawan.id == e.id && element.jenis == 'TB')
-          .fold(0, (sum, element) => sum + element.jumlah);
-      var potTelepon = controller.listPotongan
-          .where((element) => element.karyawan.id == e.id && element.jenis == 'TP')
-          .fold(0, (sum, element) => sum + element.jumlah);
-      var potBensin = controller.listPotongan
-          .where((element) => element.karyawan.id == e.id && element.jenis == 'BN')
-          .fold(0, (sum, element) => sum + element.jumlah);
-      var potKas = controller.listPotongan
-          .where((element) => element.karyawan.id == e.id && element.jenis == 'KS')
-          .fold(0, (sum, element) => sum + element.jumlah);
-      var potCicilan = controller.listPotongan
-          .where((element) => element.karyawan.id == e.id && element.jenis == 'CC')
-          .fold(0, (sum, element) => sum + element.jumlah);
-      var potBpjs = controller.listPotongan
-          .where((element) => element.karyawan.id == e.id && element.jenis == 'BP')
-          .fold(0, (sum, element) => sum + element.jumlah);
-      var potCutiHari = controller.listPotongan
-          .where((element) => element.karyawan.id == e.id && element.jenis == 'UL')
-          .fold(0.0, (sum, element) => sum + element.hari);
-      var potCutiJumlah = controller.listPotongan
-          .where((element) => element.karyawan.id == e.id && element.jenis == 'UL')
-          .fold(0, (sum, element) => sum + element.jumlah);
-      var potKompensasiJam = controller.listPotongan
-          .where((element) => element.karyawan.id == e.id && element.jenis == 'KJ')
-          .fold(0.0, (sum, element) => sum + element.hari);
-      var potKompensasiJumlah = controller.listPotongan
-          .where((element) => element.karyawan.id == e.id && element.jenis == 'KJ')
-          .fold(0, (sum, element) => sum + element.jumlah);
-      var potLain = controller.listPotongan
-          .where((element) => element.karyawan.id == e.id && element.jenis == 'LL')
-          .fold(0, (sum, element) => sum + element.jumlah);
-      var potCutiKeterangan = controller.listPotongan
-          .where((element) => element.karyawan.id == e.id && element.jenis == 'UL' && element.keterangan != '')
-          .map((el) => el.keterangan)
-          .join(', ');
-      var keteranganPot = controller.listPotongan
-          .where((element) => element.karyawan.id == e.id && element.jenis != 'UL' && element.keterangan != '')
-          .map((el) => el.keterangan)
-          .join(', ');
-      var keteranganPen = controller.listPenghasilan
-          .where((element) => element.karyawan.id == e.id && element.keterangan != '')
-          .map((el) => el.keterangan)
-          .join(', ');
+      int gajiPokok = hasGP ? gajiPokokCustom : e.upah.gaji;
+
+      double pot25Hari = 0.0;
+      int pot25HJumlah = 0;
+      int potTelepon = 0;
+      int potBensin = 0;
+      int potKas = 0;
+      int potCicilan = 0;
+      int potBpjs = 0;
+      double potCutiHari = 0.0;
+      int potCutiJumlah = 0;
+      double potKompensasiJam = 0.0;
+      int potKompensasiJumlah = 0;
+      int potLain = 0;
+      List<String> listPotCutiKet = [];
+      List<String> listKetPot = [];
+
+      for (var pot in potList) {
+        if (pot.jenis == 'UL') {
+          if (pot.keterangan.isNotEmpty) {
+            listPotCutiKet.add(pot.keterangan);
+          }
+        } else {
+          if (pot.keterangan.isNotEmpty) {
+            listKetPot.add(pot.keterangan);
+          }
+        }
+
+        switch (pot.jenis) {
+          case 'TB':
+            pot25Hari += pot.hari;
+            pot25HJumlah += pot.jumlah;
+            break;
+          case 'TP':
+            potTelepon += pot.jumlah;
+            break;
+          case 'BN':
+            potBensin += pot.jumlah;
+            break;
+          case 'KS':
+            potKas += pot.jumlah;
+            break;
+          case 'CC':
+            potCicilan += pot.jumlah;
+            break;
+          case 'BP':
+            potBpjs += pot.jumlah;
+            break;
+          case 'UL':
+            potCutiHari += pot.hari;
+            potCutiJumlah += pot.jumlah;
+            break;
+          case 'KJ':
+            potKompensasiJam += pot.hari;
+            potKompensasiJumlah += pot.jumlah;
+            break;
+          case 'LL':
+            potLain += pot.jumlah;
+            break;
+        }
+      }
+
+      String potCutiKeterangan = listPotCutiKet.join(', ');
+      String keteranganPot = listKetPot.join(', ');
+      String keteranganPen = ketPenghasilan.join(', ');
+
       List<String> keteranganAll = [];
-      if(keteranganPen.isNotEmpty) keteranganAll.add(keteranganPen);
-      if(keteranganPot.isNotEmpty) keteranganAll.add(keteranganPot);
-      
-      var listGP = controller.listPenghasilan
-          .where((element) => element.karyawan.id == e.id && element.jenis == 'GP')
-          .toList();
-      var gajiPokok = listGP.isNotEmpty 
-          ? listGP.fold(0, (sum, element) => sum + element.jumlah)
-          : e.upah.gaji;
+      if (keteranganPen.isNotEmpty) keteranganAll.add(keteranganPen);
+      if (keteranganPot.isNotEmpty) keteranganAll.add(keteranganPot);
 
       int totalDiterima = (gajiPokok + kenaikanGaji + uangMakanJumlah + overtimeFjg + overtimeCus + medical + thr + bonus + insentif + telkomsel + lain) -
           (pot25HJumlah + potTelepon + potBensin + potKas + potCicilan + potBpjs + potCutiJumlah + potKompensasiJumlah + potLain);
+
       return PlutoRow(
         cells: {
           'karyawan_id': PlutoCell(value: e.id),
