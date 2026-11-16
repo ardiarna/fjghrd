@@ -6,6 +6,7 @@ import 'package:fjghrd/views/oncall_customer_ubah_form.dart';
 import 'package:fjghrd/models/oncall_customer.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_constant.dart';
+import 'package:fjghrd/utils/af_plutogrid.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
@@ -253,8 +254,7 @@ class OncallCustomerView extends StatelessWidget {
               image: bgLineBlue,
             ),
             child: Obx(() {
-                return PlutoGrid(
-                  key: UniqueKey(),
+                return AFPlutoGrid(
                   columns: columns,
                   rows: _buildRows(controller.listOncallCustomer),
                   onChanged: (PlutoGridOnChangedEvent event) {},

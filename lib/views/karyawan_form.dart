@@ -16,6 +16,7 @@ import 'package:fjghrd/models/perjanjian_kerja.dart';
 import 'package:fjghrd/models/ptkp.dart';
 import 'package:fjghrd/models/status_kerja.dart';
 import 'package:fjghrd/utils/af_convert.dart';
+import 'package:fjghrd/utils/af_plutogrid.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
@@ -1256,8 +1257,7 @@ class KaryawanForm extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     border: Border.all(color: Colors.brown.shade200),
                                   ),
-                                  child: PlutoGrid(
-                                    key: UniqueKey(),
+                                  child: AFPlutoGrid(
                                     columns: columnsKeluarga,
                                     rows: _buildRowsKeluarga(controller.listKeluarga),
                                     onLoaded: (PlutoGridOnLoadedEvent event) {},
@@ -1317,8 +1317,7 @@ class KaryawanForm extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     border: Border.all(color: Colors.brown.shade200),
                                   ),
-                                  child: PlutoGrid(
-                                    key: UniqueKey(),
+                                  child: AFPlutoGrid(
                                     columns: columnsKontak,
                                     rows: _buildRowsKontak(controller.listKontak),
                                     onLoaded: (PlutoGridOnLoadedEvent event) {},
@@ -1378,8 +1377,7 @@ class KaryawanForm extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     border: Border.all(color: Colors.brown.shade200),
                                   ),
-                                  child: PlutoGrid(
-                                    key: UniqueKey(),
+                                  child: AFPlutoGrid(
                                     columns: columnsPerjanjian,
                                     rows: _buildRowsPerjanjian(controller.listPerjanjianKerja),
                                     onLoaded: (PlutoGridOnLoadedEvent event) {},
@@ -1440,8 +1438,7 @@ class KaryawanForm extends StatelessWidget {
                                   decoration: BoxDecoration(
                                     border: Border.all(color: Colors.brown.shade200),
                                   ),
-                                  child: PlutoGrid(
-                                    key: UniqueKey(),
+                                  child: AFPlutoGrid(
                                     columns: columnsTraining,
                                     rows: _buildRowsTraining(controller.listTrainingKaryawan),
                                     onLoaded: (PlutoGridOnLoadedEvent event) {},

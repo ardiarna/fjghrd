@@ -5,6 +5,7 @@ import 'package:fjghrd/controllers/payroll_control.dart';
 import 'package:fjghrd/models/payroll.dart';
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_convert.dart';
+import 'package:fjghrd/utils/af_plutogrid.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/views/payroll_view.dart';
@@ -1251,8 +1252,7 @@ class PayrollForm extends StatelessWidget {
         ),
         Expanded(
           child: Obx(() {
-              return PlutoGrid(
-                key: UniqueKey(),
+              return AFPlutoGrid(
                 columns: columns,
                 rows: _buildRows(controller.listDetilPayroll),
                 columnGroups: columnGroups,

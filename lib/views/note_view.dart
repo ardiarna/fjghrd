@@ -3,6 +3,7 @@ import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/controllers/note_control.dart';
 import 'package:fjghrd/views/note_form.dart';
 import 'package:fjghrd/models/note.dart';
+import 'package:fjghrd/utils/af_plutogrid.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -124,8 +125,7 @@ class NoteView extends StatelessWidget {
                 ];
 
                 return Obx(() {
-                  return PlutoGrid(
-                    key: UniqueKey(),
+                  return AFPlutoGrid(
                     columns: columns,
                     rows: _buildRows(controller.listNote),
                     onChanged: (PlutoGridOnChangedEvent event) {},

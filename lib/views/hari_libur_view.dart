@@ -3,6 +3,7 @@ import 'package:fjghrd/controllers/hari_libur_control.dart';
 import 'package:fjghrd/views/hari_libur_form.dart';
 import 'package:fjghrd/models/hari_libur.dart';
 import 'package:fjghrd/utils/af_convert.dart';
+import 'package:fjghrd/utils/af_plutogrid.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
@@ -124,8 +125,7 @@ class HariLiburView extends StatelessWidget {
               image: bgLineBlue,
             ),
             child: Obx(() {
-                return PlutoGrid(
-                  key: UniqueKey(),
+                return AFPlutoGrid(
                   columns: columns,
                   rows: _buildRows(controller.listHariLibur),
                   onChanged: (PlutoGridOnChangedEvent event) {},

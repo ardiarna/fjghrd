@@ -2,6 +2,7 @@ import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/controllers/cic_jenis_cuti_khusus_control.dart';
 import 'package:fjghrd/models/jenis_cuti_khusus.dart';
 import 'package:fjghrd/utils/af_constant.dart';
+import 'package:fjghrd/utils/af_plutogrid.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/views/cic_jenis_cuti_khusus_form.dart';
@@ -118,8 +119,7 @@ class CicJenisCutiKhususView extends StatelessWidget {
               image: bgLineBlue,
             ),
             child: Obx(() {
-                return PlutoGrid(
-                  key: UniqueKey(),
+                return AFPlutoGrid(
                   columns: columns,
                   rows: _buildRows(controller.listJenisCuti),
                   onChanged: (PlutoGridOnChangedEvent event) {},

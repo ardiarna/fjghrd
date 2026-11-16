@@ -7,6 +7,7 @@ import 'package:fjghrd/controllers/home_control.dart';
 import 'package:fjghrd/models/cuti.dart';
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_convert.dart';
+import 'package:fjghrd/utils/af_plutogrid.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/views/cic_cuti_form_view.dart';
@@ -775,8 +776,7 @@ class CicCutiView extends StatelessWidget {
               image: bgLineBlue,
             ),
             child: Obx(() {
-                return PlutoGrid(
-                  key: UniqueKey(),
+                return AFPlutoGrid(
                   columns: columns,
                   rows: _buildRows(controller.listCuti),
                   onChanged: (PlutoGridOnChangedEvent event) {},

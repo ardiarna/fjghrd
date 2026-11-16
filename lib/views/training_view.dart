@@ -3,6 +3,7 @@ import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/controllers/training_control.dart';
 import 'package:fjghrd/views/training_form.dart';
 import 'package:fjghrd/models/training.dart';
+import 'package:fjghrd/utils/af_plutogrid.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -96,8 +97,7 @@ class TrainingView extends StatelessWidget {
               image: bgLineBlue,
             ),
             child: Obx(() {
-                return PlutoGrid(
-                  key: UniqueKey(),
+                return AFPlutoGrid(
                   columns: columns,
                   rows: _buildRows(controller.listTraining),
                   onChanged: (PlutoGridOnChangedEvent event) {},

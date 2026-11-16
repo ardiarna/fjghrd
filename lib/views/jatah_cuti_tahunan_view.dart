@@ -4,6 +4,7 @@ import 'package:fjghrd/controllers/cuti_control.dart';
 import 'package:fjghrd/views/jatah_cuti_tahunan_form.dart';
 import 'package:fjghrd/models/jatah_cuti_tahunan.dart';
 import 'package:fjghrd/utils/af_constant.dart';
+import 'package:fjghrd/utils/af_plutogrid.dart';
 import 'package:fjghrd/utils/af_plutogrid_config.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/views/cuti_view.dart';
@@ -172,8 +173,7 @@ class JatahCutiTahunanView extends StatelessWidget {
               image: bgLineBlue,
             ),
             child: Obx(() {
-                return PlutoGrid(
-                  key: UniqueKey(),
+                return AFPlutoGrid(
                   columns: columns,
                   rows: _buildRows(controller.listJatah),
                   onChanged: (PlutoGridOnChangedEvent event) {},
