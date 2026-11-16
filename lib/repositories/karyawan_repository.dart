@@ -9,6 +9,18 @@ class KaryawanRepository {
     );
   }
 
+  Future<Hasil> demografi() async {
+    return await AFdatabase.send(url: 'karyawan/demografi');
+  }
+
+  Future<Hasil> ulangTahun({int? bulan}) async {
+    String url = 'karyawan/ulang-tahun';
+    if (bulan != null) {
+      url += '?bulan=$bulan';
+    }
+    return await AFdatabase.send(url: url);
+  }
+
   Future<Hasil> create(Map<String, String> body) async {
     return await AFdatabase.send(
       url: 'karyawan',

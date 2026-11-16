@@ -233,6 +233,7 @@ class _BerandaViewState extends State<BerandaView> {
                                       children: [
                                         ElevatedButton(
                                           onPressed: () {
+                                            karyawanControl.loadDemografi();
                                             homeControl.tabId = 0;
                                             homeControl.kontener =
                                                 DemografiView();

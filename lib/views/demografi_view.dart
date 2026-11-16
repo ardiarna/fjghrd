@@ -33,6 +33,12 @@ class DemografiView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (!karyawanControl.isDemografiLoaded && !karyawanControl.isLoadingDemografi) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        karyawanControl.loadDemografi();
+      });
+    }
+
     return Column(
       children: [
         AFwidget.pageHeader(
@@ -45,20 +51,36 @@ class DemografiView extends StatelessWidget {
           icon: Icons.list_alt_outlined,
         ),
         Expanded(
-          child: Row(
-            children: [
-              Expanded(child: kelaminChart()),
-              Expanded(child: agamaChart()),
-              Expanded(child: kawinChart()),
-            ],
-          ),
-        ),
-        Expanded(
-          child: Row(
-            children: [
-              Expanded(child: pendidikanChart()),
-              Expanded(child: usiaChart()),
-            ],
+          child: GetBuilder<KaryawanControl>(
+            id: 'demografi',
+            builder: (kc) {
+              if (kc.isLoadingDemografi && !kc.isDemografiLoaded) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return Column(
+                children: [
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Expanded(child: kelaminChart()),
+                        Expanded(child: agamaChart()),
+                        Expanded(child: kawinChart()),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Expanded(child: pendidikanChart()),
+                        Expanded(child: usiaChart()),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ],
@@ -86,61 +108,56 @@ class DemografiView extends StatelessWidget {
     });
     return boxKonten(
       title: 'JENIS KELAMIN',
-      child: GetBuilder<KaryawanControl>(
-        id: 'demografi',
-        builder: (_) {
-          return Column(
-            children: [
-              Expanded(
-                child: PieChart(
-                  PieChartData(
-                    sections: data.map((e) => PieChartSectionData(
-                        value: (e['value'] as num).toDouble(),
-                        color: e['color'] as Color,
-                        title: AFconvert.matNumber(e['value']),
-                        titleStyle: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          shadows: [Shadow(color: Colors.black, blurRadius: 2)],
-                        ),
-                      ),
-                    ).toList(),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Wrap(
-                spacing: 30,
-                children: data
-                    .map(
-                      (e) => Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 14,
-                            height: 14,
-                            margin: const EdgeInsets.only(right: 8),
-                            decoration: BoxDecoration(
-                              color: e['color'] as Color,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          Text('${e['label']}: ${e['value']}',
-                            style: TextStyle(color: e['color'] as Color),
-                          ),
-                    ],
+      child: Column(
+        children: [
+          Expanded(
+            child: PieChart(
+              PieChartData(
+                sections: data.map((e) => PieChartSectionData(
+                    value: (e['value'] as num).toDouble(),
+                    color: e['color'] as Color,
+                    title: AFconvert.matNumber(e['value']),
+                    titleStyle: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      shadows: [Shadow(color: Colors.black, blurRadius: 2)],
+                    ),
                   ),
                 ).toList(),
               ),
-              tombolDetil(
-                onPressed: () {
-                  dialogDetail(title: 'JENIS KELAMIN', data: renamedMap);
-                },
+            ),
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 30,
+            children: data
+                .map(
+                  (e) => Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 14,
+                        height: 14,
+                        margin: const EdgeInsets.only(right: 8),
+                        decoration: BoxDecoration(
+                          color: e['color'] as Color,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      Text('${e['label']}: ${e['value']}',
+                        style: TextStyle(color: e['color'] as Color),
+                      ),
+                ],
               ),
-            ],
-          );
-        },
+            ).toList(),
+          ),
+          tombolDetil(
+            onPressed: () {
+              dialogDetail(title: 'JENIS KELAMIN', data: renamedMap);
+            },
+          ),
+        ],
       ),
     );
   }
@@ -168,62 +185,57 @@ class DemografiView extends StatelessWidget {
     });
     return boxKonten(
       title: 'STATUS MENIKAH',
-      child: GetBuilder<KaryawanControl>(
-        id: 'demografi',
-        builder: (_) {
-          return Column(
-            children: [
-              Expanded(
-                child: PieChart(
-                  PieChartData(
-                    sections: data.map((e) => PieChartSectionData(
-                      value: (e['value'] as num).toDouble(),
-                      color: e['color'] as Color,
-                      title: AFconvert.matNumber(e['value']),
-                      titleStyle: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        shadows: [Shadow(color: Colors.black, blurRadius: 2)],
-                      ),
-                    ),
-                    ).toList(),
+      child: Column(
+        children: [
+          Expanded(
+            child: PieChart(
+              PieChartData(
+                sections: data.map((e) => PieChartSectionData(
+                  value: (e['value'] as num).toDouble(),
+                  color: e['color'] as Color,
+                  title: AFconvert.matNumber(e['value']),
+                  titleStyle: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    shadows: [Shadow(color: Colors.black, blurRadius: 2)],
                   ),
-
                 ),
-              ),
-              const SizedBox(height: 10),
-              Wrap(
-                spacing: 30,
-                children: data
-                    .map(
-                      (e) => Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        width: 14,
-                        height: 14,
-                        margin: const EdgeInsets.only(right: 8),
-                        decoration: BoxDecoration(
-                          color: e['color'] as Color,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      Text('${e['label']}: ${e['value']}',
-                        style: TextStyle(color: e['color'] as Color),
-                      ),
-                    ],
-                  ),
                 ).toList(),
               ),
-              tombolDetil(
-                onPressed: () {
-                  dialogDetail(title: 'STATUS MENIKAH', data: renamedMap);
-                },
+
+            ),
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 30,
+            children: data
+                .map(
+                  (e) => Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 14,
+                    height: 14,
+                    margin: const EdgeInsets.only(right: 8),
+                    decoration: BoxDecoration(
+                      color: e['color'] as Color,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  Text('${e['label']}: ${e['value']}',
+                    style: TextStyle(color: e['color'] as Color),
+                  ),
+                ],
               ),
-            ],
-          );
-        },
+            ).toList(),
+          ),
+          tombolDetil(
+            onPressed: () {
+              dialogDetail(title: 'STATUS MENIKAH', data: renamedMap);
+            },
+          ),
+        ],
       ),
     );
   }
@@ -241,62 +253,57 @@ class DemografiView extends StatelessWidget {
     });
     return boxKonten(
       title: 'AGAMA',
-      child: GetBuilder<KaryawanControl>(
-        id: 'demografi',
-        builder: (_) {
-          return Column(
-            children: [
-              Expanded(
-                child: PieChart(
-                  PieChartData(
-                    sections: data.map((e) => PieChartSectionData(
-                      value: (e['value'] as num).toDouble(),
-                      color: e['color'] as Color,
-                      title: AFconvert.matNumber(e['value']),
-                      titleStyle: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        shadows: [Shadow(color: Colors.black, blurRadius: 2)],
-                      ),
-                    ),
-                    ).toList(),
+      child: Column(
+        children: [
+          Expanded(
+            child: PieChart(
+              PieChartData(
+                sections: data.map((e) => PieChartSectionData(
+                  value: (e['value'] as num).toDouble(),
+                  color: e['color'] as Color,
+                  title: AFconvert.matNumber(e['value']),
+                  titleStyle: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    shadows: [Shadow(color: Colors.black, blurRadius: 2)],
                   ),
-
                 ),
-              ),
-              const SizedBox(height: 10),
-              Wrap(
-                spacing: 30,
-                children: data
-                    .map(
-                      (e) => Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            width: 14,
-                            height: 14,
-                            margin: const EdgeInsets.only(right: 8),
-                            decoration: BoxDecoration(
-                              color: e['color'] as Color,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          Text('${e['label']}: ${e['value']}',
-                            style: TextStyle(color: e['color'] as Color),
-                          ),
-                        ],
-                      ),
                 ).toList(),
               ),
-              tombolDetil(
-                onPressed: () {
-                  dialogDetail(title: 'AGAMA', data: karyawanControl.totalKaryawanPerAgama);
-                },
-              ),
-            ],
-          );
-        },
+
+            ),
+          ),
+          const SizedBox(height: 10),
+          Wrap(
+            spacing: 30,
+            children: data
+                .map(
+                  (e) => Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                        width: 14,
+                        height: 14,
+                        margin: const EdgeInsets.only(right: 8),
+                        decoration: BoxDecoration(
+                          color: e['color'] as Color,
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                      Text('${e['label']}: ${e['value']}',
+                        style: TextStyle(color: e['color'] as Color),
+                      ),
+                    ],
+                  ),
+            ).toList(),
+          ),
+          tombolDetil(
+            onPressed: () {
+              dialogDetail(title: 'AGAMA', data: karyawanControl.totalKaryawanPerAgama);
+            },
+          ),
+        ],
       ),
     );
   }

@@ -55,6 +55,8 @@ class KaryawanControl extends GetxController {
   List<Karyawan> listUlangTahun = [];
   bool isLoadingKaryawan = true;
   bool isLoadingBeranda = true;
+  bool isLoadingDemografi = false;
+  bool isDemografiLoaded = false;
   List<Opsi> listAgama = [];
   List<Opsi> listArea = [];
   List<Opsi> listDivisi = [];
@@ -305,120 +307,19 @@ class KaryawanControl extends GetxController {
 
   Future<void> loadDataBeranda() async {
     isLoadingBeranda = true;
-    update(['ulang_tahun', 'demografi', 'beranda']);
+    update(['ulang_tahun', 'beranda']);
     try {
-      var hasil = await _repo.findAll(
-        isStaf: '',
-        area: '',
-        statusKerja: '',
-      );
+      var hasil = await _repo.ulangTahun(bulan: _now.month);
       if (hasil.success) {
         listUlangTahun.clear();
-        demografiTotalKaryawanPerArea.clear();
-        totalKaryawanPerKelamin.clear();
-        totalKaryawanPerKawin.clear();
-        totalKaryawanPerAgama.clear();
-        totalKaryawanPerPendidikan.clear();
-        totalKaryawanPerUsia.clear();
-
-        for (var data in hasil.daftar) {
-          var k = Karyawan.fromMap(data);
-
-          if (k.tanggalLahir != null && k.tanggalLahir!.month == _now.month) {
-            listUlangTahun.add(k);
+        for (var u in hasil.daftar) {
+          if (u is Map) {
+            listUlangTahun.add(Karyawan(
+              id: AFconvert.keString(u['id']),
+              nama: AFconvert.keString(u['nama']),
+              tanggalLahir: AFconvert.keTanggal(u['tanggal_lahir']),
+            ));
           }
-
-          if (demografiTotalKaryawanPerArea.containsKey('TOTAL KARYAWAN')) {
-            demografiTotalKaryawanPerArea['TOTAL KARYAWAN'] =
-                demografiTotalKaryawanPerArea['TOTAL KARYAWAN']! + 1;
-          } else {
-            demografiTotalKaryawanPerArea['TOTAL KARYAWAN'] = 1;
-          }
-          if (demografiTotalKaryawanPerArea.containsKey(k.area.kode)) {
-            demografiTotalKaryawanPerArea[k.area.kode] =
-                demografiTotalKaryawanPerArea[k.area.kode]! + 1;
-          } else {
-            demografiTotalKaryawanPerArea[k.area.kode] = 1;
-          }
-
-          if (!totalKaryawanPerKelamin.containsKey(k.kelamin)) {
-            totalKaryawanPerKelamin[k.kelamin] = {};
-            totalKaryawanPerKelamin[k.kelamin]!['TOTAL KARYAWAN'] = 0;
-          }
-          if (totalKaryawanPerKelamin[k.kelamin]!.containsKey(k.area.kode)) {
-            totalKaryawanPerKelamin[k.kelamin]![k.area.kode] =
-                totalKaryawanPerKelamin[k.kelamin]![k.area.kode]! + 1;
-          } else {
-            totalKaryawanPerKelamin[k.kelamin]![k.area.kode] = 1;
-          }
-          totalKaryawanPerKelamin[k.kelamin]!['TOTAL KARYAWAN'] =
-              totalKaryawanPerKelamin[k.kelamin]!['TOTAL KARYAWAN']! + 1;
-
-          if (!totalKaryawanPerKawin.containsKey(k.kawin)) {
-            totalKaryawanPerKawin[k.kawin] = {};
-            totalKaryawanPerKawin[k.kawin]!['TOTAL KARYAWAN'] = 0;
-          }
-          if (totalKaryawanPerKawin[k.kawin]!.containsKey(k.area.kode)) {
-            totalKaryawanPerKawin[k.kawin]![k.area.kode] =
-                totalKaryawanPerKawin[k.kawin]![k.area.kode]! + 1;
-          } else {
-            totalKaryawanPerKawin[k.kawin]![k.area.kode] = 1;
-          }
-          totalKaryawanPerKawin[k.kawin]!['TOTAL KARYAWAN'] =
-              totalKaryawanPerKawin[k.kawin]!['TOTAL KARYAWAN']! + 1;
-
-          if (!totalKaryawanPerAgama.containsKey(k.agama.nama)) {
-            totalKaryawanPerAgama[k.agama.nama] = {};
-            totalKaryawanPerAgama[k.agama.nama]!['TOTAL KARYAWAN'] = 0;
-          }
-          if (totalKaryawanPerAgama[k.agama.nama]!.containsKey(k.area.kode)) {
-            totalKaryawanPerAgama[k.agama.nama]![k.area.kode] =
-                totalKaryawanPerAgama[k.agama.nama]![k.area.kode]! + 1;
-          } else {
-            totalKaryawanPerAgama[k.agama.nama]![k.area.kode] = 1;
-          }
-          totalKaryawanPerAgama[k.agama.nama]!['TOTAL KARYAWAN'] =
-              totalKaryawanPerAgama[k.agama.nama]!['TOTAL KARYAWAN']! + 1;
-
-          if (!totalKaryawanPerPendidikan.containsKey(k.pendidikan.nama)) {
-            totalKaryawanPerPendidikan[k.pendidikan.nama] = {};
-            totalKaryawanPerPendidikan[k.pendidikan.nama]!['TOTAL KARYAWAN'] =
-                0;
-          }
-          if (totalKaryawanPerPendidikan[k.pendidikan.nama]!
-              .containsKey(k.area.kode)) {
-            totalKaryawanPerPendidikan[k.pendidikan.nama]![k.area.kode] =
-                totalKaryawanPerPendidikan[k.pendidikan.nama]![k.area.kode]! +
-                    1;
-          } else {
-            totalKaryawanPerPendidikan[k.pendidikan.nama]![k.area.kode] = 1;
-          }
-          totalKaryawanPerPendidikan[k.pendidikan.nama]!['TOTAL KARYAWAN'] =
-              totalKaryawanPerPendidikan[k.pendidikan.nama]![
-                      'TOTAL KARYAWAN']! +
-                  1;
-
-          String kelompokUsia = getKelompokUsia(k.tanggalLahir);
-          if (!totalKaryawanPerUsia
-              .containsKey(kelompokUsia)) {
-            totalKaryawanPerUsia[kelompokUsia] = {};
-            totalKaryawanPerUsia[kelompokUsia]![
-                'TOTAL KARYAWAN'] = 0;
-          }
-          if (totalKaryawanPerUsia[kelompokUsia]!
-              .containsKey(k.area.kode)) {
-            totalKaryawanPerUsia[kelompokUsia]![
-                k.area.kode] = totalKaryawanPerUsia[
-                    kelompokUsia]![k.area.kode]! +
-                1;
-          } else {
-            totalKaryawanPerUsia[kelompokUsia]![
-                k.area.kode] = 1;
-          }
-          totalKaryawanPerUsia[kelompokUsia]![
-              'TOTAL KARYAWAN'] = totalKaryawanPerUsia[
-                  kelompokUsia]!['TOTAL KARYAWAN']! +
-              1;
         }
 
         listUlangTahun.sort((a, b) {
@@ -429,7 +330,58 @@ class KaryawanControl extends GetxController {
       }
     } finally {
       isLoadingBeranda = false;
-      update(['ulang_tahun', 'demografi', 'beranda']);
+      update(['ulang_tahun', 'beranda']);
+    }
+  }
+
+  Future<void> loadDemografi({bool force = false}) async {
+    if (isDemografiLoaded && !force) return;
+    isLoadingDemografi = true;
+    update(['demografi']);
+    try {
+      var hasil = await _repo.demografi();
+      if (hasil.success) {
+        demografiTotalKaryawanPerArea.clear();
+        totalKaryawanPerKelamin.clear();
+        totalKaryawanPerKawin.clear();
+        totalKaryawanPerAgama.clear();
+        totalKaryawanPerPendidikan.clear();
+        totalKaryawanPerUsia.clear();
+
+        var data = hasil.data;
+        if (data.isNotEmpty) {
+          if (data['total_per_area'] is Map) {
+            (data['total_per_area'] as Map).forEach((k, v) {
+              demografiTotalKaryawanPerArea[AFconvert.keString(k)] = AFconvert.keInt(v);
+            });
+          }
+
+          void parseNestedMap(dynamic source, Map<String, Map<String, int>> target) {
+            if (source is Map) {
+              source.forEach((k1, v1) {
+                String key1 = AFconvert.keString(k1);
+                target[key1] = {};
+                if (v1 is Map) {
+                  v1.forEach((k2, v2) {
+                    target[key1]![AFconvert.keString(k2)] = AFconvert.keInt(v2);
+                  });
+                }
+              });
+            }
+          }
+
+          parseNestedMap(data['total_per_kelamin'], totalKaryawanPerKelamin);
+          parseNestedMap(data['total_per_kawin'], totalKaryawanPerKawin);
+          parseNestedMap(data['total_per_agama'], totalKaryawanPerAgama);
+          parseNestedMap(data['total_per_pendidikan'], totalKaryawanPerPendidikan);
+          parseNestedMap(data['total_per_usia'], totalKaryawanPerUsia);
+
+          isDemografiLoaded = true;
+        }
+      }
+    } finally {
+      isLoadingDemografi = false;
+      update(['demografi']);
     }
   }
 
@@ -2238,7 +2190,10 @@ class KaryawanControl extends GetxController {
     loadKaryawans();
     loadCalonKaryawans();
     loadMantanKaryawans();
-    ever(authControl.karyawanUpdateTrigger, (_) => loadDataBeranda());
+    ever(authControl.karyawanUpdateTrigger, (_) {
+      isDemografiLoaded = false;
+      loadDataBeranda();
+    });
     ever(authControl.masterDataUpdateTrigger, (_) => loadAllData());
     super.onInit();
   }
