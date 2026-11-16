@@ -704,6 +704,7 @@ class KaryawanControl extends GetxController {
     loadTrainingKaryawan();
     loadTimelineMasakerja();
     loadUpahCurrent();
+    loadFormData();
     Get.toNamed(Rute.karyawanForm);
   }
 
@@ -1074,6 +1075,9 @@ class KaryawanControl extends GetxController {
   }
 
   Future<Opsi?> pilihTraining({String value = ''}) async {
+    if (listTraining.isEmpty) {
+      await loadTrainings();
+    }
     var a = await AFcombobox.bottomSheet(
       listOpsi: listTraining,
       valueSelected: value,
@@ -1692,6 +1696,7 @@ class KaryawanControl extends GetxController {
           Opsi(value: AFconvert.keString(data['id']), label: data['nama'], data: data),
         );
       }
+      update(['summary_karyawan', 'filter_karyawan']);
     }
   }
 
@@ -1721,22 +1726,59 @@ class KaryawanControl extends GetxController {
     }
   }
 
+  bool isFormDataLoaded = false;
+  bool isLoadingFormData = false;
+
+  /// Memuat data master utama yang esensial untuk Beranda (Demografi)
+  Future<void> loadStartupMasterData() async {
+    await loadAreas();
+  }
+
+  /// Lazy loading data master dropdown yang hanya digunakan di form / dialog
+  Future<void> loadFormData({bool force = false}) async {
+    if (isLoadingFormData) return;
+    if (isFormDataLoaded && !force) return;
+    isLoadingFormData = true;
+    try {
+      await Future.wait([
+        if (listArea.isEmpty || force) loadAreas(),
+        if (listStatusKerja.isEmpty || force) loadStatusKerjas(),
+        if (listAgama.isEmpty || force) loadAgamas(),
+        if (listDivisi.isEmpty || force) loadDivisis(),
+        if (listJabatan.isEmpty || force) loadJabatans(),
+        if (listPendidikan.isEmpty || force) loadPendidikans(),
+        if (listTraining.isEmpty || force) loadTrainings(),
+        if (listStatusPhk.isEmpty || force) loadStatusPhks(),
+        if (listPtkp.isEmpty || force) loadPtkps(),
+      ]);
+      isFormDataLoaded = true;
+      update(['form_karyawan']);
+    } finally {
+      isLoadingFormData = false;
+    }
+  }
+
   Future<void> loadAllData() async {
     await Future.wait([
-      loadAgamas(),
       loadAreas(),
-      loadDivisis(),
-      loadJabatans(),
-      loadPendidikans(),
-      loadTrainings(),
       loadStatusKerjas(),
-      loadStatusPhks(),
-      loadPtkps(),
+      if (isFormDataLoaded) ...[
+        loadAgamas(),
+        loadDivisis(),
+        loadJabatans(),
+        loadPendidikans(),
+        loadTrainings(),
+        loadStatusPhks(),
+        loadPtkps(),
+      ],
     ]);
     update(['form_karyawan']);
   }
 
   Future<Opsi?> pilihAgama({String value = ''}) async {
+    if (listAgama.isEmpty) {
+      await loadAgamas();
+    }
     var a = await AFcombobox.bottomSheet(
       listOpsi: listAgama,
       valueSelected: value,
@@ -1746,6 +1788,9 @@ class KaryawanControl extends GetxController {
   }
 
   Future<Opsi?> pilihArea({String value = '', bool withSemua = false}) async {
+    if (listArea.isEmpty) {
+      await loadAreas();
+    }
     List<Opsi> list = [...listArea];
     if(withSemua) {
       list.add(Opsi(value: '', label: 'SEMUA'));
@@ -1759,6 +1804,9 @@ class KaryawanControl extends GetxController {
   }
 
   Future<Opsi?> pilihDivisi({String value = ''}) async {
+    if (listDivisi.isEmpty) {
+      await loadDivisis();
+    }
     var a = await AFcombobox.bottomSheet(
       listOpsi: listDivisi,
       valueSelected: value,
@@ -1768,6 +1816,9 @@ class KaryawanControl extends GetxController {
   }
 
   Future<Opsi?> pilihJabatan({String value = ''}) async {
+    if (listJabatan.isEmpty) {
+      await loadJabatans();
+    }
     var a = await AFcombobox.bottomSheet(
       listOpsi: listJabatan,
       valueSelected: value,
@@ -1777,6 +1828,9 @@ class KaryawanControl extends GetxController {
   }
 
   Future<Opsi?> pilihPendidikan({String value = ''}) async {
+    if (listPendidikan.isEmpty) {
+      await loadPendidikans();
+    }
     var a = await AFcombobox.bottomSheet(
       listOpsi: listPendidikan,
       valueSelected: value,
@@ -1786,6 +1840,9 @@ class KaryawanControl extends GetxController {
   }
 
   Future<Opsi?> pilihStatusKerja({String value = '', bool withSemua = false}) async {
+    if (listStatusKerja.isEmpty) {
+      await loadStatusKerjas();
+    }
     List<Opsi> list = [...listStatusKerja];
     if(withSemua) {
       list.add(Opsi(value: '', label: 'SEMUA'));
@@ -1799,6 +1856,9 @@ class KaryawanControl extends GetxController {
   }
 
   Future<Opsi?> pilihStatusPhk({String value = ''}) async {
+    if (listStatusPhk.isEmpty) {
+      await loadStatusPhks();
+    }
     var a = await AFcombobox.bottomSheet(
       listOpsi: listStatusPhk,
       valueSelected: value,
@@ -1822,6 +1882,9 @@ class KaryawanControl extends GetxController {
   }
 
   Future<Opsi?> pilihPtkp({String value = ''}) async {
+    if (listPtkp.isEmpty) {
+      await loadPtkps();
+    }
     var a = await AFcombobox.bottomSheet(
       listOpsi: listPtkp,
       valueSelected: value,
@@ -2171,10 +2234,10 @@ class KaryawanControl extends GetxController {
     tahunPhk = Opsi(value: '${_now.year}', label: '${_now.year}');
     bulanPhk = Opsi(value: '${_now.month}', label: mapBulan[_now.month]!);
     loadDataBeranda();
+    loadStartupMasterData();
     loadKaryawans();
     loadCalonKaryawans();
     loadMantanKaryawans();
-    loadAllData();
     ever(authControl.karyawanUpdateTrigger, (_) => loadDataBeranda());
     ever(authControl.masterDataUpdateTrigger, (_) => loadAllData());
     super.onInit();

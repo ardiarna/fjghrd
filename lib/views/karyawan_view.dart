@@ -347,6 +347,9 @@ class KaryawanView extends StatelessWidget {
         hide: true,
       ),
     ];
+    if (controller.listStatusKerja.isEmpty) {
+      controller.loadStatusKerjas();
+    }
     return Column(
       children: [
         Container(

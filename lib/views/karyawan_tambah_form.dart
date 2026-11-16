@@ -863,6 +863,7 @@ class KaryawanTambahForm extends StatelessWidget {
 
 void showKaryawanTambahForm(BuildContext context) {
   final controller = Get.find<KaryawanControl>();
+  controller.loadFormData();
 
     controller.txtId.text = '';
 
