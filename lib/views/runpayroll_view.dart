@@ -20,7 +20,6 @@ class RunpayrollView extends StatelessWidget {
 
   final PayrollControl controller = Get.put(PayrollControl());
   final ScrollController _scrollController = ScrollController();
-  final TextEditingController searchKaryawan = TextEditingController();
   final DateTime now = DateTime.now();
 
   PlutoGridStateManager? stateManager;
@@ -1579,7 +1578,7 @@ class RunpayrollView extends StatelessWidget {
                           width: 350,
                           height: 40,
                           child: TextField(
-                            controller: searchKaryawan,
+                            controller: controller.searchKaryawan,
                             onChanged: (v) {
                                controller.update(['payroll_karyawan']);
                             },
@@ -1587,10 +1586,10 @@ class RunpayrollView extends StatelessWidget {
                               hintText: 'Cari...',
                               contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
                               border: const OutlineInputBorder(),
-                              suffixIcon: searchKaryawan.text.isNotEmpty ? IconButton(
+                              suffixIcon: controller.searchKaryawan.text.isNotEmpty ? IconButton(
                                 icon: const Icon(Icons.close, size: 18),
                                 onPressed: () {
-                                  searchKaryawan.clear();
+                                  controller.searchKaryawan.clear();
                                   controller.update(['payroll_karyawan']);
                                 }
                               ) : null,
@@ -1608,7 +1607,7 @@ class RunpayrollView extends StatelessWidget {
                     builder: (_) {
                       List<Widget> children = [];
                       var no = 1;
-                      String cari = searchKaryawan.text.toLowerCase();
+                      String cari = controller.searchKaryawan.text.toLowerCase();
                       controller.totalKaryawanPerArea.forEach((key, value) {
                         List<Widget> tempAreaChildren = [];
                         for (var i = 0; i < controller.listKaryawan.length; i++) {

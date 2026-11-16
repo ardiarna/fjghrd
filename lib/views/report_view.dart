@@ -903,7 +903,7 @@ class ReportView extends StatelessWidget {
         }
       ),
       scrollable: false,
-    );
+    ).then((_) => txtCari.dispose());
   }
 
   void dialogListPayroll() {

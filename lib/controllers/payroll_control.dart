@@ -70,6 +70,7 @@ class PayrollControl extends GetxController {
       txtMedical, txtThr, txtBonus, txtInsentif, txtTelkomsel, txtLain, txtPot25hari, txtPot25jumlah,
       txtPotTelepon, txtPotBensin, txtPotKas, txtPotCicilan, txtPotBpjs, txtPotCutiHari, txtPotCutiJumlah, txtPotLain,
       txtPotKompensasiJam, txtPotKompensasiJumlah, txtTotalDiterima, txtKeterangan, txtNote;
+  final TextEditingController searchKaryawan = TextEditingController();
   late Opsi filterTahun;
   late Opsi tahun;
   late Opsi bulan;
@@ -492,6 +493,7 @@ class PayrollControl extends GetxController {
     txtTotalDiterima.dispose();
     txtKeterangan.dispose();
     txtNote.dispose();
+    searchKaryawan.dispose();
     super.onClose();
   }
 }

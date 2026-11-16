@@ -109,7 +109,7 @@ class CicCutiMasalTambahKaryawanView extends StatelessWidget {
                     // 4. Tgl Kembali
                     AFwidget.barisText(
                       label: 'Tgl Kembali',
-                      controller: TextEditingController(text: dataMasal['tanggal_kembali']),
+                      controller: controller.txtEditTglKembali,
                       readOnly: true,
                     ),
                     

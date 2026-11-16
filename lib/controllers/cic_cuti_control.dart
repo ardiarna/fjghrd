@@ -204,10 +204,6 @@ class CicCutiControl extends GetxController {
     txtMinTahunLalu.addListener(() => update(['form_cuti', 'total_jatah']));
     txtAkanDiambil.addListener(() { hitungSisa(); update(['form_cuti']); });
     txtLamaMasal.addListener(() { hitungSisa(); update(['form_cuti']); });
-    txtLamaUnpaid = TextEditingController();
-    txtLamaGantiLibur = TextEditingController();
-    txtTglAwalKhusus = TextEditingController();
-    txtTglAkhirKhusus = TextEditingController();
     loadCutis();
     loadKaryawan();
     loadJenisKhusus();

@@ -24,6 +24,11 @@ class CicCutiMasalControl extends GetxController {
   TextEditingController txtTglKembali = TextEditingController();
   TextEditingController txtLamaHariGlobal = TextEditingController();
   TextEditingController txtCari = TextEditingController();
+
+  final TextEditingController txtEditTahun = TextEditingController();
+  final TextEditingController txtEditTglKembali = TextEditingController();
+  final TextEditingController txtEditLamaHari = TextEditingController();
+  final TextEditingController txtEditTanggalCuti = TextEditingController();
   
   List<DateTime> listTanggalGlobal = [];
   List<CicKaryawanCutiMasal> listKaryawan = [];
@@ -33,9 +38,6 @@ class CicCutiMasalControl extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    txtKeperluan = TextEditingController();
-    txtTglKembali = TextEditingController();
-    txtLamaHariGlobal = TextEditingController();
     txtKeperluan.addListener(update);
     txtTglKembali.addListener(update);
     txtLamaHariGlobal.addListener(update);
@@ -69,6 +71,10 @@ class CicCutiMasalControl extends GetxController {
     txtLamaHariGlobal.dispose();
     txtCari.dispose();
     txtKeteranganTambah.dispose();
+    txtEditTahun.dispose();
+    txtEditTglKembali.dispose();
+    txtEditLamaHari.dispose();
+    txtEditTanggalCuti.dispose();
     for(var k in listKaryawan) {
       k.txtLamaHari.dispose();
     }
@@ -451,6 +457,16 @@ class CicCutiMasalControl extends GetxController {
               }
           }
       }
+      txtEditTahun.text = dataMasal?['tahun']?.toString() ?? '';
+      txtEditTglKembali.text = dataMasal?['tanggal_kembali'] != null ? AFconvert.matDate(DateTime.parse(dataMasal!['tanggal_kembali'])) : '';
+      var lh = dataMasal?['lama_hari'];
+      if (lh != null) {
+        double val = AFconvert.keDouble(lh);
+        txtEditLamaHari.text = val == val.toInt() ? val.toInt().toString() : val.toString();
+      } else {
+        txtEditLamaHari.text = '';
+      }
+      txtEditTanggalCuti.text = tanggalCutiStrGlobal;
     } else {
       AFwidget.snackbar(hasil.message);
     }
@@ -531,6 +547,7 @@ class CicCutiMasalControl extends GetxController {
   void initTambahKaryawan() {
     kcmTambah = null;
     txtKeteranganTambah.text = dataMasal?['keterangan'] ?? '';
+    txtEditTglKembali.text = dataMasal?['tanggal_kembali'] != null ? AFconvert.matDate(DateTime.parse(dataMasal!['tanggal_kembali'])) : (dataMasal?['tanggal_kembali'] ?? '');
     loadingJatah = false;
   }
 

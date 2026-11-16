@@ -49,7 +49,6 @@ class CutiMasalEditView extends StatelessWidget {
 
   Widget _buildTopSection(BuildContext context, CutiMasalControl controller) {
     if (controller.dataMasal == null) return const SizedBox();
-    var masal = controller.dataMasal!;
     
     return Padding(
       padding: const EdgeInsets.all(15.0),
@@ -62,7 +61,7 @@ class CutiMasalEditView extends StatelessWidget {
               children: [
                 AFwidget.barisText(
                   label: 'Tahun Cuti',
-                  controller: TextEditingController(text: masal['tahun']?.toString()),
+                  controller: controller.txtEditTahun,
                   readOnly: true,
                 ),
                 Padding(
@@ -106,7 +105,7 @@ class CutiMasalEditView extends StatelessWidget {
                 ),
                 AFwidget.barisText(
                   label: 'Tgl Kembali',
-                  controller: TextEditingController(text: masal['tanggal_kembali'] != null ? AFconvert.matDate(DateTime.parse(masal['tanggal_kembali'])) : ''),
+                  controller: controller.txtEditTglKembali,
                   readOnly: true,
                 ),
               ],
@@ -118,22 +117,14 @@ class CutiMasalEditView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                (() {
-                  String lamaStr = '';
-                  var lh = masal['lama_hari'];
-                  if (lh != null) {
-                    double val = AFconvert.keDouble(lh);
-                    lamaStr = val == val.toInt() ? val.toInt().toString() : val.toString();
-                  }
-                  return AFwidget.barisText(
-                    label: 'Lama Hari',
-                    controller: TextEditingController(text: lamaStr),
-                    readOnly: true,
-                  );
-                })(),
+                AFwidget.barisText(
+                  label: 'Lama Hari',
+                  controller: controller.txtEditLamaHari,
+                  readOnly: true,
+                ),
                 AFwidget.barisText(
                   label: 'Tanggal Cuti',
-                  controller: TextEditingController(text: controller.tanggalCutiStrGlobal),
+                  controller: controller.txtEditTanggalCuti,
                   readOnly: true,
                   isTextArea: true,
                 ),
@@ -522,6 +513,6 @@ class CutiMasalEditView extends StatelessWidget {
       ),
       backgroundColor: Colors.transparent,
       contentPadding: EdgeInsets.zero,
-    );
+    ).then((_) => txt.dispose());
   }
 }
