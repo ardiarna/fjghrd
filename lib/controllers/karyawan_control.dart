@@ -40,6 +40,7 @@ import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pluto_grid/pluto_grid.dart';
 import 'package:fjghrd/utils/validation_exception.dart';
 
 class KaryawanControl extends GetxController {
@@ -57,6 +58,9 @@ class KaryawanControl extends GetxController {
   bool isLoadingBeranda = true;
   bool isLoadingDemografi = false;
   bool isDemografiLoaded = false;
+  PlutoGridStateManager? gridStateManager;
+  PlutoGridStateManager? gridCalonStateManager;
+  PlutoGridStateManager? gridMantanStateManager;
   List<Opsi> listAgama = [];
   List<Opsi> listArea = [];
   List<Opsi> listDivisi = [];
@@ -386,6 +390,7 @@ class KaryawanControl extends GetxController {
   }
 
   Future<void> loadKaryawans() async {
+    gridStateManager?.setShowLoading(true);
     isLoadingKaryawan = true;
     update(['summary_karyawan']);
     try {
@@ -395,7 +400,6 @@ class KaryawanControl extends GetxController {
         statusKerja: filterStatusKerja.value,
       );
       if (hasil.success) {
-        listKaryawan.clear();
         List<Karyawan> tempKaryawans = [];
         totalKaryawanPerArea.clear();
         totalKaryawanPerStatuskerjaPerArea.clear();
@@ -442,41 +446,51 @@ class KaryawanControl extends GetxController {
       }
     } finally {
       isLoadingKaryawan = false;
+      gridStateManager?.setShowLoading(false);
       update(['summary_karyawan']);
     }
   }
 
   Future<void> loadCalonKaryawans() async {
-    var hasil = await _repo.calonFindAll(isStaf: filterStaf.value, area: filterArea.value);
-    if (hasil.success) {
-      listCalonKaryawan.clear();
-      List<Karyawan> tempCalon = [];
-      totalCalonKaryawanPerArea.clear();
-      for (var data in hasil.daftar) {
-        var k = Karyawan.fromMap(data);
-        tempCalon.add(k);
-        if(filterArea.value == '') {
-          if (totalCalonKaryawanPerArea.containsKey('TOTAL KARYAWAN')) {
-            totalCalonKaryawanPerArea['TOTAL KARYAWAN'] = totalCalonKaryawanPerArea['TOTAL KARYAWAN']! + 1;
+    gridCalonStateManager?.setShowLoading(true);
+    try {
+      var hasil = await _repo.calonFindAll(isStaf: filterStaf.value, area: filterArea.value);
+      if (hasil.success) {
+        List<Karyawan> tempCalon = [];
+        totalCalonKaryawanPerArea.clear();
+        for (var data in hasil.daftar) {
+          var k = Karyawan.fromMap(data);
+          tempCalon.add(k);
+          if(filterArea.value == '') {
+            if (totalCalonKaryawanPerArea.containsKey('TOTAL KARYAWAN')) {
+              totalCalonKaryawanPerArea['TOTAL KARYAWAN'] = totalCalonKaryawanPerArea['TOTAL KARYAWAN']! + 1;
+            } else {
+              totalCalonKaryawanPerArea['TOTAL KARYAWAN'] = 1;
+            }
+          }
+          if (totalCalonKaryawanPerArea.containsKey(k.area.kode)) {
+            totalCalonKaryawanPerArea[k.area.kode] = totalCalonKaryawanPerArea[k.area.kode]! + 1;
           } else {
-            totalCalonKaryawanPerArea['TOTAL KARYAWAN'] = 1;
+            totalCalonKaryawanPerArea[k.area.kode] = 1;
           }
         }
-        if (totalCalonKaryawanPerArea.containsKey(k.area.kode)) {
-          totalCalonKaryawanPerArea[k.area.kode] = totalCalonKaryawanPerArea[k.area.kode]! + 1;
-        } else {
-          totalCalonKaryawanPerArea[k.area.kode] = 1;
-        }
+        listCalonKaryawan.assignAll(tempCalon);
+        update(['summary_calon']);
       }
-      listCalonKaryawan.assignAll(tempCalon);
-      update(['summary_calon']);
+    } finally {
+      gridCalonStateManager?.setShowLoading(false);
     }
   }
 
   Future<void> loadMantanKaryawans() async {
-    var hasil = await _repo.mantanFindAll(isStaf: filterStaf.value);
-    if (hasil.success) {
-      listMantanKaryawan.assignAll(hasil.daftar.map<Karyawan>((data) => Karyawan.fromMap(data)).toList());
+    gridMantanStateManager?.setShowLoading(true);
+    try {
+      var hasil = await _repo.mantanFindAll(isStaf: filterStaf.value);
+      if (hasil.success) {
+        listMantanKaryawan.assignAll(hasil.daftar.map<Karyawan>((data) => Karyawan.fromMap(data)).toList());
+      }
+    } finally {
+      gridMantanStateManager?.setShowLoading(false);
     }
   }
 
@@ -2200,7 +2214,9 @@ class KaryawanControl extends GetxController {
 
   @override
   void onClose() {
-    
+    gridStateManager = null;
+    gridCalonStateManager = null;
+    gridMantanStateManager = null;
     txtGaji.dispose();
     txtUangMakan.dispose();
     txtId.dispose();

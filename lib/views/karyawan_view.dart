@@ -518,6 +518,7 @@ class KaryawanView extends StatelessWidget {
                 columnGroups: columnGroups,
                 onChanged: (PlutoGridOnChangedEvent event) {},
                 onLoaded: (PlutoGridOnLoadedEvent event) {
+                  controller.gridStateManager = event.stateManager;
                   event.stateManager.setShowColumnFilter(true);
                   // event.stateManager.setRowGroup(
                   //   PlutoRowGroupByColumnDelegate(

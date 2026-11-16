@@ -402,6 +402,7 @@ class CalonKaryawanView extends StatelessWidget {
                 columnGroups: columnGroups,
                 onChanged: (PlutoGridOnChangedEvent event) {},
                 onLoaded: (PlutoGridOnLoadedEvent event) {
+                  controller.gridCalonStateManager = event.stateManager;
                   event.stateManager.setShowColumnFilter(true);
                 },
                 rowColorCallback: (rtx) {
