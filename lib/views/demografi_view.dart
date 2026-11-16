@@ -580,7 +580,7 @@ class DemografiView extends StatelessWidget {
     for (var opArea in karyawanControl.listArea) {
       listKolom = [];
       String kodeArea = opArea.data!['kode'];
-      int totalKaryawanPerArea = karyawanControl.totalKaryawanPerArea[kodeArea] ?? 0;
+      int totalKaryawanPerArea = karyawanControl.demografiTotalKaryawanPerArea[kodeArea] ?? (karyawanControl.totalKaryawanPerArea[kodeArea] ?? 0);
       if (totalKaryawanPerArea > 0) {
         int total = 0;
         index = 0;

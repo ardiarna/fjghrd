@@ -385,7 +385,7 @@ class _BerandaViewState extends State<BerandaView> {
                                                         ),
                                                       ),
                                                       if (!karyawanControl
-                                                          .isLoadingKaryawan)
+                                                          .isLoadingBeranda)
                                                         Builder(
                                                           builder: (_) {
                                                             final int totalBulanIni = karyawanControl.listUlangTahun.length;
@@ -433,7 +433,7 @@ class _BerandaViewState extends State<BerandaView> {
                                                   ),
                                                   const SizedBox(height: 5),
                                                   if (karyawanControl
-                                                      .isLoadingKaryawan)
+                                                      .isLoadingBeranda)
                                                     const Center(
                                                       child: Padding(
                                                         padding:

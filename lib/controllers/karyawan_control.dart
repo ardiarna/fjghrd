@@ -46,7 +46,7 @@ class KaryawanControl extends GetxController {
   final authControl = Get.find<AuthControl>();
   final KaryawanRepository _repo = KaryawanRepository();
 
-  final DateTime _now = DateTime.now();
+  DateTime get _now => DateTime.now();
 
   Karyawan current = Karyawan();
   RxList<Karyawan> listKaryawan = <Karyawan>[].obs;
@@ -54,6 +54,7 @@ class KaryawanControl extends GetxController {
   RxList<Karyawan> listMantanKaryawan = <Karyawan>[].obs;
   List<Karyawan> listUlangTahun = [];
   bool isLoadingKaryawan = true;
+  bool isLoadingBeranda = true;
   List<Opsi> listAgama = [];
   List<Opsi> listArea = [];
   List<Opsi> listDivisi = [];
@@ -78,6 +79,7 @@ class KaryawanControl extends GetxController {
   Opsi filterArea = Opsi(value: '', label: 'SEMUA');
   Opsi filterStatusKerja = Opsi(value: '', label: 'SEMUA');
   Map<String, int> totalKaryawanPerArea = {};
+  Map<String, int> demografiTotalKaryawanPerArea = {};
   Map<String, int> totalCalonKaryawanPerArea = {};
   Map<String, Map<String, int>> totalKaryawanPerStatuskerjaPerArea = {};
   Map<String, Map<String, int>> totalKaryawanPerKelamin = {};
@@ -301,67 +303,43 @@ class KaryawanControl extends GetxController {
 
   bool payrollPhkMakanHarian = true;
 
-  Future<void> loadKaryawans() async {
-    isLoadingKaryawan = true;
-    update(['summary_karyawan', 'ulang_tahun', 'demografi', 'beranda']);
+  Future<void> loadDataBeranda() async {
+    isLoadingBeranda = true;
+    update(['ulang_tahun', 'demografi', 'beranda']);
     try {
       var hasil = await _repo.findAll(
-        isStaf: filterStaf.value,
-        area: filterArea.value,
-        statusKerja: filterStatusKerja.value,
+        isStaf: '',
+        area: '',
+        statusKerja: '',
       );
       if (hasil.success) {
-        listKaryawan.clear();
-        List<Karyawan> tempKaryawans = [];
         listUlangTahun.clear();
-        totalKaryawanPerArea.clear();
-        totalKaryawanPerStatuskerjaPerArea.clear();
+        demografiTotalKaryawanPerArea.clear();
         totalKaryawanPerKelamin.clear();
         totalKaryawanPerKawin.clear();
         totalKaryawanPerAgama.clear();
         totalKaryawanPerPendidikan.clear();
         totalKaryawanPerUsia.clear();
+
         for (var data in hasil.daftar) {
           var k = Karyawan.fromMap(data);
-          tempKaryawans.add(k);
 
           if (k.tanggalLahir != null && k.tanggalLahir!.month == _now.month) {
             listUlangTahun.add(k);
           }
 
-          if (totalKaryawanPerArea.containsKey('TOTAL KARYAWAN')) {
-            totalKaryawanPerArea['TOTAL KARYAWAN'] =
-                totalKaryawanPerArea['TOTAL KARYAWAN']! + 1;
+          if (demografiTotalKaryawanPerArea.containsKey('TOTAL KARYAWAN')) {
+            demografiTotalKaryawanPerArea['TOTAL KARYAWAN'] =
+                demografiTotalKaryawanPerArea['TOTAL KARYAWAN']! + 1;
           } else {
-            totalKaryawanPerArea['TOTAL KARYAWAN'] = 1;
+            demografiTotalKaryawanPerArea['TOTAL KARYAWAN'] = 1;
           }
-          if (totalKaryawanPerArea.containsKey(k.area.kode)) {
-            totalKaryawanPerArea[k.area.kode] =
-                totalKaryawanPerArea[k.area.kode]! + 1;
+          if (demografiTotalKaryawanPerArea.containsKey(k.area.kode)) {
+            demografiTotalKaryawanPerArea[k.area.kode] =
+                demografiTotalKaryawanPerArea[k.area.kode]! + 1;
           } else {
-            totalKaryawanPerArea[k.area.kode] = 1;
+            demografiTotalKaryawanPerArea[k.area.kode] = 1;
           }
-
-          if (!totalKaryawanPerStatuskerjaPerArea
-              .containsKey(k.statusKerja.nama)) {
-            totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama] = {};
-            totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]![
-                'TOTAL KARYAWAN'] = 0;
-          }
-          if (totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]!
-              .containsKey(k.area.kode)) {
-            totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]![
-                k.area.kode] = totalKaryawanPerStatuskerjaPerArea[
-                    k.statusKerja.nama]![k.area.kode]! +
-                1;
-          } else {
-            totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]![
-                k.area.kode] = 1;
-          }
-          totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]![
-              'TOTAL KARYAWAN'] = totalKaryawanPerStatuskerjaPerArea[
-                  k.statusKerja.nama]!['TOTAL KARYAWAN']! +
-              1;
 
           if (!totalKaryawanPerKelamin.containsKey(k.kelamin)) {
             totalKaryawanPerKelamin[k.kelamin] = {};
@@ -420,37 +398,99 @@ class KaryawanControl extends GetxController {
                       'TOTAL KARYAWAN']! +
                   1;
 
+          String kelompokUsia = getKelompokUsia(k.tanggalLahir);
           if (!totalKaryawanPerUsia
-              .containsKey(getKelompokUsia(k.tanggalLahir))) {
-            totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)] = {};
-            totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]![
+              .containsKey(kelompokUsia)) {
+            totalKaryawanPerUsia[kelompokUsia] = {};
+            totalKaryawanPerUsia[kelompokUsia]![
                 'TOTAL KARYAWAN'] = 0;
           }
-          if (totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]!
+          if (totalKaryawanPerUsia[kelompokUsia]!
               .containsKey(k.area.kode)) {
-            totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]![
+            totalKaryawanPerUsia[kelompokUsia]![
                 k.area.kode] = totalKaryawanPerUsia[
-                    getKelompokUsia(k.tanggalLahir)]![k.area.kode]! +
+                    kelompokUsia]![k.area.kode]! +
                 1;
           } else {
-            totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]![
+            totalKaryawanPerUsia[kelompokUsia]![
                 k.area.kode] = 1;
           }
-          totalKaryawanPerUsia[getKelompokUsia(k.tanggalLahir)]![
+          totalKaryawanPerUsia[kelompokUsia]![
               'TOTAL KARYAWAN'] = totalKaryawanPerUsia[
-                  getKelompokUsia(k.tanggalLahir)]!['TOTAL KARYAWAN']! +
+                  kelompokUsia]!['TOTAL KARYAWAN']! +
               1;
         }
+
         listUlangTahun.sort((a, b) {
           int dayA = a.tanggalLahir?.day ?? 0;
           int dayB = b.tanggalLahir?.day ?? 0;
           return dayA.compareTo(dayB);
         });
+      }
+    } finally {
+      isLoadingBeranda = false;
+      update(['ulang_tahun', 'demografi', 'beranda']);
+    }
+  }
+
+  Future<void> loadKaryawans() async {
+    isLoadingKaryawan = true;
+    update(['summary_karyawan']);
+    try {
+      var hasil = await _repo.findAll(
+        isStaf: filterStaf.value,
+        area: filterArea.value,
+        statusKerja: filterStatusKerja.value,
+      );
+      if (hasil.success) {
+        listKaryawan.clear();
+        List<Karyawan> tempKaryawans = [];
+        totalKaryawanPerArea.clear();
+        totalKaryawanPerStatuskerjaPerArea.clear();
+
+        for (var data in hasil.daftar) {
+          var k = Karyawan.fromMap(data);
+          tempKaryawans.add(k);
+
+          if (totalKaryawanPerArea.containsKey('TOTAL KARYAWAN')) {
+            totalKaryawanPerArea['TOTAL KARYAWAN'] =
+                totalKaryawanPerArea['TOTAL KARYAWAN']! + 1;
+          } else {
+            totalKaryawanPerArea['TOTAL KARYAWAN'] = 1;
+          }
+          if (totalKaryawanPerArea.containsKey(k.area.kode)) {
+            totalKaryawanPerArea[k.area.kode] =
+                totalKaryawanPerArea[k.area.kode]! + 1;
+          } else {
+            totalKaryawanPerArea[k.area.kode] = 1;
+          }
+
+          if (!totalKaryawanPerStatuskerjaPerArea
+              .containsKey(k.statusKerja.nama)) {
+            totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama] = {};
+            totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]![
+                'TOTAL KARYAWAN'] = 0;
+          }
+          if (totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]!
+              .containsKey(k.area.kode)) {
+            totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]![
+                k.area.kode] = totalKaryawanPerStatuskerjaPerArea[
+                    k.statusKerja.nama]![k.area.kode]! +
+                1;
+          } else {
+            totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]![
+                k.area.kode] = 1;
+          }
+          totalKaryawanPerStatuskerjaPerArea[k.statusKerja.nama]![
+              'TOTAL KARYAWAN'] = totalKaryawanPerStatuskerjaPerArea[
+                  k.statusKerja.nama]!['TOTAL KARYAWAN']! +
+              1;
+        }
         listKaryawan.assignAll(tempKaryawans);
       }
     } finally {
       isLoadingKaryawan = false;
-      update(['summary_karyawan', 'ulang_tahun', 'demografi', 'beranda']);
+      update(['summary_karyawan']);
     }
   }
 
@@ -2130,10 +2170,12 @@ class KaryawanControl extends GetxController {
     txtPayrollPhkTglGajiAkhir = TextEditingController();
     tahunPhk = Opsi(value: '${_now.year}', label: '${_now.year}');
     bulanPhk = Opsi(value: '${_now.month}', label: mapBulan[_now.month]!);
+    loadDataBeranda();
     loadKaryawans();
     loadCalonKaryawans();
     loadMantanKaryawans();
     loadAllData();
+    ever(authControl.karyawanUpdateTrigger, (_) => loadDataBeranda());
     ever(authControl.masterDataUpdateTrigger, (_) => loadAllData());
     super.onInit();
   }
