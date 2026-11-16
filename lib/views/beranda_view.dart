@@ -39,7 +39,8 @@ class _BerandaViewState extends State<BerandaView> {
   final KaryawanControl karyawanControl = Get.put(KaryawanControl());
   final HomeControl homeControl = Get.find<HomeControl>();
 
-  final DateTime _now = DateTime.now();
+  DateTime _now = DateTime.now();
+  bool _isRefreshing = false;
 
   late Future<List<Map<String, dynamic>>> _cutiHariIniFuture;
   late Future<RekapPayrollData> _rekapPayrollFuture;
@@ -49,6 +50,50 @@ class _BerandaViewState extends State<BerandaView> {
     super.initState();
     _cutiHariIniFuture = _loadCutiHariIni();
     _rekapPayrollFuture = _loadRekapPayroll();
+  }
+
+  Future<void> _refreshBeranda() async {
+    if (_isRefreshing) return;
+    setState(() {
+      _isRefreshing = true;
+      _now = DateTime.now();
+      _cutiHariIniFuture = _loadCutiHariIni();
+      _rekapPayrollFuture = _loadRekapPayroll();
+    });
+
+    try {
+      await Future.wait([
+        _cutiHariIniFuture,
+        _rekapPayrollFuture,
+        karyawanControl.loadDataBeranda(),
+      ]);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Data Beranda berhasil diperbarui'),
+            duration: Duration(seconds: 2),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Gagal memperbarui data: $e'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 2),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isRefreshing = false;
+        });
+      }
+    }
   }
 
   Future<List<Map<String, dynamic>>> _loadCutiHariIni() async {
@@ -133,6 +178,25 @@ class _BerandaViewState extends State<BerandaView> {
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
+              ),
+              const SizedBox(width: 8),
+              IconButton(
+                tooltip: 'Refresh Data Beranda',
+                onPressed: _isRefreshing ? null : _refreshBeranda,
+                icon: _isRefreshing
+                    ? const SizedBox(
+                        width: 18,
+                        height: 18,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      )
+                    : const Icon(
+                        Icons.refresh,
+                        color: Colors.white,
+                        size: 22,
+                      ),
               ),
               const Spacer(),
               Image.asset('assets/images/logo_white.png', height: 40),
