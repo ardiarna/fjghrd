@@ -36,6 +36,7 @@ class PayrollControl extends GetxController {
   RxList<Payroll> listDetilPayroll = <Payroll>[].obs;
   List<Karyawan> listKaryawan = [];
   Map<String, int> totalKaryawanPerArea = {};
+  Map<String, List<Karyawan>> karyawanPerArea = {};
   List<Overtime> listOvertime = [];
   List<Medical> listMedical = [];
   List<Penghasilan> listPenghasilan = [];
@@ -71,6 +72,7 @@ class PayrollControl extends GetxController {
       txtPotTelepon, txtPotBensin, txtPotKas, txtPotCicilan, txtPotBpjs, txtPotCutiHari, txtPotCutiJumlah, txtPotLain,
       txtPotKompensasiJam, txtPotKompensasiJumlah, txtTotalDiterima, txtKeterangan, txtNote;
   final TextEditingController searchKaryawan = TextEditingController();
+  final ScrollController scrollKaryawan = ScrollController();
   late Opsi filterTahun;
   late Opsi tahun;
   late Opsi bulan;
@@ -113,25 +115,21 @@ class PayrollControl extends GetxController {
     if (hasil.success) {
       listKaryawan.clear();
       totalKaryawanPerArea.clear();
+      karyawanPerArea.clear();
+      List<Karyawan> nonStafList = [];
       for (var data in hasil.daftar) {
         var k = Karyawan.fromMap(data);
         listKaryawan.add(k);
-        if(k.staf) {
-          if (totalKaryawanPerArea.containsKey(k.area.nama)) {
-            totalKaryawanPerArea[k.area.nama] = totalKaryawanPerArea[k.area.nama]! + 1;
-          } else {
-            totalKaryawanPerArea[k.area.nama] = 1;
-          }
+        if (k.staf) {
+          totalKaryawanPerArea[k.area.nama] = (totalKaryawanPerArea[k.area.nama] ?? 0) + 1;
+          karyawanPerArea.putIfAbsent(k.area.nama, () => []).add(k);
+        } else {
+          nonStafList.add(k);
         }
       }
-      for (var k in listKaryawan) {
-        if(k.staf == false) {
-          if (totalKaryawanPerArea.containsKey('NON STAF')) {
-            totalKaryawanPerArea['NON STAF'] = totalKaryawanPerArea['NON STAF']! + 1;
-          } else {
-            totalKaryawanPerArea['NON STAF'] = 1;
-          }
-        }
+      if (nonStafList.isNotEmpty) {
+        totalKaryawanPerArea['NON STAF'] = nonStafList.length;
+        karyawanPerArea['NON STAF'] = nonStafList;
       }
       update(['payroll_karyawan']);
     }
@@ -494,6 +492,7 @@ class PayrollControl extends GetxController {
     txtKeterangan.dispose();
     txtNote.dispose();
     searchKaryawan.dispose();
+    scrollKaryawan.dispose();
     super.onClose();
   }
 }

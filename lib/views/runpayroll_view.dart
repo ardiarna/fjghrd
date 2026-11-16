@@ -19,7 +19,6 @@ class RunpayrollView extends StatelessWidget {
   RunpayrollView({super.key});
 
   final PayrollControl controller = Get.put(PayrollControl());
-  final ScrollController _scrollController = ScrollController();
   final DateTime now = DateTime.now();
 
   PlutoGridStateManager? stateManager;
@@ -1605,42 +1604,61 @@ class RunpayrollView extends StatelessWidget {
                   child: GetBuilder<PayrollControl>(
                     id: 'payroll_karyawan',
                     builder: (_) {
-                      List<Widget> children = [];
+                      List<_PayrollKaryawanItem> items = [];
                       var no = 1;
                       String cari = controller.searchKaryawan.text.toLowerCase();
-                      controller.totalKaryawanPerArea.forEach((key, value) {
-                        List<Widget> tempAreaChildren = [];
-                        for (var i = 0; i < controller.listKaryawan.length; i++) {
-                          var k = controller.listKaryawan[i];
-                          
-                          bool matchArea = false;
-                          if (key == 'NON STAF') {
-                            matchArea = !k.staf;
-                          } else {
-                            matchArea = k.staf && k.area.nama == key;
-                          }
-                          
-                          if(matchArea) {
-                            int currentNo = no;
-                            no++;
-                            
-                            if (cari.isNotEmpty && !k.nama.toLowerCase().contains(cari)) continue;
-                            
-                            tempAreaChildren.add(
-                              Container(
+
+                      controller.karyawanPerArea.forEach((key, listKaryawanArea) {
+                        List<_KaryawanRowItem> tempAreaItems = [];
+                        for (var k in listKaryawanArea) {
+                          int currentNo = no++;
+                          if (cari.isNotEmpty && !k.nama.toLowerCase().contains(cari)) continue;
+                          tempAreaItems.add(_KaryawanRowItem(currentNo, k));
+                        }
+                        if (tempAreaItems.isNotEmpty) {
+                          items.add(_AreaHeaderItem(key));
+                          items.addAll(tempAreaItems);
+                          items.add(_AreaSpacerItem());
+                        }
+                      });
+
+                      return Scrollbar(
+                        controller: controller.scrollKaryawan,
+                        thumbVisibility: true,
+                        child: ListView.builder(
+                          controller: controller.scrollKaryawan,
+                          itemCount: items.length,
+                          itemBuilder: (context, index) {
+                            final item = items[index];
+                            if (item is _AreaHeaderItem) {
+                              return Padding(
+                                padding: const EdgeInsets.fromLTRB(20, 10, 20, 3),
+                                child: Text(
+                                  item.title,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 17,
+                                    color: Colors.blue,
+                                  ),
+                                ),
+                              );
+                            } else if (item is _KaryawanRowItem) {
+                              final k = item.karyawan;
+                              return Container(
                                 color: k.dipilih ? Colors.transparent : Colors.redAccent.withValues(alpha: 0.1),
                                 child: Row(
                                   children: [
                                     Checkbox(
                                       value: k.dipilih,
                                       onChanged: (value) {
-                                        if(value != null) {
+                                        if (value != null) {
                                           k.dipilih = value;
                                           controller.update(['payroll_karyawan']);
                                         }
                                       },
                                     ),
-                                    Text('$currentNo. ${k.nama}',
+                                    Text(
+                                      '${item.no}. ${k.nama}',
                                       style: TextStyle(
                                         color: k.dipilih ? Colors.black87 : Colors.black38,
                                       ),
@@ -1648,36 +1666,12 @@ class RunpayrollView extends StatelessWidget {
                                     const SizedBox(width: 100),
                                   ],
                                 ),
-                              ),
-                            );
-                          }
-                        }
-                        if (tempAreaChildren.isNotEmpty) {
-                          children.add(
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(20, 0, 20, 3),
-                                child: Text(key,
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 17,
-                                    color: Colors.blue,
-                                  ),
-                                ),
-                              )
-                          );
-                          children.addAll(tempAreaChildren);
-                          children.add(const SizedBox(height: 20));
-                        }
-                      });
-                      return Scrollbar(
-                        controller: _scrollController,
-                        thumbVisibility: true,
-                        child: SingleChildScrollView(
-                          controller: _scrollController,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: children,
-                          ),
+                              );
+                            } else if (item is _AreaSpacerItem) {
+                              return const SizedBox(height: 20);
+                            }
+                            return const SizedBox.shrink();
+                          },
                         ),
                       );
                     },
@@ -1953,3 +1947,19 @@ class RunpayrollView extends StatelessWidget {
     );
   }
 }
+
+sealed class _PayrollKaryawanItem {}
+
+class _AreaHeaderItem extends _PayrollKaryawanItem {
+  final String title;
+  _AreaHeaderItem(this.title);
+}
+
+class _KaryawanRowItem extends _PayrollKaryawanItem {
+  final int no;
+  final Karyawan karyawan;
+  _KaryawanRowItem(this.no, this.karyawan);
+}
+
+class _AreaSpacerItem extends _PayrollKaryawanItem {}
+
