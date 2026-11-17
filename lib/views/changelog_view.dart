@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 class ChangelogView extends StatefulWidget {
   const ChangelogView({super.key});
 
-  static const String appVersion = 'v2.2.5';
+  static const String appVersion = 'v2.2.6';
 
   @override
   State<ChangelogView> createState() => _ChangelogViewState();
@@ -46,6 +46,20 @@ class _ChangelogViewState extends State<ChangelogView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  _buildVersion(
+                    version: 'v2.2.6',
+                    date: '17 Nov 2026',
+                    emoji: '🚀',
+                    subtitle: 'Ulang Tahun Bulanan, Periode Training, Optimasi UI Run Payroll & Efisiensi Query',
+                    items: [
+                      'Card Berulang Tahun Beranda: Pembaruan tampilan kartu Ulang Tahun pada dashboard Beranda untuk menampilkan seluruh karyawan yang berulang tahun dalam bulan berjalan (current month) yang diurutkan rapi berdasarkan tanggal lahir, disertai highlight penanda khusus bagi karyawan yang berulang tahun hari ini.',
+                      'Data & Form Training Karyawan: Pemisahan field tanggal pelatihan menjadi Tanggal Awal dan Tanggal Akhir pada form data karyawan, model, dan backend database untuk pencatatan rentang durasi training yang lebih presisi.',
+                      'Optimasi Run Payroll & Virtualisasi UI: Refactoring modal pemilihan karyawan dengan memangkas kompleksitas algoritma dari O(A × N) menjadi O(N) single-pass dan migrasi ke ListView.builder virtualized. Menghilangkan frame stutter sehingga pencarian dan checklist karyawan berjalan mulus 60 FPS.',
+                      'Pencegahan Memory Leak & Audit Controller: Pembersihan double-initialization pada seluruh modul Cuti & Cuti Masal, perbaikan inline TextEditingController pada method build() form cuti masal, serta penataan lifecycle TextEditingController dan ScrollController terkelola di GetX.',
+                      'Efisiensi Query Database (Backend): Eliminasi redundant query relasi PHK pada cetak Slip PHK (PDF & Excel), eliminasi double query pada pencarian riwayat upah dan gaji di PayrollHeader repository, serta pencegahan issue N+1 query pada ekspor biodata dan kalender cuti.',
+                      'Standardisasi Grid Komponen: Migrasi 24 komponen PlutoGrid di seluruh modul aplikasi ke AFPlutoGrid untuk menjaga kestabilan state manager dan konsistensi UI.',
+                    ],
+                  ),
                   _buildVersion(
                     version: 'v2.2.5',
                     date: '04 Nov 2026',
