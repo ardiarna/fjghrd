@@ -74,7 +74,7 @@ class TrainingView extends StatelessWidget {
     return Column(
       children: [
         AFwidget.pageHeader(
-          title: 'TRAINING',
+          title: 'TRAINING - MEETING - PAMERAN - TUGAS LN',
           icon: Icons.model_training,
           children: [
             const Spacer(),

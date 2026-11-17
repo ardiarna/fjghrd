@@ -254,7 +254,7 @@ class HomeView extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(child: drawItem(
-                        label: 'Training',
+                        label: 'Training dll',
                         icon: Icons.model_training,
                         color: Colors.blueGrey,
                         onTap: () {

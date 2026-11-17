@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 class ChangelogView extends StatefulWidget {
   const ChangelogView({super.key});
 
-  static const String appVersion = 'v2.2.6';
+  static const String appVersion = 'v2.2.7';
 
   @override
   State<ChangelogView> createState() => _ChangelogViewState();
@@ -47,8 +47,19 @@ class _ChangelogViewState extends State<ChangelogView> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildVersion(
-                    version: 'v2.2.6',
+                    version: 'v2.2.7',
                     date: '17 Nov 2026',
+                    emoji: '🚀',
+                    subtitle: 'Label Training Menjadi Event / Tugas LN, Format Baru & Rata Kiri Laporan',
+                    items: [
+                      'Penyesuaian Label Modul Training: Pembaruan label modul Training menjadi "TRAINING - MEETING - PAMERAN - TUGAS LN" pada judul header halaman dan kolom laporan Excel & PDF, serta pengubahan menu drawer sidebar menjadi "Training dll".',
+                      'Detail & Form Riwayat Karyawan: Perubahan judul section pada detail karyawan menjadi "Riwayat Training - Meeting - Pameran - Tugas LN", header kolom tabel menjadi "Nama Event", serta label input dialog form menjadi "Event" dengan dialog picker bertajuk "Pilih Training - Meeting - Pameran - Tugas LN".',
+                      'Format Pemisah Tanggal & Rata Kiri Laporan: Pembaruan format penulisan riwayat event pada seluruh laporan PDF dan Excel menjadi "[Nama Event] : [Tanggal Awal] s/d [Tanggal Akhir]" (menggunakan tanda titik dua) serta penetapan perataan teks seluruhnya rata kiri (left align).',
+                    ],
+                  ),
+                  _buildVersion(
+                    version: 'v2.2.6',
+                    date: '16 Nov 2026',
                     emoji: '🚀',
                     subtitle: 'Ulang Tahun Bulanan, Periode Training, Optimasi UI Run Payroll & Efisiensi Query',
                     items: [

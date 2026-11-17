@@ -211,7 +211,7 @@ class KaryawanForm extends StatelessWidget {
         },
       ),
       PlutoColumn(
-        title: 'TRAINING',
+        title: 'Nama Event',
         field: 'training',
         type: PlutoColumnType.text(),
         readOnly: true,
@@ -1396,7 +1396,7 @@ class KaryawanForm extends StatelessWidget {
                                 children: [
                                   const Padding(
                                     padding: EdgeInsets.fromLTRB(20, 10, 30, 10),
-                                    child: Text('Riwayat Training',
+                                    child: Text('Riwayat Training - Meeting - Pameran - Tugas LN',
                                       style: TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
@@ -1428,7 +1428,7 @@ class KaryawanForm extends StatelessWidget {
                                     decoration: BoxDecoration(
                                       border: Border.all(color: Colors.brown.shade200),
                                     ),
-                                    child: const Text('Tidak ada riwayat training'),
+                                    child: const Text('Tidak ada riwayat training - meeting - pameran - tugas LN'),
                                   );
                                 }
                                 int jumlah = controller.listTrainingKaryawan.length;

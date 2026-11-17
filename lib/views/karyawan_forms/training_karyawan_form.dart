@@ -37,7 +37,7 @@ class TrainingKaryawanForm extends StatelessWidget {
                       Container(
                         width: 150,
                         padding: const EdgeInsets.only(right: 15),
-                        child: const Text('Training'),
+                        child: const Text('Event'),
                       ),
                       Expanded(
                         child: GetBuilder<KaryawanControl>(
@@ -208,7 +208,7 @@ class TrainingKaryawanForm extends StatelessWidget {
                 ),
               ],
             ),
-            AFwidget.formHeader('Form ${id == '' ? 'Tambah' : 'Ubah'} Riwayat Training'),
+            AFwidget.formHeader('Form ${id == '' ? 'Tambah' : 'Ubah'} Riwayat Training - Meeting - Pameran - Tugas LN'),
           ],
         ),
       );

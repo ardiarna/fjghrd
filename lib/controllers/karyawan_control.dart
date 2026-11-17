@@ -1047,7 +1047,7 @@ class KaryawanControl extends GetxController {
     var a = await AFcombobox.bottomSheet(
       listOpsi: listTraining,
       valueSelected: value,
-      judul: 'Pilih Training',
+      judul: 'Pilih Training - Meeting - Pameran - Tugas LN',
     );
     return a;
   }
