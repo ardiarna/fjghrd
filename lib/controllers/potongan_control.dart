@@ -55,11 +55,7 @@ class PotonganControl extends GetxController {
       jenis: filterJenis.value,
     );
     if (hasil.success) {
-      List<Potongan> tempList = [];
-      for (var data in hasil.daftar) {
-        tempList.add(Potongan.fromMap(data));
-      }
-      listPotongan.assignAll(tempList);
+      listPotongan.assignAll(hasil.daftar.map((data) => Potongan.fromMap(data)).toList());
     }
   }
 

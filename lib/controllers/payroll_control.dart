@@ -81,10 +81,7 @@ class PayrollControl extends GetxController {
   Future<void> loadPayrolls() async {
     var hasil = await _payrollRepo.findAll(tahun: filterTahun.value);
     if (hasil.success) {
-      List<Payroll> tempList = [];
-      for (var data in hasil.daftar) {
-        tempList.add(Payroll.fromMap(data));
-      }
+      var tempList = hasil.daftar.map((data) => Payroll.fromMap(data)).toList();
       tempList.sort((a, b) => b.bulan.compareTo(a.bulan));
       listPayroll.assignAll(tempList);
     }
@@ -103,11 +100,7 @@ class PayrollControl extends GetxController {
   Future<void> loadDetilPayrolls() async {
     var hasil = await _payrollRepo.findDetail(currentPayroll.id);
     if (hasil.success) {
-      List<Payroll> tempList = [];
-      for (var data in hasil.daftar) {
-        tempList.add(Payroll.fromMap(data));
-      }
-      listDetilPayroll.assignAll(tempList);
+      listDetilPayroll.assignAll(hasil.daftar.map((data) => Payroll.fromMap(data)).toList());
     }
   }
 

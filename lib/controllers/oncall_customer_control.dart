@@ -38,11 +38,7 @@ class OncallCustomerControl extends GetxController {
       bulan: filterBulan.value,
     );
     if (hasil.success) {
-      List<OncallCustomer> tempList = [];
-      for (var data in hasil.daftar) {
-        tempList.add(OncallCustomer.fromMap(data));
-      }
-      listOncallCustomer.assignAll(tempList);
+      listOncallCustomer.assignAll(hasil.daftar.map((data) => OncallCustomer.fromMap(data)).toList());
     }
   }
 

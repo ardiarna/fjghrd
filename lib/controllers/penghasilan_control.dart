@@ -61,11 +61,7 @@ class PenghasilanControl extends GetxController {
       jenis: filterJenis.value,
     );
     if (hasil.success) {
-      List<Penghasilan> tempList = [];
-      for (var data in hasil.daftar) {
-        tempList.add(Penghasilan.fromMap(data));
-      }
-      listPenghasilan.assignAll(tempList);
+      listPenghasilan.assignAll(hasil.daftar.map((data) => Penghasilan.fromMap(data)).toList());
     }
   }
 

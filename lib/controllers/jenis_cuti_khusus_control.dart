@@ -21,11 +21,7 @@ class JenisCutiKhususControl extends GetxController {
   Future<void> loadJenisCuti() async {
     var hasil = await _repo.findAll();
     if (hasil.success) {
-      List<JenisCutiKhusus> tempList = [];
-      for (var data in hasil.daftar) {
-        tempList.add(JenisCutiKhusus.fromMap(data));
-      }
-      listJenisCuti.assignAll(tempList);
+      listJenisCuti.assignAll(hasil.daftar.map((data) => JenisCutiKhusus.fromMap(data)).toList());
     }
   }
 

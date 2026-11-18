@@ -234,11 +234,7 @@ class CicCutiControl extends GetxController {
   Future<void> loadJatah() async {
     var hasil = await AFdatabase.send(url: 'cic/jatah-cuti-tahunan?tahun=${filterTahun.value}');
     if (hasil.success) {
-      List<JatahCutiTahunan> tempList = [];
-      for (var data in hasil.daftar) {
-        tempList.add(JatahCutiTahunan.fromMap(data));
-      }
-      listJatah.assignAll(tempList);
+      listJatah.assignAll(hasil.daftar.map((data) => JatahCutiTahunan.fromMap(data)).toList());
       if (selectedKaryawan != null) {
         hasJatah = listJatah.any((e) => e.karyawanId == selectedKaryawan!.id);
         if (formType == 'IJIN' && hasJatah) {
@@ -260,11 +256,7 @@ class CicCutiControl extends GetxController {
   Future<void> loadCutis() async {
     var hasil = await repo.findAll(tahun: filterTahun.value);
     if(hasil.success) {
-      List<Cuti> tempList = [];
-      for (var data in hasil.daftar) {
-        tempList.add(Cuti.fromMap(data));
-      }
-      listCuti.assignAll(tempList);
+      listCuti.assignAll(hasil.daftar.map((data) => Cuti.fromMap(data)).toList());
       update();
     }
     loadJatah();

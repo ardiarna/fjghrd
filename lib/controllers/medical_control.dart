@@ -51,11 +51,7 @@ class MedicalControl extends GetxController {
       jenis: filterJenis.value,
     );
     if (hasil.success) {
-      List<Medical> tempList = [];
-      for (var data in hasil.daftar) {
-        tempList.add(Medical.fromMap(data));
-      }
-      listMedical.assignAll(tempList);
+      listMedical.assignAll(hasil.daftar.map((data) => Medical.fromMap(data)).toList());
     }
   }
 

@@ -47,11 +47,7 @@ class OvertimeControl extends GetxController {
       jenis: filterJenis.value,
     );
     if (hasil.success) {
-      List<Overtime> tempList = [];
-      for (var data in hasil.daftar) {
-        tempList.add(Overtime.fromMap(data));
-      }
-      listOvertime.assignAll(tempList);
+      listOvertime.assignAll(hasil.daftar.map((data) => Overtime.fromMap(data)).toList());
     }
   }
 
