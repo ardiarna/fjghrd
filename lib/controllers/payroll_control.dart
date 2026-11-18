@@ -73,6 +73,7 @@ class PayrollControl extends GetxController {
       txtPotKompensasiJam, txtPotKompensasiJumlah, txtTotalDiterima, txtKeterangan, txtNote;
   final TextEditingController searchKaryawan = TextEditingController();
   final ScrollController scrollKaryawan = ScrollController();
+  final ScrollController scrollPayroll = ScrollController();
   late Opsi filterTahun;
   late Opsi tahun;
   late Opsi bulan;
@@ -493,6 +494,7 @@ class PayrollControl extends GetxController {
     txtNote.dispose();
     searchKaryawan.dispose();
     scrollKaryawan.dispose();
+    scrollPayroll.dispose();
     super.onClose();
   }
 }

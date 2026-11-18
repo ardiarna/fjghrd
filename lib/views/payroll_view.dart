@@ -18,8 +18,6 @@ class PayrollView extends StatelessWidget {
 
   final PayrollControl controller = Get.put(PayrollControl());
 
-  final ScrollController _scrollController = ScrollController();
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -138,9 +136,9 @@ class PayrollView extends StatelessWidget {
             ),
             child: Scrollbar(
               thumbVisibility: true,
-              controller: _scrollController,
+              controller: controller.scrollPayroll,
               child: SingleChildScrollView(
-                controller: _scrollController,
+                controller: controller.scrollPayroll,
                 child: Column(
                   children: [
                     Container(

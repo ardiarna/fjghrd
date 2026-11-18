@@ -95,6 +95,10 @@ class KaryawanControl extends GetxController {
   Map<String, Map<String, int>> totalKaryawanPerUsia = {};
 
   
+  final ScrollController scrollFormLeft = ScrollController();
+  final ScrollController scrollFormRight = ScrollController();
+  final ScrollController scrollPayroll = ScrollController();
+
   late TextEditingController txtGaji, txtUangMakan;
   bool? upahMakanHarian = true;
   bool? upahOvertime = false;
@@ -2305,6 +2309,9 @@ class KaryawanControl extends GetxController {
     txtPayrollPhkTglAkhir.dispose();
     txtPayrollPhkTglGajiAwal.dispose();
     txtPayrollPhkTglGajiAkhir.dispose();
+    scrollFormLeft.dispose();
+    scrollFormRight.dispose();
+    scrollPayroll.dispose();
     super.onClose();
   }
 }

@@ -29,9 +29,6 @@ class KaryawanForm extends StatelessWidget {
 
   final KaryawanControl controller = Get.put(KaryawanControl());
 
-  final ScrollController _scrollControllerLeft = ScrollController();
-  final ScrollController _scrollControllerRight = ScrollController();
-
   final DateTime _now = DateTime.now();
 
   List<PlutoRow> _buildRowsKeluarga(List<KeluargaKaryawan> rowData) {
@@ -450,10 +447,10 @@ class KaryawanForm extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Scrollbar(
-                            controller: _scrollControllerLeft,
+                            controller: controller.scrollFormLeft,
                             thumbVisibility: true,
                             child: SingleChildScrollView(
-                              controller: _scrollControllerLeft,
+                              controller: controller.scrollFormLeft,
                               child: Column(
                                 children: [
                                   barisForm(
@@ -1094,10 +1091,10 @@ class KaryawanForm extends StatelessWidget {
                   ),
                   Flexible(
                     child: Scrollbar(
-                      controller: _scrollControllerRight,
+                      controller: controller.scrollFormRight,
                       thumbVisibility: true,
                       child: SingleChildScrollView(
-                        controller: _scrollControllerRight,
+                        controller: controller.scrollFormRight,
                         child: Column(
                           children: [
                             GetBuilder<KaryawanControl>(id: 'detail_karyawan',
