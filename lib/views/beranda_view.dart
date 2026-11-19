@@ -214,23 +214,19 @@ class _BerandaViewState extends State<BerandaView> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: LayoutBuilder(
-                          builder: (context, constraints) {
-                            return SingleChildScrollView(
-                              child: ConstrainedBox(
-                                constraints: BoxConstraints(
-                                  minHeight: constraints.maxHeight,
-                                ),
-                                child: IntrinsicHeight(
-                                  child: Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        20, 10, 20, 10),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
+                        child: CustomScrollView(
+                          slivers: [
+                            SliverFillRemaining(
+                              hasScrollBody: false,
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                    20, 10, 20, 10),
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.center,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
                                         ElevatedButton(
                                           onPressed: () {
                                             karyawanControl.loadDemografi();
@@ -655,11 +651,9 @@ class _BerandaViewState extends State<BerandaView> {
                                     ),
                                   ),
                                 ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
+                              ],
+                            ),
+                          ),
                       Expanded(
                         child: Container(
                           padding: const EdgeInsets.fromLTRB(0, 10, 30, 10),

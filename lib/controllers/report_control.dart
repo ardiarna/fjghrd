@@ -944,4 +944,12 @@ class ReportControl extends GetxController {
     super.onInit();
   }
 
+  @override
+  void onClose() {
+    listArea.clear();
+    listDivisi.clear();
+    bulanTerpilih.clear();
+    super.onClose();
+  }
+
 }
