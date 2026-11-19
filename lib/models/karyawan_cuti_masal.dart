@@ -64,4 +64,8 @@ class KaryawanCutiMasal {
   int get sisaAkhir {
     return belumDiambil - splitCutiMasal;
   }
+
+  void dispose() {
+    txtLamaHari.dispose();
+  }
 }

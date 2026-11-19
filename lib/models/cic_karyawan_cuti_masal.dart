@@ -64,4 +64,8 @@ class CicKaryawanCutiMasal {
   int get sisaAkhir {
     return belumDiambil - splitCutiMasal;
   }
+
+  void dispose() {
+    txtLamaHari.dispose();
+  }
 }

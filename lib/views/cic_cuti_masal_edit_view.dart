@@ -166,7 +166,10 @@ class CicCutiMasalEditView extends StatelessWidget {
                         ),
                         backgroundColor: Colors.transparent,
                         contentPadding: EdgeInsets.zero,
-                      );
+                      ).then((_) {
+                        controller.kcmTambah?.dispose();
+                        controller.kcmTambah = null;
+                      });
                     },
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),

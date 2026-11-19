@@ -76,8 +76,9 @@ class CicCutiMasalControl extends GetxController {
     txtEditLamaHari.dispose();
     txtEditTanggalCuti.dispose();
     for(var k in listKaryawan) {
-      k.txtLamaHari.dispose();
+      k.dispose();
     }
+    kcmTambah?.dispose();
     super.onClose();
   }
 
@@ -90,7 +91,7 @@ class CicCutiMasalControl extends GetxController {
       Get.back();
       if(hasil.success) {
         for(var k in listKaryawan) {
-          k.txtLamaHari.dispose();
+          k.dispose();
         }
         listKaryawan.clear();
         for(var a in hasil.daftar) {
@@ -120,8 +121,11 @@ class CicCutiMasalControl extends GetxController {
           updatedKaryawan.inputDates = List.from(listKaryawan[index].inputDates);
           updatedKaryawan.isChecked = listKaryawan[index].isChecked;
           updatedKaryawan.pindahKeMinus = listKaryawan[index].pindahKeMinus;
+          listKaryawan[index].dispose();
           listKaryawan[index] = updatedKaryawan;
           update();
+        } else {
+          updatedKaryawan.dispose();
         }
       }
     } catch(e) {
@@ -545,6 +549,7 @@ class CicCutiMasalControl extends GetxController {
   bool loadingJatah = false;
 
   void initTambahKaryawan() {
+    kcmTambah?.dispose();
     kcmTambah = null;
     txtKeteranganTambah.text = dataMasal?['keterangan'] ?? '';
     txtEditTglKembali.text = dataMasal?['tanggal_kembali'] != null ? AFconvert.matDate(DateTime.parse(dataMasal!['tanggal_kembali'])) : (dataMasal?['tanggal_kembali'] ?? '');
@@ -576,9 +581,12 @@ class CicCutiMasalControl extends GetxController {
       if (hasil.success) {
         if (hasil.daftar.isNotEmpty) {
           var dt = hasil.daftar.first as Map<String, dynamic>;
+          var oldKcm = kcmTambah;
           kcmTambah = CicKaryawanCutiMasal.fromMap(dt);
           kcmTambah!.nama = nama;
+          oldKcm?.dispose();
         } else {
+          var oldKcm = kcmTambah;
           kcmTambah = CicKaryawanCutiMasal(
             karyawanId: karyawanId,
             nama: nama,
@@ -590,6 +598,7 @@ class CicCutiMasalControl extends GetxController {
             belumDiambil: 0,
             bolehMinus: false,
           );
+          oldKcm?.dispose();
         }
                 double lh = AFconvert.keDouble(dataMasal?['lama_hari'] ?? 1);
         kcmTambah!.txtLamaHari.text = lh == lh.toInt() ? lh.toInt().toString() : lh.toString();
