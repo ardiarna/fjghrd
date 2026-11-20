@@ -9,7 +9,9 @@ import 'package:get/get.dart';
 class KaryawanPayrollView extends StatelessWidget {
   KaryawanPayrollView({super.key});
 
-  final KaryawanControl controller = Get.put(KaryawanControl());
+  final KaryawanControl controller = Get.isRegistered<KaryawanControl>()
+      ? Get.find<KaryawanControl>()
+      : Get.put(KaryawanControl());
 
   @override
   Widget build(BuildContext context) {

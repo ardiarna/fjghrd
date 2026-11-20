@@ -18,7 +18,9 @@ class PayrollForm extends StatelessWidget {
 
   final bool isEdit;
 
-  final PayrollControl controller = Get.put(PayrollControl());
+  final PayrollControl controller = Get.isRegistered<PayrollControl>()
+      ? Get.find<PayrollControl>()
+      : Get.put(PayrollControl());
 
   List<PlutoRow> _buildRows(List<Payroll> rowData) {
     return rowData.map((e) {

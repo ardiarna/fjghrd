@@ -13,7 +13,9 @@ class CicCutiFormView extends StatelessWidget {
   final String formType;
   CicCutiFormView({super.key, required this.formType});
 
-  final CicCutiControl controller = Get.put(CicCutiControl());
+  final CicCutiControl controller = Get.isRegistered<CicCutiControl>()
+      ? Get.find<CicCutiControl>()
+      : Get.put(CicCutiControl());
 
   @override
   Widget build(BuildContext context) {

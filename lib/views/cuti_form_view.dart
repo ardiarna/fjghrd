@@ -14,7 +14,9 @@ class CutiFormView extends StatelessWidget {
   final String formType;
   CutiFormView({super.key, required this.formType});
 
-  final CutiControl controller = Get.put(CutiControl());
+  final CutiControl controller = Get.isRegistered<CutiControl>()
+      ? Get.find<CutiControl>()
+      : Get.put(CutiControl());
 
   @override
   Widget build(BuildContext context) {
