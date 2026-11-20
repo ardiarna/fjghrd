@@ -1476,11 +1476,18 @@ class RunpayrollView extends StatelessWidget {
                             AFwidget.formWarning(label: 'Payroll untuk periode ${controller.bulan.label} ${controller.tahun.label} sudah ada di database, jika ada perubahan data silakan edit payroll tersebut (lihat di menu utama Payroll).');
                             return;
                           }
-                          controller.loadOvertimes();
-                          controller.loadMedicals();
-                          controller.loadPenghasilans();
-                          controller.loadPotongans();
-                          controller.loadHariLiburs();
+                          AFwidget.loading();
+                          try {
+                            await Future.wait([
+                              controller.loadOvertimes(),
+                              controller.loadMedicals(),
+                              controller.loadPenghasilans(),
+                              controller.loadPotongans(),
+                              controller.loadHariLiburs(),
+                            ]);
+                          } finally {
+                            Get.back();
+                          }
                           controller.homeControl.kontener = wgKaryawans();
                           controller.homeControl.update();
                         },
