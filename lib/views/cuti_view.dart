@@ -22,7 +22,9 @@ import 'package:pluto_grid/pluto_grid.dart';
 class CutiView extends StatelessWidget {
   CutiView({super.key});
 
-  final CutiControl controller = Get.put(CutiControl());
+  final CutiControl controller = Get.isRegistered<CutiControl>()
+      ? Get.find<CutiControl>()
+      : Get.put(CutiControl());
 
   List<PlutoRow> _buildRows(List<Cuti> rowData) {
     return List.generate(

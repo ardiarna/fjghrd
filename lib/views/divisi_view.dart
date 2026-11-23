@@ -12,7 +12,9 @@ import 'package:pluto_grid/pluto_grid.dart';
 class DivisiView extends StatelessWidget {
   DivisiView({super.key});
 
-  final DivisiControl controller = Get.put(DivisiControl());
+  final DivisiControl controller = Get.isRegistered<DivisiControl>()
+      ? Get.find<DivisiControl>()
+      : Get.put(DivisiControl());
 
   List<PlutoRow> _buildRows(List<Divisi> rowData) {
     return List.generate(

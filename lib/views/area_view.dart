@@ -12,7 +12,9 @@ import 'package:pluto_grid/pluto_grid.dart';
 class AreaView extends StatelessWidget {
   AreaView({super.key});
 
-  final AreaControl controller = Get.put(AreaControl());
+  final AreaControl controller = Get.isRegistered<AreaControl>()
+      ? Get.find<AreaControl>()
+      : Get.put(AreaControl());
 
   List<PlutoRow> _buildRows(List<Area> rowData) {
     return List.generate(

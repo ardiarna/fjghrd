@@ -12,7 +12,9 @@ import 'package:pluto_grid/pluto_grid.dart';
 class PendidikanView extends StatelessWidget {
   PendidikanView({super.key});
 
-  final PendidikanControl controller = Get.put(PendidikanControl());
+  final PendidikanControl controller = Get.isRegistered<PendidikanControl>()
+      ? Get.find<PendidikanControl>()
+      : Get.put(PendidikanControl());
 
   List<PlutoRow> _buildRows(List<Pendidikan> rowData) {
     return List.generate(

@@ -16,7 +16,9 @@ import 'package:pluto_grid/pluto_grid.dart';
 class OvertimeView extends StatelessWidget {
   OvertimeView({super.key});
 
-  final OvertimeControl controller = Get.put(OvertimeControl());
+  final OvertimeControl controller = Get.isRegistered<OvertimeControl>()
+      ? Get.find<OvertimeControl>()
+      : Get.put(OvertimeControl());
   final DateTime now = DateTime.now();
 
   List<PlutoRow> _buildRows(List<Overtime> rowData) {

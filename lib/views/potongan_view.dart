@@ -16,7 +16,9 @@ import 'package:pluto_grid/pluto_grid.dart';
 class PotonganView extends StatelessWidget {
   PotonganView({super.key});
 
-  final PotonganControl controller = Get.put(PotonganControl());
+  final PotonganControl controller = Get.isRegistered<PotonganControl>()
+      ? Get.find<PotonganControl>()
+      : Get.put(PotonganControl());
   final DateTime now = DateTime.now();
 
   List<PlutoRow> _buildRows(List<Potongan> rowData) {

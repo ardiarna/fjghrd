@@ -12,7 +12,9 @@ import 'package:pluto_grid/pluto_grid.dart';
 class CustomerView extends StatelessWidget {
   CustomerView({super.key});
 
-  final CustomerControl controller = Get.put(CustomerControl());
+  final CustomerControl controller = Get.isRegistered<CustomerControl>()
+      ? Get.find<CustomerControl>()
+      : Get.put(CustomerControl());
 
   List<PlutoRow> _buildRows(List<Customer> rowData) {
     return List.generate(

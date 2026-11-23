@@ -8,7 +8,9 @@ import 'package:flutter_animate/flutter_animate.dart';
 class ReportView extends StatelessWidget {
   ReportView({super.key});
 
-  final ReportControl controller = Get.put(ReportControl());
+  final ReportControl controller = Get.isRegistered<ReportControl>()
+      ? Get.find<ReportControl>()
+      : Get.put(ReportControl());
 
   @override
   Widget build(BuildContext context) {

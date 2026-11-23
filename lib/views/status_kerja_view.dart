@@ -12,7 +12,9 @@ import 'package:pluto_grid/pluto_grid.dart';
 class StatusKerjaView extends StatelessWidget {
   StatusKerjaView({super.key});
 
-  final StatusKerjaControl controller = Get.put(StatusKerjaControl());
+  final StatusKerjaControl controller = Get.isRegistered<StatusKerjaControl>()
+      ? Get.find<StatusKerjaControl>()
+      : Get.put(StatusKerjaControl());
 
   List<PlutoRow> _buildRows(List<StatusKerja> rowData) {
     return List.generate(

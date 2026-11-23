@@ -422,7 +422,9 @@ class CicCutiView extends StatelessWidget {
   }
 
 
-  final CicCutiControl controller = Get.put(CicCutiControl());
+  final CicCutiControl controller = Get.isRegistered<CicCutiControl>()
+      ? Get.find<CicCutiControl>()
+      : Get.put(CicCutiControl());
 
   List<PlutoRow> _buildRows(List<Cuti> rowData) {
     return List.generate(

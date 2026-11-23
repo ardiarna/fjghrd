@@ -22,7 +22,9 @@ import 'package:get/get.dart';
 class HomeView extends StatelessWidget {
   HomeView({super.key});
 
-  final HomeControl controller = Get.put(HomeControl());
+  final HomeControl controller = Get.isRegistered<HomeControl>()
+      ? Get.find<HomeControl>()
+      : Get.put(HomeControl());
 
   @override
   Widget build(BuildContext context) {

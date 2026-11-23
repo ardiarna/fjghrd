@@ -12,7 +12,9 @@ import 'package:pluto_grid/pluto_grid.dart';
 class AgamaView extends StatelessWidget {
   AgamaView({super.key});
 
-  final AgamaControl controller = Get.put(AgamaControl());
+  final AgamaControl controller = Get.isRegistered<AgamaControl>()
+      ? Get.find<AgamaControl>()
+      : Get.put(AgamaControl());
 
   List<PlutoRow> _buildRows(List<Agama> rowData) {
     return List.generate(

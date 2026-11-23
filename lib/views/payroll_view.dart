@@ -16,7 +16,9 @@ import 'package:get/get.dart';
 class PayrollView extends StatelessWidget {
   PayrollView({super.key});
 
-  final PayrollControl controller = Get.put(PayrollControl());
+  final PayrollControl controller = Get.isRegistered<PayrollControl>()
+      ? Get.find<PayrollControl>()
+      : Get.put(PayrollControl());
 
   @override
   Widget build(BuildContext context) {

@@ -12,7 +12,9 @@ import 'package:pluto_grid/pluto_grid.dart';
 class UpahView extends StatelessWidget {
   UpahView({super.key});
 
-  final UpahControl controller = Get.put(UpahControl());
+  final UpahControl controller = Get.isRegistered<UpahControl>()
+      ? Get.find<UpahControl>()
+      : Get.put(UpahControl());
 
   List<PlutoRow> _buildRows(List<Karyawan> rowData) {
     return List.generate(

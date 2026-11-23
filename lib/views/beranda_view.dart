@@ -36,7 +36,9 @@ class RekapPayrollData {
 }
 
 class _BerandaViewState extends State<BerandaView> {
-  final KaryawanControl karyawanControl = Get.put(KaryawanControl());
+  final KaryawanControl karyawanControl = Get.isRegistered<KaryawanControl>()
+      ? Get.find<KaryawanControl>()
+      : Get.put(KaryawanControl());
   final HomeControl homeControl = Get.find<HomeControl>();
 
   DateTime _now = DateTime.now();

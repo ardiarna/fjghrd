@@ -12,7 +12,9 @@ import 'package:pluto_grid/pluto_grid.dart';
 class NoteView extends StatelessWidget {
   NoteView({super.key});
 
-  final NoteControl controller = Get.put(NoteControl());
+  final NoteControl controller = Get.isRegistered<NoteControl>()
+      ? Get.find<NoteControl>()
+      : Get.put(NoteControl());
 
   List<PlutoRow> _buildRows(List<Note> rowData) {
     return List.generate(

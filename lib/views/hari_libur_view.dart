@@ -13,7 +13,9 @@ import 'package:pluto_grid/pluto_grid.dart';
 class HariLiburView extends StatelessWidget {
   HariLiburView({super.key});
 
-  final HariLiburControl controller = Get.put(HariLiburControl());
+  final HariLiburControl controller = Get.isRegistered<HariLiburControl>()
+      ? Get.find<HariLiburControl>()
+      : Get.put(HariLiburControl());
 
   List<PlutoRow> _buildRows(List<HariLibur> rowData) {
     return List.generate(

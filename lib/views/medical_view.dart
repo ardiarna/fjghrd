@@ -16,7 +16,9 @@ import 'package:pluto_grid/pluto_grid.dart';
 class MedicalView extends StatelessWidget {
   MedicalView({super.key});
 
-  final MedicalControl controller = Get.put(MedicalControl());
+  final MedicalControl controller = Get.isRegistered<MedicalControl>()
+      ? Get.find<MedicalControl>()
+      : Get.put(MedicalControl());
   final DateTime now = DateTime.now();
 
   List<Medical> gabungkanMedicalPerKaryawan(List<Medical> daftar) {

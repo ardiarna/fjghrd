@@ -12,7 +12,9 @@ import 'package:pluto_grid/pluto_grid.dart';
 class StatusPhkView extends StatelessWidget {
   StatusPhkView({super.key});
 
-  final StatusPhkControl controller = Get.put(StatusPhkControl());
+  final StatusPhkControl controller = Get.isRegistered<StatusPhkControl>()
+      ? Get.find<StatusPhkControl>()
+      : Get.put(StatusPhkControl());
 
   List<PlutoRow> _buildRows(List<StatusPhk> rowData) {
     return List.generate(

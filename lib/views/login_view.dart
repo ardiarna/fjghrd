@@ -8,7 +8,9 @@ import 'package:flutter_animate/flutter_animate.dart';
 class LoginView extends StatelessWidget {
   LoginView({super.key});
 
-  final LoginControl controller = Get.put(LoginControl());
+  final LoginControl controller = Get.isRegistered<LoginControl>()
+      ? Get.find<LoginControl>()
+      : Get.put(LoginControl());
 
   @override
   Widget build(BuildContext context) {

@@ -12,7 +12,9 @@ import 'package:pluto_grid/pluto_grid.dart';
 class TarifEfektifView extends StatelessWidget {
   TarifEfektifView({super.key});
 
-  final TarifEfektifControl controller = Get.put(TarifEfektifControl());
+  final TarifEfektifControl controller = Get.isRegistered<TarifEfektifControl>()
+      ? Get.find<TarifEfektifControl>()
+      : Get.put(TarifEfektifControl());
 
   List<PlutoRow> _buildRows(List<TarifEfektif> rowData) {
     return List.generate(

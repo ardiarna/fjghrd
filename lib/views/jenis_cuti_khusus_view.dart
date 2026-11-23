@@ -15,7 +15,10 @@ import 'package:pluto_grid/pluto_grid.dart';
 class JenisCutiKhususView extends StatelessWidget {
   JenisCutiKhususView({super.key});
 
-  final JenisCutiKhususControl controller = Get.put(JenisCutiKhususControl());
+  final JenisCutiKhususControl controller =
+      Get.isRegistered<JenisCutiKhususControl>()
+          ? Get.find<JenisCutiKhususControl>()
+          : Get.put(JenisCutiKhususControl());
 
   List<PlutoRow> _buildRows(List<JenisCutiKhusus> rowData) {
     return List.generate(

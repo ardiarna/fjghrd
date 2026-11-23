@@ -12,7 +12,9 @@ import 'package:pluto_grid/pluto_grid.dart';
 class JabatanView extends StatelessWidget {
   JabatanView({super.key});
 
-  final JabatanControl controller = Get.put(JabatanControl());
+  final JabatanControl controller = Get.isRegistered<JabatanControl>()
+      ? Get.find<JabatanControl>()
+      : Get.put(JabatanControl());
 
   List<PlutoRow> _buildRows(List<Jabatan> rowData) {
     return List.generate(

@@ -12,7 +12,9 @@ import 'package:pluto_grid/pluto_grid.dart';
 class PtkpView extends StatelessWidget {
   PtkpView({super.key});
 
-  final PtkpControl controller = Get.put(PtkpControl());
+  final PtkpControl controller = Get.isRegistered<PtkpControl>()
+      ? Get.find<PtkpControl>()
+      : Get.put(PtkpControl());
 
   List<PlutoRow> _buildRows(List<Ptkp> rowData) {
     return List.generate(

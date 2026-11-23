@@ -16,7 +16,10 @@ import 'package:pluto_grid/pluto_grid.dart';
 class PenghasilanView extends StatelessWidget {
   PenghasilanView({super.key});
 
-  final PenghasilanControl controller = Get.put(PenghasilanControl());
+  final PenghasilanControl controller =
+      Get.isRegistered<PenghasilanControl>()
+          ? Get.find<PenghasilanControl>()
+          : Get.put(PenghasilanControl());
   final DateTime now = DateTime.now();
 
   List<PlutoRow> _buildRows(List<Penghasilan> rowData) {

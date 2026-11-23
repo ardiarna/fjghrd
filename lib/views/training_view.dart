@@ -12,7 +12,9 @@ import 'package:pluto_grid/pluto_grid.dart';
 class TrainingView extends StatelessWidget {
   TrainingView({super.key});
 
-  final TrainingControl controller = Get.put(TrainingControl());
+  final TrainingControl controller = Get.isRegistered<TrainingControl>()
+      ? Get.find<TrainingControl>()
+      : Get.put(TrainingControl());
 
   List<PlutoRow> _buildRows(List<Training> rowData) {
     return List.generate(

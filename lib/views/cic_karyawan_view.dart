@@ -14,7 +14,9 @@ import 'package:pluto_grid/pluto_grid.dart';
 class CicKaryawanView extends StatelessWidget {
   CicKaryawanView({super.key});
 
-  final CicKaryawanControl controller = Get.put(CicKaryawanControl());
+  final CicKaryawanControl controller = Get.isRegistered<CicKaryawanControl>()
+      ? Get.find<CicKaryawanControl>()
+      : Get.put(CicKaryawanControl());
 
   List<PlutoRow> _buildRows(List<Karyawan> rowData) {
     var now = DateTime.now();

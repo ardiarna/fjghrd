@@ -16,7 +16,10 @@ import 'package:pluto_grid/pluto_grid.dart';
 class OncallCustomerView extends StatelessWidget {
   OncallCustomerView({super.key});
 
-  final OncallCustomerControl controller = Get.put(OncallCustomerControl());
+  final OncallCustomerControl controller =
+      Get.isRegistered<OncallCustomerControl>()
+          ? Get.find<OncallCustomerControl>()
+          : Get.put(OncallCustomerControl());
   final DateTime now = DateTime.now();
 
   List<PlutoRow> _buildRows(List<OncallCustomer> rowData) {
