@@ -58,6 +58,8 @@ class KaryawanControl extends GetxController {
   bool isLoadingBeranda = true;
   bool isLoadingDemografi = false;
   bool isDemografiLoaded = false;
+  bool isCalonLoaded = false;
+  bool isMantanLoaded = false;
   PlutoGridStateManager? gridStateManager;
   PlutoGridStateManager? gridCalonStateManager;
   PlutoGridStateManager? gridMantanStateManager;
@@ -479,6 +481,7 @@ class KaryawanControl extends GetxController {
           }
         }
         listCalonKaryawan.assignAll(tempCalon);
+        isCalonLoaded = true;
         update(['summary_calon']);
       }
     } finally {
@@ -492,6 +495,7 @@ class KaryawanControl extends GetxController {
       var hasil = await _repo.mantanFindAll(isStaf: filterStaf.value);
       if (hasil.success) {
         listMantanKaryawan.assignAll(hasil.daftar.map<Karyawan>((data) => Karyawan.fromMap(data)).toList());
+        isMantanLoaded = true;
       }
     } finally {
       gridMantanStateManager?.setShowLoading(false);
@@ -2206,10 +2210,10 @@ class KaryawanControl extends GetxController {
     loadDataBeranda();
     loadStartupMasterData();
     loadKaryawans();
-    loadCalonKaryawans();
-    loadMantanKaryawans();
     ever(authControl.karyawanUpdateTrigger, (_) {
       isDemografiLoaded = false;
+      isCalonLoaded = false;
+      isMantanLoaded = false;
       loadDataBeranda();
     });
     ever(authControl.masterDataUpdateTrigger, (_) => loadAllData());
@@ -2221,6 +2225,8 @@ class KaryawanControl extends GetxController {
     gridStateManager = null;
     gridCalonStateManager = null;
     gridMantanStateManager = null;
+    isCalonLoaded = false;
+    isMantanLoaded = false;
     txtGaji.dispose();
     txtUangMakan.dispose();
     txtId.dispose();

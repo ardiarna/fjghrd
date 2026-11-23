@@ -12,9 +12,15 @@ import 'package:get/get.dart';
 import 'package:pluto_grid/pluto_grid.dart';
 
 class CalonKaryawanView extends StatelessWidget {
-  CalonKaryawanView({super.key});
+  CalonKaryawanView({super.key}) {
+    if (!controller.isCalonLoaded) {
+      controller.loadCalonKaryawans();
+    }
+  }
 
-  final KaryawanControl controller = Get.find<KaryawanControl>();
+  final KaryawanControl controller = Get.isRegistered<KaryawanControl>()
+      ? Get.find<KaryawanControl>()
+      : Get.put(KaryawanControl());
   final homeControl = Get.find<HomeControl>();
 
   List<PlutoRow> _buildRows(List<Karyawan> rowData) {
