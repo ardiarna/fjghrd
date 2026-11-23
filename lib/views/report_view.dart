@@ -811,6 +811,7 @@ class ReportView extends StatelessWidget {
       {'label': 'Data Status Karyawan', 'onDownloadExcel': () { Get.back(); controller.dowloadDataStatusKaryawan(); }, 'onDownloadPdf': () { Get.back(); controller.dowloadDataStatusKaryawanPdf(); }},
       {'label': 'Data Jabatan Karyawan', 'onDownloadExcel': () { Get.back(); controller.dowloadDataJabatanKaryawan(); }, 'onDownloadPdf': () { Get.back(); controller.dowloadDataJabatanKaryawanPdf(); }},
       {'label': 'Data Pendidikan Karyawan', 'onDownloadExcel': () { Get.back(); controller.dowloadDataPendidikanKaryawan(); }, 'onDownloadPdf': () { Get.back(); controller.dowloadDataPendidikanKaryawanPdf(); }},
+      {'label': 'Data Pelatihan Karyawan', 'onDownloadExcel': () { Get.back(); controller.dowloadDataPelatihanKaryawan(); }, 'onDownloadPdf': () { Get.back(); controller.dowloadDataPelatihanKaryawanPdf(); }},
       {'label': 'Data Karyawan Per Joint', 'onModalTap': () { Get.back(); dialogDataKaryawanPerJoint(); }},
     ];
     

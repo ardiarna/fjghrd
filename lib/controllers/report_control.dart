@@ -508,6 +508,36 @@ class ReportControl extends GetxController {
     }
   }
 
+  Future<void> dowloadDataPelatihanKaryawan() async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/data-pelatihan-karyawan');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan excel Data Pelatihan Karyawan telah berhasil dibuat. Silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+  Future<void> dowloadDataPelatihanKaryawanPdf() async {
+    AFwidget.loading();
+    var hasil = await AFdatabase.download(url: 'excel/pdf-data-pelatihan-karyawan');
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'Laporan PDF Data Pelatihan Karyawan telah berhasil dibuat. Silakan periksa directory Download anda (${hasil.message})',
+        warna: Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat pdf. [${hasil.message}]');
+    }
+  }
+
   Future<void> dowloadDataJabatanKaryawan() async {
     AFwidget.loading();
     var hasil = await AFdatabase.download(url: 'excel/data-jabatan-karyawan');
