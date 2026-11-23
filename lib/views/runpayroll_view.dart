@@ -18,7 +18,9 @@ import 'package:pluto_grid/pluto_grid.dart';
 class RunpayrollView extends StatelessWidget {
   RunpayrollView({super.key});
 
-  final PayrollControl controller = Get.put(PayrollControl());
+  final PayrollControl controller = Get.isRegistered<PayrollControl>()
+      ? Get.find<PayrollControl>()
+      : Get.put(PayrollControl());
   final DateTime now = DateTime.now();
 
   PlutoGridStateManager? stateManager;

@@ -17,7 +17,9 @@ import 'package:pluto_grid/pluto_grid.dart';
 class KaryawanView extends StatelessWidget {
   KaryawanView({super.key});
 
-  final KaryawanControl controller = Get.put(KaryawanControl());
+  final KaryawanControl controller = Get.isRegistered<KaryawanControl>()
+      ? Get.find<KaryawanControl>()
+      : Get.put(KaryawanControl());
   final homeControl = Get.find<HomeControl>();
 
   List<PlutoRow> _buildRows(List<Karyawan> rowData) {
