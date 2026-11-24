@@ -315,6 +315,9 @@ class MedicalTambahForm extends StatelessWidget {
 
 void showMedicalTambahForm(BuildContext context) {
   final controller = Get.find<MedicalControl>();
+  if (controller.listKaryawan.isEmpty) {
+    controller.loadKaryawans();
+  }
   controller.txtId.text = '';
     controller.tahun = Opsi(value: controller.filterTahun.value, label: controller.filterTahun.label);
   if(controller.filterBulan.value == '') {

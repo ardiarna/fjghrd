@@ -264,7 +264,10 @@ class MedicalControl extends GetxController {
     }
   }
 
-  Future<Opsi?> pilihKaryawan({String value = ''}) async {
+  Future<Opsi?> pilihKaryawan({String value = '', bool force = false}) async {
+    if (listKaryawan.isEmpty || force) {
+      await loadKaryawans();
+    }
     var a = await AFcombobox.bottomSheet(
       listOpsi: listKaryawan,
       valueSelected: value,
@@ -311,8 +314,11 @@ class MedicalControl extends GetxController {
 
   @override
   void onInit() {
-    loadKaryawans();
-    ever(authControl.karyawanUpdateTrigger, (_) => loadKaryawans());
+    ever(authControl.karyawanUpdateTrigger, (_) {
+      if (listKaryawan.isNotEmpty) {
+        loadKaryawans();
+      }
+    });
     filterTahun = Opsi(value: '${_now.year}', label: '${_now.year}');
     filterBulan = Opsi(value: '${_now.month}', label: mapBulan[_now.month]!);
     tahun = Opsi(value: '${_now.year}', label: '${_now.year}');
