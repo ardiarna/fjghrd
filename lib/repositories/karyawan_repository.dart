@@ -202,6 +202,13 @@ class KaryawanRepository {
     );
   }
 
+  Future<Hasil> phkHapus(String id, String phkId) async {
+    return await AFdatabase.send(
+      url: 'karyawan/$id/phk/$phkId?destroy=1',
+      methodeRequest: MethodeRequest.delete,
+    );
+  }
+
   Future<Hasil> timelineMasakerja(String id) async {
     return await AFdatabase.send(
       url: 'karyawan/$id/timeline-masakerja',
@@ -291,14 +298,24 @@ class KaryawanRepository {
 
   Future<Hasil> excelSlipPhk({
     required String id,
+    String? phkId,
   }) async {
-    return await AFdatabase.download(url: 'excel/slip-phk/$id');
+    String url = 'excel/slip-phk/$id';
+    if (phkId != null && phkId.isNotEmpty) {
+      url += '?phk_id=$phkId';
+    }
+    return await AFdatabase.download(url: url);
   }
 
   Future<Hasil> pdfSlipPhk({
     required String id,
+    String? phkId,
   }) async {
-    return await AFdatabase.download(url: 'excel/pdf-slip-phk/$id');
+    String url = 'excel/pdf-slip-phk/$id';
+    if (phkId != null && phkId.isNotEmpty) {
+      url += '?phk_id=$phkId';
+    }
+    return await AFdatabase.download(url: url);
   }
 
   Future<Hasil> excelSlipGaji({

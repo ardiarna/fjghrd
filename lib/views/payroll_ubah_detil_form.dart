@@ -38,6 +38,56 @@ class PayrollUbahDetilForm extends StatelessWidget {
                   nilai: AFconvert.matDate(controller.currentDetilPayroll.karyawan.tanggalMasuk),
                   labelWidth: 230,
                 ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 230,
+                        padding: const EdgeInsets.only(right: 15),
+                        child: const Text('Periode Cut-Off'),
+                      ),
+                      Expanded(
+                        child: AFwidget.textField(
+                          marginTop: 0,
+                          controller: controller.txtCutOffAwal,
+                          readOnly: true,
+                          prefixIcon: const Icon(Icons.calendar_month),
+                          ontap: () async {
+                            var a = await AFwidget.pickDate(
+                              context: context,
+                              initialDate: AFconvert.keTanggal(controller.txtCutOffAwal.text),
+                            );
+                            if(a != null) {
+                              controller.txtCutOffAwal.text = AFconvert.matYMD(a);
+                            }
+                          },
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 40,
+                        child: Text('s/d', textAlign: TextAlign.center),
+                      ),
+                      Expanded(
+                        child: AFwidget.textField(
+                          marginTop: 0,
+                          controller: controller.txtCutOffAkhir,
+                          readOnly: true,
+                          prefixIcon: const Icon(Icons.calendar_month),
+                          ontap: () async {
+                            var a = await AFwidget.pickDate(
+                              context: context,
+                              initialDate: AFconvert.keTanggal(controller.txtCutOffAkhir.text),
+                            );
+                            if(a != null) {
+                              controller.txtCutOffAkhir.text = AFconvert.matYMD(a);
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
                 AFwidget.barisInfo(
                   label: 'A. PENGHASILAN',
                   labelWidth: 230,
@@ -495,11 +545,22 @@ class PayrollUbahDetilForm extends StatelessWidget {
                   isTextArea: true,
                   labelWidth: 230,
                 ),
-                AFwidget.barisText(
-                  label: 'Note',
-                  controller: controller.txtNote,
-                  isTextArea: true,
-                  labelWidth: 230,
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text('Note'),
+                      const SizedBox(height: 6),
+                      AFwidget.textField(
+                        marginTop: 0,
+                        controller: controller.txtNote,
+                        minLines: 2,
+                        maxLines: 4,
+                        keyboard: TextInputType.multiline,
+                      ),
+                    ],
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(20, 50, 20, 0),
@@ -534,6 +595,27 @@ class PayrollUbahDetilForm extends StatelessWidget {
 void showPayrollUbahDetilForm(String id, BuildContext context) {
   final controller = Get.find<PayrollControl>();
     controller.currentDetilPayroll = controller.listDetilPayroll.where((element) => element.id == id).first;
+
+    String cutOffAwal = controller.currentDetilPayroll.makanTglAwal.isNotEmpty
+        ? controller.currentDetilPayroll.makanTglAwal
+        : (controller.currentDetilPayroll.tanggalAwal != null
+            ? AFconvert.matYMD(controller.currentDetilPayroll.tanggalAwal)
+            : (controller.currentPayroll.tanggalAwal != null
+                ? AFconvert.matYMD(controller.currentPayroll.tanggalAwal)
+                : ''));
+    DateTime? dtAwal = AFconvert.keTanggal(cutOffAwal);
+    controller.txtCutOffAwal.text = dtAwal != null ? AFconvert.matYMD(dtAwal) : cutOffAwal;
+
+    String cutOffAkhir = controller.currentDetilPayroll.makanTglAkhir.isNotEmpty
+        ? controller.currentDetilPayroll.makanTglAkhir
+        : (controller.currentDetilPayroll.tanggalAkhir != null
+            ? AFconvert.matYMD(controller.currentDetilPayroll.tanggalAkhir)
+            : (controller.currentPayroll.tanggalAkhir != null
+                ? AFconvert.matYMD(controller.currentPayroll.tanggalAkhir)
+                : ''));
+    DateTime? dtAkhir = AFconvert.keTanggal(cutOffAkhir);
+    controller.txtCutOffAkhir.text = dtAkhir != null ? AFconvert.matYMD(dtAkhir) : cutOffAkhir;
+
     controller.txtGaji.text = AFconvert.matNumber(controller.currentDetilPayroll.gaji);
     controller.txtKenaikanGaji.text = AFconvert.matNumber(controller.currentDetilPayroll.kenaikanGaji);
     controller.txtHariMakan.text = AFconvert.matNumber(controller.currentDetilPayroll.hariMakan);

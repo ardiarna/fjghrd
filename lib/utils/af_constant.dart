@@ -6,6 +6,7 @@ abstract class Rute {
   static const login = '/login';
   static const karyawanForm = '/karyawanform';
   static const karyawanPayrollView = '/karyawan-payroll';
+  static const phkForm = '/phk-form';
 }
 
 final Map<int, String> mapBulan = {

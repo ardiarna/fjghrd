@@ -3,59 +3,129 @@ import 'package:get/get.dart';
 import 'package:fjghrd/controllers/karyawan_control.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:fjghrd/utils/af_convert.dart';
+import 'package:fjghrd/models/phk.dart';
 import 'package:fjghrd/models/status_phk.dart';
 import 'package:fjghrd/models/upah.dart';
 import 'package:fjghrd/repositories/upah_repository.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 
-class PhkForm extends StatelessWidget {
-  const PhkForm({super.key});
+typedef PhkForm = PhkPage;
+
+class PhkPage extends StatelessWidget {
+  const PhkPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<KaryawanControl>();
-    final formWidth = Get.width > 1250 ? 1200.0 : Get.width * 0.96;
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Column(
+        children: [
+          AFwidget.pageHeader(
+            title: 'FORM PHK KARYAWAN',
+            icon: Icons.person_off_outlined,
+            onBack: Get.back,
+            children: [
+              const Spacer(),
+              Obx(() {
+                if (controller.listHistoryPhk.isEmpty) {
+                  return const SizedBox.shrink();
+                }
+                return ElevatedButton.icon(
+                  onPressed: () {
+                    showDialogHistoryPhk(context, controller);
+                  },
+                  icon: const Icon(Icons.history, color: Colors.blue, size: 20),
+                  label: const Text(
+                    'History PHK',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.blue,
+                    elevation: 2,
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                );
+              }),
+            ],
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(15, 10, 15, 25),
+              child: PhkFormBody(
+                isHistoryEdit: false,
+                onSimpan: controller.simpanPhkData,
+                onBatal: Get.back,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class PhkFormBody extends StatelessWidget {
+  final bool isHistoryEdit;
+  final Phk? historyPhk;
+  final void Function()? onSimpan;
+  final void Function()? onBatal;
+
+  const PhkFormBody({
+    super.key,
+    this.isHistoryEdit = false,
+    this.historyPhk,
+    this.onSimpan,
+    this.onBatal,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = Get.find<KaryawanControl>();
     const double labelWidth = 185;
     final stylePenghasilan = TextStyle(color: Colors.green.shade700, fontWeight: FontWeight.w500);
     final stylePotongan = TextStyle(color: Colors.red.shade700, fontWeight: FontWeight.w500);
 
-    return Container(
-      padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
-      width: formWidth,
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.all(Radius.circular(15)),
-      ),
-      child: Stack(
-        children: [
-          ListView(
-            children: [
-              // HEADER INFO KARYAWAN (2 KOLOM)
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: AFwidget.barisInfo(
-                      label: 'Nama Karyawan',
-                      nilai: controller.current.nama,
-                      labelWidth: labelWidth,
-                      paddingLeft: 20,
-                      paddingRight: 10,
-                      paddingTop: 65,
-                    ),
-                  ),
-                  Expanded(
-                    child: AFwidget.barisInfo(
-                      label: 'Status Karyawan',
-                      nilai: controller.current.statusKerja.nama,
-                      labelWidth: labelWidth,
-                      paddingLeft: 10,
-                      paddingRight: 20,
-                      paddingTop: 65,
-                    ),
-                  ),
-                ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // HEADER INFO KARYAWAN (2 KOLOM)
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: AFwidget.barisInfo(
+                label: 'Nama Karyawan',
+                nilai: controller.current.nama,
+                labelWidth: labelWidth,
+                paddingLeft: 20,
+                paddingRight: 10,
+                paddingTop: 10,
               ),
+            ),
+            Expanded(
+              child: AFwidget.barisInfo(
+                label: 'Status Karyawan',
+                nilai: (isHistoryEdit && historyPhk != null && historyPhk!.statusKerja.nama.isNotEmpty)
+                    ? historyPhk!.statusKerja.nama
+                    : controller.current.statusKerja.nama,
+                labelWidth: labelWidth,
+                paddingLeft: 10,
+                paddingRight: 20,
+                paddingTop: 10,
+              ),
+            ),
+          ],
+        ),
               GetBuilder<KaryawanControl>(
                 builder: (_) {
                   final upah = controller.current.upah;
@@ -1193,103 +1263,122 @@ class PhkForm extends StatelessWidget {
                 child: Row(
                   children: [
                     const Spacer(),
-                    if (controller.current.phk.uangPhkId.isNotEmpty ||
-                        controller.current.phk.payrollPhkId.isNotEmpty ||
-                        controller.current.phk.uangPhk.id.isNotEmpty ||
-                        controller.current.phk.payrollPhk.id.isNotEmpty) ...[
-                      AFwidget.tombol(
-                        label: 'Cetak Slip PHK',
-                        color: Colors.green,
-                        onPressed: () => dialogSlipPhk(controller),
-                        minimumSize: const Size(120, 40),
-                      ),
-                      const SizedBox(width: 25),
-                    ],
+                    Builder(
+                      builder: (_) {
+                        bool adaDataSlip;
+                        if (isHistoryEdit && historyPhk != null) {
+                          adaDataSlip = historyPhk!.uangPhkId.isNotEmpty ||
+                              historyPhk!.payrollPhkId.isNotEmpty ||
+                              historyPhk!.uangPhk.id.isNotEmpty ||
+                              historyPhk!.payrollPhk.id.isNotEmpty ||
+                              controller.sertakanKalkulasiPhk.value ||
+                              controller.sertakanPayrollPhk.value;
+                        } else {
+                          adaDataSlip = controller.current.phk.uangPhkId.isNotEmpty ||
+                              controller.current.phk.payrollPhkId.isNotEmpty ||
+                              controller.current.phk.uangPhk.id.isNotEmpty ||
+                              controller.current.phk.payrollPhk.id.isNotEmpty;
+                        }
+                        if (adaDataSlip) {
+                          return Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              AFwidget.tombol(
+                                label: 'Cetak Slip PHK',
+                                color: Colors.green,
+                                onPressed: () => dialogSlipPhk(controller, phkId: isHistoryEdit ? historyPhk?.id : null),
+                                minimumSize: const Size(120, 40),
+                              ),
+                              const SizedBox(width: 25),
+                            ],
+                          );
+                        }
+                        return const SizedBox.shrink();
+                      },
+                    ),
                     AFwidget.tombol(
                       label: 'Batal',
                       color: Colors.orange,
-                      onPressed: Get.back,
+                      onPressed: onBatal ?? Get.back,
                       minimumSize: const Size(120, 40),
                     ),
                     const SizedBox(width: 25),
                     AFwidget.tombol(
-                      label: (controller.current.phk.id.isEmpty || controller.current.aktif == 'Y')
-                          ? 'Simpan'
-                          : 'Simpan Perubahan',
+                      label: isHistoryEdit
+                          ? 'Simpan Perubahan'
+                          : ((controller.current.phk.id.isEmpty || controller.current.aktif == 'Y')
+                              ? 'Simpan'
+                              : 'Simpan Perubahan'),
                       color: Colors.blue,
-                      onPressed: controller.simpanPhkData,
+                      onPressed: onSimpan ?? controller.simpanPhkData,
                       minimumSize: const Size(120, 40),
                     ),
                   ],
                 ),
               ),
             ],
+          );
+  }
+}
+
+void dialogSlipPhk(KaryawanControl controller, {String? phkId}) {
+  AFwidget.dialog(
+    Container(
+      width: 500,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(15)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          AFwidget.formHeader('Cetak Slip PHK'),
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                AFwidget.tombol(
+                  label: 'Batal',
+                  color: Colors.grey,
+                  onPressed: Get.back,
+                  minimumSize: const Size(100, 40),
+                ),
+                const SizedBox(width: 15),
+                Expanded(
+                  child: AFwidget.tombol(
+                    label: 'Download PDF',
+                    color: Colors.red,
+                    onPressed: () {
+                      Get.back();
+                      controller.downloadPdfSlipPhk(phkId: phkId);
+                    },
+                    minimumSize: const Size(0, 40),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: AFwidget.tombol(
+                    label: 'Download Excel',
+                    color: Colors.green,
+                    onPressed: () {
+                      Get.back();
+                      controller.downloadExcelSlipPhk(phkId: phkId);
+                    },
+                    minimumSize: const Size(0, 40),
+                  ),
+                ),
+              ],
+            ),
           ),
-          AFwidget.formHeader('Form PHK Karyawan'),
         ],
       ),
-    );
-  }
-
-  void dialogSlipPhk(KaryawanControl controller) {
-    AFwidget.dialog(
-      Container(
-        width: 500,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            AFwidget.formHeader('Cetak Slip PHK'),
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  AFwidget.tombol(
-                    label: 'Batal',
-                    color: Colors.grey,
-                    onPressed: Get.back,
-                    minimumSize: const Size(100, 40),
-                  ),
-                  const SizedBox(width: 15),
-                  Expanded(
-                    child: AFwidget.tombol(
-                      label: 'Download PDF',
-                      color: Colors.red,
-                      onPressed: () {
-                        Get.back();
-                        controller.downloadPdfSlipPhk();
-                      },
-                      minimumSize: const Size(0, 40),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: AFwidget.tombol(
-                      label: 'Download Excel',
-                      color: Colors.green,
-                      onPressed: () {
-                        Get.back();
-                        controller.downloadExcelSlipPhk();
-                      },
-                      minimumSize: const Size(0, 40),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-      barrierDismissible: false,
-      backgroundColor: Colors.transparent,
-      contentPadding: const EdgeInsets.all(0),
-    );
-  }
+    ),
+    barrierDismissible: false,
+    backgroundColor: Colors.transparent,
+    contentPadding: const EdgeInsets.all(0),
+  );
 }
 
 void showPhkForm(BuildContext context) async {
@@ -1306,11 +1395,264 @@ void showPhkForm(BuildContext context) async {
     Get.back();
   }
   await controller.initPhkForm();
+  await controller.loadHistoryPhk();
+  Get.to(() => const PhkPage());
+}
+
+void showDialogHistoryPhk(BuildContext context, KaryawanControl controller) {
   AFwidget.dialog(
-    const PhkForm(),
+    Container(
+      width: Get.width > 1050 ? 1000.0 : Get.width * 0.95,
+      height: Get.height * 0.75,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(15)),
+      ),
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 65, 20, 20),
+            child: Column(
+              children: [
+                Expanded(
+                  child: Obx(() {
+                    if (controller.listHistoryPhk.isEmpty) {
+                      return const Center(
+                        child: Text(
+                          'Tidak ada data riwayat PHK.',
+                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                        ),
+                      );
+                    }
+                    return ListView.separated(
+                      itemCount: controller.listHistoryPhk.length,
+                      separatorBuilder: (_, __) => const SizedBox(height: 12),
+                      itemBuilder: (ctx, index) {
+                        final phk = controller.listHistoryPhk[index];
+                        final tglAwal = phk.tanggalAwal != null ? AFconvert.matYMD(phk.tanggalAwal) : '-';
+                        final tglAkhir = phk.tanggalAKhir != null ? AFconvert.matYMD(phk.tanggalAKhir) : '-';
+                        final hasUangPhk = phk.uangPhk.id.isNotEmpty || phk.uangPhkId.isNotEmpty;
+                        final hasPayrollPhk = phk.payrollPhk.id.isNotEmpty || phk.payrollPhkId.isNotEmpty;
+
+                        return Container(
+                          padding: const EdgeInsets.all(14),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade50,
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: Colors.grey.shade300),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Wrap(
+                                      crossAxisAlignment: WrapCrossAlignment.center,
+                                      spacing: 8,
+                                      runSpacing: 6,
+                                      children: [
+                                        Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const Icon(Icons.history_toggle_off, color: Colors.blue, size: 20),
+                                            const SizedBox(width: 6),
+                                            Text(
+                                              '$tglAwal  s/d  $tglAkhir',
+                                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                                            ),
+                                          ],
+                                        ),
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                          decoration: BoxDecoration(
+                                            color: Colors.blue.shade100,
+                                            borderRadius: BorderRadius.circular(5),
+                                          ),
+                                          child: Text(
+                                            phk.statusPhk.nama.isNotEmpty ? phk.statusPhk.nama : 'Status PHK',
+                                            style: TextStyle(color: Colors.blue.shade900, fontSize: 12, fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        if (phk.statusKerja.nama.isNotEmpty)
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                            decoration: BoxDecoration(
+                                              color: Colors.orange.shade100,
+                                              borderRadius: BorderRadius.circular(5),
+                                            ),
+                                            child: Text(
+                                              phk.statusKerja.nama,
+                                              style: TextStyle(color: Colors.orange.shade900, fontSize: 12, fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      SizedBox(
+                                        width: 95,
+                                        child: AFwidget.tombol(
+                                          label: 'Cetak',
+                                          color: Colors.green,
+                                          minimumSize: const Size(95, 30),
+                                          onPressed: () {
+                                            dialogSlipPhk(controller, phkId: phk.id);
+                                          },
+                                        ),
+                                      ),
+                                      const SizedBox(height: 6),
+                                      SizedBox(
+                                        width: 95,
+                                        child: AFwidget.tombol(
+                                          label: 'Edit',
+                                          color: Colors.blue,
+                                          minimumSize: const Size(95, 30),
+                                          onPressed: () {
+                                            showDialogEditHistoryPhk(context, controller, phk);
+                                          },
+                                        ),
+                                      ),
+                                      const SizedBox(height: 6),
+                                      SizedBox(
+                                        width: 95,
+                                        child: AFwidget.tombol(
+                                          label: 'Hapus',
+                                          color: Colors.red,
+                                          minimumSize: const Size(95, 30),
+                                          onPressed: () {
+                                            AFwidget.formWarning(
+                                              label: 'Apakah Anda yakin ingin menghapus data riwayat PHK periode $tglAwal s/d $tglAkhir? Data kalkulasi dan payroll terkait juga akan terhapus.',
+                                              ikon: Icons.delete_forever,
+                                              warna: Colors.red,
+                                              isKonfirmasi: true,
+                                              labelBatal: 'Batal',
+                                              labelYa: 'Ya, Hapus',
+                                              aksi: () async {
+                                                Get.back();
+                                                await controller.hapusHistoryPhk(phk.id);
+                                              },
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              if (phk.keterangan.isNotEmpty) ...[
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Keterangan: ${phk.keterangan}',
+                                  style: TextStyle(color: Colors.grey.shade700, fontSize: 13),
+                                ),
+                              ],
+                              if (hasUangPhk || hasPayrollPhk) ...[
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    if (hasUangPhk) ...[
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                        decoration: BoxDecoration(
+                                          color: Colors.green.shade50,
+                                          borderRadius: BorderRadius.circular(4),
+                                          border: Border.all(color: Colors.green.shade200),
+                                        ),
+                                        child: Text(
+                                          'Kalkulasi PHK: Rp ${AFconvert.matNumber(phk.uangPhk.totalKalkulasi)}',
+                                          style: TextStyle(color: Colors.green.shade800, fontSize: 12, fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                      const SizedBox(width: 10),
+                                    ],
+                                    if (hasPayrollPhk) ...[
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                        decoration: BoxDecoration(
+                                          color: Colors.teal.shade50,
+                                          borderRadius: BorderRadius.circular(4),
+                                          border: Border.all(color: Colors.teal.shade200),
+                                        ),
+                                        child: Text(
+                                          'Payroll PHK: Rp ${AFconvert.matNumber(phk.payrollPhk.totalDiterima)}',
+                                          style: TextStyle(color: Colors.teal.shade800, fontSize: 12, fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ],
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  }),
+                ),
+                const SizedBox(height: 15),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    AFwidget.tombol(
+                      label: 'Tutup',
+                      color: Colors.grey,
+                      onPressed: Get.back,
+                      minimumSize: const Size(100, 38),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          AFwidget.formHeader('Form History PHK'),
+        ],
+      ),
+    ),
     barrierDismissible: false,
     scrollable: false,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.transparent,
+    contentPadding: const EdgeInsets.all(0),
+  );
+}
+
+void showDialogEditHistoryPhk(BuildContext context, KaryawanControl controller, Phk phk) async {
+  await controller.initHistoryPhkForm(phk);
+  final formWidth = Get.width > 1250 ? 1200.0 : Get.width * 0.96;
+  AFwidget.dialog(
+    Container(
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+      width: formWidth,
+      height: Get.height * 0.88,
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(15)),
+      ),
+      child: Stack(
+        children: [
+          SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(15, 65, 15, 20),
+            child: PhkFormBody(
+              isHistoryEdit: true,
+              historyPhk: phk,
+              onSimpan: () => controller.simpanHistoryPhkData(phk),
+              onBatal: () async {
+                Get.back();
+                await controller.initPhkForm();
+              },
+            ),
+          ),
+          AFwidget.formHeader('Form History PHK - ${phk.id}'),
+        ],
+      ),
+    ),
+    barrierDismissible: false,
+    scrollable: false,
+    backgroundColor: Colors.transparent,
     contentPadding: const EdgeInsets.all(0),
   );
 }

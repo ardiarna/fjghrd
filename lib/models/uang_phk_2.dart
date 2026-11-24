@@ -26,6 +26,8 @@ class UangPhk2 {
   DateTime? createdAt;
   DateTime? updatedAt;
 
+  int get totalKalkulasi => kompensasi + pesangon + masaKerja + uangPisah + sisaCutiJumlah;
+
   UangPhk2({
     this.id = '',
     this.karyawanId = '',

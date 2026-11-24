@@ -51,6 +51,7 @@ class Payroll {
   String keterangan;
   String note;
   bool dikunci;
+  bool isPhk;
   DateTime? createdAt;
   DateTime? updatedAt;
 
@@ -102,6 +103,7 @@ class Payroll {
     this.keterangan = '',
     this.note = '',
     this.dikunci = false,
+    this.isPhk = false,
     this.createdAt,
     this.updatedAt,
   }) ;
@@ -157,6 +159,7 @@ class Payroll {
       penghasilanBruto: AFconvert.keInt(data['penghasilan_bruto']),
       dpp: AFconvert.keInt(data['dpp']),
       pph21: AFconvert.keInt(data['pph21']),
+      isPhk: AFconvert.keBool(data['is_phk']),
     );
     if(data['karyawan'] != null) {
       a.karyawan = Karyawan.fromMap(data['karyawan']);
@@ -205,6 +208,7 @@ class Payroll {
       'total_diterima': AFconvert.keString(totalDiterima),
       'keterangan': keterangan,
       'note': note,
+      'is_phk': isPhk ? 'Y' : 'N',
     };
     return data;
   }

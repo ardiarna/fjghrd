@@ -70,7 +70,8 @@ class PayrollControl extends GetxController {
       txtGaji, txtKenaikanGaji, txtHariMakan, txtUangMakanHarian, txtUangMakanJumlah, txtOvertimeFjg, txtOvertimeCus,
       txtMedical, txtThr, txtBonus, txtInsentif, txtTelkomsel, txtLain, txtPot25hari, txtPot25jumlah,
       txtPotTelepon, txtPotBensin, txtPotKas, txtPotCicilan, txtPotBpjs, txtPotCutiHari, txtPotCutiJumlah, txtPotLain,
-      txtPotKompensasiJam, txtPotKompensasiJumlah, txtTotalDiterima, txtKeterangan, txtNote;
+      txtPotKompensasiJam, txtPotKompensasiJumlah, txtTotalDiterima, txtKeterangan, txtNote,
+      txtCutOffAwal, txtCutOffAkhir;
   final TextEditingController searchKaryawan = TextEditingController();
   final ScrollController scrollKaryawan = ScrollController();
   final ScrollController scrollPayroll = ScrollController();
@@ -344,6 +345,8 @@ class PayrollControl extends GetxController {
         id: currentDetilPayroll.id,
         headerId: currentDetilPayroll.headerId,
         makanHarian: currentDetilPayroll.makanHarian,
+        makanTglAwal: txtCutOffAwal.text,
+        makanTglAkhir: txtCutOffAkhir.text,
         gaji: AFconvert.keInt(txtGaji.text),
         kenaikanGaji: AFconvert.keInt(txtKenaikanGaji.text),
         hariMakan: AFconvert.keInt(txtHariMakan.text),
@@ -449,6 +452,8 @@ class PayrollControl extends GetxController {
     txtTotalDiterima = TextEditingController();
     txtKeterangan = TextEditingController();
     txtNote = TextEditingController();
+    txtCutOffAwal = TextEditingController();
+    txtCutOffAkhir = TextEditingController();
     loadPayrolls();
     super.onInit();
   }
@@ -457,6 +462,8 @@ class PayrollControl extends GetxController {
   void onClose() {
     txtTanggalAwal.dispose();
     txtTanggalAkhir.dispose();
+    txtCutOffAwal.dispose();
+    txtCutOffAkhir.dispose();
     txtGaji.dispose();
     txtKenaikanGaji.dispose();
     txtHariMakan.dispose();

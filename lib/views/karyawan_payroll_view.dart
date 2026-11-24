@@ -282,12 +282,12 @@ class KaryawanPayrollView extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white.withValues(alpha: 0.7),
             borderRadius: const BorderRadius.all(Radius.circular(15)),
-            boxShadow: const [
+            boxShadow: [
               BoxShadow(
-                color: Colors.blue,
+                color: item.isPhk ? Colors.red : Colors.blue,
                 blurRadius: 1,
                 blurStyle: BlurStyle.outer,
-                offset: Offset(1, 1),
+                offset: const Offset(1, 1),
               ),
             ],
           ),
@@ -507,6 +507,24 @@ class KaryawanPayrollView extends StatelessWidget {
             ],
           ),
         ),
+        if (item.isPhk)
+          Container(
+            margin: const EdgeInsets.only(top: 15, right: 18),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+            decoration: BoxDecoration(
+              color: Colors.red.shade50,
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(color: Colors.red, width: 0.8),
+            ),
+            child: const Text(
+              'PHK',
+              style: TextStyle(
+                color: Colors.red,
+                fontSize: 11,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
       ],
     );
   }
