@@ -1302,8 +1302,8 @@ class RunpayrollView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     controller.resetRunPayrollNote();
-    controller.txtTanggalAwal.text = AFconvert.matDate(DateTime(now.month == 1 ? (now.year-1) : now.year, now.month == 1 ? 12 : now.month-1, 19));
-    controller.txtTanggalAkhir.text = AFconvert.matDate(DateTime(now.year, now.month, 18));
+    controller.txtTanggalAwal.text = AFconvert.matYMD(DateTime(now.month == 1 ? (now.year-1) : now.year, now.month == 1 ? 12 : now.month-1, 19));
+    controller.txtTanggalAkhir.text = AFconvert.matYMD(DateTime(now.year, now.month, 18));
     controller.tahun = Opsi(value: '${now.year}', label: '${now.year}');
     controller.bulan = Opsi(value: '${now.month}', label: mapBulan[now.month]!);
     controller.homeControl.kontener = wgPeriode();
@@ -1364,8 +1364,8 @@ class RunpayrollView extends StatelessWidget {
                                   controller.bulan = a;
                                   int vTahun = AFconvert.keInt(controller.tahun.value);
                                   int vBulan = AFconvert.keInt(a.value);
-                                  controller.txtTanggalAwal.text = AFconvert.matDate(DateTime(vBulan == 1 ? vTahun-1 : vTahun, vBulan == 1 ? 12 : vBulan-1, 19));
-                                  controller.txtTanggalAkhir.text = AFconvert.matDate(DateTime(vTahun, vBulan, 18));
+                                  controller.txtTanggalAwal.text = AFconvert.matYMD(DateTime(vBulan == 1 ? vTahun-1 : vTahun, vBulan == 1 ? 12 : vBulan-1, 19));
+                                  controller.txtTanggalAkhir.text = AFconvert.matYMD(DateTime(vTahun, vBulan, 18));
                                   controller.update(['runpayroll_periode']);
                                 }
                               },
@@ -1388,8 +1388,8 @@ class RunpayrollView extends StatelessWidget {
                                   controller.tahun = a;
                                   int vTahun = AFconvert.keInt(a.value);
                                   int vBulan = AFconvert.keInt(controller.bulan.value);
-                                  controller.txtTanggalAwal.text = AFconvert.matDate(DateTime(vBulan == 1 ? vTahun-1 : vTahun, vBulan == 1 ? 12 : vBulan-1, 19));
-                                  controller.txtTanggalAkhir.text = AFconvert.matDate(DateTime(vTahun, vBulan, 18));
+                                  controller.txtTanggalAwal.text = AFconvert.matYMD(DateTime(vBulan == 1 ? vTahun-1 : vTahun, vBulan == 1 ? 12 : vBulan-1, 19));
+                                  controller.txtTanggalAkhir.text = AFconvert.matYMD(DateTime(vTahun, vBulan, 18));
                                   controller.update(['runpayroll_periode']);
                                 }
                               },
@@ -1419,10 +1419,10 @@ class RunpayrollView extends StatelessWidget {
                           ontap: () async {
                             var a = await AFwidget.pickDate(
                               context: controller.homeControl.scaffoldKey.currentContext!,
-                              initialDate: AFconvert.keTanggal(AFconvert.matDMYtoYMD(controller.txtTanggalAwal.text)),
+                              initialDate: AFconvert.keTanggal(controller.txtTanggalAwal.text),
                             );
                             if(a != null) {
-                              controller.txtTanggalAwal.text = AFconvert.matDate(a);
+                              controller.txtTanggalAwal.text = AFconvert.matYMD(a);
                             }
                           },
                         ),
@@ -1441,10 +1441,10 @@ class RunpayrollView extends StatelessWidget {
                           ontap: () async {
                             var a = await AFwidget.pickDate(
                               context: controller.homeControl.scaffoldKey.currentContext!,
-                              initialDate: AFconvert.keTanggal(AFconvert.matDMYtoYMD(controller.txtTanggalAkhir.text)),
+                              initialDate: AFconvert.keTanggal(controller.txtTanggalAkhir.text),
                             );
                             if(a != null) {
-                              controller.txtTanggalAkhir.text = AFconvert.matDate(a);
+                              controller.txtTanggalAkhir.text = AFconvert.matYMD(a);
                             }
                           },
                         ),

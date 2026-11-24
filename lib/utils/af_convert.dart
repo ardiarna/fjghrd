@@ -64,7 +64,13 @@ abstract class AFconvert {
     if (nilai is DateTime) {
       return nilai;
     } else if (nilai != null && nilai != '') {
-      return DateTime.parse(nilai);
+      String str = nilai.toString().trim();
+      DateTime? dt = DateTime.tryParse(str);
+      if (dt != null) return dt;
+      try {
+        return DateFormat('dd-MM-yyyy').parse(str);
+      } catch (_) {}
+      return null;
     } else {
       return null;
     }
@@ -91,7 +97,10 @@ abstract class AFconvert {
   }
 
   static String matDMYtoYMD(String nilai) {
+    if (nilai.isEmpty) return '';
     List<String> tanggal = nilai.split('-');
+    if (tanggal.length != 3) return nilai;
+    if (tanggal[0].length == 4) return nilai;
     return '${tanggal[2]}-${tanggal[1]}-${tanggal[0]}';
   }
 

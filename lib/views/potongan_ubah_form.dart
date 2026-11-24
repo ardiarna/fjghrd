@@ -234,7 +234,7 @@ Future<void> showPotonganUbahForm(String id, BuildContext context) async {
   controller.txtId.text = item.id;
   controller.tahun = Opsi(value: '${item.tahun}', label: '${item.tahun}');
   controller.bulan = Opsi(value: '${item.bulan}', label: mapBulan[item.bulan]!);
-  controller.txtTanggal.text = AFconvert.matDate(item.tanggal);
+  controller.txtTanggal.text = AFconvert.matYMD(item.tanggal);
   controller.txtKeterangan.text = item.keterangan;
   controller.txtHari.text = AFconvert.matNumber(item.hari);
   controller.txtJumlah.text = AFconvert.matNumber(item.jumlah);

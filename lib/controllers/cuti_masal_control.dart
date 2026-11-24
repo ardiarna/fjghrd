@@ -352,7 +352,7 @@ class CutiMasalControl extends GetxController {
     var body = {
       'tahun': filterTahun.value,
       'keterangan': txtKeperluan.text,
-      'tanggal_kembali': txtTglKembali.text != '' ? AFconvert.matYMD(DateFormat('dd-MM-yyyy').parse(txtTglKembali.text)) : null,
+      'tanggal_kembali': txtTglKembali.text != '' ? AFconvert.matYMD(AFconvert.keTanggal(txtTglKembali.text) ?? DateTime.now()) : null,
       'lama_hari': AFconvert.keInt(txtLamaHariGlobal.text),
       'tanggal_cuti': tanggalCutiStr,
       'global_dates': listTanggalGlobal.map((e) => AFconvert.matYMD(e)).toList(),
@@ -462,7 +462,7 @@ class CutiMasalControl extends GetxController {
           }
       }
       txtEditTahun.text = dataMasal?['tahun']?.toString() ?? '';
-      txtEditTglKembali.text = dataMasal?['tanggal_kembali'] != null ? AFconvert.matDate(DateTime.parse(dataMasal!['tanggal_kembali'])) : '';
+      txtEditTglKembali.text = dataMasal?['tanggal_kembali'] != null ? AFconvert.matYMD(DateTime.parse(dataMasal!['tanggal_kembali'])) : '';
       var lh = dataMasal?['lama_hari'];
       if (lh != null) {
         double val = AFconvert.keDouble(lh);
@@ -552,7 +552,7 @@ class CutiMasalControl extends GetxController {
     kcmTambah?.dispose();
     kcmTambah = null;
     txtKeteranganTambah.text = dataMasal?['keterangan'] ?? '';
-    txtEditTglKembali.text = dataMasal?['tanggal_kembali'] != null ? AFconvert.matDate(DateTime.parse(dataMasal!['tanggal_kembali'])) : (dataMasal?['tanggal_kembali'] ?? '');
+    txtEditTglKembali.text = dataMasal?['tanggal_kembali'] != null ? AFconvert.matYMD(DateTime.parse(dataMasal!['tanggal_kembali'])) : (dataMasal?['tanggal_kembali'] ?? '');
     loadingJatah = false;
   }
 

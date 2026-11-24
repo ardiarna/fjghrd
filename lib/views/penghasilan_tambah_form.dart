@@ -45,7 +45,7 @@ class PenghasilanTambahForm extends StatelessWidget {
                                 var a = await controller.pilihBulan(value: controller.bulan.value);
                                 if(a != null && a.value != controller.bulan.value) {
                                   controller.bulan = a;
-                                  controller.txtTanggal.text = AFconvert.matDate(DateTime(AFconvert.keInt(controller.tahun.value), AFconvert.keInt(controller.bulan.value)));
+                                  controller.txtTanggal.text = AFconvert.matYMD(DateTime(AFconvert.keInt(controller.tahun.value), AFconvert.keInt(controller.bulan.value)));
                                   controller.update(['form_penghasilan_periode']);
                                 }
                               },
@@ -65,7 +65,7 @@ class PenghasilanTambahForm extends StatelessWidget {
                                 var a = await controller.pilihTahun(value: controller.tahun.value);
                                 if(a != null && a.value != controller.tahun.value) {
                                   controller.tahun = a;
-                                  controller.txtTanggal.text = AFconvert.matDate(DateTime(AFconvert.keInt(controller.tahun.value), AFconvert.keInt(controller.bulan.value)));
+                                  controller.txtTanggal.text = AFconvert.matYMD(DateTime(AFconvert.keInt(controller.tahun.value), AFconvert.keInt(controller.bulan.value)));
                                   controller.update(['form_penghasilan_periode']);
                                 }
                               },
@@ -212,9 +212,9 @@ class PenghasilanTambahForm extends StatelessWidget {
                                     readOnly: true,
                                     prefixIcon: const Icon(Icons.calendar_month),
                                     ontap: () async {
-                                      DateTime? d = await AFwidget.pickDate(context: context, initialDate: controller.txtTglAwal.text != '' ? AFconvert.keTanggal('${AFconvert.matDMYtoYMD(controller.txtTglAwal.text)} 00:00:00') : null);
+                                      DateTime? d = await AFwidget.pickDate(context: context, initialDate: controller.txtTglAwal.text != '' ? AFconvert.keTanggal(controller.txtTglAwal.text) : null);
                                       if (d != null) {
-                                        controller.txtTglAwal.text = AFconvert.matDate(d);
+                                        controller.txtTglAwal.text = AFconvert.matYMD(d);
                                       }
                                     }
                                   ),
@@ -230,9 +230,9 @@ class PenghasilanTambahForm extends StatelessWidget {
                                     readOnly: true,
                                     prefixIcon: const Icon(Icons.calendar_month),
                                     ontap: () async {
-                                      DateTime? d = await AFwidget.pickDate(context: context, initialDate: controller.txtTglAkhir.text != '' ? AFconvert.keTanggal('${AFconvert.matDMYtoYMD(controller.txtTglAkhir.text)} 00:00:00') : null);
+                                      DateTime? d = await AFwidget.pickDate(context: context, initialDate: controller.txtTglAkhir.text != '' ? AFconvert.keTanggal(controller.txtTglAkhir.text) : null);
                                       if (d != null) {
-                                        controller.txtTglAkhir.text = AFconvert.matDate(d);
+                                        controller.txtTglAkhir.text = AFconvert.matYMD(d);
                                       }
                                     }
                                   ),
@@ -349,7 +349,7 @@ void showPenghasilanTambahForm(BuildContext context) {
   } else {
     controller.bulan = Opsi(value: controller.filterBulan.value, label: controller.filterBulan.label);
   }
-  controller.txtTanggal.text = AFconvert.matDate(DateTime(AFconvert.keInt(controller.tahun.value), AFconvert.keInt(controller.bulan.value)));
+  controller.txtTanggal.text = AFconvert.matYMD(DateTime(AFconvert.keInt(controller.tahun.value), AFconvert.keInt(controller.bulan.value)));
   controller.txtKeterangan.text = '';
   controller.txtHari.text = '';
   controller.txtTglAwal.text = '';

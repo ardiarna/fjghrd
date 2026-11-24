@@ -1,4 +1,3 @@
-import 'package:intl/intl.dart';
 import 'package:fjghrd/utils/af_constant.dart';
 import 'package:fjghrd/utils/af_database.dart';
 import 'package:fjghrd/models/cuti.dart';
@@ -387,11 +386,11 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
                   DateTime? dt = AFconvert.keTanggal(t);
                   if (dt != null) tglKembaliMulti.add(dt);
               }
-              txtTanggalKembali.text = tglKembaliMulti.isNotEmpty ? AFconvert.matDate(tglKembaliMulti.first) : '';
+              txtTanggalKembali.text = tglKembaliMulti.isNotEmpty ? AFconvert.matYMD(tglKembaliMulti.first) : '';
           } else {
               DateTime? dt = AFconvert.keTanggal(cuti.tanggalKembali);
               if (dt != null) {
-                  txtTanggalKembali.text = AFconvert.matDate(dt);
+                  txtTanggalKembali.text = AFconvert.matYMD(dt);
                   tglKembaliMulti.add(dt);
               }
           }
@@ -483,8 +482,8 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
           if(tglKhusus.length > 5 || satuanKhusus == 'bulan') {
               tglKhusus.sort();
               if(tglKhusus.isNotEmpty) {
-                  txtTglAwalKhusus.text = AFconvert.matDate(tglKhusus.first);
-                  txtTglAkhirKhusus.text = AFconvert.matDate(tglKhusus.last);
+                  txtTglAwalKhusus.text = AFconvert.matYMD(tglKhusus.first);
+                  txtTglAkhirKhusus.text = AFconvert.matYMD(tglKhusus.last);
               }
           }
       }
@@ -513,9 +512,11 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
         double lm = AFconvert.keDouble(txtLamaKhusus.text);
         if (lm > 5 || satuanKhusus == 'bulan') {
             if (txtTglAwalKhusus.text.isNotEmpty && txtTglAkhirKhusus.text.isNotEmpty) {
-                DateTime start = DateFormat('dd-MM-yyyy').parse(txtTglAwalKhusus.text);
-                DateTime end = DateFormat('dd-MM-yyyy').parse(txtTglAkhirKhusus.text);
-                if (date.compareTo(start) >= 0 && date.compareTo(end) <= 0) return true;
+                DateTime? start = AFconvert.keTanggal(txtTglAwalKhusus.text);
+                DateTime? end = AFconvert.keTanggal(txtTglAkhirKhusus.text);
+                if (start != null && end != null) {
+                    if (date.compareTo(start) >= 0 && date.compareTo(end) <= 0) return true;
+                }
             }
         } else {
             if (tglKhusus.any((d) => AFconvert.matYMD(d) == strDate)) return true;
@@ -633,11 +634,13 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
         List<DateTime> finalTglKhusus = [...tglKhusus];
         double lm = AFconvert.keDouble(txtLamaKhusus.text);
         if ((lm > 5 || satuanKhusus == 'bulan') && txtTglAwalKhusus.text.isNotEmpty && txtTglAkhirKhusus.text.isNotEmpty) {
-            finalTglKhusus.clear();
-            DateTime start = DateFormat('dd-MM-yyyy').parse(txtTglAwalKhusus.text);
-            DateTime end = DateFormat('dd-MM-yyyy').parse(txtTglAkhirKhusus.text);
-            for (DateTime d = start; d.compareTo(end) <= 0; d = d.add(const Duration(days: 1))) {
-                finalTglKhusus.add(d);
+            DateTime? start = AFconvert.keTanggal(txtTglAwalKhusus.text);
+            DateTime? end = AFconvert.keTanggal(txtTglAkhirKhusus.text);
+            if (start != null && end != null) {
+                finalTglKhusus.clear();
+                for (DateTime d = start; d.compareTo(end) <= 0; d = d.add(const Duration(days: 1))) {
+                    finalTglKhusus.add(d);
+                }
             }
         }
         details.add({
@@ -687,7 +690,7 @@ Future<Opsi?> pilihTahun({String value = ''}) async {
         'id': currentId,
         'karyawan_id': selectedKaryawan!.id,
         'jenis_form': formType,
-          'tanggal_kembali': (formType == 'CUTI' && tglKembaliMulti.isNotEmpty) ? tglKembaliMulti.map((d) => AFconvert.matYMD(d)).join(',') : (txtTanggalKembali.text.isNotEmpty ? AFconvert.matYMD(DateFormat('dd-MM-yyyy').parse(txtTanggalKembali.text)) : null),
+          'tanggal_kembali': (formType == 'CUTI' && tglKembaliMulti.isNotEmpty) ? tglKembaliMulti.map((d) => AFconvert.matYMD(d)).join(',') : (txtTanggalKembali.text.isNotEmpty ? AFconvert.matYMD(AFconvert.keTanggal(txtTanggalKembali.text) ?? DateTime.now()) : null),
         'tahun': AFconvert.keInt(filterTahun.value),
         'details': details,
     };

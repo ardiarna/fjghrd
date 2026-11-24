@@ -90,10 +90,10 @@ class PayrollUbahForm extends StatelessWidget {
                           ontap: () async {
                             var a = await AFwidget.pickDate(
                               context: context,
-                              initialDate: AFconvert.keTanggal(AFconvert.matDMYtoYMD(controller.txtTanggalAwal.text)),
+                              initialDate: AFconvert.keTanggal(controller.txtTanggalAwal.text),
                             );
                             if(a != null) {
-                              controller.txtTanggalAwal.text = AFconvert.matDate(a);
+                              controller.txtTanggalAwal.text = AFconvert.matYMD(a);
                             }
                           },
                         ),
@@ -111,10 +111,10 @@ class PayrollUbahForm extends StatelessWidget {
                           ontap: () async {
                             var a = await AFwidget.pickDate(
                               context: context,
-                              initialDate: AFconvert.keTanggal(AFconvert.matDMYtoYMD(controller.txtTanggalAkhir.text)),
+                              initialDate: AFconvert.keTanggal(controller.txtTanggalAkhir.text),
                             );
                             if(a != null) {
-                              controller.txtTanggalAkhir.text = AFconvert.matDate(a);
+                              controller.txtTanggalAkhir.text = AFconvert.matYMD(a);
                             }
                           },
                         ),
@@ -174,8 +174,8 @@ class PayrollUbahForm extends StatelessWidget {
 
 void showPayrollUbahForm(BuildContext context) {
   final controller = Get.find<PayrollControl>();
-    controller.txtTanggalAwal.text = AFconvert.matDate(controller.currentPayroll.tanggalAwal);
-    controller.txtTanggalAkhir.text = AFconvert.matDate(controller.currentPayroll.tanggalAkhir);
+    controller.txtTanggalAwal.text = AFconvert.matYMD(controller.currentPayroll.tanggalAwal);
+    controller.txtTanggalAkhir.text = AFconvert.matYMD(controller.currentPayroll.tanggalAkhir);
     controller.tahun = Opsi(value: '${controller.currentPayroll.tahun}', label: '${controller.currentPayroll.tahun}');
     controller.bulan = Opsi(value: '${controller.currentPayroll.bulan}', label: mapBulan[controller.currentPayroll.bulan]!);
     controller.txtKeterangan.text = controller.currentPayroll.keterangan;

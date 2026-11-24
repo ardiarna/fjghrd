@@ -44,7 +44,7 @@ class PotonganTambahForm extends StatelessWidget {
                               var a = await controller.pilihBulan(value: controller.bulan.value);
                               if(a != null && a.value != controller.bulan.value) {
                                 controller.bulan = a;
-                                controller.txtTanggal.text = AFconvert.matDate(DateTime(AFconvert.keInt(controller.tahun.value), AFconvert.keInt(controller.bulan.value)));
+                                controller.txtTanggal.text = AFconvert.matYMD(DateTime(AFconvert.keInt(controller.tahun.value), AFconvert.keInt(controller.bulan.value)));
                                 controller.update(['form_potongan_periode']);
                               }
                             },
@@ -64,7 +64,7 @@ class PotonganTambahForm extends StatelessWidget {
                               var a = await controller.pilihTahun(value: controller.tahun.value);
                               if(a != null && a.value != controller.tahun.value) {
                                 controller.tahun = a;
-                                controller.txtTanggal.text = AFconvert.matDate(DateTime(AFconvert.keInt(controller.tahun.value), AFconvert.keInt(controller.bulan.value)));
+                                controller.txtTanggal.text = AFconvert.matYMD(DateTime(AFconvert.keInt(controller.tahun.value), AFconvert.keInt(controller.bulan.value)));
                                 controller.update(['form_potongan_periode']);
                               }
                             },
@@ -278,7 +278,7 @@ void showPotonganTambahForm(BuildContext context) {
   } else {
     controller.bulan = Opsi(value: controller.filterBulan.value, label: controller.filterBulan.label);
   }
-  controller.txtTanggal.text = AFconvert.matDate(DateTime(AFconvert.keInt(controller.tahun.value), AFconvert.keInt(controller.bulan.value)));
+  controller.txtTanggal.text = AFconvert.matYMD(DateTime(AFconvert.keInt(controller.tahun.value), AFconvert.keInt(controller.bulan.value)));
   controller.txtKeterangan.text = '';
   controller.txtHari.text = '';
   controller.txtJumlah.text = '';

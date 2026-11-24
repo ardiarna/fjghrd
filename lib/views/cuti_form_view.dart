@@ -6,7 +6,6 @@ import 'package:fjghrd/utils/af_convert.dart';
 import 'package:fjghrd/utils/af_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
-import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 import 'package:fjghrd/utils/af_database.dart';
 
@@ -53,10 +52,10 @@ class CutiFormView extends StatelessWidget {
                         ontap: (controller.formType == 'CUTI_MASAL' || controller.currentId != '') ? null : () async {
                           DateTime? picked = await AFwidget.pickDate(
                             context: context,
-                            initialDate: controller.txtTanggalKembali.text.isNotEmpty ? DateFormat('dd-MM-yyyy').parse(controller.txtTanggalKembali.text) : DateTime.now(),
+                            initialDate: AFconvert.keTanggal(controller.txtTanggalKembali.text) ?? DateTime.now(),
                           );
                           if (picked != null) {
-                            controller.txtTanggalKembali.text = AFconvert.matDate(picked);
+                            controller.txtTanggalKembali.text = AFconvert.matYMD(picked);
                             controller.update(['form_cuti']);
                           }
                         },
@@ -504,13 +503,13 @@ class CutiFormView extends StatelessWidget {
                                                       ontap: () async {
                                                           DateTime? picked = await AFwidget.pickDate(
                                                               context: context,
-                                                              initialDate: controller.txtTglAwalKhusus.text.isNotEmpty ? DateFormat('dd-MM-yyyy').parse(controller.txtTglAwalKhusus.text) : DateTime.now(),
+                                                              initialDate: AFconvert.keTanggal(controller.txtTglAwalKhusus.text) ?? DateTime.now(),
                                                           );
                                                           if(picked != null) {
                                                               if(controller.isTanggalDuplicate(picked, skipKategori: 'KHUSUS')) {
                                                                   AFwidget.snackbar('Sebagian tanggal bentrok dengan kategori lain');
                                                               } else {
-                                                                  controller.txtTglAwalKhusus.text = AFconvert.matDate(picked);
+                                                                  controller.txtTglAwalKhusus.text = AFconvert.matYMD(picked);
                                                                   controller.update(['form_cuti']);
                                                               }
                                                           }
@@ -531,13 +530,13 @@ class CutiFormView extends StatelessWidget {
                                                       ontap: () async {
                                                           DateTime? picked = await AFwidget.pickDate(
                                                               context: context,
-                                                              initialDate: controller.txtTglAkhirKhusus.text.isNotEmpty ? DateFormat('dd-MM-yyyy').parse(controller.txtTglAkhirKhusus.text) : DateTime.now(),
+                                                              initialDate: AFconvert.keTanggal(controller.txtTglAkhirKhusus.text) ?? DateTime.now(),
                                                           );
                                                           if(picked != null) {
                                                               if(controller.isTanggalDuplicate(picked, skipKategori: 'KHUSUS')) {
                                                                   AFwidget.snackbar('Sebagian tanggal bentrok dengan kategori lain');
                                                               } else {
-                                                                  controller.txtTglAkhirKhusus.text = AFconvert.matDate(picked);
+                                                                  controller.txtTglAkhirKhusus.text = AFconvert.matYMD(picked);
                                                                   controller.update(['form_cuti']);
                                                               }
                                                           }

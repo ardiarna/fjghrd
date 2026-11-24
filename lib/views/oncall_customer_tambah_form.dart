@@ -92,10 +92,10 @@ class OncallCustomerTambahForm extends StatelessWidget {
                           ontap: () async {
                             var a = await AFwidget.pickDate(
                               context: context,
-                              initialDate: AFconvert.keTanggal(AFconvert.matDMYtoYMD(controller.txtTanggal.text)),
+                              initialDate: AFconvert.keTanggal(controller.txtTanggal.text),
                             );
                             if(a != null) {
-                              controller.txtTanggal.text = AFconvert.matDate(a);
+                              controller.txtTanggal.text = AFconvert.matYMD(a);
                             }
                           },
                         ),
@@ -196,7 +196,7 @@ void showOncallCustomerTambahForm(BuildContext context) {
   } else {
     controller.bulan = Opsi(value: controller.filterBulan.value, label: controller.filterBulan.label);
   }
-  controller.txtTanggal.text = AFconvert.matDate(DateTime(AFconvert.keInt(controller.tahun.value), AFconvert.keInt(controller.bulan.value)));
+  controller.txtTanggal.text = AFconvert.matYMD(DateTime(AFconvert.keInt(controller.tahun.value), AFconvert.keInt(controller.bulan.value)));
   controller.txtKeterangan.text = '';
   controller.txtJumlah.text = '';
   controller.customer = Customer();

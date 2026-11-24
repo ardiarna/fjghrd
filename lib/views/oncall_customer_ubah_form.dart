@@ -182,7 +182,7 @@ void showOncallCustomerUbahForm(String id, BuildContext context) {
   controller.txtId.text = item.id;
   controller.tahun = Opsi(value: '${item.tahun}', label: '${item.tahun}');
   controller.bulan = Opsi(value: '${item.bulan}', label: mapBulan[item.bulan]!);
-  controller.txtTanggal.text = AFconvert.matDate(item.tanggal);
+  controller.txtTanggal.text = AFconvert.matYMD(item.tanggal);
   controller.txtKeterangan.text = item.keterangan;
   controller.txtJumlah.text = AFconvert.matNumber(item.jumlah);
   controller.customer = item.customer;

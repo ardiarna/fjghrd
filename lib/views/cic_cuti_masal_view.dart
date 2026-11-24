@@ -81,10 +81,10 @@ class CicCutiMasalView extends StatelessWidget {
                   readOnly: true,
                   ontap: () async {
                     var a = await AFwidget.pickDate(context: context, 
-                      initialDate: controller.txtTglKembali.text != '' ? DateFormat('dd-MM-yyyy').parse(controller.txtTglKembali.text) : DateTime.now(),
+                      initialDate: AFconvert.keTanggal(controller.txtTglKembali.text) ?? DateTime.now(),
                     );
                     if(a != null) {
-                      controller.txtTglKembali.text = DateFormat('dd-MM-yyyy').format(a);
+                      controller.txtTglKembali.text = AFconvert.matYMD(a);
                       controller.update();
                     }
                   }

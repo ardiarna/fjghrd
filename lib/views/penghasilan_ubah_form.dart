@@ -155,9 +155,9 @@ class PenghasilanUbahForm extends StatelessWidget {
                                     readOnly: true,
                                     prefixIcon: const Icon(Icons.calendar_month),
                                     ontap: () async {
-                                      DateTime? d = await AFwidget.pickDate(context: context, initialDate: controller.txtTglAwal.text != '' ? AFconvert.keTanggal('${AFconvert.matDMYtoYMD(controller.txtTglAwal.text)} 00:00:00') : null);
+                                      DateTime? d = await AFwidget.pickDate(context: context, initialDate: controller.txtTglAwal.text != '' ? AFconvert.keTanggal(controller.txtTglAwal.text) : null);
                                       if (d != null) {
-                                        controller.txtTglAwal.text = AFconvert.matDate(d);
+                                        controller.txtTglAwal.text = AFconvert.matYMD(d);
                                       }
                                     },
                                   ),
@@ -173,9 +173,9 @@ class PenghasilanUbahForm extends StatelessWidget {
                                     readOnly: true,
                                     prefixIcon: const Icon(Icons.calendar_month),
                                     ontap: () async {
-                                      DateTime? d = await AFwidget.pickDate(context: context, initialDate: controller.txtTglAkhir.text != '' ? AFconvert.keTanggal('${AFconvert.matDMYtoYMD(controller.txtTglAkhir.text)} 00:00:00') : null);
+                                      DateTime? d = await AFwidget.pickDate(context: context, initialDate: controller.txtTglAkhir.text != '' ? AFconvert.keTanggal(controller.txtTglAkhir.text) : null);
                                       if (d != null) {
-                                        controller.txtTglAkhir.text = AFconvert.matDate(d);
+                                        controller.txtTglAkhir.text = AFconvert.matYMD(d);
                                       }
                                     },
                                   ),
@@ -297,11 +297,11 @@ Future<void> showPenghasilanUbahForm(String id, BuildContext context) async {
   controller.updateMasterGaji = false;
   controller.tahun = Opsi(value: '${item.tahun}', label: '${item.tahun}');
   controller.bulan = Opsi(value: '${item.bulan}', label: mapBulan[item.bulan]!);
-  controller.txtTanggal.text = AFconvert.matDate(item.tanggal);
+  controller.txtTanggal.text = AFconvert.matYMD(item.tanggal);
   controller.txtKeterangan.text = item.keterangan;
   controller.txtHari.text = AFconvert.matNumber(item.hari);
-  controller.txtTglAwal.text = item.tglAwal != '' ? AFconvert.matDate(AFconvert.keTanggal('${item.tglAwal} 00:00:00')) : '';
-  controller.txtTglAkhir.text = item.tglAkhir != '' ? AFconvert.matDate(AFconvert.keTanggal('${item.tglAkhir} 00:00:00')) : '';
+  controller.txtTglAwal.text = item.tglAwal != '' ? AFconvert.matYMD(AFconvert.keTanggal('${item.tglAwal} 00:00:00')) : '';
+  controller.txtTglAkhir.text = item.tglAkhir != '' ? AFconvert.matYMD(AFconvert.keTanggal('${item.tglAkhir} 00:00:00')) : '';
   controller.txtJumlah.text = AFconvert.matNumber(item.jumlah);
   controller.karyawan = item.karyawan;
   controller.jenis = controller.listJenis.where((element) => element.value == item.jenis).first;
