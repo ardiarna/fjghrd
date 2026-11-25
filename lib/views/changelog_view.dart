@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 class ChangelogView extends StatefulWidget {
   const ChangelogView({super.key});
 
-  static const String appVersion = 'v2.2.7';
+  static const String appVersion = 'v2.2.8';
 
   @override
   State<ChangelogView> createState() => _ChangelogViewState();
@@ -46,6 +46,19 @@ class _ChangelogViewState extends State<ChangelogView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  _buildVersion(
+                    version: 'v2.2.8',
+                    date: '25 Nov 2026',
+                    emoji: '🚀',
+                    subtitle: 'Halaman Form PHK, Riwayat PHK, Payroll PHK Mandiri & Pembaruan Laporan Payroll Karyawan',
+                    items: [
+                      'Transformasi Halaman Form PHK & Riwayat PHK: Pemindahan Form PHK Karyawan menjadi halaman penuh (tanpa card pembungkus utama), penambahan tombol ikon Riwayat PHK di header halaman (tampil jika karyawan memiliki riwayat PHK, termasuk karyawan aktif yang pernah di-PHK), serta modal Form History PHK lengkap dengan aksi Cetak, Edit, dan Hapus (tanpa mengubah status aktif karyawan saat mengedit riwayat).',
+                      'Cetak Slip PHK Berdasarkan Riwayat: Dukungan cetak Slip PHK (Excel & PDF) berdasarkan ID PHK spesifik baik dari modal daftar riwayat maupun modal edit riwayat PHK.',
+                      'Add & Edit Payroll PHK di Halaman Payroll & Cuti: Penambahan tombol "Add Payroll" khusus mantan karyawan pada halaman Payroll & Cuti serta tombol Edit pada kartu payroll PHK untuk mengelola data payroll_phks secara mandiri lengkap dengan Periode Payroll dan Periode Gaji.',
+                      'Desain Baru Kartu Payroll: Penyembunyian baris item bernilai 0, pembaruan label dan skema warna per bagian (Kalkulasi PHK hijau, Penghasilan biru, Potongan merah, Benefit Lainnya kuning), tampilan ringkasan total berbentuk card berwarna memudar, serta penyesuaian header halaman agar responsif dengan elipsis.',
+                      'Pembaruan Report Payroll Karyawan (Excel & PDF): Penyisipan otomatis kolom KALKULASI PHK sebelum Total Diterima apabila memiliki nilai (berlaku untuk ex-karyawan maupun karyawan aktif dengan riwayat PHK), penambahan opsi checklist "Cantumkan Benefit Lainnya" (default tidak terceklis) untuk menampilkan kolom Benefit Lainnya & PPh 21, serta pembaruan tata letak judul dan informasi karyawan (Nama, Jabatan, Tanggal Gabung / Masa Kerja).',
+                    ],
+                  ),
                   _buildVersion(
                     version: 'v2.2.7',
                     date: '17 Nov 2026',
