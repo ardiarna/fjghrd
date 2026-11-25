@@ -1,5 +1,6 @@
 
 import 'package:fjghrd/models/karyawan.dart';
+import 'package:fjghrd/models/uang_phk_2.dart';
 import 'package:fjghrd/utils/af_convert.dart';
 
 class Payroll {
@@ -52,6 +53,9 @@ class Payroll {
   String note;
   bool dikunci;
   bool isPhk;
+  UangPhk2? uangPhk;
+  DateTime? tglGajiAwal;
+  DateTime? tglGajiAkhir;
   DateTime? createdAt;
   DateTime? updatedAt;
 
@@ -104,6 +108,9 @@ class Payroll {
     this.note = '',
     this.dikunci = false,
     this.isPhk = false,
+    this.uangPhk,
+    this.tglGajiAwal,
+    this.tglGajiAkhir,
     this.createdAt,
     this.updatedAt,
   }) ;
@@ -160,9 +167,14 @@ class Payroll {
       dpp: AFconvert.keInt(data['dpp']),
       pph21: AFconvert.keInt(data['pph21']),
       isPhk: AFconvert.keBool(data['is_phk']),
+      tglGajiAwal: AFconvert.keTanggal(data['tgl_gaji_awal']),
+      tglGajiAkhir: AFconvert.keTanggal(data['tgl_gaji_akhir']),
     );
     if(data['karyawan'] != null) {
       a.karyawan = Karyawan.fromMap(data['karyawan']);
+    }
+    if(data['phk'] != null && data['phk'] is Map && data['phk']['uang_phk'] != null) {
+      a.uangPhk = UangPhk2.fromMap(Map<String, dynamic>.from(data['phk']['uang_phk']));
     }
     return a;
   }

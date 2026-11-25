@@ -1870,6 +1870,211 @@ class KaryawanControl extends GetxController {
     hitungTotalPhk(nilai);
   }
 
+  void hitungPayrollPhkStandalone([String? _]) {
+    int a = AFconvert.keInt(txtPayrollPhkGaji.text) +
+        AFconvert.keInt(txtPayrollPhkKenaikanGaji.text) +
+        AFconvert.keInt(txtPayrollPhkUangMakanJumlah.text) +
+        AFconvert.keInt(txtPayrollPhkOvertimeFjg.text) +
+        AFconvert.keInt(txtPayrollPhkOvertimeCus.text) +
+        AFconvert.keInt(txtPayrollPhkMedical.text) +
+        AFconvert.keInt(txtPayrollPhkThr.text) +
+        AFconvert.keInt(txtPayrollPhkBonus.text) +
+        AFconvert.keInt(txtPayrollPhkInsentif.text) +
+        AFconvert.keInt(txtPayrollPhkTelkomsel.text) +
+        AFconvert.keInt(txtPayrollPhkLain.text);
+    int b = AFconvert.keInt(txtPayrollPhkPot25jumlah.text) +
+        AFconvert.keInt(txtPayrollPhkPotTelepon.text) +
+        AFconvert.keInt(txtPayrollPhkPotBensin.text) +
+        AFconvert.keInt(txtPayrollPhkPotKas.text) +
+        AFconvert.keInt(txtPayrollPhkPotCicilan.text) +
+        AFconvert.keInt(txtPayrollPhkPotBpjs.text) +
+        AFconvert.keInt(txtPayrollPhkPotCutiJumlah.text) +
+        AFconvert.keInt(txtPayrollPhkPotKompensasiJumlah.text) +
+        AFconvert.keInt(txtPayrollPhkPotLain.text);
+    txtPayrollPhkTotalDiterima.text = AFconvert.matNumber(a - b);
+  }
+
+  Future<void> initFormPayrollPhkStandalone({Payroll? item}) async {
+    if (current.upah.id.isEmpty) {
+      try {
+        final upahRepo = UpahRepository();
+        var hasil = await upahRepo.find(current.id);
+        if (hasil.success && hasil.data.isNotEmpty) {
+          current.upah = Upah.fromMap(hasil.data);
+        }
+      } catch (_) {}
+    }
+
+    if (item == null) {
+      payrollPhk = PayrollPhk(karyawanId: current.id);
+      int vTahun = AFconvert.keInt(filterTahun.value);
+      if (vTahun == 0) vTahun = DateTime.now().year;
+      int vBulan = DateTime.now().month;
+      int prevBulan = vBulan == 1 ? 12 : vBulan - 1;
+      int prevTahun = vBulan == 1 ? vTahun - 1 : vTahun;
+
+      tahunPhk = Opsi(value: '$vTahun', label: '$vTahun');
+      bulanPhk = Opsi(value: '$vBulan', label: mapBulan[vBulan] ?? '$vBulan');
+      txtPayrollPhkTglAwal.text = AFconvert.matYMD(DateTime(prevTahun, prevBulan, 19));
+      txtPayrollPhkTglAkhir.text = AFconvert.matYMD(DateTime(vTahun, vBulan, 18));
+      txtPayrollPhkTglGajiAwal.text = AFconvert.matYMD(DateTime(prevTahun, prevBulan, 26));
+      txtPayrollPhkTglGajiAkhir.text = AFconvert.matYMD(DateTime(vTahun, vBulan, 25));
+
+      payrollPhkMakanHarian = current.upah.makanHarian;
+      txtPayrollPhkGaji.text = AFconvert.matNumber(current.upah.gaji);
+      txtPayrollPhkKenaikanGaji.text = '0';
+      txtPayrollPhkHariMakan.text = '0';
+      txtPayrollPhkUangMakanHarian.text = AFconvert.matNumber(current.upah.uangMakan);
+      txtPayrollPhkUangMakanJumlah.text = current.upah.makanHarian ? '0' : AFconvert.matNumber(current.upah.uangMakan);
+      txtPayrollPhkOvertimeFjg.text = '0';
+      txtPayrollPhkOvertimeCus.text = '0';
+      txtPayrollPhkMedical.text = '0';
+      txtPayrollPhkThr.text = '0';
+      txtPayrollPhkBonus.text = '0';
+      txtPayrollPhkInsentif.text = '0';
+      txtPayrollPhkTelkomsel.text = '0';
+      txtPayrollPhkLain.text = '0';
+      txtPayrollPhkPot25hari.text = '0';
+      txtPayrollPhkPot25jumlah.text = '0';
+      txtPayrollPhkPotTelepon.text = '0';
+      txtPayrollPhkPotBensin.text = '0';
+      txtPayrollPhkPotKas.text = '0';
+      txtPayrollPhkPotCicilan.text = '0';
+      txtPayrollPhkPotBpjs.text = '0';
+      txtPayrollPhkPotCutiHari.text = '0';
+      txtPayrollPhkPotCutiJumlah.text = '0';
+      txtPayrollPhkPotKompensasiJam.text = '0';
+      txtPayrollPhkPotKompensasiJumlah.text = '0';
+      txtPayrollPhkPotLain.text = '0';
+      txtPayrollPhkKeterangan.text = '';
+    } else {
+      payrollPhk = PayrollPhk(
+        id: item.id,
+        karyawanId: current.id,
+        tahun: item.tahun,
+        bulan: item.bulan,
+      );
+      int vTahun = item.tahun == 0 ? DateTime.now().year : item.tahun;
+      int vBulan = item.bulan == 0 ? DateTime.now().month : item.bulan;
+      int prevBulan = vBulan == 1 ? 12 : vBulan - 1;
+      int prevTahun = vBulan == 1 ? vTahun - 1 : vTahun;
+
+      tahunPhk = Opsi(value: '$vTahun', label: '$vTahun');
+      bulanPhk = Opsi(value: '$vBulan', label: mapBulan[vBulan] ?? '$vBulan');
+      txtPayrollPhkTglAwal.text = item.tanggalAwal != null
+          ? AFconvert.matYMD(item.tanggalAwal)
+          : AFconvert.matYMD(DateTime(prevTahun, prevBulan, 19));
+      txtPayrollPhkTglAkhir.text = item.tanggalAkhir != null
+          ? AFconvert.matYMD(item.tanggalAkhir)
+          : AFconvert.matYMD(DateTime(vTahun, vBulan, 18));
+      txtPayrollPhkTglGajiAwal.text = item.tglGajiAwal != null
+          ? AFconvert.matYMD(item.tglGajiAwal)
+          : AFconvert.matYMD(DateTime(prevTahun, prevBulan, 26));
+      txtPayrollPhkTglGajiAkhir.text = item.tglGajiAkhir != null
+          ? AFconvert.matYMD(item.tglGajiAkhir)
+          : AFconvert.matYMD(DateTime(vTahun, vBulan, 25));
+
+      payrollPhkMakanHarian = item.makanHarian;
+      txtPayrollPhkGaji.text = AFconvert.matNumber(item.gaji);
+      txtPayrollPhkKenaikanGaji.text = AFconvert.matNumber(item.kenaikanGaji);
+      txtPayrollPhkHariMakan.text = AFconvert.matNumber(item.hariMakan);
+      txtPayrollPhkUangMakanHarian.text = AFconvert.matNumber(
+        item.uangMakanHarian > 0 ? item.uangMakanHarian : current.upah.uangMakan,
+      );
+      txtPayrollPhkUangMakanJumlah.text = AFconvert.matNumber(item.uangMakanJumlah);
+      txtPayrollPhkOvertimeFjg.text = AFconvert.matNumber(item.overtimeFjg);
+      txtPayrollPhkOvertimeCus.text = AFconvert.matNumber(item.overtimeCus);
+      txtPayrollPhkMedical.text = AFconvert.matNumber(item.medical);
+      txtPayrollPhkThr.text = AFconvert.matNumber(item.thr);
+      txtPayrollPhkBonus.text = AFconvert.matNumber(item.bonus);
+      txtPayrollPhkInsentif.text = AFconvert.matNumber(item.insentif);
+      txtPayrollPhkTelkomsel.text = AFconvert.matNumber(item.telkomsel);
+      txtPayrollPhkLain.text = AFconvert.matNumber(item.lain);
+      txtPayrollPhkPot25hari.text = AFconvert.matNumber(item.pot25hari);
+      txtPayrollPhkPot25jumlah.text = AFconvert.matNumber(item.pot25jumlah);
+      txtPayrollPhkPotTelepon.text = AFconvert.matNumber(item.potTelepon);
+      txtPayrollPhkPotBensin.text = AFconvert.matNumber(item.potBensin);
+      txtPayrollPhkPotKas.text = AFconvert.matNumber(item.potKas);
+      txtPayrollPhkPotCicilan.text = AFconvert.matNumber(item.potCicilan);
+      txtPayrollPhkPotBpjs.text = AFconvert.matNumber(item.potBpjs);
+      txtPayrollPhkPotCutiHari.text = AFconvert.matNumber(item.potCutiHari);
+      txtPayrollPhkPotCutiJumlah.text = AFconvert.matNumber(item.potCutiJumlah);
+      txtPayrollPhkPotKompensasiJam.text = AFconvert.matNumberWithDecimal(item.potKompensasiJam, decimal: 1);
+      txtPayrollPhkPotKompensasiJumlah.text = AFconvert.matNumber(item.potKompensasiJumlah);
+      txtPayrollPhkPotLain.text = AFconvert.matNumber(item.potLain);
+      txtPayrollPhkKeterangan.text = item.keterangan;
+    }
+
+    hitungPayrollPhkStandalone();
+    update();
+  }
+
+  Future<void> simpanPayrollPhkStandalone() async {
+    try {
+      if (txtPayrollPhkTglAwal.text.isEmpty || txtPayrollPhkTglAkhir.text.isEmpty) {
+        throw ValidationException('Silakan isi Periode Cut-Off');
+      }
+      if (txtPayrollPhkTglGajiAwal.text.isEmpty || txtPayrollPhkTglGajiAkhir.text.isEmpty) {
+        throw ValidationException('Silakan isi Periode Gaji');
+      }
+
+      PayrollPhk c = PayrollPhk(
+        id: payrollPhk.id,
+        karyawanId: current.id,
+        tahun: AFconvert.keInt(tahunPhk.value),
+        bulan: AFconvert.keInt(bulanPhk.value),
+        tanggalAwal: AFconvert.keTanggal(txtPayrollPhkTglAwal.text),
+        tanggalAkhir: AFconvert.keTanggal(txtPayrollPhkTglAkhir.text),
+        tglGajiAwal: AFconvert.keTanggal(txtPayrollPhkTglGajiAwal.text),
+        tglGajiAkhir: AFconvert.keTanggal(txtPayrollPhkTglGajiAkhir.text),
+        makanHarian: payrollPhkMakanHarian,
+        gaji: AFconvert.keInt(txtPayrollPhkGaji.text),
+        kenaikanGaji: AFconvert.keInt(txtPayrollPhkKenaikanGaji.text),
+        hariMakan: AFconvert.keInt(txtPayrollPhkHariMakan.text),
+        uangMakanHarian: AFconvert.keInt(txtPayrollPhkUangMakanHarian.text),
+        uangMakanJumlah: AFconvert.keInt(txtPayrollPhkUangMakanJumlah.text),
+        overtimeFjg: AFconvert.keInt(txtPayrollPhkOvertimeFjg.text),
+        overtimeCus: AFconvert.keInt(txtPayrollPhkOvertimeCus.text),
+        medical: AFconvert.keInt(txtPayrollPhkMedical.text),
+        thr: AFconvert.keInt(txtPayrollPhkThr.text),
+        bonus: AFconvert.keInt(txtPayrollPhkBonus.text),
+        insentif: AFconvert.keInt(txtPayrollPhkInsentif.text),
+        telkomsel: AFconvert.keInt(txtPayrollPhkTelkomsel.text),
+        lain: AFconvert.keInt(txtPayrollPhkLain.text),
+        pot25hari: AFconvert.keInt(txtPayrollPhkPot25hari.text),
+        pot25jumlah: AFconvert.keInt(txtPayrollPhkPot25jumlah.text),
+        potTelepon: AFconvert.keInt(txtPayrollPhkPotTelepon.text),
+        potBensin: AFconvert.keInt(txtPayrollPhkPotBensin.text),
+        potKas: AFconvert.keInt(txtPayrollPhkPotKas.text),
+        potCicilan: AFconvert.keInt(txtPayrollPhkPotCicilan.text),
+        potBpjs: AFconvert.keInt(txtPayrollPhkPotBpjs.text),
+        potCutiHari: AFconvert.keInt(txtPayrollPhkPotCutiHari.text),
+        potCutiJumlah: AFconvert.keInt(txtPayrollPhkPotCutiJumlah.text),
+        potKompensasiJam: AFconvert.keDouble(txtPayrollPhkPotKompensasiJam.text),
+        potKompensasiJumlah: AFconvert.keInt(txtPayrollPhkPotKompensasiJumlah.text),
+        potLain: AFconvert.keInt(txtPayrollPhkPotLain.text),
+        totalDiterima: AFconvert.keInt(txtPayrollPhkTotalDiterima.text),
+        keterangan: txtPayrollPhkKeterangan.text,
+      );
+
+      var body = c.toMap();
+      body['skip_link_phk'] = '1';
+
+      AFwidget.loading();
+      var hasil = await _repo.payrollPhkUpdateOrCreate(current.id, body);
+      Get.back();
+      if (hasil.success) {
+        await loadPayrolls();
+        Get.back();
+        AFwidget.snackbar(hasil.message);
+      } else {
+        AFwidget.formWarning(label: hasil.message);
+      }
+    } catch (er) {
+      AFwidget.formWarning(label: '$er');
+    }
+  }
+
   Future<void> loadAgamas() async {
     AgamaRepository repo = AgamaRepository();
     var hasil = await repo.findAll();
@@ -2161,29 +2366,12 @@ class KaryawanControl extends GetxController {
     return a;
   }
 
-  Future<void> dowloadPayroll() async {
+  Future<void> dowloadPayroll({bool cantumkanBenefit = false}) async {
     AFwidget.loading();
-    var hasil = await _repo.excelPayroll(id: current.id, tahun: filterTahun.label);
-    Get.back();
-    if(hasil.success) {
-      AFwidget.formWarning(
-        label: 'laporan excel payroll ${current.nama} berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
-        warna:  Colors.green,
-        ikon: Icons.info,
-      );
-    } else {
-      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
-    }
-  }
-
-  Future<void> dowloadPayrollPeriode() async {
-    AFwidget.loading();
-    var hasil = await _repo.excelPayrollPeriode(
+    var hasil = await _repo.excelPayroll(
       id: current.id,
-      tahunAwal: payrollTahunAwal.value,
-      bulanAwal: payrollBulanAwal.value,
-      tahunAkhir: payrollTahunAkhir.value,
-      bulanAkhir: payrollBulanAkhir.value,
+      tahun: filterTahun.label,
+      cantumkanBenefit: cantumkanBenefit,
     );
     Get.back();
     if(hasil.success) {
@@ -2197,9 +2385,35 @@ class KaryawanControl extends GetxController {
     }
   }
 
-  Future<void> dowloadPayrollPdf() async {
+  Future<void> dowloadPayrollPeriode({bool cantumkanBenefit = false}) async {
     AFwidget.loading();
-    var hasil = await _repo.pdfPayroll(id: current.id, tahun: filterTahun.label);
+    var hasil = await _repo.excelPayrollPeriode(
+      id: current.id,
+      tahunAwal: payrollTahunAwal.value,
+      bulanAwal: payrollBulanAwal.value,
+      tahunAkhir: payrollTahunAkhir.value,
+      bulanAkhir: payrollBulanAkhir.value,
+      cantumkanBenefit: cantumkanBenefit,
+    );
+    Get.back();
+    if(hasil.success) {
+      AFwidget.formWarning(
+        label: 'laporan excel payroll ${current.nama} berhasil dibuat. silakan periksa directory Download anda (${hasil.message})',
+        warna:  Colors.green,
+        ikon: Icons.info,
+      );
+    } else {
+      AFwidget.formWarning(label: 'Gagal membuat excel. [${hasil.message}]');
+    }
+  }
+
+  Future<void> dowloadPayrollPdf({bool cantumkanBenefit = false}) async {
+    AFwidget.loading();
+    var hasil = await _repo.pdfPayroll(
+      id: current.id,
+      tahun: filterTahun.label,
+      cantumkanBenefit: cantumkanBenefit,
+    );
     Get.back();
     if(hasil.success) {
       AFwidget.formWarning(
@@ -2212,7 +2426,7 @@ class KaryawanControl extends GetxController {
     }
   }
 
-  Future<void> dowloadPayrollPeriodePdf() async {
+  Future<void> dowloadPayrollPeriodePdf({bool cantumkanBenefit = false}) async {
     AFwidget.loading();
     var hasil = await _repo.pdfPayrollPeriode(
       id: current.id,
@@ -2220,6 +2434,7 @@ class KaryawanControl extends GetxController {
       bulanAwal: payrollBulanAwal.value,
       tahunAkhir: payrollTahunAkhir.value,
       bulanAkhir: payrollBulanAkhir.value,
+      cantumkanBenefit: cantumkanBenefit,
     );
     Get.back();
     if(hasil.success) {

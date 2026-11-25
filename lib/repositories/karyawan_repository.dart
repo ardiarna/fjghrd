@@ -239,8 +239,10 @@ class KaryawanRepository {
   Future<Hasil> excelPayroll({
     required String id,
     required String tahun,
+    bool cantumkanBenefit = false,
   }) async {
-    return await AFdatabase.download(url: 'excel/payroll/$id/$tahun');
+    final q = cantumkanBenefit ? '?benefit=Y' : '';
+    return await AFdatabase.download(url: 'excel/payroll/$id/$tahun$q');
   }
 
   Future<Hasil> excelListCuti({
@@ -263,15 +265,19 @@ class KaryawanRepository {
     required String bulanAwal,
     required String tahunAkhir,
     required String bulanAkhir,
+    bool cantumkanBenefit = false,
   }) async {
-    return await AFdatabase.download(url: 'excel/payroll-periode/$id/$tahunAwal/$bulanAwal/$tahunAkhir/$bulanAkhir');
+    final q = cantumkanBenefit ? '?benefit=Y' : '';
+    return await AFdatabase.download(url: 'excel/payroll-periode/$id/$tahunAwal/$bulanAwal/$tahunAkhir/$bulanAkhir$q');
   }
 
   Future<Hasil> pdfPayroll({
     required String id,
     required String tahun,
+    bool cantumkanBenefit = false,
   }) async {
-    return await AFdatabase.download(url: 'excel/pdf-payroll/$id/$tahun');
+    final q = cantumkanBenefit ? '?benefit=Y' : '';
+    return await AFdatabase.download(url: 'excel/pdf-payroll/$id/$tahun$q');
   }
 
   Future<Hasil> pdfPayrollPeriode({
@@ -280,8 +286,10 @@ class KaryawanRepository {
     required String bulanAwal,
     required String tahunAkhir,
     required String bulanAkhir,
+    bool cantumkanBenefit = false,
   }) async {
-    return await AFdatabase.download(url: 'excel/pdf-payroll-periode/$id/$tahunAwal/$bulanAwal/$tahunAkhir/$bulanAkhir');
+    final q = cantumkanBenefit ? '?benefit=Y' : '';
+    return await AFdatabase.download(url: 'excel/pdf-payroll-periode/$id/$tahunAwal/$bulanAwal/$tahunAkhir/$bulanAkhir$q');
   }
   
       Future<Hasil> pdfBiodataKaryawan({
